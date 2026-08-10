@@ -8,7 +8,7 @@ project:
 website:
   title: "PoliSci 812"
   description: "Graduate introduction to statistical methods in political science"
-  site-url: https://www.antonstrezhnev.com/ps812/
+  site-url: https://astrezhnev.github.io/ps812/
   repo-url: https://github.com/astrezhnev/ps812
 
   navbar:
