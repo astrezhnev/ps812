@@ -1,0 +1,67 @@
+---
+title: "Assignments"
+---
+
+## Schedule
+
+| Assignment        | Assigned              | Due                   |
+|-------------------|-----------------------|-----------------------|
+| Problem Set 1     | Sept 16 (Week 2)      | Sept 30 (Week 4)      |
+| Problem Set 2     | Sept 30 (Week 4)      | Oct 14 (Week 6)       |
+| Problem Set 3     | Oct 14 (Week 6)       | Oct 28 (Week 8)       |
+| **Midterm Exam**  | Nov 3 (Week 9)        | **In-Class**          |
+| Problem Set 4     | Nov 11 (Week 10)      | Nov 25 (Week 12)      |
+| Problem Set 5     | Nov 25 (Week 12)      | Dec 9 (Week 14)       |
+| **Final Exam**    | Exam week (Dec 11-17) | **Date/Location TBA** |
+
+Problem sets are due at the start of Wednesday's lecture. Solutions are posted to Canvas after the deadline.
+
+---
+
+## Problem Sets
+
+Problem sets are distributed as `.qmd` files along with their rendered `.html` form. You should edit the provided `.qmd` file and render to `.html` when submitting the assignment. Additional files (e.g. datasets) are located in sub-folders. For convenience, all the combined files are also distributed as a `.zip` compressed archive.
+
+Links become active when each assignment is released.
+
+### Problem Set 1
+
+- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps1)
+- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps1.zip)
+
+### Problem Set 2
+
+- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps2)
+- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps2.zip)
+
+### Problem Set 3
+
+- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps3)
+- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps3.zip)
+
+### Problem Set 4
+
+- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps4)
+- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps4.zip)
+
+### Problem Set 5
+
+- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps5)
+- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps5.zip)
+
+---
+
+## Section Exercises
+
+Section meets once a week and is built around short, guided exercises that implement the week's material in {{< fa brands r-project >}}. These are completed in Quarto and uploaded at the end of section. They are not formally graded, but they are reviewed and count toward your participation grade. Section materials will be posted here as they are released.
+
+*To be posted.*
+
+---
+
+## Exams
+
+Both exams are **in person**, closed-book, pen-and-paper examinations involving both theory questions and practical interpretation of sample code and results.
+
+- **Midterm:** in class on Tuesday, November 3, covering material through Week 8 (probability, random variables, expectation, random samples, estimation and inference).
+- **Final:** during the university exam period, December 11-17. The date, time and room are assigned by the registrar and will be posted here once available. The final covers material from the full semester.

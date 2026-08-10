@@ -1,0 +1,295 @@
+---
+title: "Schedule"
+---
+
+A schedule of topics and readings is provided below. Each week covers a single topic or group of topics. Tuesday lectures will typically introduce the core theory for the week while Wednesday lectures will go into greater detail and work through examples. You should make sure to review the readings prior to that week's lectures with an aim towards completing them before Wednesday's lecture.
+
+The readings are not long, but they are dense. The first part of the semester in particular leans heavily on mathematical notation. Becoming comfortable with that kind of language is itself one of the learning goals of the course, so it will be tempting to skim past the math that looks daunting -- do not do this. Read carefully, go line by line, take notes, and bring your questions to lecture, section, or the discussion board.
+
+Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Agnostic Statistics*, and those marked **(AP)** are from Angrist and Pischke, *Mostly Harmless Econometrics*. Both are available through the UW-Madison library; relevant excerpts will also be posted on Canvas. All hyperlinks to papers and to other books are either to the published version or to a freely available copy.
+
+::: {.callout-note appearance="simple"}
+Fall instruction begins Wednesday, September 2, and Labor Day (no instruction) falls on Monday, September 7. **This course begins on Tuesday, September 8.**
+:::
+
+## Week 1: Introduction and Foundations of Probability
+
+*Tuesday, September 8 & Wednesday, September 9*
+
+**Topics:**
+
+- Course introduction: what is statistics for, and what is this sequence for?
+- Sample spaces, events, and the probability function
+- The axioms of probability and their immediate consequences
+
+**Readings:**
+
+- Section 1.1 (through 1.1.2); **(AM)** Aronow, Peter M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press.
+- **Software setup:** Chapters 1-4 and 28 ("Quarto"); Wickham, Hadley, Mine Çetinkaya-Rundel, and Garrett Grolemund. 2023. [*R for Data Science*, 2nd ed.](https://r4ds.hadley.nz/)
+
+---
+
+## Week 2: Conditional Probability and Independence
+
+*Tuesday, September 15 & Wednesday, September 16*
+
+**Topics:**
+
+- Conditional probability and the law of total probability
+- Independence and conditional independence
+- Bayes' rule and how to reason with it
+
+**Readings:**
+
+- Section 1.1 (remainder); **(AM)** Aronow and Miller 2019.
+- **Supplementary:** Gigerenzer, Gerd, and Ulrich Hoffrage. 1995. ["How to Improve Bayesian Reasoning without Instruction: Frequency Formats."](https://pure.mpg.de/rest/items/item_2101336/component/file_2101335/content) *Psychological Review* 102 (4): 684-704.
+
+::: {.callout-note appearance="simple"}
+**Problem Set 1** assigned Wednesday, September 16 -- due Wednesday, September 30.
+:::
+
+---
+
+## Week 3: Random Variables and Distributions
+
+*Tuesday, September 22 & Wednesday, September 23*
+
+**Topics:**
+
+- Random variables as functions on the sample space
+- Discrete and continuous distributions; PMFs, PDFs and CDFs
+- Common distributions and where they come from
+
+**Readings:**
+
+- Section 1.2 (through 1.2.3); **(AM)** Aronow and Miller 2019.
+
+---
+
+## Week 4: Joint Distributions and Expectation
+
+*Tuesday, September 29 & Wednesday, September 30*
+
+**Topics:**
+
+- Joint, marginal and conditional distributions
+- Independence of random variables
+- Expectation and its properties; functions of random variables
+
+**Readings:**
+
+- Section 1.2 (remainder) and Section 2.1 (through 2.1.2); **(AM)** Aronow and Miller 2019.
+
+::: {.callout-note appearance="simple"}
+**Problem Set 1** due Wednesday, September 30. **Problem Set 2** assigned Wednesday, September 30 -- due Wednesday, October 14.
+:::
+
+---
+
+## Week 5: Variance, Covariance, and Conditional Expectation
+
+*Tuesday, October 6 & Wednesday, October 7*
+
+**Topics:**
+
+- Variance, standard deviation, covariance and correlation
+- Conditional expectation and the conditional expectation function
+- The law of iterated expectations
+
+**Readings:**
+
+- Sections 2.1 (remainder) and 2.2; **(AM)** Aronow and Miller 2019.
+
+---
+
+## Week 6: Random Samples, the LLN, and the CLT
+
+*Tuesday, October 13 & Wednesday, October 14*
+
+**Topics:**
+
+- Random sampling and the sampling distribution
+- Convergence in probability and the law of large numbers
+- Convergence in distribution and the central limit theorem
+- Simulating sampling distributions in {{< fa brands r-project >}}
+
+**Readings:**
+
+- Sections 3.1 through 3.2.1; **(AM)** Aronow and Miller 2019.
+- **Supplementary:** Chapter 3 ("Asymptotics"); Blackwell, Matthew. 2025. [*A User's Guide to Statistical Inference and Regression*.](https://mattblackwell.github.io/gov2002-book/asymptotics.html)
+
+::: {.callout-note appearance="simple"}
+**Problem Set 2** due Wednesday, October 14. **Problem Set 3** assigned Wednesday, October 14 -- due Wednesday, October 28.
+:::
+
+---
+
+## Week 7: Estimation
+
+*Tuesday, October 20 & Wednesday, October 21*
+
+**Topics:**
+
+- Estimands, estimators and estimates
+- Bias, variance, mean squared error and consistency
+- Asymptotic normality and the plug-in principle
+
+**Readings:**
+
+- Sections 3.2.2 through 3.2.4; **(AM)** Aronow and Miller 2019.
+- Lundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. ["What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory."](https://journals.sagepub.com/doi/full/10.1177/00031224211004187) *American Sociological Review* 86 (3): 532-565.
+
+---
+
+## Week 8: Confidence Intervals and Hypothesis Testing
+
+*Tuesday, October 27 & Wednesday, October 28*
+
+**Topics:**
+
+- Standard errors and the construction of confidence intervals
+- Hypothesis tests, test statistics and p-values
+- What a p-value is and -- more importantly -- what it is not
+- The bootstrap
+
+**Readings:**
+
+- Sections 3.3 and 3.4; **(AM)** Aronow and Miller 2019.
+- Wasserstein, Ronald L., and Nicole A. Lazar. 2016. ["The ASA Statement on p-Values: Context, Process, and Purpose."](https://www.tandfonline.com/doi/full/10.1080/00031305.2016.1154108) *The American Statistician* 70 (2): 129-133.
+
+::: {.callout-note appearance="simple"}
+**Problem Set 3** due Wednesday, October 28.
+:::
+
+---
+
+## Week 9: Midterm; Introduction to Regression
+
+*Tuesday, November 3 & Wednesday, November 4*
+
+::: {.callout-important appearance="simple"}
+**In-person midterm examination on Tuesday, November 3.** The exam covers Weeks 1-8: probability, random variables, expectation, random samples, estimation and inference.
+:::
+
+**Topics (Wednesday):**
+
+- Regression as an approximation to the conditional expectation function
+- The best linear predictor and its properties
+- Ordinary least squares as an estimator
+
+**Readings:**
+
+- Section 4.1 (through 4.1.2); **(AM)** Aronow and Miller 2019.
+
+---
+
+## Week 10: Multiple Regression
+
+*Tuesday, November 10 & Wednesday, November 11*
+
+**Topics:**
+
+- Regression with multiple predictors; partialling out
+- Interpreting coefficients, and what "holding constant" does and does not mean
+- Interactions, polynomials and other transformations
+- Fitting and interpreting regressions in {{< fa brands r-project >}}
+
+**Readings:**
+
+- Section 4.1 (remainder) and Section 4.2; **(AM)** Aronow and Miller 2019.
+- **Supplementary:** Chapter 3; **(AP)** Angrist, Joshua D., and Jörn-Steffen Pischke. 2009. *Mostly Harmless Econometrics*. Princeton: Princeton University Press.
+
+::: {.callout-note appearance="simple"}
+**Problem Set 4** assigned Wednesday, November 11 -- due Wednesday, November 25.
+:::
+
+---
+
+## Week 11: Inference for Regression
+
+*Tuesday, November 17 & Wednesday, November 18*
+
+**Topics:**
+
+- Sampling distribution of the OLS estimator
+- Homoskedastic and heteroskedasticity-consistent standard errors
+- Clustered dependence and what to do about it
+- Specification, model fit and the limits of both
+
+**Readings:**
+
+- Sections 4.2 (remainder) and 4.3; **(AM)** Aronow and Miller 2019.
+- **Supplementary:** Chapter 8 ("Nonstandard Standard Error Issues"); **(AP)** Angrist and Pischke 2009.
+
+---
+
+## Week 12: Causal Inference and the Experimental Ideal
+
+*Tuesday, November 24 & Wednesday, November 25*
+
+::: {.callout-important appearance="simple"}
+Thanksgiving recess runs November 26-29. Class meets as usual on Tuesday and Wednesday of this week.
+:::
+
+**Topics:**
+
+- Potential outcomes and the counterfactual definition of a causal effect
+- The fundamental problem of causal inference
+- Why randomization identifies the average treatment effect
+- Estimating treatment effects from an experiment
+
+**Readings:**
+
+- Chapters 1-2; **(AP)** Angrist and Pischke 2009.
+- Section 7.1; **(AM)** Aronow and Miller 2019.
+
+::: {.callout-note appearance="simple"}
+**Problem Set 4** due Wednesday, November 25. **Problem Set 5** assigned Wednesday, November 25 -- due Wednesday, December 9.
+:::
+
+---
+
+## Week 13: Regression and Observational Data
+
+*Tuesday, December 1 & Wednesday, December 2*
+
+**Topics:**
+
+- Confounding and selection bias
+- What regression can and cannot do with observational data
+- Selection on observables and the conditional independence assumption
+- Good controls, bad controls, and the perils of "controlling for everything"
+
+**Readings:**
+
+- Chapter 3; **(AP)** Angrist and Pischke 2009.
+- Cinelli, Carlos, Andrew Forney, and Judea Pearl. 2024. ["A Crash Course in Good and Bad Controls."](https://journals.sagepub.com/doi/full/10.1177/00491241221099552) *Sociological Methods & Research* 53 (3): 1071-1104.
+
+---
+
+## Week 14: Beyond Selection on Observables; Wrap-Up
+
+*Tuesday, December 8 & Wednesday, December 9*
+
+**Topics:**
+
+- A first look at research designs that do not assume selection on observables: instrumental variables, differences-in-differences, and regression discontinuity
+- What comes next in the sequence
+- End-of-course review
+
+**Readings:**
+
+- Chapter 4 (Sections 4.1-4.2); **(AP)** Angrist and Pischke 2009.
+- Torreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2025. ["The Credibility Revolution in Political Science."](https://osf.io/preprints/socarxiv/w2kmc_v1) Working paper.
+
+::: {.callout-note appearance="simple"}
+**Problem Set 5** due Wednesday, December 9. This is the last class day of the semester.
+:::
+
+---
+
+## Final Exam
+
+*In person, during the university exam period (December 11-17, 2026)*
+
+The date, time and room for the final exam are assigned by the registrar and will be posted here once available.

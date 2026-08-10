@@ -1,0 +1,101 @@
+---
+title: "Resources"
+---
+
+## Textbooks
+
+The two main texts for the course are listed first. The remaining books are useful supplements -- each is available either as a free online version or in digital form via UW-Madison library access.
+
+### Main Texts
+
+- **Aronow, Peter M., and Benjamin T. Miller.** *Foundations of Agnostic Statistics*. Cambridge University Press, 2019.
+  - [UW-Madison Library Access](https://search.library.wisc.edu/)
+  - The main text for probability, inference and regression. "Agnostic" here means the book develops these tools without leaning on the parametric modeling assumptions that introductory texts usually take for granted.
+
+- **Angrist, Joshua D., and Jörn-Steffen Pischke.** *Mostly Harmless Econometrics: An Empiricist's Companion*. Princeton University Press, 2009.
+  - [UW-Madison Library Access](https://search.library.wisc.edu/)
+  - The main text for the causal inference material at the end of the course.
+
+### Supplementary Texts
+
+- **Blackwell, Matthew.** *A User's Guide to Statistical Inference and Regression*.
+  - [Free online version](https://mattblackwell.github.io/gov2002-book/)
+
+- **Wasserman, Larry.** *All of Statistics: A Concise Course in Statistical Inference*. Springer, 2004.
+  - [UW-Madison Library Access](https://search.library.wisc.edu/)
+
+- **Blitzstein, Joseph K., and Jessica Hwang.** *Introduction to Probability*. 2nd Edition. Chapman and Hall/CRC, 2019.
+  - [Free online version](https://projects.iq.harvard.edu/stat110/home)
+
+- **Gelman, Andrew, Jennifer Hill, and Aki Vehtari.** *Regression and Other Stories*. Cambridge University Press, 2020.
+  - [Free online version and examples](https://avehtari.github.io/ROS-Examples/index.html)
+
+- **Huntington-Klein, Nick.** *The Effect: An Introduction to Research Design and Causality*. Chapman and Hall/CRC, 2021.
+  - [Free online version](https://theeffectbook.net/)
+
+- **Cunningham, Scott.** *Causal Inference: The Mixtape*. Yale University Press, 2021.
+  - [Free online version](https://mixtape.scunning.com/)
+
+---
+
+## Software
+
+### R and RStudio
+
+This course uses R for all programming assignments. You are welcome to use the RStudio Interactive Development Environment (IDE) to write code and edit the assignment write-up. Due to the extensive integration of Quarto into Posit-developed IDEs, I encourage using either RStudio or the more recent Positron IDE.
+
+- **R:** Download from [https://www.r-project.org](https://www.r-project.org)
+- **RStudio:** Download from [https://posit.co/download/rstudio-desktop/](https://posit.co/download/rstudio-desktop/)
+- **Positron:** Download from [https://positron.posit.co/](https://positron.posit.co/)
+
+#### Recommended Guides for R Programming
+
+The following are excellent introductions to R, roughly in increasing order of difficulty.
+
+- **R For Data Science** Available at [https://r4ds.hadley.nz/](https://r4ds.hadley.nz/)
+- **Data Visualization: A Practical Introduction** Available at [https://socviz.co/](https://socviz.co/)
+- **The Art of R Programming** Matloff, Norman. 2011. No Starch Press. A tour of statistical programming aimed at people who want to understand what the language is actually doing.
+- **Advanced R** Wickham, Hadley. Available at [https://adv-r.hadley.nz/](https://adv-r.hadley.nz/)
+
+### Quarto and Markdown
+
+The assignments are distributed as `.qmd` Quarto files. [Quarto](https://quarto.org/) is the successor to R Markdown and lets you present your analysis, code, figures and written discussion all in a single document. It uses Markdown syntax for formatting text and supports embedded R code chunks that execute when you render the document.
+
+To complete assignments, you will edit the provided `.qmd` file, adding your code and written responses, then render it to an HTML file for submission. Both your `.html` output and `.qmd` file will be submitted via Gradescope.
+
+- **Quarto:** Download from [https://quarto.org/docs/get-started/](https://quarto.org/docs/get-started/)
+- **Quarto Guide:** [https://quarto.org/docs/guide/](https://quarto.org/docs/guide/)
+- **Markdown Basics:** [https://quarto.org/docs/authoring/markdown-basics.html](https://quarto.org/docs/authoring/markdown-basics.html)
+- Note also the [chapter on Quarto](https://r4ds.hadley.nz/quarto.html) in **R For Data Science**
+
+### LaTeX Math Notation
+
+Problem sets involve writing mathematical derivations, which you will typeset using LaTeX notation inside your Quarto document. You do not need to learn much -- a short reference goes a long way.
+
+- **Quarto math syntax:** [https://quarto.org/docs/authoring/markdown-basics.html#equations](https://quarto.org/docs/authoring/markdown-basics.html#equations)
+- **A quick LaTeX math reference:** [https://en.wikibooks.org/wiki/LaTeX/Mathematics](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+
+---
+
+## Math Review
+
+The course assumes the algebra and single-variable calculus covered in the summer math camp. If you would like a refresher:
+
+- **Moore, Will H., and David A. Siegel.** *A Mathematics Course for Political and Social Research*. Princeton University Press, 2013.
+- **Khan Academy calculus:** [https://www.khanacademy.org/math/calculus-1](https://www.khanacademy.org/math/calculus-1)
+- **3Blue1Brown, Essence of Calculus:** [https://www.3blue1brown.com/topics/calculus](https://www.3blue1brown.com/topics/calculus) -- useful for building geometric intuition about derivatives and integrals.
+
+---
+
+## Beyond the Course
+
+- **Models, Experiments and Data (MEAD) workshop:** [https://sites.google.com/view/meadwisc/home](https://sites.google.com/view/meadwisc/home) -- the political methodology workshop at UW-Madison. Attending is one of the best ways to see what quantitative political science actually looks like in practice, and you are strongly encouraged to come.
+- **Society for Political Methodology:** [https://polmeth.org/](https://polmeth.org/)
+
+---
+
+## Tutorials
+
+Below are some additional tutorials to help supplement the main course material. They will generally focus on specific topics in statistical computing and things that we did not have time to cover as part of the main set of lectures.
+
+*To be posted.*

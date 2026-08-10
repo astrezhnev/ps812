@@ -1,0 +1,72 @@
+---
+title: "Lectures"
+---
+
+## Lecture Slides
+
+Lecture slides are available as self-contained `.html` files made with RevealJS from a Quarto `.qmd` file. You can choose to print these to a PDF document by using the "PDF Export Mode" in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the `.qmd` file and supporting data/images/etc. from the Github repository. Slides are organized by week and combine Tuesday and Wednesday's lectures.
+
+Links become active as the materials for each week are posted.
+
+<!-- Template for each week once slides are posted:
+
+- [Week N Github Repository](https://github.com/astrezhnev/ps812/tree/main/slides/weekN/)
+- [Week N `.html` slides](https://www.antonstrezhnev.com/ps812/slides/weekN/weekN_topic.html)
+
+-->
+
+### Week 1: Introduction and Foundations of Probability
+
+*To be posted*
+
+### Week 2: Conditional Probability and Independence
+
+*To be posted*
+
+### Week 3: Random Variables and Distributions
+
+*To be posted*
+
+### Week 4: Joint Distributions and Expectation
+
+*To be posted*
+
+### Week 5: Variance, Covariance, and Conditional Expectation
+
+*To be posted*
+
+### Week 6: Random Samples, the LLN, and the CLT
+
+*To be posted*
+
+### Week 7: Estimation
+
+*To be posted*
+
+### Week 8: Confidence Intervals and Hypothesis Testing
+
+*To be posted*
+
+### Week 9: Introduction to Regression
+
+*To be posted*
+
+### Week 10: Multiple Regression
+
+*To be posted*
+
+### Week 11: Inference for Regression
+
+*To be posted*
+
+### Week 12: Causal Inference and the Experimental Ideal
+
+*To be posted*
+
+### Week 13: Regression and Observational Data
+
+*To be posted*
+
+### Week 14: Beyond Selection on Observables; Wrap-Up
+
+*To be posted*

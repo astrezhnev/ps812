@@ -1,0 +1,64 @@
+---
+sidebar: false
+toc: false
+page-layout: full
+---
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-sm-8 .order-2 .order-sm-1}
+
+[Statistical Methods]{style="font-size: 4em; font-weight: bold;"}
+
+[Probability, inference and regression for political science research]{style="font-size: 2em;"}
+
+[PoliSci 812 • Fall 2026<br>University of Wisconsin-Madison]{style="color: grey;"}
+
+:::
+
+::: {.g-col-12 .g-col-sm-4 .order-1 .order-sm-2}
+
+![](images/ps812-hex-sticker.png){.img-fluid style="max-width: 300px;"}
+
+:::
+
+:::
+
+::: {.grid .course-details}
+
+::: {.g-col-12 .g-col-sm-6 .g-col-md-4}
+
+### Instructor
+
+- {{< fa user >}} &nbsp; [Anton Strezhnev](https://www.antonstrezhnev.com)
+- {{< fa university >}} &nbsp; North Hall 322D
+- {{< fa envelope >}} &nbsp; [strezhnev@wisc.edu](mailto:strezhnev@wisc.edu)
+
+### Teaching Assistant
+
+- {{< fa user >}} &nbsp; TBD
+- {{< fa envelope >}} &nbsp; TBD
+
+:::
+
+::: {.g-col-12 .g-col-sm-6 .g-col-md-4}
+
+### Course details
+
+- {{< fa calendar >}} &nbsp; Tuesdays & Wednesdays
+- {{< fa calendar-alt >}} &nbsp; 9/8/2026 - 12/9/2026
+- {{< fa clock >}} &nbsp; Time TBA
+- {{< fa location-dot >}} &nbsp; Room TBA
+- {{< fa users >}} &nbsp; Section: TBA
+
+:::
+
+::: {.g-col-12 .g-col-md-4 .contact-policy}
+
+### Contacting me
+
+E-mail is the best way to get in touch with me. My dedicated office hours are **TBA** if you want to meet in-person. I am also generally in my office on weekdays during normal hours and my door is open, so you are welcome to drop in. You can also feel free to e-mail me to confirm availability or to schedule a virtual meeting via Zoom.
+
+:::
+
+:::

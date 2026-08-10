@@ -1,0 +1,53 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+      - "*.qmd"
+      - "!psets/"
+
+website:
+  title: "PoliSci 812"
+  description: "Graduate introduction to statistical methods in political science"
+  site-url: https://www.antonstrezhnev.com/ps812/
+  repo-url: https://github.com/astrezhnev/ps812
+
+  navbar:
+    background: "#c5050c"  # UW-Madison red
+    foreground: white
+    left:
+      - text: "Syllabus"
+        href: syllabus.qmd
+      - text: "Schedule"
+        href: schedule.qmd
+      - text: "Staff"
+        href: staff.qmd
+      - text: "Lectures"
+        href: lectures.qmd
+      - text: "Assignments"
+        href: assignments.qmd
+      - text: "Resources"
+        href: resources.qmd
+      - text: "Ed"
+        href: https://edstem.org/
+      - text: "Gradescope"
+        href: https://www.gradescope.com/
+    right:
+      - icon: github
+        href: https://github.com/astrezhnev/ps812
+        aria-label: GitHub
+
+  page-footer:
+    left: |
+      Licensed under a {{< fa brands creative-commons >}} {{< fa brands creative-commons-by >}} {{< fa brands creative-commons-nc >}} [Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/).
+    center: ""
+    right: |
+      Made with [Quarto](https://quarto.org/) | [Report an Issue](https://github.com/astrezhnev/ps812/issues)
+
+format:
+  html:
+    theme:
+      - cosmo
+      - styles.scss
+    css: styles.css
+    toc: true
+    toc-depth: 3

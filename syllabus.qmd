@@ -1,0 +1,192 @@
+---
+title: "Syllabus"
+---
+
+## Course Overview
+
+Statistical analysis is now an integral part of both conducting and consuming research in the social sciences. This course is the first in the graduate quantitative methods sequence in the Department of Political Science at the University of Wisconsin-Madison. It begins with the foundations of probability theory and builds up through statistical inference to linear regression and its application to causal inference. Alongside the statistical material, we will develop the programming skills that play an essential role in modern empirical research.
+
+The goal of the sequence is to move you from being *consumers* of quantitative research to *producers* of it. We start by developing a common language for reasoning about uncertainty: probability, random variables, expectation, and the behavior of sample quantities as samples grow large. We then turn to inference -- how we use a sample to say something credible about a population, and how we quantify how wrong we might be. The second half of the course develops linear regression, first as a tool for describing conditional relationships and then as a tool that, under strong and explicit assumptions, can be used to speak to questions of cause and effect. Throughout, the emphasis is on understanding *why* a method works and *what* it assumes, rather than on memorizing recipes.
+
+This course will involve a combination of lectures, a weekly section, and problem sets. Lectures will introduce the core theoretical concepts and illustrate them with worked examples. Section will focus on implementation and on building the practical computing skills needed to carry out the analyses discussed in lecture. Problem sets will contain a mixture of both theoretical and applied questions and serve to reinforce key concepts and allow students to assess their progress and understanding throughout the course.
+
+Assignments will involve analysis of data using the {{< fa brands r-project >}} programming language. This is a free and open source language for statistical computing that is used extensively for data analysis in many fields. No prior programming experience is assumed -- you will learn to program in this course if you do not already know how. Assignments will be written and distributed using the [Quarto](https://quarto.org/) publishing system -- the most recent extension of the R Markdown notebook interface.
+
+### Course Goals
+
+By the end of the semester, you should be able to:
+
+1. Critically read, interpret and replicate the quantitative content of many articles in the quantitative social sciences.
+2. Reason formally about probability, random variables, and the sampling distribution of an estimator.
+3. Conduct, interpret, and communicate results from an analysis using multiple regression.
+4. Explain the limitations of observational data for making causal claims, and begin to use existing strategies for attempting to make causal claims from observational data.
+5. Write clean, reusable, and reliable {{< fa brands r-project >}} code.
+6. Feel empowered working with data.
+
+The methods sequence is designed to get you to a point where you can teach yourself new statistical methods by reading the literature. We cannot teach you every technique you will need over the course of your career, but we can prepare you to learn them on your own. Beyond the sequence, I strongly encourage you to participate in the broader statistical life at UW-Madison, including the [Models, Experiments and Data (MEAD) workshop](https://sites.google.com/view/meadwisc/home).
+
+## Prerequisites
+
+Graduate/professional standing. Formally, this course assumes familiarity with algebra and the basics of calculus -- derivatives and integrals. Everything covered in the summer math camp is fair game, and if you would like a refresher you should return to those materials.
+
+Informally, and considerably more importantly, the most essential prerequisite is a willingness to work hard on unfamiliar material. Learning statistics and programming is a lot like learning a new language: fluency and comfort come from daily practice and consistent effort rather than from cramming. Please contact me at [strezhnev@wisc.edu](mailto:strezhnev@wisc.edu) if you are interested in enrolling but are unsure of the requirements.
+
+## Logistics
+
+- **Lectures**: Tuesdays/Wednesdays. Time and room TBA.
+
+You should attend lectures regularly as they comprise a significant element of the course instruction. Lecture materials will be posted on the course website.
+
+- **Section**: Day, time and room TBA.
+
+Instruction in this course is delivered through two complementary avenues. Lectures typically focus on the statistical material. Section meets once a week and focuses on practical problem solving and computational skills. It is common to leave a lecture understanding the theory but not knowing how to implement it in {{< fa brands r-project >}}; section exists to bridge that gap. Each section will typically begin with questions and review, and the remainder will be devoted to short guided exercises. These exercises are not formally graded, but they are looked over and they count toward your participation grade.
+
+- **Discussion Forum**: We will be using [Ed](https://edstem.org/) as our primary course discussion platform. If you are enrolled in the class on Canvas, you should already have access to the Ed board for this class. Please use this to post questions about the readings/lecture material as well as about the problem sets.
+
+- **Course Materials**: Lecture materials, problem sets and tutorial code will be posted on the course website. Problem set solutions will be posted after the due date on Canvas. Links to readings can be found on the [Schedule](schedule.qmd) page organized by week.
+
+## Textbooks
+
+The course will involve readings from a variety of different textbook chapters and published papers. The class will not require the purchase of any textbook as they are available online or through the university library. However, you may wish to obtain a paper copy for your own personal use or reference.
+
+Two textbooks provide the bulk of the readings:
+
+- **(AM)** Aronow, Peter M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press. (Probability, inference and regression, developed without the usual reliance on parametric modeling assumptions. This is the main text for roughly the first three-quarters of the course.)
+- **(AP)** Angrist, Joshua D., and Jörn-Steffen Pischke. 2009. *Mostly Harmless Econometrics: An Empiricist's Companion*. Princeton: Princeton University Press. (The main text for the causal inference material at the end of the course.)
+
+A complete list of textbooks and supplementary references, including recommended guides to {{< fa brands r-project >}} programming, can be found on the [Resources](resources.qmd) page.
+
+## Grading
+
+Students' final grades are based on four components:
+
+### Problem Sets (25%)
+
+Students will complete a total of five problem sets throughout the semester. Problem sets cover roughly a two-week block of course material and will contain a mix of analytic problems, computer simulations, and data analysis. A complete schedule of the assignments can be found on the [Assignments](assignments.qmd) page.
+
+The goal of the problem sets is to encourage exploration of the material and to provide you with a clear and credible means of assessing your understanding and progress through the course. As such, problem sets are *designed* to be challenging and I expect students to find some questions difficult.
+
+Problem sets will be graded on a (+/✓/-) scale:
+
+- **+** : Complete and near-perfect work
+- **✓** : Generally good work with clear effort shown but with notable errors
+- **-** : Significantly incomplete work with major conceptual errors and little effort shown
+
+#### Collaboration Policy
+
+I strongly encourage collaboration between students on the problem sets and highly recommend that students discuss problems with each other either in person or via the discussion forum. However, each student is expected to submit their own write-up of the answers and any relevant code. That is: no copy-and-paste from someone else's code. You would not copy-and-paste from someone else's paper, and you should treat code the same way. I also strongly suggest that you make a solo attempt at every problem before consulting others.
+
+#### Office Hours and Online Discussion
+
+Students should feel free to discuss any questions about the problem sets with the teaching staff during section and during office hours. I also strongly encourage students to post questions about both the problem sets and the readings on the course discussion board and respond to other students' questions. Responding to other students' questions will contribute to your participation grade.
+
+#### Submission Guidelines
+
+Problem sets will be distributed as HTML and Quarto files (`.qmd`). You should submit your answers and any relevant R code in the same format: including the Quarto file (`.qmd` extension) and a corresponding rendered `.html` file as your submission. Quarto builds on the earlier R Markdown project, which allows you to combine the text formatting syntax of the Markdown markup language with the ability to embed and execute chunks of code directly into a text document. This allows you to present your code, graphical output, and discussion/write-up all in the same document. I highly recommend that you edit the distributed Quarto assignment file for each problem set directly to make organization easier. Problem sets are submitted via [Gradescope](https://www.gradescope.com/).
+
+#### Code Conventions
+
+Throughout the course you will receive feedback on your code from me, from the TA, and from other students. Consistent code conventions are therefore important, and good style is one of the easiest ways to increase the readability of your code -- including for a future version of yourself. I recommend following the conventions developed by Hadley Wickham and implemented in the [`lintr`](https://lintr.r-lib.org/) package, which integrates directly into RStudio.
+
+### In-person Midterm (25%)
+
+We will have an in-person midterm examination on **Tuesday, November 3rd, 2026**. This exam will cover the material in the first half of the course (probability, random variables, expectation, random samples, estimation, and inference). The exam will take the form of a standard pen-and-paper timed examination involving both theory and practical analysis of sample code and results.
+
+### In-person Final (35%)
+
+The final exam will take place in person during exams week (December 11-17, 2026). The date, time and room are assigned by the registrar and will be posted on the [Schedule](schedule.qmd) page once available. The exam will take the same form as the midterm, but will be slightly longer given the additional time available during the exam period, and will cover material from the full semester.
+
+### Participation (15%)
+
+I expect students to take an active role in learning in both lecture and section. Engagement with the teaching staff by asking and answering questions will contribute to this grade, as will interaction on the discussion board and completion of the weekly section exercises. Actively helping your classmates is a substantial part of what makes a methods sequence work, and it is graded accordingly.
+
+### Grade Scale
+
+This course is not curved. Letter grades follow the standard UW-Madison scale:
+
+| Grade | Range  |
+|-------|--------|
+| A     | 93-100 |
+| AB    | 88-92  |
+| B     | 83-87  |
+| BC    | 78-82  |
+| C     | 70-77  |
+| D     | 60-69  |
+| F     | < 60   |
+
+## Computing
+
+This course will use the R programming language. This is a free and open source programming language that is available for nearly all computing platforms. You should download and install it from [https://www.r-project.org](https://www.r-project.org).
+
+Unless you have strong preferences for a specific coding environment, I also highly recommend that you use the free [RStudio](https://rstudio.com) Desktop Integrated Development Environment (IDE) which you can download from [https://rstudio.com/products/rstudio/download/#download](https://rstudio.com/products/rstudio/download/#download). In addition to being a great and simple to use environment for editing code, RStudio makes it very easy to write and compile Quarto documents: the format in which problem sets will be distributed. For a guide to using Quarto, see [https://quarto.org](https://quarto.org).
+
+In addition to base R, we will be frequently using data management and processing tools found in the [tidyverse](https://www.tidyverse.org/) set of packages along with basic graphics and visualization using [ggplot2](https://ggplot2.tidyverse.org/).
+
+You should have R, RStudio and Quarto installed and be able to render a document to `.html` **before the end of the first week of classes**. If you cannot reliably do this, come to office hours or section early on -- do not wait until the first problem set is due. See the [Resources](resources.qmd) page for additional information.
+
+## Policy on Generative Large Language Models
+
+Large Language Models (LLMs) continue to have an immense impact on the educational field. Over the last several years, we have seen striking growth in the capabilities of these models and it is clear that they will remain a permanent and inextricable presence in all of our lives. This very course website has been built from an earlier `.tex` syllabus with considerable assistance from Claude's Opus 5 model. Having taught graduate methods courses every year since 2020, I have seen first-hand how these tools are rapidly reshaping how students engage with the material - for better and for worse.
+
+The clearest setting where LLM tools have been amplifying user productivity is in programming. For me, the most positive case for LLMs is that they are a kind of "universal interface" in natural language that makes it easier for users to get a computer to do what they want simply by articulating the task in English. Cutting-edge LLMs implement some form of "reasoning" (essentially, having the model generate intermediate tokens into its context window to improve the quality of the final predicted tokens) and models are able to call various software tools as part of the generation process. Modern LLMs are increasingly "agentic" in that they replicate the sort of think-decide-act loop that we would consider to be the role of a typical knowledge worker. In essence, every graduate student can now have their own team of RAs for a comparatively low monthly payment to Anthropic.
+
+Unfortunately, the effectiveness of LLMs remains highly variable across different task domains. My own view is that coding (especially coding for **software development**) is an optimal use case for LLMs because it is an *engineering* task. By “engineering,” I mean the the iterative task of solving a problem by brainstorming potential solutions, implementing those solutions, and then subsequently evaluating the solutions with respect to some clearly defined criteria. This is because the goal of engineering is the building of *systems*. The key components here are both the existence of a well-defined problem and the ability to assess whether the proposed solutions are effective. Indeed, modern agentic LLMs are good in large part because they incorporate a lot of this evaluation by way of the "reasoning" structure and have the ability to write unit tests to check the code. Moreover, software development is amenable to this "try-and-check" sort of reasoning because the sub-tasks typically involve some well-defined, structured output that can be evaluated against what the user knows what they need/want.
+
+Problems begin to accumulate when there is no longer an agent (human or LLM) that can diagnose errors and adjust. Unfortunately, this is the sort of thing that *experienced* users are better at than less experienced users. Without an understanding of **what** the LLM is actually doing, you are much less likely to be able to figure out when it has gone wrong. And the fail cases for LLMs are, in my experience, a lot *weirder* than the usual fail cases for humans. So my most negative assessment of LLMs is that they have severely adversely affected the process of education. While they may supercharge the productivity of those who already have the relevant understanding, they are much less promising in training novices and provide only the illusion of capability.
+
+I am increasingly opposed to the use of LLMs for programming when one is learning to code. This matters more in this course than in any other course in the sequence, since for many of you this is where you will learn to program at all. In practice, I find that students delegate far too much to the model and spend insufficient time understanding the mechanics of what the code is doing. This makes it actually quite difficult to meaningfully debug outputs and understand how to diagnose errors. Additionally, actually implementing statistical methods in code is a common way for students to actually understand conceptually what the methods do and how they work. As such, I would still discourage LLM-assistance when completing problem sets although I do not strictly rule it out, especially for the more tedious components where you are confident that you understand what the code is doing (e.g. data cleaning).
+
+Additionally, the sort of coding that we do as scientists is typically *not* software development, so I actually don't think these tools are (yet) good for writing research code. The task of **science** I think is distinct from **engineering** in that we do not have a "try-check-fail-repeat" evaluation loop where the "correctness" of the method and implementation can be assessed from the "correctness" of the output. In fact, we would probably characterize scientists that do this sort of thing as engaging in "questionable research practices" if "correctness" is judged by the "number of publications" objective function. We are not building, we are discovering. A core theme of this class is the importance of outside information and deep knowledge in assessing the feasibility of the assumptions behind a particular research design. The quality of research is determined not by its outputs but rather by its inputs. These are not assumptions that an LLM (for the most part) will provide to you unprompted. An LLM agent can effectively replicate an existing analysis, but it is unlikely to tell you that this was the wrong analysis to begin with. I like to think of LLM agents as amateur improvisers - they can ["Yes, and..."](https://en.wikipedia.org/wiki/Yes,_and_...) you very well, but are much less capable of the "No, but..."
+
+One other common use of LLMs that I have also seen - and perhaps this is more common than direct assistance on assignments - is the use of them as "personal tutors." The chat interfaces let students ask questions, summarize complex texts, search for other relevant information, and brainstorm (see the above point re: "amateur improviser") without the need for awkward conversations with other human beings. While I think this is fine for simple questions, especially when the LLM just replaces web search, I would not use LLMs as a complete substitute for your colleagues and for the teaching staff. One of the unfortunate consequences of LLM-proliferation is that students don't post on discussion boards as often as they used to - even in graduate classes. I feel that this is ultimately detrimental to the sort of community-building and professionalization that this class is designed for. Additionally, one of the benefits of asking the teaching staff is that they are familiar enough with the topic and the context that they can infer a lot of what is unstated or implied by your question and better tailor the response. We will provide additional context *unprompted*.
+
+With regards to web-search, I would have strongly advised against this a few years ago, but the incorporation of retrieval augmented generation in modern models has reduced the prevalence of entirely made up sources, though not entirely. Since modern web search runs on basically the same underlying vector search architecture, there's basically no difference in using an LLM vs. just Googling something. I would still encourage going to the retrieved sources directly though and avoiding the generated summaries since those seem to use cheaper/low-quality models. For summaries, tools explicitly built for interacting with a text (e.g. Google's NotebookLM) I think are potentially more useful, though I have not spent much time exploring them. Even then, I would still encourage the "classical" approach of searching past (and, with Google Scholar, future) citations. Even if LLMs generated perfect summaries, I think there is an inherent benefit of the "old ways" when it comes to professionalization and developing a better understanding of the authors in a given literature. Unlike the rest of the internet, academia is still a link(citation)-based culture and it is worth leveraging that researcher-provided context to guide your reading. Additionally, these authors are *real human beings* who you will meet at conferences - it's worth understanding who they are conversing with in order to better understand the discipline.
+
+Lastly, any LLM policy needs to consider its feasibility. It is clear to me that any restrictions on LLM use aside from *restricted, in-class pen-and-paper examination* use are fundamentally unenforceable. Therefore, with respect to the problem sets, students are permitted to use LLMs in whatever capacity they see fit. I have attempted to design the problem sets such that they contain "out-of-distribution" challenges and otherwise general "traps" that try to evaluate deep substantive knowledge of the problem. Over the last two years, I have found on (e.g. take home exams) that LLM-using students produce mediocre but not completely terrible results. Nevertheless, they do make mistakes (and often behave in ways that could be described as "not wrong, just strange") and it is clear to me which students use them to their detriment. Perhaps this will change in the next year or two - such is the nature of this field. Indeed, my decision to move entirely to in-person assessment was driven by the observation that although take-home exams still provided *some* variation among students, that variation was dramatically lower than the in-class exams. So in short:
+
+- You may use them.
+- I discourage it for anything important.
+- I'll know if you use them poorly.
+- [Ignore the problem sets at your own peril. The consequences will arrive at exam time.](https://en.wikipedia.org/wiki/Deal_with_the_Devil)
+
+## How to Learn in this Course
+
+If you find this course challenging, you are not alone. Statistics can be difficult and we cover a lot of ground quickly. Your primary responsibilities in this class are to **work hard** and to **communicate** with us about what you need. You cannot learn if you are not putting in the time, and we cannot help if we do not know there is a problem.
+
+The main sources of support available to you are:
+
+1. **Lecture and section.** Ask questions when something does not make sense. Someone else in the room almost certainly has the same question.
+2. **Readings and slides.** The slides are dense by design and are meant to be reviewed repeatedly, not seen once.
+3. **The discussion board.** Questions posted there get answered quickly by classmates, the TA, and me, and everyone benefits from the answer.
+4. **Office hours.** Both mine and the TA's. These are especially useful for new, tricky material and for problem sets.
+5. **Problem set solutions.** Solutions are posted after the due date. It is tempting to move straight on to the next assignment, but the material builds directly on itself -- go back and lock down anything you were unsure about.
+
+## Accommodations and Accessibility
+
+The University of Wisconsin–Madison supports the right of all enrolled students to a full and equal educational opportunity. The Americans with Disabilities Act (ADA), Wisconsin State Statute (36.12), and UW–Madison policy (Faculty Document 1071) require that students with disabilities be reasonably accommodated in instruction and campus life. Reasonable accommodations for students with disabilities is a shared faculty and student responsibility.
+
+Students are expected to inform faculty of their need for instructional accommodations by the end of the third week of the semester, or as soon as possible after a disability has been incurred or recognized.
+
+I will work either directly with you or in coordination with the [McBurney Disability Resource Center](https://mcburney.wisc.edu/) to identify and provide reasonable instructional accommodations. Once you are approved for accommodations by the McBurney Center, please be sure to make the relevant selections in [McBurney Connect](https://mcburney.wisc.edu/mcburneyconnect/). When I have received your Student Accommodation Letter, I will send you a follow-up e-mail to connect and discuss how the accommodations will be implemented for this course. Disability information, including instructional accommodations as part of a student's educational record, is confidential and protected under FERPA.
+
+### North Hall Accessibility
+
+The Department of Political Science is located in North Hall, the oldest building on campus. Due to its age, this building is not accessible to individuals with mobility disabilities and does not have an elevator or an accessible restroom. The department is committed to equal opportunity for all students to attend office hours, advising, and other department-related events. Please contact me if North Hall presents a disability-related barrier to you and the department will gladly work to ensure access.
+
+## Academic Integrity
+
+By virtue of enrollment, each student agrees to uphold the high academic standards of the University of Wisconsin-Madison. Academic misconduct is behavior that negatively impacts the integrity of the institution. Cheating, fabrication, plagiarism, unauthorized collaboration, and helping others commit these acts are examples of misconduct which may result in disciplinary action. For more information, see the [UW-Madison academic integrity policy](https://conduct.students.wisc.edu/academic-integrity/).
+
+## Academic Calendar and Religious Observances
+
+See the [UW-Madison academic calendar](https://secfac.wisc.edu/academic-calendar/) and the university policy on [religious observances](https://secfac.wisc.edu/academic-calendar/#religious-observances). If a religious observance conflicts with a scheduled assessment, notify me within the first three weeks of the semester so that we can make alternative arrangements.
+
+## Course Evaluations
+
+Students will be provided with an opportunity to evaluate this course and their learning experience. I will also informally solicit feedback throughout the semester. UW-Madison uses an online course evaluation survey tool, AEFIS. You will typically receive an official email two weeks prior to the end of the semester with a link to log in with your NetID and complete the evaluation anonymously. Your feedback is important to me and I strongly encourage you to participate.
+
+## Acknowledgments
+
+This course was developed on the shoulders of giants, in some cases borrowing directly from materials developed by the methods community in political science, economics, statistics and sociology. In particular, I thank Adeline Lo, whose previous version of PS 812 forms the backbone of this syllabus and its schedule, as well as Matthew Blackwell, Peter Aronow, Dalton Conley, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Brandon Stewart, and Teppei Yamamoto, whose lecture notes and syllabi have been immensely valuable in the creation of this course. Lecture slides and circulated materials should carry appropriate citations -- please e-mail me if you believe something is incorrectly cited or lacking in citation rigor. All errors that remain are my own.
+
+Lastly, thanks to Andrew Heiss and Matt Blackwell for their Quarto website templates, which I have extensively borrowed from in designing this course site.

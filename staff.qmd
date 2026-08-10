@@ -1,0 +1,45 @@
+---
+title: "Staff"
+---
+
+## Instructor
+
+### Anton Strezhnev
+
+::: {.course-details}
+
+- **Assistant Professor**
+- Department of Political Science
+- University of Wisconsin-Madison
+
+:::
+
+|                  |                                                     |
+|------------------|-----------------------------------------------------|
+| **Office**       | North Hall 322D                                     |
+| **Email**        | [strezhnev@wisc.edu](mailto:strezhnev@wisc.edu)     |
+| **Website**      | [antonstrezhnev.com](https://www.antonstrezhnev.com)|
+| **Office Hours** | TBA (or by appointment via email)                   |
+
+---
+
+## Teaching Assistant
+
+### TBD
+
+The teaching assistant for this course has not yet been assigned. Contact information, section times and TA office hours will be posted here before the start of the semester.
+
+|                  |       |
+|------------------|-------|
+| **Email**        | TBA   |
+| **Section**      | TBA   |
+| **Office Hours** | TBA   |
+
+---
+
+## Contact Policy
+
+- **Course questions:** Please post questions about course content on the Ed discussion forum so that all students can benefit from the answers.
+- **Personal matters:** Email the instructor directly.
+- **Problem set questions:** Post on the discussion forum, bring them to section, or come to office hours.
+- **Expected response time:** We aim to respond to discussion posts within 24 hours on weekdays.
