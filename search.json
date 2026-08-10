@@ -1,0 +1,338 @@
+[
+  {
+    "objectID": "syllabus.html",
+    "href": "syllabus.html",
+    "title": "Syllabus",
+    "section": "",
+    "text": "Statistical analysis is now an integral part of both conducting and consuming research in the social sciences. This course is the first in the graduate quantitative methods sequence in the Department of Political Science at the University of Wisconsin-Madison. It begins with the foundations of probability theory and builds up through statistical inference to linear regression and its application to causal inference. Alongside the statistical material, we will develop the programming skills that play an essential role in modern empirical research.\nThe goal of the sequence is to move you from being consumers of quantitative research to producers of it. We start by developing a common language for reasoning about uncertainty: probability, random variables, expectation, and the behavior of sample quantities as samples grow large. We then turn to inference – how we use a sample to say something credible about a population, and how we quantify how wrong we might be. The second half of the course develops linear regression, first as a tool for describing conditional relationships and then as a tool that, under strong and explicit assumptions, can be used to speak to questions of cause and effect. Throughout, the emphasis is on understanding why a method works and what it assumes, rather than on memorizing recipes.\nThis course will involve a combination of lectures, a weekly section, and problem sets. Lectures will introduce the core theoretical concepts and illustrate them with worked examples. Section will focus on implementation and on building the practical computing skills needed to carry out the analyses discussed in lecture. Problem sets will contain a mixture of both theoretical and applied questions and serve to reinforce key concepts and allow students to assess their progress and understanding throughout the course.\nAssignments will involve analysis of data using the  programming language. This is a free and open source language for statistical computing that is used extensively for data analysis in many fields. No prior programming experience is assumed – you will learn to program in this course if you do not already know how. Assignments will be written and distributed using the Quarto publishing system – the most recent extension of the R Markdown notebook interface.\n\n\nBy the end of the semester, you should be able to:\n\nCritically read, interpret and replicate the quantitative content of many articles in the quantitative social sciences.\nReason formally about probability, random variables, and the sampling distribution of an estimator.\nConduct, interpret, and communicate results from an analysis using multiple regression.\nExplain the limitations of observational data for making causal claims, and begin to use existing strategies for attempting to make causal claims from observational data.\nWrite clean, reusable, and reliable  code.\nFeel empowered working with data.\n\nThe methods sequence is designed to get you to a point where you can teach yourself new statistical methods by reading the literature. We cannot teach you every technique you will need over the course of your career, but we can prepare you to learn them on your own. Beyond the sequence, I strongly encourage you to participate in the broader statistical life at UW-Madison, including the Models, Experiments and Data (MEAD) workshop."
+  },
+  {
+    "objectID": "syllabus.html#course-overview",
+    "href": "syllabus.html#course-overview",
+    "title": "Syllabus",
+    "section": "",
+    "text": "Statistical analysis is now an integral part of both conducting and consuming research in the social sciences. This course is the first in the graduate quantitative methods sequence in the Department of Political Science at the University of Wisconsin-Madison. It begins with the foundations of probability theory and builds up through statistical inference to linear regression and its application to causal inference. Alongside the statistical material, we will develop the programming skills that play an essential role in modern empirical research.\nThe goal of the sequence is to move you from being consumers of quantitative research to producers of it. We start by developing a common language for reasoning about uncertainty: probability, random variables, expectation, and the behavior of sample quantities as samples grow large. We then turn to inference – how we use a sample to say something credible about a population, and how we quantify how wrong we might be. The second half of the course develops linear regression, first as a tool for describing conditional relationships and then as a tool that, under strong and explicit assumptions, can be used to speak to questions of cause and effect. Throughout, the emphasis is on understanding why a method works and what it assumes, rather than on memorizing recipes.\nThis course will involve a combination of lectures, a weekly section, and problem sets. Lectures will introduce the core theoretical concepts and illustrate them with worked examples. Section will focus on implementation and on building the practical computing skills needed to carry out the analyses discussed in lecture. Problem sets will contain a mixture of both theoretical and applied questions and serve to reinforce key concepts and allow students to assess their progress and understanding throughout the course.\nAssignments will involve analysis of data using the  programming language. This is a free and open source language for statistical computing that is used extensively for data analysis in many fields. No prior programming experience is assumed – you will learn to program in this course if you do not already know how. Assignments will be written and distributed using the Quarto publishing system – the most recent extension of the R Markdown notebook interface.\n\n\nBy the end of the semester, you should be able to:\n\nCritically read, interpret and replicate the quantitative content of many articles in the quantitative social sciences.\nReason formally about probability, random variables, and the sampling distribution of an estimator.\nConduct, interpret, and communicate results from an analysis using multiple regression.\nExplain the limitations of observational data for making causal claims, and begin to use existing strategies for attempting to make causal claims from observational data.\nWrite clean, reusable, and reliable  code.\nFeel empowered working with data.\n\nThe methods sequence is designed to get you to a point where you can teach yourself new statistical methods by reading the literature. We cannot teach you every technique you will need over the course of your career, but we can prepare you to learn them on your own. Beyond the sequence, I strongly encourage you to participate in the broader statistical life at UW-Madison, including the Models, Experiments and Data (MEAD) workshop."
+  },
+  {
+    "objectID": "syllabus.html#prerequisites",
+    "href": "syllabus.html#prerequisites",
+    "title": "Syllabus",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nGraduate/professional standing. Formally, this course assumes familiarity with algebra and the basics of calculus – derivatives and integrals. Everything covered in the summer math camp is fair game, and if you would like a refresher you should return to those materials.\nInformally, and considerably more importantly, the most essential prerequisite is a willingness to work hard on unfamiliar material. Learning statistics and programming is a lot like learning a new language: fluency and comfort come from daily practice and consistent effort rather than from cramming. Please contact me at strezhnev@wisc.edu if you are interested in enrolling but are unsure of the requirements."
+  },
+  {
+    "objectID": "syllabus.html#logistics",
+    "href": "syllabus.html#logistics",
+    "title": "Syllabus",
+    "section": "Logistics",
+    "text": "Logistics\n\nLectures: Tuesdays/Wednesdays. Time and room TBA.\n\nYou should attend lectures regularly as they comprise a significant element of the course instruction. Lecture materials will be posted on the course website.\n\nSection: Day, time and room TBA.\n\nInstruction in this course is delivered through two complementary avenues. Lectures typically focus on the statistical material. Section meets once a week and focuses on practical problem solving and computational skills. It is common to leave a lecture understanding the theory but not knowing how to implement it in ; section exists to bridge that gap. Each section will typically begin with questions and review, and the remainder will be devoted to short guided exercises. These exercises are not formally graded, but they are looked over and they count toward your participation grade.\n\nDiscussion Forum: We will be using Ed as our primary course discussion platform. If you are enrolled in the class on Canvas, you should already have access to the Ed board for this class. Please use this to post questions about the readings/lecture material as well as about the problem sets.\nCourse Materials: Lecture materials, problem sets and tutorial code will be posted on the course website. Problem set solutions will be posted after the due date on Canvas. Links to readings can be found on the Schedule page organized by week."
+  },
+  {
+    "objectID": "syllabus.html#textbooks",
+    "href": "syllabus.html#textbooks",
+    "title": "Syllabus",
+    "section": "Textbooks",
+    "text": "Textbooks\nThe course will involve readings from a variety of different textbook chapters and published papers. The class will not require the purchase of any textbook as they are available online or through the university library. However, you may wish to obtain a paper copy for your own personal use or reference.\nTwo textbooks provide the bulk of the readings:\n\n(AM) Aronow, Peter M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press. (Probability, inference and regression, developed without the usual reliance on parametric modeling assumptions. This is the main text for roughly the first three-quarters of the course.)\n(AP) Angrist, Joshua D., and Jörn-Steffen Pischke. 2009. Mostly Harmless Econometrics: An Empiricist’s Companion. Princeton: Princeton University Press. (The main text for the causal inference material at the end of the course.)\n\nA complete list of textbooks and supplementary references, including recommended guides to  programming, can be found on the Resources page."
+  },
+  {
+    "objectID": "syllabus.html#grading",
+    "href": "syllabus.html#grading",
+    "title": "Syllabus",
+    "section": "Grading",
+    "text": "Grading\nStudents’ final grades are based on four components:\n\nProblem Sets (25%)\nStudents will complete a total of five problem sets throughout the semester. Problem sets cover roughly a two-week block of course material and will contain a mix of analytic problems, computer simulations, and data analysis. A complete schedule of the assignments can be found on the Assignments page.\nThe goal of the problem sets is to encourage exploration of the material and to provide you with a clear and credible means of assessing your understanding and progress through the course. As such, problem sets are designed to be challenging and I expect students to find some questions difficult.\nProblem sets will be graded on a (+/✓/-) scale:\n\n+ : Complete and near-perfect work\n✓ : Generally good work with clear effort shown but with notable errors\n- : Significantly incomplete work with major conceptual errors and little effort shown\n\n\nCollaboration Policy\nI strongly encourage collaboration between students on the problem sets and highly recommend that students discuss problems with each other either in person or via the discussion forum. However, each student is expected to submit their own write-up of the answers and any relevant code. That is: no copy-and-paste from someone else’s code. You would not copy-and-paste from someone else’s paper, and you should treat code the same way. I also strongly suggest that you make a solo attempt at every problem before consulting others.\n\n\nOffice Hours and Online Discussion\nStudents should feel free to discuss any questions about the problem sets with the teaching staff during section and during office hours. I also strongly encourage students to post questions about both the problem sets and the readings on the course discussion board and respond to other students’ questions. Responding to other students’ questions will contribute to your participation grade.\n\n\nSubmission Guidelines\nProblem sets will be distributed as HTML and Quarto files (.qmd). You should submit your answers and any relevant R code in the same format: including the Quarto file (.qmd extension) and a corresponding rendered .html file as your submission. Quarto builds on the earlier R Markdown project, which allows you to combine the text formatting syntax of the Markdown markup language with the ability to embed and execute chunks of code directly into a text document. This allows you to present your code, graphical output, and discussion/write-up all in the same document. I highly recommend that you edit the distributed Quarto assignment file for each problem set directly to make organization easier. Problem sets are submitted via Gradescope.\n\n\nCode Conventions\nThroughout the course you will receive feedback on your code from me, from the TA, and from other students. Consistent code conventions are therefore important, and good style is one of the easiest ways to increase the readability of your code – including for a future version of yourself. I recommend following the conventions developed by Hadley Wickham and implemented in the lintr package, which integrates directly into RStudio.\n\n\n\nIn-person Midterm (25%)\nWe will have an in-person midterm examination on Tuesday, November 3rd, 2026. This exam will cover the material in the first half of the course (probability, random variables, expectation, random samples, estimation, and inference). The exam will take the form of a standard pen-and-paper timed examination involving both theory and practical analysis of sample code and results.\n\n\nIn-person Final (35%)\nThe final exam will take place in person during exams week (December 11-17, 2026). The date, time and room are assigned by the registrar and will be posted on the Schedule page once available. The exam will take the same form as the midterm, but will be slightly longer given the additional time available during the exam period, and will cover material from the full semester.\n\n\nParticipation (15%)\nI expect students to take an active role in learning in both lecture and section. Engagement with the teaching staff by asking and answering questions will contribute to this grade, as will interaction on the discussion board and completion of the weekly section exercises. Actively helping your classmates is a substantial part of what makes a methods sequence work, and it is graded accordingly.\n\n\nGrade Scale\nThis course is not curved. Letter grades follow the standard UW-Madison scale:\n\n\n\nGrade\nRange\n\n\n\n\nA\n93-100\n\n\nAB\n88-92\n\n\nB\n83-87\n\n\nBC\n78-82\n\n\nC\n70-77\n\n\nD\n60-69\n\n\nF\n&lt; 60"
+  },
+  {
+    "objectID": "syllabus.html#computing",
+    "href": "syllabus.html#computing",
+    "title": "Syllabus",
+    "section": "Computing",
+    "text": "Computing\nThis course will use the R programming language. This is a free and open source programming language that is available for nearly all computing platforms. You should download and install it from https://www.r-project.org.\nUnless you have strong preferences for a specific coding environment, I also highly recommend that you use the free RStudio Desktop Integrated Development Environment (IDE) which you can download from https://rstudio.com/products/rstudio/download/#download. In addition to being a great and simple to use environment for editing code, RStudio makes it very easy to write and compile Quarto documents: the format in which problem sets will be distributed. For a guide to using Quarto, see https://quarto.org.\nIn addition to base R, we will be frequently using data management and processing tools found in the tidyverse set of packages along with basic graphics and visualization using ggplot2.\nYou should have R, RStudio and Quarto installed and be able to render a document to .html before the end of the first week of classes. If you cannot reliably do this, come to office hours or section early on – do not wait until the first problem set is due. See the Resources page for additional information."
+  },
+  {
+    "objectID": "syllabus.html#policy-on-generative-large-language-models",
+    "href": "syllabus.html#policy-on-generative-large-language-models",
+    "title": "Syllabus",
+    "section": "Policy on Generative Large Language Models",
+    "text": "Policy on Generative Large Language Models\nLarge Language Models (LLMs) continue to have an immense impact on the educational field. Over the last several years, we have seen striking growth in the capabilities of these models and it is clear that they will remain a permanent and inextricable presence in all of our lives. This very course website has been built from an earlier .tex syllabus with considerable assistance from Claude’s Opus 5 model. Having taught graduate methods courses every year since 2020, I have seen first-hand how these tools are rapidly reshaping how students engage with the material - for better and for worse.\nThe clearest setting where LLM tools have been amplifying user productivity is in programming. For me, the most positive case for LLMs is that they are a kind of “universal interface” in natural language that makes it easier for users to get a computer to do what they want simply by articulating the task in English. Cutting-edge LLMs implement some form of “reasoning” (essentially, having the model generate intermediate tokens into its context window to improve the quality of the final predicted tokens) and models are able to call various software tools as part of the generation process. Modern LLMs are increasingly “agentic” in that they replicate the sort of think-decide-act loop that we would consider to be the role of a typical knowledge worker. In essence, every graduate student can now have their own team of RAs for a comparatively low monthly payment to Anthropic.\nUnfortunately, the effectiveness of LLMs remains highly variable across different task domains. My own view is that coding (especially coding for software development) is an optimal use case for LLMs because it is an engineering task. By “engineering,” I mean the the iterative task of solving a problem by brainstorming potential solutions, implementing those solutions, and then subsequently evaluating the solutions with respect to some clearly defined criteria. This is because the goal of engineering is the building of systems. The key components here are both the existence of a well-defined problem and the ability to assess whether the proposed solutions are effective. Indeed, modern agentic LLMs are good in large part because they incorporate a lot of this evaluation by way of the “reasoning” structure and have the ability to write unit tests to check the code. Moreover, software development is amenable to this “try-and-check” sort of reasoning because the sub-tasks typically involve some well-defined, structured output that can be evaluated against what the user knows what they need/want.\nProblems begin to accumulate when there is no longer an agent (human or LLM) that can diagnose errors and adjust. Unfortunately, this is the sort of thing that experienced users are better at than less experienced users. Without an understanding of what the LLM is actually doing, you are much less likely to be able to figure out when it has gone wrong. And the fail cases for LLMs are, in my experience, a lot weirder than the usual fail cases for humans. So my most negative assessment of LLMs is that they have severely adversely affected the process of education. While they may supercharge the productivity of those who already have the relevant understanding, they are much less promising in training novices and provide only the illusion of capability.\nI am increasingly opposed to the use of LLMs for programming when one is learning to code. This matters more in this course than in any other course in the sequence, since for many of you this is where you will learn to program at all. In practice, I find that students delegate far too much to the model and spend insufficient time understanding the mechanics of what the code is doing. This makes it actually quite difficult to meaningfully debug outputs and understand how to diagnose errors. Additionally, actually implementing statistical methods in code is a common way for students to actually understand conceptually what the methods do and how they work. As such, I would still discourage LLM-assistance when completing problem sets although I do not strictly rule it out, especially for the more tedious components where you are confident that you understand what the code is doing (e.g. data cleaning).\nAdditionally, the sort of coding that we do as scientists is typically not software development, so I actually don’t think these tools are (yet) good for writing research code. The task of science I think is distinct from engineering in that we do not have a “try-check-fail-repeat” evaluation loop where the “correctness” of the method and implementation can be assessed from the “correctness” of the output. In fact, we would probably characterize scientists that do this sort of thing as engaging in “questionable research practices” if “correctness” is judged by the “number of publications” objective function. We are not building, we are discovering. A core theme of this class is the importance of outside information and deep knowledge in assessing the feasibility of the assumptions behind a particular research design. The quality of research is determined not by its outputs but rather by its inputs. These are not assumptions that an LLM (for the most part) will provide to you unprompted. An LLM agent can effectively replicate an existing analysis, but it is unlikely to tell you that this was the wrong analysis to begin with. I like to think of LLM agents as amateur improvisers - they can “Yes, and…” you very well, but are much less capable of the “No, but…”\nOne other common use of LLMs that I have also seen - and perhaps this is more common than direct assistance on assignments - is the use of them as “personal tutors.” The chat interfaces let students ask questions, summarize complex texts, search for other relevant information, and brainstorm (see the above point re: “amateur improviser”) without the need for awkward conversations with other human beings. While I think this is fine for simple questions, especially when the LLM just replaces web search, I would not use LLMs as a complete substitute for your colleagues and for the teaching staff. One of the unfortunate consequences of LLM-proliferation is that students don’t post on discussion boards as often as they used to - even in graduate classes. I feel that this is ultimately detrimental to the sort of community-building and professionalization that this class is designed for. Additionally, one of the benefits of asking the teaching staff is that they are familiar enough with the topic and the context that they can infer a lot of what is unstated or implied by your question and better tailor the response. We will provide additional context unprompted.\nWith regards to web-search, I would have strongly advised against this a few years ago, but the incorporation of retrieval augmented generation in modern models has reduced the prevalence of entirely made up sources, though not entirely. Since modern web search runs on basically the same underlying vector search architecture, there’s basically no difference in using an LLM vs. just Googling something. I would still encourage going to the retrieved sources directly though and avoiding the generated summaries since those seem to use cheaper/low-quality models. For summaries, tools explicitly built for interacting with a text (e.g. Google’s NotebookLM) I think are potentially more useful, though I have not spent much time exploring them. Even then, I would still encourage the “classical” approach of searching past (and, with Google Scholar, future) citations. Even if LLMs generated perfect summaries, I think there is an inherent benefit of the “old ways” when it comes to professionalization and developing a better understanding of the authors in a given literature. Unlike the rest of the internet, academia is still a link(citation)-based culture and it is worth leveraging that researcher-provided context to guide your reading. Additionally, these authors are real human beings who you will meet at conferences - it’s worth understanding who they are conversing with in order to better understand the discipline.\nLastly, any LLM policy needs to consider its feasibility. It is clear to me that any restrictions on LLM use aside from restricted, in-class pen-and-paper examination use are fundamentally unenforceable. Therefore, with respect to the problem sets, students are permitted to use LLMs in whatever capacity they see fit. I have attempted to design the problem sets such that they contain “out-of-distribution” challenges and otherwise general “traps” that try to evaluate deep substantive knowledge of the problem. Over the last two years, I have found on (e.g. take home exams) that LLM-using students produce mediocre but not completely terrible results. Nevertheless, they do make mistakes (and often behave in ways that could be described as “not wrong, just strange”) and it is clear to me which students use them to their detriment. Perhaps this will change in the next year or two - such is the nature of this field. Indeed, my decision to move entirely to in-person assessment was driven by the observation that although take-home exams still provided some variation among students, that variation was dramatically lower than the in-class exams. So in short:\n\nYou may use them.\nI discourage it for anything important.\nI’ll know if you use them poorly.\nIgnore the problem sets at your own peril. The consequences will arrive at exam time."
+  },
+  {
+    "objectID": "syllabus.html#how-to-learn-in-this-course",
+    "href": "syllabus.html#how-to-learn-in-this-course",
+    "title": "Syllabus",
+    "section": "How to Learn in this Course",
+    "text": "How to Learn in this Course\nIf you find this course challenging, you are not alone. Statistics can be difficult and we cover a lot of ground quickly. Your primary responsibilities in this class are to work hard and to communicate with us about what you need. You cannot learn if you are not putting in the time, and we cannot help if we do not know there is a problem.\nThe main sources of support available to you are:\n\nLecture and section. Ask questions when something does not make sense. Someone else in the room almost certainly has the same question.\nReadings and slides. The slides are dense by design and are meant to be reviewed repeatedly, not seen once.\nThe discussion board. Questions posted there get answered quickly by classmates, the TA, and me, and everyone benefits from the answer.\nOffice hours. Both mine and the TA’s. These are especially useful for new, tricky material and for problem sets.\nProblem set solutions. Solutions are posted after the due date. It is tempting to move straight on to the next assignment, but the material builds directly on itself – go back and lock down anything you were unsure about."
+  },
+  {
+    "objectID": "syllabus.html#accommodations-and-accessibility",
+    "href": "syllabus.html#accommodations-and-accessibility",
+    "title": "Syllabus",
+    "section": "Accommodations and Accessibility",
+    "text": "Accommodations and Accessibility\nThe University of Wisconsin–Madison supports the right of all enrolled students to a full and equal educational opportunity. The Americans with Disabilities Act (ADA), Wisconsin State Statute (36.12), and UW–Madison policy (Faculty Document 1071) require that students with disabilities be reasonably accommodated in instruction and campus life. Reasonable accommodations for students with disabilities is a shared faculty and student responsibility.\nStudents are expected to inform faculty of their need for instructional accommodations by the end of the third week of the semester, or as soon as possible after a disability has been incurred or recognized.\nI will work either directly with you or in coordination with the McBurney Disability Resource Center to identify and provide reasonable instructional accommodations. Once you are approved for accommodations by the McBurney Center, please be sure to make the relevant selections in McBurney Connect. When I have received your Student Accommodation Letter, I will send you a follow-up e-mail to connect and discuss how the accommodations will be implemented for this course. Disability information, including instructional accommodations as part of a student’s educational record, is confidential and protected under FERPA.\n\nNorth Hall Accessibility\nThe Department of Political Science is located in North Hall, the oldest building on campus. Due to its age, this building is not accessible to individuals with mobility disabilities and does not have an elevator or an accessible restroom. The department is committed to equal opportunity for all students to attend office hours, advising, and other department-related events. Please contact me if North Hall presents a disability-related barrier to you and the department will gladly work to ensure access."
+  },
+  {
+    "objectID": "syllabus.html#academic-integrity",
+    "href": "syllabus.html#academic-integrity",
+    "title": "Syllabus",
+    "section": "Academic Integrity",
+    "text": "Academic Integrity\nBy virtue of enrollment, each student agrees to uphold the high academic standards of the University of Wisconsin-Madison. Academic misconduct is behavior that negatively impacts the integrity of the institution. Cheating, fabrication, plagiarism, unauthorized collaboration, and helping others commit these acts are examples of misconduct which may result in disciplinary action. For more information, see the UW-Madison academic integrity policy."
+  },
+  {
+    "objectID": "syllabus.html#academic-calendar-and-religious-observances",
+    "href": "syllabus.html#academic-calendar-and-religious-observances",
+    "title": "Syllabus",
+    "section": "Academic Calendar and Religious Observances",
+    "text": "Academic Calendar and Religious Observances\nSee the UW-Madison academic calendar and the university policy on religious observances. If a religious observance conflicts with a scheduled assessment, notify me within the first three weeks of the semester so that we can make alternative arrangements."
+  },
+  {
+    "objectID": "syllabus.html#course-evaluations",
+    "href": "syllabus.html#course-evaluations",
+    "title": "Syllabus",
+    "section": "Course Evaluations",
+    "text": "Course Evaluations\nStudents will be provided with an opportunity to evaluate this course and their learning experience. I will also informally solicit feedback throughout the semester. UW-Madison uses an online course evaluation survey tool, AEFIS. You will typically receive an official email two weeks prior to the end of the semester with a link to log in with your NetID and complete the evaluation anonymously. Your feedback is important to me and I strongly encourage you to participate."
+  },
+  {
+    "objectID": "syllabus.html#acknowledgments",
+    "href": "syllabus.html#acknowledgments",
+    "title": "Syllabus",
+    "section": "Acknowledgments",
+    "text": "Acknowledgments\nThis course was developed on the shoulders of giants, in some cases borrowing directly from materials developed by the methods community in political science, economics, statistics and sociology. In particular, I thank Adeline Lo, whose previous version of PS 812 forms the backbone of this syllabus and its schedule, as well as Matthew Blackwell, Peter Aronow, Dalton Conley, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Brandon Stewart, and Teppei Yamamoto, whose lecture notes and syllabi have been immensely valuable in the creation of this course. Lecture slides and circulated materials should carry appropriate citations – please e-mail me if you believe something is incorrectly cited or lacking in citation rigor. All errors that remain are my own.\nLastly, thanks to Andrew Heiss and Matt Blackwell for their Quarto website templates, which I have extensively borrowed from in designing this course site."
+  },
+  {
+    "objectID": "schedule.html",
+    "href": "schedule.html",
+    "title": "Schedule",
+    "section": "",
+    "text": "A schedule of topics and readings is provided below. Each week covers a single topic or group of topics. Tuesday lectures will typically introduce the core theory for the week while Wednesday lectures will go into greater detail and work through examples. You should make sure to review the readings prior to that week’s lectures with an aim towards completing them before Wednesday’s lecture.\nThe readings are not long, but they are dense. The first part of the semester in particular leans heavily on mathematical notation. Becoming comfortable with that kind of language is itself one of the learning goals of the course, so it will be tempting to skim past the math that looks daunting – do not do this. Read carefully, go line by line, take notes, and bring your questions to lecture, section, or the discussion board.\nTextbook readings marked (AM) are from Aronow and Miller, Foundations of Agnostic Statistics, and those marked (AP) are from Angrist and Pischke, Mostly Harmless Econometrics. Both are available through the UW-Madison library; relevant excerpts will also be posted on Canvas. All hyperlinks to papers and to other books are either to the published version or to a freely available copy."
+  },
+  {
+    "objectID": "schedule.html#week-1-introduction-and-foundations-of-probability",
+    "href": "schedule.html#week-1-introduction-and-foundations-of-probability",
+    "title": "Schedule",
+    "section": "Week 1: Introduction and Foundations of Probability",
+    "text": "Week 1: Introduction and Foundations of Probability\nTuesday, September 8 & Wednesday, September 9\nTopics:\n\nCourse introduction: what is statistics for, and what is this sequence for?\nSample spaces, events, and the probability function\nThe axioms of probability and their immediate consequences\n\nReadings:\n\nSection 1.1 (through 1.1.2); (AM) Aronow, Peter M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press.\nSoftware setup: Chapters 1-4 and 28 (“Quarto”); Wickham, Hadley, Mine Çetinkaya-Rundel, and Garrett Grolemund. 2023. R for Data Science, 2nd ed."
+  },
+  {
+    "objectID": "schedule.html#week-2-conditional-probability-and-independence",
+    "href": "schedule.html#week-2-conditional-probability-and-independence",
+    "title": "Schedule",
+    "section": "Week 2: Conditional Probability and Independence",
+    "text": "Week 2: Conditional Probability and Independence\nTuesday, September 15 & Wednesday, September 16\nTopics:\n\nConditional probability and the law of total probability\nIndependence and conditional independence\nBayes’ rule and how to reason with it\n\nReadings:\n\nSection 1.1 (remainder); (AM) Aronow and Miller 2019.\nSupplementary: Gigerenzer, Gerd, and Ulrich Hoffrage. 1995. “How to Improve Bayesian Reasoning without Instruction: Frequency Formats.” Psychological Review 102 (4): 684-704.\n\n\n\n\n\n\n\nProblem Set 1 assigned Wednesday, September 16 – due Wednesday, September 30."
+  },
+  {
+    "objectID": "schedule.html#week-3-random-variables-and-distributions",
+    "href": "schedule.html#week-3-random-variables-and-distributions",
+    "title": "Schedule",
+    "section": "Week 3: Random Variables and Distributions",
+    "text": "Week 3: Random Variables and Distributions\nTuesday, September 22 & Wednesday, September 23\nTopics:\n\nRandom variables as functions on the sample space\nDiscrete and continuous distributions; PMFs, PDFs and CDFs\nCommon distributions and where they come from\n\nReadings:\n\nSection 1.2 (through 1.2.3); (AM) Aronow and Miller 2019."
+  },
+  {
+    "objectID": "schedule.html#week-4-joint-distributions-and-expectation",
+    "href": "schedule.html#week-4-joint-distributions-and-expectation",
+    "title": "Schedule",
+    "section": "Week 4: Joint Distributions and Expectation",
+    "text": "Week 4: Joint Distributions and Expectation\nTuesday, September 29 & Wednesday, September 30\nTopics:\n\nJoint, marginal and conditional distributions\nIndependence of random variables\nExpectation and its properties; functions of random variables\n\nReadings:\n\nSection 1.2 (remainder) and Section 2.1 (through 2.1.2); (AM) Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 1 due Wednesday, September 30. Problem Set 2 assigned Wednesday, September 30 – due Wednesday, October 14."
+  },
+  {
+    "objectID": "schedule.html#week-5-variance-covariance-and-conditional-expectation",
+    "href": "schedule.html#week-5-variance-covariance-and-conditional-expectation",
+    "title": "Schedule",
+    "section": "Week 5: Variance, Covariance, and Conditional Expectation",
+    "text": "Week 5: Variance, Covariance, and Conditional Expectation\nTuesday, October 6 & Wednesday, October 7\nTopics:\n\nVariance, standard deviation, covariance and correlation\nConditional expectation and the conditional expectation function\nThe law of iterated expectations\n\nReadings:\n\nSections 2.1 (remainder) and 2.2; (AM) Aronow and Miller 2019."
+  },
+  {
+    "objectID": "schedule.html#week-6-random-samples-the-lln-and-the-clt",
+    "href": "schedule.html#week-6-random-samples-the-lln-and-the-clt",
+    "title": "Schedule",
+    "section": "Week 6: Random Samples, the LLN, and the CLT",
+    "text": "Week 6: Random Samples, the LLN, and the CLT\nTuesday, October 13 & Wednesday, October 14\nTopics:\n\nRandom sampling and the sampling distribution\nConvergence in probability and the law of large numbers\nConvergence in distribution and the central limit theorem\nSimulating sampling distributions in \n\nReadings:\n\nSections 3.1 through 3.2.1; (AM) Aronow and Miller 2019.\nSupplementary: Chapter 3 (“Asymptotics”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression.\n\n\n\n\n\n\n\nProblem Set 2 due Wednesday, October 14. Problem Set 3 assigned Wednesday, October 14 – due Wednesday, October 28."
+  },
+  {
+    "objectID": "schedule.html#week-7-estimation",
+    "href": "schedule.html#week-7-estimation",
+    "title": "Schedule",
+    "section": "Week 7: Estimation",
+    "text": "Week 7: Estimation\nTuesday, October 20 & Wednesday, October 21\nTopics:\n\nEstimands, estimators and estimates\nBias, variance, mean squared error and consistency\nAsymptotic normality and the plug-in principle\n\nReadings:\n\nSections 3.2.2 through 3.2.4; (AM) Aronow and Miller 2019.\nLundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. “What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory.” American Sociological Review 86 (3): 532-565."
+  },
+  {
+    "objectID": "schedule.html#week-8-confidence-intervals-and-hypothesis-testing",
+    "href": "schedule.html#week-8-confidence-intervals-and-hypothesis-testing",
+    "title": "Schedule",
+    "section": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "text": "Week 8: Confidence Intervals and Hypothesis Testing\nTuesday, October 27 & Wednesday, October 28\nTopics:\n\nStandard errors and the construction of confidence intervals\nHypothesis tests, test statistics and p-values\nWhat a p-value is and – more importantly – what it is not\nThe bootstrap\n\nReadings:\n\nSections 3.3 and 3.4; (AM) Aronow and Miller 2019.\nWasserstein, Ronald L., and Nicole A. Lazar. 2016. “The ASA Statement on p-Values: Context, Process, and Purpose.” The American Statistician 70 (2): 129-133.\n\n\n\n\n\n\n\nProblem Set 3 due Wednesday, October 28."
+  },
+  {
+    "objectID": "schedule.html#week-9-midterm-introduction-to-regression",
+    "href": "schedule.html#week-9-midterm-introduction-to-regression",
+    "title": "Schedule",
+    "section": "Week 9: Midterm; Introduction to Regression",
+    "text": "Week 9: Midterm; Introduction to Regression\nTuesday, November 3 & Wednesday, November 4\n\n\n\n\n\n\nIn-person midterm examination on Tuesday, November 3. The exam covers Weeks 1-8: probability, random variables, expectation, random samples, estimation and inference.\n\n\n\nTopics (Wednesday):\n\nRegression as an approximation to the conditional expectation function\nThe best linear predictor and its properties\nOrdinary least squares as an estimator\n\nReadings:\n\nSection 4.1 (through 4.1.2); (AM) Aronow and Miller 2019."
+  },
+  {
+    "objectID": "schedule.html#week-10-multiple-regression",
+    "href": "schedule.html#week-10-multiple-regression",
+    "title": "Schedule",
+    "section": "Week 10: Multiple Regression",
+    "text": "Week 10: Multiple Regression\nTuesday, November 10 & Wednesday, November 11\nTopics:\n\nRegression with multiple predictors; partialling out\nInterpreting coefficients, and what “holding constant” does and does not mean\nInteractions, polynomials and other transformations\nFitting and interpreting regressions in \n\nReadings:\n\nSection 4.1 (remainder) and Section 4.2; (AM) Aronow and Miller 2019.\nSupplementary: Chapter 3; (AP) Angrist, Joshua D., and Jörn-Steffen Pischke. 2009. Mostly Harmless Econometrics. Princeton: Princeton University Press.\n\n\n\n\n\n\n\nProblem Set 4 assigned Wednesday, November 11 – due Wednesday, November 25."
+  },
+  {
+    "objectID": "schedule.html#week-11-inference-for-regression",
+    "href": "schedule.html#week-11-inference-for-regression",
+    "title": "Schedule",
+    "section": "Week 11: Inference for Regression",
+    "text": "Week 11: Inference for Regression\nTuesday, November 17 & Wednesday, November 18\nTopics:\n\nSampling distribution of the OLS estimator\nHomoskedastic and heteroskedasticity-consistent standard errors\nClustered dependence and what to do about it\nSpecification, model fit and the limits of both\n\nReadings:\n\nSections 4.2 (remainder) and 4.3; (AM) Aronow and Miller 2019.\nSupplementary: Chapter 8 (“Nonstandard Standard Error Issues”); (AP) Angrist and Pischke 2009."
+  },
+  {
+    "objectID": "schedule.html#week-12-causal-inference-and-the-experimental-ideal",
+    "href": "schedule.html#week-12-causal-inference-and-the-experimental-ideal",
+    "title": "Schedule",
+    "section": "Week 12: Causal Inference and the Experimental Ideal",
+    "text": "Week 12: Causal Inference and the Experimental Ideal\nTuesday, November 24 & Wednesday, November 25\n\n\n\n\n\n\nThanksgiving recess runs November 26-29. Class meets as usual on Tuesday and Wednesday of this week.\n\n\n\nTopics:\n\nPotential outcomes and the counterfactual definition of a causal effect\nThe fundamental problem of causal inference\nWhy randomization identifies the average treatment effect\nEstimating treatment effects from an experiment\n\nReadings:\n\nChapters 1-2; (AP) Angrist and Pischke 2009.\nSection 7.1; (AM) Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 4 due Wednesday, November 25. Problem Set 5 assigned Wednesday, November 25 – due Wednesday, December 9."
+  },
+  {
+    "objectID": "schedule.html#week-13-regression-and-observational-data",
+    "href": "schedule.html#week-13-regression-and-observational-data",
+    "title": "Schedule",
+    "section": "Week 13: Regression and Observational Data",
+    "text": "Week 13: Regression and Observational Data\nTuesday, December 1 & Wednesday, December 2\nTopics:\n\nConfounding and selection bias\nWhat regression can and cannot do with observational data\nSelection on observables and the conditional independence assumption\nGood controls, bad controls, and the perils of “controlling for everything”\n\nReadings:\n\nChapter 3; (AP) Angrist and Pischke 2009.\nCinelli, Carlos, Andrew Forney, and Judea Pearl. 2024. “A Crash Course in Good and Bad Controls.” Sociological Methods & Research 53 (3): 1071-1104."
+  },
+  {
+    "objectID": "schedule.html#week-14-beyond-selection-on-observables-wrap-up",
+    "href": "schedule.html#week-14-beyond-selection-on-observables-wrap-up",
+    "title": "Schedule",
+    "section": "Week 14: Beyond Selection on Observables; Wrap-Up",
+    "text": "Week 14: Beyond Selection on Observables; Wrap-Up\nTuesday, December 8 & Wednesday, December 9\nTopics:\n\nA first look at research designs that do not assume selection on observables: instrumental variables, differences-in-differences, and regression discontinuity\nWhat comes next in the sequence\nEnd-of-course review\n\nReadings:\n\nChapter 4 (Sections 4.1-4.2); (AP) Angrist and Pischke 2009.\nTorreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2025. “The Credibility Revolution in Political Science.” Working paper.\n\n\n\n\n\n\n\nProblem Set 5 due Wednesday, December 9. This is the last class day of the semester."
+  },
+  {
+    "objectID": "schedule.html#final-exam",
+    "href": "schedule.html#final-exam",
+    "title": "Schedule",
+    "section": "Final Exam",
+    "text": "Final Exam\nIn person, during the university exam period (December 11-17, 2026)\nThe date, time and room for the final exam are assigned by the registrar and will be posted here once available."
+  },
+  {
+    "objectID": "lectures.html",
+    "href": "lectures.html",
+    "title": "Lectures",
+    "section": "",
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the Github repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+  },
+  {
+    "objectID": "lectures.html#lecture-slides",
+    "href": "lectures.html#lecture-slides",
+    "title": "Lectures",
+    "section": "",
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the Github repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+  },
+  {
+    "objectID": "assignments.html",
+    "href": "assignments.html",
+    "title": "Assignments",
+    "section": "",
+    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 16 (Week 2)\nSept 30 (Week 4)\n\n\nProblem Set 2\nSept 30 (Week 4)\nOct 14 (Week 6)\n\n\nProblem Set 3\nOct 14 (Week 6)\nOct 28 (Week 8)\n\n\nMidterm Exam\nNov 3 (Week 9)\nIn-Class\n\n\nProblem Set 4\nNov 11 (Week 10)\nNov 25 (Week 12)\n\n\nProblem Set 5\nNov 25 (Week 12)\nDec 9 (Week 14)\n\n\nFinal Exam\nExam week (Dec 11-17)\nDate/Location TBA\n\n\n\nProblem sets are due at the start of Wednesday’s lecture. Solutions are posted to Canvas after the deadline."
+  },
+  {
+    "objectID": "assignments.html#schedule",
+    "href": "assignments.html#schedule",
+    "title": "Assignments",
+    "section": "",
+    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 16 (Week 2)\nSept 30 (Week 4)\n\n\nProblem Set 2\nSept 30 (Week 4)\nOct 14 (Week 6)\n\n\nProblem Set 3\nOct 14 (Week 6)\nOct 28 (Week 8)\n\n\nMidterm Exam\nNov 3 (Week 9)\nIn-Class\n\n\nProblem Set 4\nNov 11 (Week 10)\nNov 25 (Week 12)\n\n\nProblem Set 5\nNov 25 (Week 12)\nDec 9 (Week 14)\n\n\nFinal Exam\nExam week (Dec 11-17)\nDate/Location TBA\n\n\n\nProblem sets are due at the start of Wednesday’s lecture. Solutions are posted to Canvas after the deadline."
+  },
+  {
+    "objectID": "assignments.html#problem-sets",
+    "href": "assignments.html#problem-sets",
+    "title": "Assignments",
+    "section": "Problem Sets",
+    "text": "Problem Sets\nProblem sets are distributed as .qmd files along with their rendered .html form. You should edit the provided .qmd file and render to .html when submitting the assignment. Additional files (e.g. datasets) are located in sub-folders. For convenience, all the combined files are also distributed as a .zip compressed archive.\nLinks become active when each assignment is released.\n\nProblem Set 1\n\nGithub Repository\n.zip archive\n\n\n\nProblem Set 2\n\nGithub Repository\n.zip archive\n\n\n\nProblem Set 3\n\nGithub Repository\n.zip archive\n\n\n\nProblem Set 4\n\nGithub Repository\n.zip archive\n\n\n\nProblem Set 5\n\nGithub Repository\n.zip archive"
+  },
+  {
+    "objectID": "assignments.html#section-exercises",
+    "href": "assignments.html#section-exercises",
+    "title": "Assignments",
+    "section": "Section Exercises",
+    "text": "Section Exercises\nSection meets once a week and is built around short, guided exercises that implement the week’s material in . These are completed in Quarto and uploaded at the end of section. They are not formally graded, but they are reviewed and count toward your participation grade. Section materials will be posted here as they are released.\nTo be posted."
+  },
+  {
+    "objectID": "assignments.html#exams",
+    "href": "assignments.html#exams",
+    "title": "Assignments",
+    "section": "Exams",
+    "text": "Exams\nBoth exams are in person, closed-book, pen-and-paper examinations involving both theory questions and practical interpretation of sample code and results.\n\nMidterm: in class on Tuesday, November 3, covering material through Week 8 (probability, random variables, expectation, random samples, estimation and inference).\nFinal: during the university exam period, December 11-17. The date, time and room are assigned by the registrar and will be posted here once available. The final covers material from the full semester."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "PoliSci 812",
+    "section": "",
+    "text": "Statistical Methods\nProbability, inference and regression for political science research\nPoliSci 812 • Fall 2026University of Wisconsin-Madison\n\n\n\n\n\n\n\n\nInstructor\n\n   Anton Strezhnev\n   North Hall 322D\n   strezhnev@wisc.edu\n\n\n\nTeaching Assistant\n\n   TBD\n   TBD\n\n\n\n\nCourse details\n\n   Tuesdays & Wednesdays\n   9/8/2026 - 12/9/2026\n   Time TBA\n   Room TBA\n   Section: TBA\n\n\n\nContacting me\nE-mail is the best way to get in touch with me. My dedicated office hours are TBA if you want to meet in-person. I am also generally in my office on weekdays during normal hours and my door is open, so you are welcome to drop in. You can also feel free to e-mail me to confirm availability or to schedule a virtual meeting via Zoom."
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Resources",
+    "section": "",
+    "text": "The two main texts for the course are listed first. The remaining books are useful supplements – each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, Peter M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\nThe main text for probability, inference and regression. “Agnostic” here means the book develops these tools without leaning on the parametric modeling assumptions that introductory texts usually take for granted.\n\nAngrist, Joshua D., and Jörn-Steffen Pischke. Mostly Harmless Econometrics: An Empiricist’s Companion. Princeton University Press, 2009.\n\nUW-Madison Library Access\nThe main text for the causal inference material at the end of the course.\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nWasserman, Larry. All of Statistics: A Concise Course in Statistical Inference. Springer, 2004.\n\nUW-Madison Library Access\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version\n\nGelman, Andrew, Jennifer Hill, and Aki Vehtari. Regression and Other Stories. Cambridge University Press, 2020.\n\nFree online version and examples\n\nHuntington-Klein, Nick. The Effect: An Introduction to Research Design and Causality. Chapman and Hall/CRC, 2021.\n\nFree online version\n\nCunningham, Scott. Causal Inference: The Mixtape. Yale University Press, 2021.\n\nFree online version"
+  },
+  {
+    "objectID": "resources.html#textbooks",
+    "href": "resources.html#textbooks",
+    "title": "Resources",
+    "section": "",
+    "text": "The two main texts for the course are listed first. The remaining books are useful supplements – each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, Peter M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\nThe main text for probability, inference and regression. “Agnostic” here means the book develops these tools without leaning on the parametric modeling assumptions that introductory texts usually take for granted.\n\nAngrist, Joshua D., and Jörn-Steffen Pischke. Mostly Harmless Econometrics: An Empiricist’s Companion. Princeton University Press, 2009.\n\nUW-Madison Library Access\nThe main text for the causal inference material at the end of the course.\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nWasserman, Larry. All of Statistics: A Concise Course in Statistical Inference. Springer, 2004.\n\nUW-Madison Library Access\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version\n\nGelman, Andrew, Jennifer Hill, and Aki Vehtari. Regression and Other Stories. Cambridge University Press, 2020.\n\nFree online version and examples\n\nHuntington-Klein, Nick. The Effect: An Introduction to Research Design and Causality. Chapman and Hall/CRC, 2021.\n\nFree online version\n\nCunningham, Scott. Causal Inference: The Mixtape. Yale University Press, 2021.\n\nFree online version"
+  },
+  {
+    "objectID": "resources.html#software",
+    "href": "resources.html#software",
+    "title": "Resources",
+    "section": "Software",
+    "text": "Software\n\nR and RStudio\nThis course uses R for all programming assignments. You are welcome to use the RStudio Interactive Development Environment (IDE) to write code and edit the assignment write-up. Due to the extensive integration of Quarto into Posit-developed IDEs, I encourage using either RStudio or the more recent Positron IDE.\n\nR: Download from https://www.r-project.org\nRStudio: Download from https://posit.co/download/rstudio-desktop/\nPositron: Download from https://positron.posit.co/\n\n\nRecommended Guides for R Programming\nThe following are excellent introductions to R, roughly in increasing order of difficulty.\n\nR For Data Science Available at https://r4ds.hadley.nz/\nData Visualization: A Practical Introduction Available at https://socviz.co/\nThe Art of R Programming Matloff, Norman. 2011. No Starch Press. A tour of statistical programming aimed at people who want to understand what the language is actually doing.\nAdvanced R Wickham, Hadley. Available at https://adv-r.hadley.nz/\n\n\n\n\nQuarto and Markdown\nThe assignments are distributed as .qmd Quarto files. Quarto is the successor to R Markdown and lets you present your analysis, code, figures and written discussion all in a single document. It uses Markdown syntax for formatting text and supports embedded R code chunks that execute when you render the document.\nTo complete assignments, you will edit the provided .qmd file, adding your code and written responses, then render it to an HTML file for submission. Both your .html output and .qmd file will be submitted via Gradescope.\n\nQuarto: Download from https://quarto.org/docs/get-started/\nQuarto Guide: https://quarto.org/docs/guide/\nMarkdown Basics: https://quarto.org/docs/authoring/markdown-basics.html\nNote also the chapter on Quarto in R For Data Science\n\n\n\nLaTeX Math Notation\nProblem sets involve writing mathematical derivations, which you will typeset using LaTeX notation inside your Quarto document. You do not need to learn much – a short reference goes a long way.\n\nQuarto math syntax: https://quarto.org/docs/authoring/markdown-basics.html#equations\nA quick LaTeX math reference: https://en.wikibooks.org/wiki/LaTeX/Mathematics"
+  },
+  {
+    "objectID": "resources.html#math-review",
+    "href": "resources.html#math-review",
+    "title": "Resources",
+    "section": "Math Review",
+    "text": "Math Review\nThe course assumes the algebra and single-variable calculus covered in the summer math camp. If you would like a refresher:\n\nMoore, Will H., and David A. Siegel. A Mathematics Course for Political and Social Research. Princeton University Press, 2013.\nKhan Academy calculus: https://www.khanacademy.org/math/calculus-1\n3Blue1Brown, Essence of Calculus: https://www.3blue1brown.com/topics/calculus – useful for building geometric intuition about derivatives and integrals."
+  },
+  {
+    "objectID": "resources.html#beyond-the-course",
+    "href": "resources.html#beyond-the-course",
+    "title": "Resources",
+    "section": "Beyond the Course",
+    "text": "Beyond the Course\n\nModels, Experiments and Data (MEAD) workshop: https://sites.google.com/view/meadwisc/home – the political methodology workshop at UW-Madison. Attending is one of the best ways to see what quantitative political science actually looks like in practice, and you are strongly encouraged to come.\nSociety for Political Methodology: https://polmeth.org/"
+  },
+  {
+    "objectID": "resources.html#tutorials",
+    "href": "resources.html#tutorials",
+    "title": "Resources",
+    "section": "Tutorials",
+    "text": "Tutorials\nBelow are some additional tutorials to help supplement the main course material. They will generally focus on specific topics in statistical computing and things that we did not have time to cover as part of the main set of lectures.\nTo be posted."
+  },
+  {
+    "objectID": "staff.html",
+    "href": "staff.html",
+    "title": "Staff",
+    "section": "",
+    "text": "Assistant Professor\nDepartment of Political Science\nUniversity of Wisconsin-Madison\n\n\n\n\n\nOffice\nNorth Hall 322D\n\n\nEmail\nstrezhnev@wisc.edu\n\n\nWebsite\nantonstrezhnev.com\n\n\nOffice Hours\nTBA (or by appointment via email)"
+  },
+  {
+    "objectID": "staff.html#instructor",
+    "href": "staff.html#instructor",
+    "title": "Staff",
+    "section": "",
+    "text": "Assistant Professor\nDepartment of Political Science\nUniversity of Wisconsin-Madison\n\n\n\n\n\nOffice\nNorth Hall 322D\n\n\nEmail\nstrezhnev@wisc.edu\n\n\nWebsite\nantonstrezhnev.com\n\n\nOffice Hours\nTBA (or by appointment via email)"
+  },
+  {
+    "objectID": "staff.html#teaching-assistant",
+    "href": "staff.html#teaching-assistant",
+    "title": "Staff",
+    "section": "Teaching Assistant",
+    "text": "Teaching Assistant\n\nTBD\nThe teaching assistant for this course has not yet been assigned. Contact information, section times and TA office hours will be posted here before the start of the semester.\n\n\n\nEmail\nTBA\n\n\nSection\nTBA\n\n\nOffice Hours\nTBA"
+  },
+  {
+    "objectID": "staff.html#contact-policy",
+    "href": "staff.html#contact-policy",
+    "title": "Staff",
+    "section": "Contact Policy",
+    "text": "Contact Policy\n\nCourse questions: Please post questions about course content on the Ed discussion forum so that all students can benefit from the answers.\nPersonal matters: Email the instructor directly.\nProblem set questions: Post on the discussion forum, bring them to section, or come to office hours.\nExpected response time: We aim to respond to discussion posts within 24 hours on weekdays."
+  }
+]
