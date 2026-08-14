@@ -12,29 +12,13 @@ The two main texts for the course are listed first. The remaining books are usef
   - [UW-Madison Library Access](https://search.library.wisc.edu/)
   - The main text for probability, inference and regression. "Agnostic" here means the book develops these tools without leaning on the parametric modeling assumptions that introductory texts usually take for granted.
 
-- **Angrist, Joshua D., and Jörn-Steffen Pischke.** *Mostly Harmless Econometrics: An Empiricist's Companion*. Princeton University Press, 2009.
-  - [UW-Madison Library Access](https://search.library.wisc.edu/)
-  - The main text for the causal inference material at the end of the course.
-
 ### Supplementary Texts
 
 - **Blackwell, Matthew.** *A User's Guide to Statistical Inference and Regression*.
   - [Free online version](https://mattblackwell.github.io/gov2002-book/)
 
-- **Wasserman, Larry.** *All of Statistics: A Concise Course in Statistical Inference*. Springer, 2004.
-  - [UW-Madison Library Access](https://search.library.wisc.edu/)
-
 - **Blitzstein, Joseph K., and Jessica Hwang.** *Introduction to Probability*. 2nd Edition. Chapman and Hall/CRC, 2019.
   - [Free online version](https://projects.iq.harvard.edu/stat110/home)
-
-- **Gelman, Andrew, Jennifer Hill, and Aki Vehtari.** *Regression and Other Stories*. Cambridge University Press, 2020.
-  - [Free online version and examples](https://avehtari.github.io/ROS-Examples/index.html)
-
-- **Huntington-Klein, Nick.** *The Effect: An Introduction to Research Design and Causality*. Chapman and Hall/CRC, 2021.
-  - [Free online version](https://theeffectbook.net/)
-
-- **Cunningham, Scott.** *Causal Inference: The Mixtape*. Yale University Press, 2021.
-  - [Free online version](https://mixtape.scunning.com/)
 
 ---
 
@@ -54,7 +38,6 @@ The following are excellent introductions to R, roughly in increasing order of d
 
 - **R For Data Science** Available at [https://r4ds.hadley.nz/](https://r4ds.hadley.nz/)
 - **Data Visualization: A Practical Introduction** Available at [https://socviz.co/](https://socviz.co/)
-- **The Art of R Programming** Matloff, Norman. 2011. No Starch Press. A tour of statistical programming aimed at people who want to understand what the language is actually doing.
 - **Advanced R** Wickham, Hadley. Available at [https://adv-r.hadley.nz/](https://adv-r.hadley.nz/)
 
 ### Quarto and Markdown
@@ -94,8 +77,3 @@ The course assumes the algebra and single-variable calculus covered in the summe
 
 ---
 
-## Tutorials
-
-Below are some additional tutorials to help supplement the main course material. They will generally focus on specific topics in statistical computing and things that we did not have time to cover as part of the main set of lectures.
-
-*To be posted.*

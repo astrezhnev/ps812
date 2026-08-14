@@ -4,9 +4,9 @@ title: "Syllabus"
 
 ## Course Overview
 
-Statistical analysis is now an integral part of both conducting and consuming research in the social sciences. This course is the first in the graduate quantitative methods sequence in the Department of Political Science at the University of Wisconsin-Madison. It begins with the foundations of probability theory and builds up through statistical inference to linear regression and its application to causal inference. Alongside the statistical material, we will develop the programming skills that play an essential role in modern empirical research.
+Statistics is at the heart of modern social science. This course is the first in the graduate quantitative methods sequence in the Department of Political Science at the University of Wisconsin-Madison. It begins with the foundations of probability theory and builds up through statistical inference to linear regression. Alongside the statistical material, we will develop the programming skills that play an essential role in the practice of empirical research.
 
-The goal of the sequence is to move you from being *consumers* of quantitative research to *producers* of it. We start by developing a common language for reasoning about uncertainty: probability, random variables, expectation, and the behavior of sample quantities as samples grow large. We then turn to inference -- how we use a sample to say something credible about a population, and how we quantify how wrong we might be. The second half of the course develops linear regression, first as a tool for describing conditional relationships and then as a tool that, under strong and explicit assumptions, can be used to speak to questions of cause and effect. Throughout, the emphasis is on understanding *why* a method works and *what* it assumes, rather than on memorizing recipes.
+The goal of the sequence is to enable you to *produce* quality quantitative research and to *engage critically* with the work of others in the discipline. We start by developing a common language for reasoning about uncertainty: probability, random variables, expectation, and the behavior of sample quantities as samples grow large. We then turn to inference -- how we use a sample to make statements about a population with an adequate accounting of uncertainty.  The second half of the course develops linear regression as a tool for describing conditional relationships. We will conclude with a brief preview of the principles of causal inference to be developed in greater detail in the second course, PS813. Throughout, the emphasis is on conceptual understanding and the development of your internal mental model of the scientific process rather than on memorizing static recipes and flowcharts for conducting research.
 
 This course will involve a combination of lectures, a weekly section, and problem sets. Lectures will introduce the core theoretical concepts and illustrate them with worked examples. Section will focus on implementation and on building the practical computing skills needed to carry out the analyses discussed in lecture. Problem sets will contain a mixture of both theoretical and applied questions and serve to reinforce key concepts and allow students to assess their progress and understanding throughout the course.
 
@@ -17,17 +17,16 @@ Assignments will involve analysis of data using the {{< fa brands r-project >}} 
 By the end of the semester, you should be able to:
 
 1. Critically read, interpret and replicate the quantitative content of many articles in the quantitative social sciences.
-2. Reason formally about probability, random variables, and the sampling distribution of an estimator.
+2. Understand how to reason about properties of estimators: bias, variance, large-sample behavior
 3. Conduct, interpret, and communicate results from an analysis using multiple regression.
-4. Explain the limitations of observational data for making causal claims, and begin to use existing strategies for attempting to make causal claims from observational data.
-5. Write clean, reusable, and reliable {{< fa brands r-project >}} code.
-6. Feel empowered working with data.
+4. Write clean, reusable, and reliable {{< fa brands r-project >}} code.
+5. Feel empowered working with data.
 
 The methods sequence is designed to get you to a point where you can teach yourself new statistical methods by reading the literature. We cannot teach you every technique you will need over the course of your career, but we can prepare you to learn them on your own. Beyond the sequence, I strongly encourage you to participate in the broader statistical life at UW-Madison, including the [Models, Experiments and Data (MEAD) workshop](https://sites.google.com/view/meadwisc/home).
 
 ## Prerequisites
 
-Graduate/professional standing. Formally, this course assumes familiarity with algebra and the basics of calculus -- derivatives and integrals. Everything covered in the summer math camp is fair game, and if you would like a refresher you should return to those materials.
+This is an introductory course in the political science department's statistical methods sequence and assumes no prior background in statistics. It will assume familiarity with mathematical fundamentals, especially algebra and the basics of calculus: derivatives and integrals. All of the relevant pre-requisite material is covered in the summer math camp provided by the department.
 
 Informally, and considerably more importantly, the most essential prerequisite is a willingness to work hard on unfamiliar material. Learning statistics and programming is a lot like learning a new language: fluency and comfort come from daily practice and consistent effort rather than from cramming. Please contact me at [strezhnev@wisc.edu](mailto:strezhnev@wisc.edu) if you are interested in enrolling but are unsure of the requirements.
 
@@ -41,20 +40,17 @@ You should attend lectures regularly as they comprise a significant element of t
 
 Instruction in this course is delivered through two complementary avenues. Lectures typically focus on the statistical material. Section meets once a week and focuses on practical problem solving and computational skills. It is common to leave a lecture understanding the theory but not knowing how to implement it in {{< fa brands r-project >}}; section exists to bridge that gap. Each section will typically begin with questions and review, and the remainder will be devoted to short guided exercises. These exercises are not formally graded, but they are looked over and they count toward your participation grade.
 
-- **Discussion Forum**: We will be using [Ed](https://edstem.org/) as our primary course discussion platform. If you are enrolled in the class on Canvas, you should already have access to the Ed board for this class. Please use this to post questions about the readings/lecture material as well as about the problem sets.
+- **Discussion Forum**: We will be using [Slack](https://uw-mpolscimethods.slack.com/) as our primary course discussion platform. Please reach out to the course staff for an invitation to the methods sequence Slack channel if you are not already on it.
 
 - **Course Materials**: Lecture materials, problem sets and tutorial code will be posted on the course website. Problem set solutions will be posted after the due date on Canvas. Links to readings can be found on the [Schedule](schedule.qmd) page organized by week.
 
 ## Textbooks
 
-The course will involve readings from a variety of different textbook chapters and published papers. The class will not require the purchase of any textbook as they are available online or through the university library. However, you may wish to obtain a paper copy for your own personal use or reference.
+The primary textbook for this class is Aronow and Miller (2019) *Foundations of Agnostic Statistics*. We highly encourage you to purchase this text as it is an excellent reference for the core probability and inference material that we will be covering.
 
-Two textbooks provide the bulk of the readings:
+- **(AM)** Aronow, Peter M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press.
 
-- **(AM)** Aronow, Peter M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press. (Probability, inference and regression, developed without the usual reliance on parametric modeling assumptions. This is the main text for roughly the first three-quarters of the course.)
-- **(AP)** Angrist, Joshua D., and Jörn-Steffen Pischke. 2009. *Mostly Harmless Econometrics: An Empiricist's Companion*. Princeton: Princeton University Press. (The main text for the causal inference material at the end of the course.)
-
-A complete list of textbooks and supplementary references, including recommended guides to {{< fa brands r-project >}} programming, can be found on the [Resources](resources.qmd) page.
+Additional readings will be provided in the form of links to articles and online textbook chapters. No other book purchases will be necessary for this course. Additional supplementary references including recommended guides to {{< fa brands r-project >}} programming, can be found on the [Resources](resources.qmd) page.
 
 ## Grading
 
@@ -126,7 +122,7 @@ You should have R, RStudio and Quarto installed and be able to render a document
 
 ## Policy on Generative Large Language Models
 
-Large Language Models (LLMs) continue to have an immense impact on the educational field. Over the last several years, we have seen striking growth in the capabilities of these models and it is clear that they will remain a permanent and inextricable presence in all of our lives. This very course website has been built from an earlier `.tex` syllabus with considerable assistance from Claude's Opus 5 model. Having taught graduate methods courses every year since 2020, I have seen first-hand how these tools are rapidly reshaping how students engage with the material - for better and for worse.
+Large Language Models (LLMs) continue to have an immense impact on the educational field. Over the last several years, we have seen striking growth in the capabilities of these models and it is clear that they will remain a permanent and inextricable presence in all of our lives. This very course website has been built from an earlier syllabus with considerable assistance from Claude's Opus 5 model. Having taught graduate methods courses every year since 2020, I have seen first-hand how these tools are rapidly reshaping how students engage with the material - for better and for worse.
 
 The clearest setting where LLM tools have been amplifying user productivity is in programming. For me, the most positive case for LLMs is that they are a kind of "universal interface" in natural language that makes it easier for users to get a computer to do what they want simply by articulating the task in English. Cutting-edge LLMs implement some form of "reasoning" (essentially, having the model generate intermediate tokens into its context window to improve the quality of the final predicted tokens) and models are able to call various software tools as part of the generation process. Modern LLMs are increasingly "agentic" in that they replicate the sort of think-decide-act loop that we would consider to be the role of a typical knowledge worker. In essence, every graduate student can now have their own team of RAs for a comparatively low monthly payment to Anthropic.
 
