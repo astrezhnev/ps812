@@ -32,7 +32,7 @@
     "href": "syllabus.html#textbooks",
     "title": "Syllabus",
     "section": "Textbooks",
-    "text": "Textbooks\nThe primary textbook for this class is Aronow and Miller (2019) Foundations of Agnostic Statistics. It is available online through the UW-Madison Library. However, you may also wish to purchase a physical copy as it is an excellent reference for the core probability and inference material that we will be covering.\n\n(AM) Aronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press.\n\nAdditional readings will be provided in the form of links to articles and online textbook chapters. Additional supplementary references including recommended guides to  programming, can be found on the Resources page."
+    "text": "Textbooks\nThe primary textbook for this class is Aronow and Miller (2019) Foundations of Agnostic Statistics. It is available online through the UW-Madison Library. However, you may also wish to purchase a physical copy as it is an excellent reference for the core probability and inference material that we will be covering.\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press.\n\nAdditional readings will be provided in the form of links to articles and online textbook chapters. Additional supplementary references including recommended guides to  programming, can be found on the Resources page."
   },
   {
     "objectID": "syllabus.html#grading",
@@ -74,84 +74,84 @@
     "href": "schedule.html",
     "title": "Schedule",
     "section": "",
-    "text": "A schedule of topics and readings is provided below. Each week covers a single topic or group of topics. Tuesday lectures will typically introduce the core theory for the week while Wednesday lectures will go into greater detail and work through examples. You should make sure to review the readings prior to that week’s lectures with an aim towards completing them before Wednesday’s lecture.\nThe readings are not long, but they are dense. The first part of the semester in particular leans heavily on mathematical notation. Becoming comfortable with that kind of language is itself one of the learning goals of the course, so it will be tempting to skim past the math that looks daunting – do not do this. Read carefully, go line by line, take notes, and bring your questions to lecture, section, or the discussion board.\nTextbook readings marked (AM) are from Aronow and Miller, Foundations of Agnostic Statistics. Both are available through the UW-Madison library; relevant excerpts will also be posted on Canvas. All hyperlinks to papers and to other books are either to the published version or to a freely available copy."
+    "text": "A schedule of topics and readings is provided below. Each week covers a single topic or group of topics. Tuesday lectures will typically introduce the core theory for the week while Wednesday lectures will go into greater detail and work through examples. You should make sure to review the readings prior to that week’s lectures with an aim towards completing them before Wednesday’s lecture.\nThe readings are not long, but they are dense. The first part of the semester in particular leans heavily on mathematical notation. Becoming comfortable with that kind of language is itself one of the learning goals of the course, so it will be tempting to skim past the math that looks daunting – do not do this. Read carefully, go line by line, take notes, and bring your questions to lecture, section, or the discussion board.\nTextbook readings are from Aronow and Miller, Foundations of Agnostic Statistics, which is available through the UW-Madison library; relevant excerpts will also be posted on Canvas. All hyperlinks to papers and to other books are either to the published version or to a freely available copy."
   },
   {
     "objectID": "schedule.html#week-1-introduction-and-foundations-of-probability",
     "href": "schedule.html#week-1-introduction-and-foundations-of-probability",
     "title": "Schedule",
     "section": "Week 1: Introduction and Foundations of Probability",
-    "text": "Week 1: Introduction and Foundations of Probability\nTuesday, September 8 & Wednesday, September 9\nTopics:\n\nCourse introduction: what is statistics for, and what is this sequence for?\nSample spaces, events, and the probability measure\nThe axioms of probability and their implications\n\nReadings:\n\nSection 1.1; (AM) Aronow, Peter M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press.\nSoftware familiarization: Chapters 1-4 and 28 (“Quarto”); Wickham, Hadley, Mine Çetinkaya-Rundel, and Garrett Grolemund. 2023. R for Data Science, 2nd ed.\n\n\n\n\n\n\n\nProblem Set 1 assigned Tuesday, September 8 – due Tuesday, September 22."
+    "text": "Week 1: Introduction and Foundations of Probability\nTuesday, September 8 & Wednesday, September 9\nTopics:\n\nCourse introduction: what is statistics for, and what is this sequence for?\nSample spaces, events, and the probability measure\nThe axioms of probability and their implications\n\nReadings:\n\nSection 1.1; Aronow, Peter M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press.\nSoftware familiarization: Chapters 1-4 and 28 (“Quarto”); Wickham, Hadley, Mine Çetinkaya-Rundel, and Garrett Grolemund. 2023. R for Data Science, 2nd ed.\n\n\n\n\n\n\n\nProblem Set 1 assigned Tuesday, September 8 – due Tuesday, September 22."
   },
   {
     "objectID": "schedule.html#week-2-conditional-probability-and-independence",
     "href": "schedule.html#week-2-conditional-probability-and-independence",
     "title": "Schedule",
     "section": "Week 2: Conditional Probability and Independence",
-    "text": "Week 2: Conditional Probability and Independence\nTuesday, September 15 & Wednesday, September 16\nTopics:\n\nConditional probability and the law of total probability\nIndependence and conditional independence\nReasoning with Bayes’ rule\n\nReadings:\n\nSection 1.2; (AM) Aronow and Miller 2019."
+    "text": "Week 2: Conditional Probability and Independence\nTuesday, September 15 & Wednesday, September 16\nTopics:\n\nConditional probability and the law of total probability\nIndependence and conditional independence\nReasoning with Bayes’ rule\n\nReadings:\n\nSection 1.2; Aronow and Miller 2019."
   },
   {
     "objectID": "schedule.html#week-3-random-variables-and-distributions",
     "href": "schedule.html#week-3-random-variables-and-distributions",
     "title": "Schedule",
     "section": "Week 3: Random Variables and Distributions",
-    "text": "Week 3: Random Variables and Distributions\nTuesday, September 22 & Wednesday, September 23\nTopics:\n\nRandom variables as functions on the sample space\nDiscrete and continuous distributions; PMFs, PDFs and CDFs\nCommon distributions (e.g. Binomial, Normal)\n\nReadings:\n\nSection 1.3; (AM) Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 1 due Tuesday, September 22. Problem Set 2 assigned Tuesday, September 22 – due Tuesday, October 6"
+    "text": "Week 3: Random Variables and Distributions\nTuesday, September 22 & Wednesday, September 23\nTopics:\n\nRandom variables as functions on the sample space\nDiscrete and continuous distributions; PMFs, PDFs and CDFs\nCommon distributions (e.g. Binomial, Normal)\n\nReadings:\n\nSection 1.3; Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 1 due Tuesday, September 22. Problem Set 2 assigned Tuesday, September 22 – due Tuesday, October 6"
   },
   {
     "objectID": "schedule.html#week-4-joint-distributions-and-expectation",
     "href": "schedule.html#week-4-joint-distributions-and-expectation",
     "title": "Schedule",
     "section": "Week 4: Joint Distributions and Expectation",
-    "text": "Week 4: Joint Distributions and Expectation\nTuesday, September 29 & Wednesday, September 30\nTopics:\n\nJoint, marginal and conditional distributions\nIndependence of random variables\nExpectation and its properties; functions of random variables\n\nReadings:\n\nSection 2.1; (AM) Aronow and Miller 2019."
+    "text": "Week 4: Joint Distributions and Expectation\nTuesday, September 29 & Wednesday, September 30\nTopics:\n\nJoint, marginal and conditional distributions\nIndependence of random variables\nExpectation and its properties; functions of random variables\n\nReadings:\n\nSection 2.1; Aronow and Miller 2019."
   },
   {
     "objectID": "schedule.html#week-5-variance-covariance-and-conditional-expectation",
     "href": "schedule.html#week-5-variance-covariance-and-conditional-expectation",
     "title": "Schedule",
     "section": "Week 5: Variance, Covariance, and Conditional Expectation",
-    "text": "Week 5: Variance, Covariance, and Conditional Expectation\nTuesday, October 6 & Wednesday, October 7\nTopics:\n\nVariance, standard deviation, covariance and correlation\nConditional expectations and the Best Linear Predictor\nThe law of iterated expectations\n\nReadings:\n\nSections 2.2 - 2.3; (AM) Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 2 due Tuesday, October 6. Problem Set 3 assigned Tuesday, October 6 – due Tuesday, October 20\n\n\n\n\n\n\n\n\n\nFirst Midterm Exam - Wednesday, October 7th"
+    "text": "Week 5: Variance, Covariance, and Conditional Expectation\nTuesday, October 6 & Wednesday, October 7\nTopics:\n\nVariance, standard deviation, covariance and correlation\nConditional expectations and the Best Linear Predictor\nThe law of iterated expectations\n\nReadings:\n\nSections 2.2 - 2.3; Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 2 due Tuesday, October 6. Problem Set 3 assigned Tuesday, October 6 – due Tuesday, October 20\n\n\n\n\n\n\n\n\n\nFirst Midterm Exam - Wednesday, October 7th"
   },
   {
     "objectID": "schedule.html#week-6-estimation-part-1",
     "href": "schedule.html#week-6-estimation-part-1",
     "title": "Schedule",
     "section": "Week 6: Estimation: Part 1",
-    "text": "Week 6: Estimation: Part 1\nTuesday, October 13 & Wednesday, October 14\nTopics:\n\nRandom sampling from a target population\nProperties of estimators: bias, variance and consistency\nConvergence in probability and the weak law of large numbers\n\nReadings:\n\nSections 3.1 - 3.2 (AM) Aronow and Miller 2019.\nChapter 3 (“Asymptotics”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression."
+    "text": "Week 6: Estimation: Part 1\nTuesday, October 13 & Wednesday, October 14\nTopics:\n\nRandom sampling from a target population\nProperties of estimators: bias, variance and consistency\nConvergence in probability and the weak law of large numbers\n\nReadings:\n\nSections 3.1 - 3.2; Aronow and Miller 2019.\nChapter 3 (“Asymptotics”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression."
   },
   {
     "objectID": "schedule.html#week-7-estimation-part-2",
     "href": "schedule.html#week-7-estimation-part-2",
     "title": "Schedule",
     "section": "Week 7: Estimation: Part 2",
-    "text": "Week 7: Estimation: Part 2\nTuesday, October 20 & Wednesday, October 21\nTopics:\n\nConvergence in distribution and the central limit theorem\nPlug-in estimators of statistical functionals\nDensity estimation\n\nReadings:\n\nSection 3.3 (AM) Aronow and Miller 2019.\nLundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. “What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory.” American Sociological Review 86 (3): 532-565.\n\n\n\n\n\n\n\nProblem Set 3 due Tuesday, October 20. Problem Set 4 assigned Tuesday, October 20 – due Tuesday, November 3"
+    "text": "Week 7: Estimation: Part 2\nTuesday, October 20 & Wednesday, October 21\nTopics:\n\nConvergence in distribution and the central limit theorem\nPlug-in estimators of statistical functionals\nDensity estimation\n\nReadings:\n\nSection 3.3; Aronow and Miller 2019.\nLundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. “What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory.” American Sociological Review 86 (3): 532-565.\n\n\n\n\n\n\n\nProblem Set 3 due Tuesday, October 20. Problem Set 4 assigned Tuesday, October 20 – due Tuesday, November 3"
   },
   {
     "objectID": "schedule.html#week-8-confidence-intervals-and-hypothesis-testing",
     "href": "schedule.html#week-8-confidence-intervals-and-hypothesis-testing",
     "title": "Schedule",
     "section": "Week 8: Confidence Intervals and Hypothesis Testing",
-    "text": "Week 8: Confidence Intervals and Hypothesis Testing\nTuesday, October 27 & Wednesday, October 28\nTopics:\n\nStandard errors and the construction of confidence intervals\nHypothesis tests, test statistics and p-values\nThe bootstrap\n\nReadings:\n\nSection 3.4-3.5 ; (AM) Aronow and Miller 2019.\nWasserstein, Ronald L., and Nicole A. Lazar. 2016. “ASA Statement on Statistical Significance and P-Values” The American Statistician 70 (2): 129-133."
+    "text": "Week 8: Confidence Intervals and Hypothesis Testing\nTuesday, October 27 & Wednesday, October 28\nTopics:\n\nStandard errors and the construction of confidence intervals\nHypothesis tests, test statistics and p-values\nThe bootstrap\n\nReadings:\n\nSection 3.4-3.5; Aronow and Miller 2019.\nWasserstein, Ronald L., and Nicole A. Lazar. 2016. “ASA Statement on Statistical Significance and P-Values” The American Statistician 70 (2): 129-133."
   },
   {
     "objectID": "schedule.html#week-9-introduction-to-regression",
     "href": "schedule.html#week-9-introduction-to-regression",
     "title": "Schedule",
     "section": "Week 9: Introduction to Regression",
-    "text": "Week 9: Introduction to Regression\nTuesday, November 3 & Wednesday, November 4\nTopics:\n\nOrdinary least squares as an estimator of the Best Linear Predictor\nClassical OLS and estimation of the conditional expectation function\nProperties of the OLS estimator\n\nReadings:\n\nSection 4.1; (AM) Aronow and Miller 2019.\nChapter 6 (“Linear Regression”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression.\nChapter 7 (“The Mechanics of Least Squares”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression.\n\n\n\n\n\n\n\nProblem Set 4 due Tuesday, November 3. Problem Set 5 assigned Tuesday, November 3 – due Tuesday, November 17"
+    "text": "Week 9: Introduction to Regression\nTuesday, November 3 & Wednesday, November 4\nTopics:\n\nOrdinary least squares as an estimator of the Best Linear Predictor\nClassical OLS and estimation of the conditional expectation function\nProperties of the OLS estimator\n\nReadings:\n\nSection 4.1; Aronow and Miller 2019.\nChapter 6 (“Linear Regression”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression.\nChapter 7 (“The Mechanics of Least Squares”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression.\n\n\n\n\n\n\n\nProblem Set 4 due Tuesday, November 3. Problem Set 5 assigned Tuesday, November 3 – due Tuesday, November 17"
   },
   {
     "objectID": "schedule.html#week-10-inference-for-regression",
     "href": "schedule.html#week-10-inference-for-regression",
     "title": "Schedule",
     "section": "Week 10: Inference for Regression",
-    "text": "Week 10: Inference for Regression\nTuesday, November 10 & Wednesday, November 11\nTopics:\n\nSampling distribution of the OLS estimator\nHeteroskedasticity-consistent standard errors\nClassical OLS standard errors under homoskedasticity\n\nReadings:\n\nSection 4.2; (AM) Aronow and Miller 2019.\nChapter 8 (“The Statistics of Least Squares”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression."
+    "text": "Week 10: Inference for Regression\nTuesday, November 10 & Wednesday, November 11\nTopics:\n\nSampling distribution of the OLS estimator\nHeteroskedasticity-consistent standard errors\nClassical OLS standard errors under homoskedasticity\n\nReadings:\n\nSection 4.2; Aronow and Miller 2019.\nChapter 8 (“The Statistics of Least Squares”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression."
   },
   {
     "objectID": "schedule.html#week-11-interpreting-regressions",
     "href": "schedule.html#week-11-interpreting-regressions",
     "title": "Schedule",
     "section": "Week 11: Interpreting Regressions",
-    "text": "Week 11: Interpreting Regressions\nTuesday, November 17 & Wednesday, November 18\nTopics:\n\nInterpreting multiple regression and the Frisch-Waugh-Lovell theorem\nInteractions, summarizing partial derivatives and “marginal effects”\n\nReadings:\n\nSection 4.3; (AM) Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 5 due Tuesday, November 17.\n\n\n\n\n\n\n\n\n\nSecond Midterm Exam - Wednesday, November 18"
+    "text": "Week 11: Interpreting Regressions\nTuesday, November 17 & Wednesday, November 18\nTopics:\n\nInterpreting multiple regression and the Frisch-Waugh-Lovell theorem\nInteractions, summarizing partial derivatives and “marginal effects”\n\nReadings:\n\nSection 4.3; Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 5 due Tuesday, November 17.\n\n\n\n\n\n\n\n\n\nSecond Midterm Exam - Wednesday, November 18"
   },
   {
     "objectID": "schedule.html#week-12-regression-wrap-up",
@@ -165,14 +165,14 @@
     "href": "schedule.html#week-13-weighting-estimators",
     "title": "Schedule",
     "section": "Week 13: Weighting estimators",
-    "text": "Week 13: Weighting estimators\nTuesday, December 1 & Wednesday, December 2\nTopics:\n\nMissing data, bounds for the sample mean, and assumptions for point identification\nHorvitz-Thompson and Hájek inverse probability weighting estimators\nPost-stratification/raking weights in surveys.\n\nReadings:\n\nSection 6.1-6.2; (AM) Aronow and Miller 2019.\nSection 1-2. Caughey, Devin, Adam J. Berinsky, Sara Chatfield, Erin Hartman, Eric Schickler, and Jasjeet S. Sekhon. “Target Estimation and Adjustment Weighting for Survey Nonresponse and Sampling Bias.” Elements in Quantitative and Computational Methods for the Social Sciences. Cambridge: Cambridge University Press, 2020.\n\n\n\n\n\n\n\nFall Grad Poster Presentations at MEAD, Friday 12/4, 1:30-4pm Ogg Room"
+    "text": "Week 13: Weighting estimators\nTuesday, December 1 & Wednesday, December 2\nTopics:\n\nMissing data, bounds for the sample mean, and assumptions for point identification\nHorvitz-Thompson and Hájek inverse probability weighting estimators\nPost-stratification/raking weights in surveys.\n\nReadings:\n\nSection 6.1-6.2; Aronow and Miller 2019.\nSection 1-2. Caughey, Devin, Adam J. Berinsky, Sara Chatfield, Erin Hartman, Eric Schickler, and Jasjeet S. Sekhon. “Target Estimation and Adjustment Weighting for Survey Nonresponse and Sampling Bias.” Elements in Quantitative and Computational Methods for the Social Sciences. Cambridge: Cambridge University Press, 2020.\n\n\n\n\n\n\n\nFall Grad Poster Presentations at MEAD, Friday 12/4, 1:30-4pm Ogg Room"
   },
   {
     "objectID": "schedule.html#week-14-preview-causal-inference",
     "href": "schedule.html#week-14-preview-causal-inference",
     "title": "Schedule",
     "section": "Week 14: Preview: Causal inference",
-    "text": "Week 14: Preview: Causal inference\nTuesday, December 8 & Wednesday, December 9\nTopics:\n\nThe potential outcomes model for causal inference\nThe fundamental problem of causal inference\nThe “credibility revolution” and the centrality of research design\n\nReadings:\n\nSection 7.1; (AM) Aronow and Miller 2019.\nTorreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2025. “The Credibility Revolution in Political Science.” Working paper."
+    "text": "Week 14: Preview: Causal inference\nTuesday, December 8 & Wednesday, December 9\nTopics:\n\nThe potential outcomes model for causal inference\nThe fundamental problem of causal inference\nThe “credibility revolution” and the centrality of research design\n\nReadings:\n\nSection 7.1; Aronow and Miller 2019.\nTorreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2025. “The Credibility Revolution in Political Science.” Working paper."
   },
   {
     "objectID": "lectures.html",
