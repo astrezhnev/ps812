@@ -32,9 +32,9 @@ Informally, and considerably more importantly, the most essential prerequisite i
 
 ## Logistics
 
-- **Lectures**: Tuesdays/Wednesdays. Time and room TBA.
+- **Lectures**: Tuesdays/Wednesdays, 3:30PM-4:45PM, Ogg Room (North Hall 422).
 
-- **Section**: Fridays. 
+- **Section**: Fridays, 9:30AM-10:20AM, Ogg Room (North Hall 422).
 
 You should attend lectures regularly as they comprise a significant element of the course instruction. Lecture materials will be posted on the course website. Lectures typically focus on the statistical material while the weekly sections emphasize applications and computational skills. Each section will typically begin with questions and review, and the remainder will be devoted to short guided exercises.
 

@@ -37,7 +37,7 @@ page-layout: full
 ### Teaching Assistant
 
 - {{< fa user >}} &nbsp; [John Hicks](https://polisci.wisc.edu/staff/hicks-john/)
-- {{< fa envelope >}} &nbsp; [jdhicks3@wisc.edu](mailto:jdhicks3@wisc.edu)
+- {{< fa envelope >}} &nbsp; [john.hicks@wisc.edu](mailto:john.hicks@wisc.edu)
 
 :::
 
