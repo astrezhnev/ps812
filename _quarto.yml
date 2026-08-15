@@ -7,7 +7,7 @@ project:
 
 website:
   title: "PoliSci 812"
-  description: "Graduate introduction to statistical methods in political science"
+  description: "Introduction to Statistical Methods in Political Science"
   site-url: https://astrezhnev.github.io/ps812/
   repo-url: https://github.com/astrezhnev/ps812
 
@@ -27,8 +27,8 @@ website:
         href: assignments.qmd
       - text: "Resources"
         href: resources.qmd
-      - text: "Ed"
-        href: https://edstem.org/
+      - text: "Slack"
+        href: https://uw-mpolscimethods.slack.com/
       - text: "Gradescope"
         href: https://www.gradescope.com/
     right:

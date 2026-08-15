@@ -4,13 +4,13 @@ title: "Lectures"
 
 ## Lecture Slides
 
-Lecture slides are available as self-contained `.html` files made with RevealJS from a Quarto `.qmd` file. You can choose to print these to a PDF document by using the "PDF Export Mode" in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the `.qmd` file and supporting data/images/etc. from the Github repository. Slides are organized by week and combine Tuesday and Wednesday's lectures.
+Lecture slides are available as self-contained `.html` files made with RevealJS from a Quarto `.qmd` file. You can choose to print these to a PDF document by using the "PDF Export Mode" in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the `.qmd` file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday's lectures.
 
 Links become active as the materials for each week are posted.
 
 <!-- Template for each week once slides are posted:
 
-- [Week N Github Repository](https://github.com/astrezhnev/ps812/tree/main/slides/weekN/)
+- [Week N GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/slides/weekN/)
 - [Week N `.html` slides](https://www.antonstrezhnev.com/ps812/slides/weekN/weekN_topic.html)
 
 -->
@@ -35,11 +35,11 @@ Links become active as the materials for each week are posted.
 
 *To be posted*
 
-### Week 6: Random Samples, the LLN, and the CLT
+### Week 6: Estimation: Part 1
 
 *To be posted*
 
-### Week 7: Estimation
+### Week 7: Estimation: Part 2
 
 *To be posted*
 
@@ -51,22 +51,22 @@ Links become active as the materials for each week are posted.
 
 *To be posted*
 
-### Week 10: Multiple Regression
+### Week 10: Inference for Regression
 
 *To be posted*
 
-### Week 11: Inference for Regression
+### Week 11: Interpreting Regressions
 
 *To be posted*
 
-### Week 12: Causal Inference and the Experimental Ideal
+### Week 12: Regression wrap-up
 
 *To be posted*
 
-### Week 13: Regression and Observational Data
+### Week 13: Weighting estimators
 
 *To be posted*
 
-### Week 14: Beyond Selection on Observables; Wrap-Up
+### Week 14: Preview: Causal inference
 
 *To be posted*

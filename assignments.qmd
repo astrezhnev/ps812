@@ -4,17 +4,18 @@ title: "Assignments"
 
 ## Schedule
 
-| Assignment        | Assigned              | Due                   |
-|-------------------|-----------------------|-----------------------|
-| Problem Set 1     | Sept 16 (Week 2)      | Sept 30 (Week 4)      |
-| Problem Set 2     | Sept 30 (Week 4)      | Oct 14 (Week 6)       |
-| Problem Set 3     | Oct 14 (Week 6)       | Oct 28 (Week 8)       |
-| **Midterm Exam**  | Nov 3 (Week 9)        | **In-Class**          |
-| Problem Set 4     | Nov 11 (Week 10)      | Nov 25 (Week 12)      |
-| Problem Set 5     | Nov 25 (Week 12)      | Dec 9 (Week 14)       |
-| **Final Exam**    | Exam week (Dec 11-17) | **Date/Location TBA** |
+| Assignment                 | Assigned         | Due                  |
+|----------------------------|------------------|----------------------|
+| Problem Set 1              | Sept 8 (Week 1)  | Sept 22 (Week 3)     |
+| Problem Set 2              | Sept 22 (Week 3) | Oct 6 (Week 5)       |
+| Problem Set 3              | Oct 6 (Week 5)   | Oct 20 (Week 7)      |
+| **First Midterm Exam**     | --               | **Oct 7 (Week 5)**   |
+| Problem Set 4              | Oct 20 (Week 7)  | Nov 3 (Week 9)       |
+| Problem Set 5              | Nov 3 (Week 9)   | Nov 17 (Week 11)     |
+| **Second Midterm Exam**    | --               | **Nov 18 (Week 11)** |
+| **Replication Project**    | TBA              | **Dec 4 (Week 13)**  |
 
-Problem sets are due at the start of Wednesday's lecture. Solutions are posted to Canvas after the deadline.
+Problem sets are assigned and due on Tuesdays, at the start of lecture. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week.
 
 ---
 
@@ -26,27 +27,27 @@ Links become active when each assignment is released.
 
 ### Problem Set 1
 
-- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps1)
+- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps1)
 - [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps1.zip)
 
 ### Problem Set 2
 
-- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps2)
+- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps2)
 - [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps2.zip)
 
 ### Problem Set 3
 
-- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps3)
+- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps3)
 - [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps3.zip)
 
 ### Problem Set 4
 
-- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps4)
+- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps4)
 - [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps4.zip)
 
 ### Problem Set 5
 
-- [Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps5)
+- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps5)
 - [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps5.zip)
 
 ---
@@ -59,9 +60,15 @@ Section meets once a week and is built around short, guided exercises that imple
 
 ---
 
+## Replication Project
+
+You will work in groups of two on a replication project and present it as a poster at the MEAD Fall Grad Poster Presentations on **Friday, December 4, 1:30-4pm** in the Ogg Room. More details on the project will be provided later in the semester.
+
+---
+
 ## Exams
 
-Both exams are **in person**, closed-book, pen-and-paper examinations involving both theory questions and practical interpretation of sample code and results.
+Both midterms are **in person**, closed-book, pen-and-paper examinations involving both theory questions and practical interpretation of sample code and results. There is no final exam.
 
-- **Midterm:** in class on Tuesday, November 3, covering material through Week 8 (probability, random variables, expectation, random samples, estimation and inference).
-- **Final:** during the university exam period, December 11-17. The date, time and room are assigned by the registrar and will be posted here once available. The final covers material from the full semester.
+- **First Midterm:** in class on Wednesday, October 7, covering the first five weeks of probability theory (probability, conditional probability and independence, random variables and distributions, joint distributions, expectation, variance and covariance).
+- **Second Midterm:** in class on Wednesday, November 18, covering statistical inference and linear regression (estimation, confidence intervals and hypothesis testing, OLS and its interpretation).

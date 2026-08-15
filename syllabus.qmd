@@ -34,33 +34,31 @@ Informally, and considerably more importantly, the most essential prerequisite i
 
 - **Lectures**: Tuesdays/Wednesdays. Time and room TBA.
 
-You should attend lectures regularly as they comprise a significant element of the course instruction. Lecture materials will be posted on the course website.
+- **Section**: Fridays. 
 
-- **Section**: Day, time and room TBA.
+You should attend lectures regularly as they comprise a significant element of the course instruction. Lecture materials will be posted on the course website. Lectures typically focus on the statistical material while the weekly sections emphasize applications and computational skills. Each section will typically begin with questions and review, and the remainder will be devoted to short guided exercises.
 
-Instruction in this course is delivered through two complementary avenues. Lectures typically focus on the statistical material. Section meets once a week and focuses on practical problem solving and computational skills. It is common to leave a lecture understanding the theory but not knowing how to implement it in {{< fa brands r-project >}}; section exists to bridge that gap. Each section will typically begin with questions and review, and the remainder will be devoted to short guided exercises. These exercises are not formally graded, but they are looked over and they count toward your participation grade.
-
-- **Discussion Forum**: We will be using [Slack](https://uw-mpolscimethods.slack.com/) as our primary course discussion platform. Please reach out to the course staff for an invitation to the methods sequence Slack channel if you are not already on it.
+- **Discussion Forum**: We will be using [Slack](https://uw-mpolscimethods.slack.com/) as our primary course discussion platform. Please reach out to the course staff for an invitation to the methods sequence Slack channel if you are not already on it. Please use this to post questions about the readings/lecture material as well as about the problem sets. We also recommend using the channel to contact teaching staff.
 
 - **Course Materials**: Lecture materials, problem sets and tutorial code will be posted on the course website. Problem set solutions will be posted after the due date on Canvas. Links to readings can be found on the [Schedule](schedule.qmd) page organized by week.
 
 ## Textbooks
 
-The primary textbook for this class is Aronow and Miller (2019) *Foundations of Agnostic Statistics*. We highly encourage you to purchase this text as it is an excellent reference for the core probability and inference material that we will be covering.
+The primary textbook for this class is Aronow and Miller (2019) *Foundations of Agnostic Statistics*. It is [available online](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/684756357E7E9B3DFF0A8157FB2DCECA) through the UW-Madison Library. However, you may also wish to purchase a physical copy as it is an excellent reference for the core probability and inference material that we will be covering.
 
-- **(AM)** Aronow, Peter M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press.
+- **(AM)** Aronow, P. M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press.
 
-Additional readings will be provided in the form of links to articles and online textbook chapters. No other book purchases will be necessary for this course. Additional supplementary references including recommended guides to {{< fa brands r-project >}} programming, can be found on the [Resources](resources.qmd) page.
+Additional readings will be provided in the form of links to articles and online textbook chapters. Additional supplementary references including recommended guides to {{< fa brands r-project >}} programming, can be found on the [Resources](resources.qmd) page.
 
 ## Grading
 
 Students' final grades are based on four components:
 
-### Problem Sets (25%)
+### Problem Sets (15%)
 
-Students will complete a total of five problem sets throughout the semester. Problem sets cover roughly a two-week block of course material and will contain a mix of analytic problems, computer simulations, and data analysis. A complete schedule of the assignments can be found on the [Assignments](assignments.qmd) page.
+Students will complete a total of five problem sets throughout the semester. Problem sets cover roughly a two-week block of course material. A complete schedule of the assignments can be found on the [Assignments](assignments.qmd) page.
 
-The goal of the problem sets is to encourage exploration of the material and to provide you with a clear and credible means of assessing your understanding and progress through the course. As such, problem sets are *designed* to be challenging and I expect students to find some questions difficult.
+The goal of the problem sets is to encourage exploration of the material and to provide you with a clear and credible means of assessing your understanding and progress through the course. As such, problem sets are *designed* to be challenging and we expect students to find some questions difficult.
 
 Problem sets will be graded on a (+/✓/-) scale:
 
@@ -70,55 +68,37 @@ Problem sets will be graded on a (+/✓/-) scale:
 
 #### Collaboration Policy
 
-I strongly encourage collaboration between students on the problem sets and highly recommend that students discuss problems with each other either in person or via the discussion forum. However, each student is expected to submit their own write-up of the answers and any relevant code. That is: no copy-and-paste from someone else's code. You would not copy-and-paste from someone else's paper, and you should treat code the same way. I also strongly suggest that you make a solo attempt at every problem before consulting others.
+We strongly encourage collaboration between students on the problem sets and highly recommend that students discuss problems with each other either in person or via the discussion forum. However, each student is expected to submit their own write-up of the answers and any relevant code.
 
 #### Office Hours and Online Discussion
 
-Students should feel free to discuss any questions about the problem sets with the teaching staff during section and during office hours. I also strongly encourage students to post questions about both the problem sets and the readings on the course discussion board and respond to other students' questions. Responding to other students' questions will contribute to your participation grade.
+Students should feel free to discuss any questions about the problem sets with the teaching staff during sections and office hours. We also strongly encourage students to post questions about both the problem sets and the assigned readings on the course discussion board and respond to other students' questions. Responding to other students' questions will contribute to your participation grade.
 
 #### Submission Guidelines
 
-Problem sets will be distributed as HTML and Quarto files (`.qmd`). You should submit your answers and any relevant R code in the same format: including the Quarto file (`.qmd` extension) and a corresponding rendered `.html` file as your submission. Quarto builds on the earlier R Markdown project, which allows you to combine the text formatting syntax of the Markdown markup language with the ability to embed and execute chunks of code directly into a text document. This allows you to present your code, graphical output, and discussion/write-up all in the same document. I highly recommend that you edit the distributed Quarto assignment file for each problem set directly to make organization easier. Problem sets are submitted via [Gradescope](https://www.gradescope.com/).
+Problem sets will be distributed as HTMl and Quarto files (`.qmd`). You should submit your answers and any relevant R code in the same format: including the Quarto file (`.qmd` extension) and a corresponding rendered `.html` file as your submission. I highly recommend editing the provided Quarto file and providing your work in line with the questions. You will be submitting your problem sets via [Gradescope](https://www.gradescope.com/).
 
-#### Code Conventions
+### Two in-person Midterms (20% each)
 
-Throughout the course you will receive feedback on your code from me, from the TA, and from other students. Consistent code conventions are therefore important, and good style is one of the easiest ways to increase the readability of your code -- including for a future version of yourself. I recommend following the conventions developed by Hadley Wickham and implemented in the [`lintr`](https://lintr.r-lib.org/) package, which integrates directly into RStudio.
+We will have two in-person midterm examinations that will take place during the class period.  The first will take place on **Wednesday, October 7** and cover the first five weeks of probability theory. The second will take place on **Wednesday, November 18** and cover statistical inference and linear regression. The exams will take the form of a standard pen-and-paper timed examination involving both theory and practical analysis of sample code and results. 
 
-### In-person Midterm (25%)
+### Replication project (30%)
 
-We will have an in-person midterm examination on **Tuesday, November 3rd, 2026**. This exam will cover the material in the first half of the course (probability, random variables, expectation, random samples, estimation, and inference). The exam will take the form of a standard pen-and-paper timed examination involving both theory and practical analysis of sample code and results.
-
-### In-person Final (35%)
-
-The final exam will take place in person during exams week (December 11-17, 2026). The date, time and room are assigned by the registrar and will be posted on the [Schedule](schedule.qmd) page once available. The exam will take the same form as the midterm, but will be slightly longer given the additional time available during the exam period, and will cover material from the full semester.
+You will work in groups of two to work on a replication project and present it at the end of the semester in a MEAD session: **Friday December 4, 2026**. We will provide more details on the project later in the semester.
 
 ### Participation (15%)
 
-I expect students to take an active role in learning in both lecture and section. Engagement with the teaching staff by asking and answering questions will contribute to this grade, as will interaction on the discussion board and completion of the weekly section exercises. Actively helping your classmates is a substantial part of what makes a methods sequence work, and it is graded accordingly.
-
-### Grade Scale
-
-This course is not curved. Letter grades follow the standard UW-Madison scale:
-
-| Grade | Range  |
-|-------|--------|
-| A     | 93-100 |
-| AB    | 88-92  |
-| B     | 83-87  |
-| BC    | 78-82  |
-| C     | 70-77  |
-| D     | 60-69  |
-| F     | < 60   |
+We expect students to take an active role in learning in both lecture and section. Engagement with the teaching staff by asking and answering questions will contribute to this grade as will interaction on the Slack. Additionally, bonus credit can be earned by attending talks from external speakers at the MEAD workshop.
 
 ## Computing
 
 This course will use the R programming language. This is a free and open source programming language that is available for nearly all computing platforms. You should download and install it from [https://www.r-project.org](https://www.r-project.org).
 
-Unless you have strong preferences for a specific coding environment, I also highly recommend that you use the free [RStudio](https://rstudio.com) Desktop Integrated Development Environment (IDE) which you can download from [https://rstudio.com/products/rstudio/download/#download](https://rstudio.com/products/rstudio/download/#download). In addition to being a great and simple to use environment for editing code, RStudio makes it very easy to write and compile Quarto documents: the format in which problem sets will be distributed. For a guide to using Quarto, see [https://quarto.org](https://quarto.org).
+Unless you have strong preferences for a specific coding environment, we recommend that you use the free [RStudio](https://rstudio.com) Desktop Integrated Development Environment (IDE) which you can download from [https://rstudio.com/products/rstudio/download/#download](https://rstudio.com/products/rstudio/download/#download).
 
 In addition to base R, we will be frequently using data management and processing tools found in the [tidyverse](https://www.tidyverse.org/) set of packages along with basic graphics and visualization using [ggplot2](https://ggplot2.tidyverse.org/).
 
-You should have R, RStudio and Quarto installed and be able to render a document to `.html` **before the end of the first week of classes**. If you cannot reliably do this, come to office hours or section early on -- do not wait until the first problem set is due. See the [Resources](resources.qmd) page for additional information.
+See the [Resources](resources.qmd) page for additional information. 
 
 ## Policy on Generative Large Language Models
 
@@ -145,44 +125,20 @@ Lastly, any LLM policy needs to consider its feasibility. It is clear to me that
 - I'll know if you use them poorly.
 - [Ignore the problem sets at your own peril. The consequences will arrive at exam time.](https://en.wikipedia.org/wiki/Deal_with_the_Devil)
 
-## How to Learn in this Course
-
-If you find this course challenging, you are not alone. Statistics can be difficult and we cover a lot of ground quickly. Your primary responsibilities in this class are to **work hard** and to **communicate** with us about what you need. You cannot learn if you are not putting in the time, and we cannot help if we do not know there is a problem.
-
-The main sources of support available to you are:
-
-1. **Lecture and section.** Ask questions when something does not make sense. Someone else in the room almost certainly has the same question.
-2. **Readings and slides.** The slides are dense by design and are meant to be reviewed repeatedly, not seen once.
-3. **The discussion board.** Questions posted there get answered quickly by classmates, the TA, and me, and everyone benefits from the answer.
-4. **Office hours.** Both mine and the TA's. These are especially useful for new, tricky material and for problem sets.
-5. **Problem set solutions.** Solutions are posted after the due date. It is tempting to move straight on to the next assignment, but the material builds directly on itself -- go back and lock down anything you were unsure about.
-
 ## Accommodations and Accessibility
 
-The University of Wisconsin–Madison supports the right of all enrolled students to a full and equal educational opportunity. The Americans with Disabilities Act (ADA), Wisconsin State Statute (36.12), and UW–Madison policy (Faculty Document 1071) require that students with disabilities be reasonably accommodated in instruction and campus life. Reasonable accommodations for students with disabilities is a shared faculty and student responsibility.
+The University of Wisconsin–Madison supports the right of all enrolled students to a full and equal educational opportunity. The Americans with Disabilities Act (ADA), Wisconsin State Statute (36.12), and UW–Madison policy (Faculty Document 1071) require that students with disabilities be reasonably accommodated in instruction and campus life. Reasonable accommodations for students with disabilities is a shared faculty and student responsibility. 
 
-Students are expected to inform faculty of their need for instructional accommodations by the end of the third week of the semester, or as soon as possible after a disability has been incurred or recognized.
+Students are expected to inform faculty of their need for instructional accommodations by the end of the third week of the semester, or as soon as possible after a disability has been incurred or recognized. 
 
-I will work either directly with you or in coordination with the [McBurney Disability Resource Center](https://mcburney.wisc.edu/) to identify and provide reasonable instructional accommodations. Once you are approved for accommodations by the McBurney Center, please be sure to make the relevant selections in [McBurney Connect](https://mcburney.wisc.edu/mcburneyconnect/). When I have received your Student Accommodation Letter, I will send you a follow-up e-mail to connect and discuss how the accommodations will be implemented for this course. Disability information, including instructional accommodations as part of a student's educational record, is confidential and protected under FERPA.
+I will work either directly with you or in coordination with the [McBurney Disability Resource Center](https://mcburney.wisc.edu/) to identify and provide reasonable instructional accommodations. Once you are approved for accommodations by the McBurney Center, please be sure to make the relevant selections in [McBurney Connect](https://mcburney.wisc.edu/mcburneyconnect/). When I have received your Student Accommodation Letter, I will send you a follow-up e-mail to connect and discuss how the accommodations will be implemented for this course. Disability information, including instructional accommodations as part of a student’s educational record, is confidential and protected under FERPA.
 
 ### North Hall Accessibility
 
-The Department of Political Science is located in North Hall, the oldest building on campus. Due to its age, this building is not accessible to individuals with mobility disabilities and does not have an elevator or an accessible restroom. The department is committed to equal opportunity for all students to attend office hours, advising, and other department-related events. Please contact me if North Hall presents a disability-related barrier to you and the department will gladly work to ensure access.
-
-## Academic Integrity
-
-By virtue of enrollment, each student agrees to uphold the high academic standards of the University of Wisconsin-Madison. Academic misconduct is behavior that negatively impacts the integrity of the institution. Cheating, fabrication, plagiarism, unauthorized collaboration, and helping others commit these acts are examples of misconduct which may result in disciplinary action. For more information, see the [UW-Madison academic integrity policy](https://conduct.students.wisc.edu/academic-integrity/).
-
-## Academic Calendar and Religious Observances
-
-See the [UW-Madison academic calendar](https://secfac.wisc.edu/academic-calendar/) and the university policy on [religious observances](https://secfac.wisc.edu/academic-calendar/#religious-observances). If a religious observance conflicts with a scheduled assessment, notify me within the first three weeks of the semester so that we can make alternative arrangements.
-
-## Course Evaluations
-
-Students will be provided with an opportunity to evaluate this course and their learning experience. I will also informally solicit feedback throughout the semester. UW-Madison uses an online course evaluation survey tool, AEFIS. You will typically receive an official email two weeks prior to the end of the semester with a link to log in with your NetID and complete the evaluation anonymously. Your feedback is important to me and I strongly encourage you to participate.
+The Political Science department is located in North Hall, the oldest building on campus. Due to its age, this building is not accessible to individuals with mobility disabilities and does not have an elevator or accessible restroom. The department is committed to equal opportunity for all students to attend office hours, advising, and other department-related events. Please contact me if North Hall presents a disability-related barrier to you, and the department will gladly work to ensure access.
 
 ## Acknowledgments
 
-This course was developed on the shoulders of giants, in some cases borrowing directly from materials developed by the methods community in political science, economics, statistics and sociology. In particular, I thank Adeline Lo, whose previous version of PS 812 forms the backbone of this syllabus and its schedule, as well as Matthew Blackwell, Peter Aronow, Dalton Conley, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Brandon Stewart, and Teppei Yamamoto, whose lecture notes and syllabi have been immensely valuable in the creation of this course. Lecture slides and circulated materials should carry appropriate citations -- please e-mail me if you believe something is incorrectly cited or lacking in citation rigor. All errors that remain are my own.
+This course is indebted to the many wonderful and generous scholars in political methodology, econometrics and sociology who have made their materials available to the public. In particular, I thank Adeline Lo, whose previous version of PS812 forms the core of this syllabus and its schedule, as well as Matthew Blackwell, P Aronow, Dalton Conley, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto
 
 Lastly, thanks to Andrew Heiss and Matt Blackwell for their Quarto website templates, which I have extensively borrowed from in designing this course site.

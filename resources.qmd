@@ -8,7 +8,7 @@ The two main texts for the course are listed first. The remaining books are usef
 
 ### Main Texts
 
-- **Aronow, Peter M., and Benjamin T. Miller.** *Foundations of Agnostic Statistics*. Cambridge University Press, 2019.
+- **Aronow, P. M., and Benjamin T. Miller.** *Foundations of Agnostic Statistics*. Cambridge University Press, 2019.
   - [UW-Madison Library Access](https://search.library.wisc.edu/)
   - The main text for probability, inference and regression. "Agnostic" here means the book develops these tools without leaning on the parametric modeling assumptions that introductory texts usually take for granted.
 

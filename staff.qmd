@@ -19,7 +19,7 @@ title: "Staff"
 | **Office**       | North Hall 322D                                     |
 | **Email**        | [strezhnev@wisc.edu](mailto:strezhnev@wisc.edu)     |
 | **Website**      | [antonstrezhnev.com](https://www.antonstrezhnev.com)|
-| **Office Hours** | TBA (or by appointment via email)                   |
+| **Office Hours** | Tuesdays 9am-11am (or by appointment via email)     |
 
 ---
 
@@ -34,8 +34,8 @@ title: "Staff"
 |                  |       |
 |------------------|-------|
 | **Email**        | [john.hicks@wisc.edu](mailto:john.hicks@wisc.edu)   |
-| **Section**      | TBA   |
-| **Office Hours** | TBA   |
+| **Section**      | Friday 9:30AM-10:20AM, 422 North Hall   |
+| **Office Hours** | Thursday 9AM-11AM, Education Building   |
 
 ---
 

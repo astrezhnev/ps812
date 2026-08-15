@@ -8,9 +8,9 @@ page-layout: full
 
 ::: {.g-col-12 .g-col-sm-8 .order-2 .order-sm-1}
 
-[Statistical Methods]{style="font-size: 4em; font-weight: bold;"}
+[Introduction to Statistical Methods in Political Science]{style="font-size: 4em; font-weight: bold;"}
 
-[Probability, inference and regression for political science research]{style="font-size: 2em;"}
+[Probability, inference and regression]{style="font-size: 2em;"}
 
 [PoliSci 812 • Fall 2026<br>University of Wisconsin-Madison]{style="color: grey;"}
 
@@ -36,8 +36,8 @@ page-layout: full
 
 ### Teaching Assistant
 
-- {{< fa user >}} &nbsp; TBD
-- {{< fa envelope >}} &nbsp; TBD
+- {{< fa user >}} &nbsp; [John Hicks](https://polisci.wisc.edu/staff/hicks-john/)
+- {{< fa envelope >}} &nbsp; [jdhicks3@wisc.edu](mailto:jdhicks3@wisc.edu)
 
 :::
 
@@ -47,9 +47,9 @@ page-layout: full
 
 - {{< fa calendar >}} &nbsp; Tuesdays & Wednesdays
 - {{< fa calendar-alt >}} &nbsp; 9/8/2026 - 12/9/2026
-- {{< fa clock >}} &nbsp; Time TBA
-- {{< fa location-dot >}} &nbsp; Room TBA
-- {{< fa users >}} &nbsp; Section: TBA
+- {{< fa clock >}} &nbsp; 3:30PM-4:45PM
+- {{< fa location-dot >}} &nbsp; Ogg Room (North Hall 422)
+- {{< fa users >}} &nbsp; Section: Friday 9:30AM-10:20AM, Ogg Room (North Hall 422)
 
 :::
 
@@ -57,7 +57,7 @@ page-layout: full
 
 ### Contacting me
 
-E-mail is the best way to get in touch with me. My dedicated office hours are **TBA** if you want to meet in-person. I am also generally in my office on weekdays during normal hours and my door is open, so you are welcome to drop in. You can also feel free to e-mail me to confirm availability or to schedule a virtual meeting via Zoom.
+Slack is the best way to get in touch with me. My dedicated office hours are **Tuesdays 9am-11am** if you want to meet in-person. I am also generally in my office on weekdays during normal hours and my door is open, so you are welcome to drop in. You can also feel free to contact me to confirm availability or to schedule a virtual meeting via Zoom.
 
 :::
 
