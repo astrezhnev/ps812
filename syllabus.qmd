@@ -46,7 +46,7 @@ You should attend lectures regularly as they comprise a significant element of t
 
 The primary textbook for this class is Aronow and Miller (2019) *Foundations of Agnostic Statistics*. It is [available online](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/684756357E7E9B3DFF0A8157FB2DCECA) through the UW-Madison Library. However, you may also wish to purchase a physical copy as it is an excellent reference for the core probability and inference material that we will be covering.
 
-- **(AM)** Aronow, P. M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press.
+- Aronow, P. M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press.
 
 Additional readings will be provided in the form of links to articles and online textbook chapters. Additional supplementary references including recommended guides to {{< fa brands r-project >}} programming, can be found on the [Resources](resources.qmd) page.
 

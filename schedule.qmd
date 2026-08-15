@@ -6,7 +6,7 @@ A schedule of topics and readings is provided below. Each week covers a single t
 
 The readings are not long, but they are dense. The first part of the semester in particular leans heavily on mathematical notation. Becoming comfortable with that kind of language is itself one of the learning goals of the course, so it will be tempting to skim past the math that looks daunting -- do not do this. Read carefully, go line by line, take notes, and bring your questions to lecture, section, or the discussion board.
 
-Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Agnostic Statistics*. Both are available through the UW-Madison library; relevant excerpts will also be posted on Canvas. All hyperlinks to papers and to other books are either to the published version or to a freely available copy.
+Textbook readings are from Aronow and Miller, *Foundations of Agnostic Statistics*, which is available through the UW-Madison library; relevant excerpts will also be posted on Canvas. All hyperlinks to papers and to other books are either to the published version or to a freely available copy.
 
 ::: {.callout-note appearance="simple"}
 **This course begins on Tuesday, September 8.** Wednesday, September 2nd is cancelled due to the American Political Science Association (APSA) annual meeting.
@@ -24,7 +24,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Section 1.1](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/probability-theory/49615782B7055F584D820E8864F145FD); **(AM)** Aronow, Peter M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press.
+- [Section 1.1](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/probability-theory/49615782B7055F584D820E8864F145FD); Aronow, Peter M., and Benjamin T. Miller. 2019. *Foundations of Agnostic Statistics*. Cambridge: Cambridge University Press.
 - **Software familiarization:** Chapters 1-4 and 28 ("Quarto"); Wickham, Hadley, Mine Çetinkaya-Rundel, and Garrett Grolemund. 2023. [*R for Data Science*, 2nd ed.](https://r4ds.hadley.nz/)
 
 ::: {.callout-note appearance="simple"}
@@ -45,7 +45,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Section 1.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/probability-theory/49615782B7055F584D820E8864F145FD); **(AM)** Aronow and Miller 2019.
+- [Section 1.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/probability-theory/49615782B7055F584D820E8864F145FD); Aronow and Miller 2019.
 
 
 ---
@@ -62,7 +62,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Section 1.3](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/probability-theory/49615782B7055F584D820E8864F145FD); **(AM)** Aronow and Miller 2019.
+- [Section 1.3](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/probability-theory/49615782B7055F584D820E8864F145FD); Aronow and Miller 2019.
 
 ::: {.callout-note appearance="simple"}
 **Problem Set 1** due Tuesday, September 22. **Problem Set 2** assigned Tuesday, September 22 -- due Tuesday, October 6
@@ -82,7 +82,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Section 2.1](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/summarizing-distributions/16F75B68EABD0738A8B11BFFA9E312C0); **(AM)** Aronow and Miller 2019.
+- [Section 2.1](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/summarizing-distributions/16F75B68EABD0738A8B11BFFA9E312C0); Aronow and Miller 2019.
 
 ---
 
@@ -98,7 +98,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Sections 2.2 - 2.3](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/summarizing-distributions/16F75B68EABD0738A8B11BFFA9E312C0); **(AM)** Aronow and Miller 2019.
+- [Sections 2.2 - 2.3](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/summarizing-distributions/16F75B68EABD0738A8B11BFFA9E312C0); Aronow and Miller 2019.
 
 ::: {.callout-note appearance="simple"}
 **Problem Set 2** due Tuesday, October 6. **Problem Set 3** assigned Tuesday, October 6 -- due Tuesday, October 20
@@ -122,7 +122,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Sections 3.1 - 3.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/learning-from-random-samples/509C9A93461306812A43DE3D54302AD1) **(AM)** Aronow and Miller 2019.
+- [Sections 3.1 - 3.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/learning-from-random-samples/509C9A93461306812A43DE3D54302AD1); Aronow and Miller 2019.
 - Chapter 3 ("Asymptotics"); Blackwell, Matthew. 2025. [*A User's Guide to Statistical Inference and Regression*.](https://mattblackwell.github.io/gov2002-book/asymptotics.html)
 
 
@@ -140,7 +140,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Section 3.3](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/learning-from-random-samples/509C9A93461306812A43DE3D54302AD1) **(AM)** Aronow and Miller 2019.
+- [Section 3.3](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/learning-from-random-samples/509C9A93461306812A43DE3D54302AD1); Aronow and Miller 2019.
 - Lundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. ["What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory."](https://journals.sagepub.com/doi/full/10.1177/00031224211004187) *American Sociological Review* 86 (3): 532-565.
 
 ::: {.callout-note appearance="simple"}
@@ -162,7 +162,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Section 3.4-3.5](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/learning-from-random-samples/509C9A93461306812A43DE3D54302AD1) ; **(AM)** Aronow and Miller 2019.
+- [Section 3.4-3.5](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/learning-from-random-samples/509C9A93461306812A43DE3D54302AD1); Aronow and Miller 2019.
 - Wasserstein, Ronald L., and Nicole A. Lazar. 2016. ["ASA Statement on Statistical Significance and P-Values"](https://www.tandfonline.com/doi/full/10.1080/00031305.2016.1154108) *The American Statistician* 70 (2): 129-133.
 
 ---
@@ -179,7 +179,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Section 4.1](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/regression/A50D2BEDE2AFB367FAD939AB509D4F53); **(AM)** Aronow and Miller 2019.
+- [Section 4.1](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/regression/A50D2BEDE2AFB367FAD939AB509D4F53); Aronow and Miller 2019.
 - Chapter 6 ("Linear Regression"); Blackwell, Matthew. 2025. [*A User's Guide to Statistical Inference and Regression*.](https://mattblackwell.github.io/gov2002-book/linear_model.html)
 - Chapter 7 ("The Mechanics of Least Squares"); Blackwell, Matthew. 2025. [*A User's Guide to Statistical Inference and Regression*.](https://mattblackwell.github.io/gov2002-book/least_squares.html)
 
@@ -202,7 +202,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Section 4.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/regression/A50D2BEDE2AFB367FAD939AB509D4F53); **(AM)** Aronow and Miller 2019.
+- [Section 4.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/regression/A50D2BEDE2AFB367FAD939AB509D4F53); Aronow and Miller 2019.
 - Chapter 8 ("The Statistics of Least Squares"); Blackwell, Matthew. 2025. [*A User's Guide to Statistical Inference and Regression*.](https://mattblackwell.github.io/gov2002-book/ols_properties.html)
 
 
@@ -217,7 +217,7 @@ Textbook readings marked **(AM)** are from Aronow and Miller, *Foundations of Ag
 
 **Readings:**
 
-- [Section 4.3](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/regression/A50D2BEDE2AFB367FAD939AB509D4F53); **(AM)** Aronow and Miller 2019.
+- [Section 4.3](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/regression/A50D2BEDE2AFB367FAD939AB509D4F53); Aronow and Miller 2019.
 
 ::: {.callout-note appearance="simple"}
 **Problem Set 5** due Tuesday, November 17.
@@ -256,7 +256,7 @@ Thanksgiving recess runs November 26-29. Class meets as usual on Tuesday this we
 
 **Readings:**
 
-- [Section 6.1-6.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/missing-data/0E4CAAF51D501EC05D4D5F2D0950C012); **(AM)** Aronow and Miller 2019.
+- [Section 6.1-6.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/missing-data/0E4CAAF51D501EC05D4D5F2D0950C012); Aronow and Miller 2019.
 - Section 1-2. Caughey, Devin, Adam J. Berinsky, Sara Chatfield, Erin Hartman, Eric Schickler, and Jasjeet S. Sekhon. ["Target Estimation and Adjustment Weighting for Survey Nonresponse and Sampling Bias."](https://www.dropbox.com/s/hnb4tjf3eer4yxo/Caughey_et_al-target_estimation_calibration_weighting.pdf?dl=1) *Elements in Quantitative and Computational Methods for the Social Sciences*. Cambridge: Cambridge University Press, 2020.
 
 ::: {.callout-important appearance="simple"}
@@ -277,7 +277,7 @@ Thanksgiving recess runs November 26-29. Class meets as usual on Tuesday this we
 
 **Readings:**
 
-- [Section 7.1](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/regression/A50D2BEDE2AFB367FAD939AB509D4F53); **(AM)** Aronow and Miller 2019.
+- [Section 7.1](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/regression/A50D2BEDE2AFB367FAD939AB509D4F53); Aronow and Miller 2019.
 - Torreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2025. ["The Credibility Revolution in Political Science."](https://osf.io/preprints/socarxiv/w2kmc_v1) Working paper.
 
 
