@@ -25,38 +25,11 @@ Problem sets are distributed as `.qmd` files along with their rendered `.html` f
 
 Links become active when each assignment is released.
 
-### Problem Set 1
-
-- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps1)
-- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps1.zip)
-
-### Problem Set 2
-
-- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps2)
-- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps2.zip)
-
-### Problem Set 3
-
-- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps3)
-- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps3.zip)
-
-### Problem Set 4
-
-- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps4)
-- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps4.zip)
-
-### Problem Set 5
-
-- [GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps5)
-- [`.zip` archive](https://www.antonstrezhnev.com/ps812/psets/ps5.zip)
-
 ---
 
 ## Section Exercises
 
-Section meets once a week and is built around short, guided exercises that implement the week's material in {{< fa brands r-project >}}. These are completed in Quarto and uploaded at the end of section. They are not formally graded, but they are reviewed and count toward your participation grade. Section materials will be posted here as they are released.
-
-*To be posted.*
+Section meets once a week and is built around short, guided exercises that implement the week's material in {{< fa brands r-project >}}. Section materials will be posted here as they are released.
 
 ---
 
@@ -68,7 +41,7 @@ You will work in groups of two on a replication project and present it as a post
 
 ## Exams
 
-Both midterms are **in person**, closed-book, pen-and-paper examinations involving both theory questions and practical interpretation of sample code and results. There is no final exam.
+Both midterms are **in person**, closed-book, pen-and-paper examinations involving both theory questions and practical interpretation of sample code and results.
 
 - **First Midterm:** in class on Wednesday, October 7, covering the first five weeks of probability theory (probability, conditional probability and independence, random variables and distributions, joint distributions, expectation, variance and covariance).
 - **Second Midterm:** in class on Wednesday, November 18, covering statistical inference and linear regression (estimation, confidence intervals and hypothesis testing, OLS and its interpretation).
