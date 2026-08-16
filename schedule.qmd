@@ -227,7 +227,7 @@ Textbook readings are from Aronow and Miller, *Foundations of Agnostic Statistic
 
 ---
 
-## Week 12: Regression wrap-up
+## Week 12: Regression Wrap-up
 
 *Tuesday, November 24*
 
@@ -242,7 +242,7 @@ Thanksgiving recess runs November 26-29. Class meets as usual on Tuesday this we
 
 ---
 
-## Week 13: Weighting estimators
+## Week 13: Weighting Estimators
 
 *Tuesday, December 1 & Wednesday, December 2*
 
