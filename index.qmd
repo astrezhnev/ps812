@@ -10,7 +10,7 @@ page-layout: full
 
 [Introduction to Statistical Methods in Political Science]{style="font-size: 4em; font-weight: bold;"}
 
-[Probability, inference and regression]{style="font-size: 2em;"}
+[The fundamentals of probability, statistical inference and regression]{style="font-size: 2em;"}
 
 [PoliSci 812 • Fall 2026<br>University of Wisconsin-Madison]{style="color: grey;"}
 

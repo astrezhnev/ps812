@@ -35,7 +35,7 @@ title: "Staff"
 |------------------|-------|
 | **Email**        | [john.hicks@wisc.edu](mailto:john.hicks@wisc.edu)   |
 | **Section**      | Friday 9:30AM-10:20AM, 422 North Hall   |
-| **Office Hours** | Thursday 9AM-11AM, Education Building   |
+| **Office Hours** | Thursday 9AM-11AM, 201D North Hall   |
 
 ---
 
@@ -50,7 +50,7 @@ title: "Staff"
 |                  |       |
 |------------------|-------|
 | **Email**        | [andreeva@wisc.edu](mailto:andreeva@wisc.edu)   |
-| **Office Hours** | TBA   |
+| **Office Hours** | Friday 10:30am-12:30pm, 315 North Hall   |
 
 ---
 

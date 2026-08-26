@@ -123,7 +123,6 @@ Textbook readings are from Aronow and Miller, *Foundations of Agnostic Statistic
 - [Sections 3.1 - 3.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/learning-from-random-samples/509C9A93461306812A43DE3D54302AD1); Aronow and Miller 2019.
 - Chapter 3 ("Asymptotics"); Blackwell, Matthew. 2025. [*A User's Guide to Statistical Inference and Regression*.](https://mattblackwell.github.io/gov2002-book/asymptotics.html)
 
-
 ---
 
 ## Week 7: Estimation: Part 2
@@ -145,6 +144,9 @@ Textbook readings are from Aronow and Miller, *Foundations of Agnostic Statistic
 **Problem Set 3** due Tuesday, October 20. **Problem Set 4** assigned Tuesday, October 20 -- due Tuesday, November 3
 :::
 
+::: {.callout-note appearance="simple"}
+***Replication project memo** due Wednesday, October 21
+:::
 
 ---
 
@@ -227,7 +229,7 @@ Textbook readings are from Aronow and Miller, *Foundations of Agnostic Statistic
 
 ---
 
-## Week 12: Regression Wrap-up
+## Week 12: Regression wrap-up
 
 *Tuesday, November 24*
 
@@ -242,7 +244,7 @@ Thanksgiving recess runs November 26-29. Class meets as usual on Tuesday this we
 
 ---
 
-## Week 13: Weighting Estimators
+## Week 13: Weighting estimators
 
 *Tuesday, December 1 & Wednesday, December 2*
 
@@ -276,7 +278,7 @@ Thanksgiving recess runs November 26-29. Class meets as usual on Tuesday this we
 **Readings:**
 
 - [Section 7.1](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/regression/A50D2BEDE2AFB367FAD939AB509D4F53); Aronow and Miller 2019.
-- Torreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2026. ["The Credibility Revolution in Political Science."](https://osf.io/preprints/socarxiv/w2kmc_v3) Working paper.
+- Torreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2025. ["The Credibility Revolution in Political Science."](https://osf.io/preprints/socarxiv/w2kmc_v1) Working paper.
 
 
 ---
