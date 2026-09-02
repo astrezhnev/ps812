@@ -145,7 +145,7 @@ Textbook readings are from Aronow and Miller, *Foundations of Agnostic Statistic
 :::
 
 ::: {.callout-note appearance="simple"}
-***Replication project memo** due Wednesday, October 21
+**Replication project memo** due Wednesday, October 21
 :::
 
 ---
