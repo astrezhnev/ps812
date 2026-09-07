@@ -77,6 +77,153 @@
     "text": "Acknowledgments\nThis course is indebted to the many wonderful and generous scholars in political methodology, econometrics and sociology who have made their materials available to the public. In particular, I thank Adeline Lo, whose previous version of PS812 forms the core of this syllabus and its schedule, as well as Matthew Blackwell, P Aronow, Dalton Conley, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nLastly, thanks to Andrew Heiss and Matt Blackwell for their Quarto website templates, which I have extensively borrowed from in designing this course site."
   },
   {
+    "objectID": "slides/week1/week1_intro_and_review.html#welcome",
+    "href": "slides/week1/week1_intro_and_review.html#welcome",
+    "title": "Week 1: Intro to Probability",
+    "section": "Welcome!",
+    "text": "Welcome!"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-overview",
+    "href": "slides/week1/week1_intro_and_review.html#course-overview",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course Overview",
+    "text": "Course Overview\n\nInstructor: Anton Strezhnev\nTA: John Hicks\nMethods Mentor: Nastya Andreeva\nLogistics:\n\nLectures T/W - 3:30pm-4:45pm, Ogg Room (North Hall 422)\nSection F - 9:30am-10:20am, Ogg Room (North Hall 422)\n5 Problem Sets (~ 2 weeks)\nIn-class midterms (October 7, November 18)\nReplication project poster (December 4th)\nMy office hours: Tuesdays 9am-11am (North Hall 322D)\nJohn’s office hours: Thursdays 9am-11am (North Hall 201D)\nNastya’s office hours: Fridays 10:30am-12:30pm (North Hall 315)\nCourse Website: https://www.antonstrezhnev.com/ps812\nAnnouncements will be posted on Slack - you should have received an invite."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-objectives",
+    "href": "slides/week1/week1_intro_and_review.html#course-objectives",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course Objectives",
+    "text": "Course Objectives\n\nWhat is this course about?\n\nProbability - How do we talk about uncertainty in a structured manner?\nInference - Given what we observe, how do we learn about what we don’t?\nRegression - Can we characterize the average of one quantity given information about another?\n\nGoals for the course\n\nCritically read, interpret and evaluate quantitative social science articles\nConduct, interpret and communicate results from a regression analysis\nWrite clean, reusable and reliable analysis code in R\nSee how research is conducted by working with real replication data."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nLectures (Tuesdays/Wednesdays)\n\nOne set of slides for each of the two lectures in each week\nYour primary point of instruction - goal is to synthesize the core material + give you the tools to learn more.\nI want lectures to be interactive - you should ask questions and interrupt!\nLectures focus on the statistical material.\n\nSection (Fridays, led by John)\n\nMeets once a week - this is where we do the computing.\nStarts with questions and review, then short guided exercises in R.\nBring your laptop and bring your problem set questions!"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-1",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nReadings\n\nCore textbook: Aronow and Miller: Foundations of Agnostic Statistics\nThe philosophy: Make as few assumptions as you need to. If you make assumptions, anchor them in beliefs about research design.\nSupplemental readings from other sources\nEverything is available digitally either directly or through the UW-Madison online library resources\nDo the readings prior to each week, but definitely be sure to do them before the Wednesday."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-2",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow-2",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nProblem sets (20% of your grade)\n\nFive problem sets, each covering roughly a two-week block of material.\nMain day-to-day component of the class – meant to get you working with your colleagues and thinking hard about the material.\nCollaboration is strongly encouraged – you should ask and answer questions on our class Slack Discussion board\nSubmit on the Gradescope assignment platform\nGrading is on a plus/check/minus scale.\n\nConversion to grade point is somewhat holistic.\nMajority plusses is an A, Majority checks is an AB, Majority minus is a B\n\nSolutions will be posted to Canvas after the due-date."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-3",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow-3",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nTwo in-class midterms (20% of your grade each)\n\nOctober 7 – the first five weeks of probability theory.\nNovember 18 – statistical inference and linear regression.\nClosed-book, pen-and-paper: theoretical questions + interpretation of code and results.\n\nReplication project (30% of your grade)\n\nWork in pairs to replicate and extend a published paper.\nPresented as a poster at the MEAD grad poster session, December 4th.\nAn ungraded check-in memo is due October 21 so I can keep you on track.\n\nParticipation (10% of your grade)\n\nIt is important that you actively engage with lecture, section, and the teaching staff – ask and answer questions.\nDo the reading!\nParticipating on Slack counts as well, as does attending MEAD talks."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#class-requirements",
+    "href": "slides/week1/week1_intro_and_review.html#class-requirements",
+    "title": "Week 1: Intro to Probability",
+    "section": "Class Requirements",
+    "text": "Class Requirements\n\nOverall: An interest in learning and willingness to ask questions.\nNo formal pre-requisites - Math camp should get you up to speed on topics/refresh your memory of HS math.\n\nWe’ll spend time on the really relevant stuff: probability/inference\n\nMath is not about intrinsic aptitude, it’s about effort\n\n…in mathematics you don’t understand things. You just get used to them.\n— John Von Neumann\n\nWe don’t do rigor for rigor’s sake\n\nBut rigor is important - we will tell you why we need to be clear and precise about things!\n\nYou’re developing your ability to reason and not just memorize\nIf you’re unsure or confused, always ask - we will match the effort you put in\nWe all come from different backgrounds. Please have patience with yourself and with others"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#a-brief-overview",
+    "href": "slides/week1/week1_intro_and_review.html#a-brief-overview",
+    "title": "Week 1: Intro to Probability",
+    "section": "A brief overview",
+    "text": "A brief overview\n\nWeeks 1-2: Probability, conditional probability and independence\nWeeks 3-5: Random variables, distributions, expectation, variance and covariance\n\nFirst midterm: Wednesday, October 7\n\nWeeks 6-7: Estimation - bias, variance, consistency and the central limit theorem\nWeek 8: Confidence intervals and hypothesis testing\nWeeks 9-11: Linear regression - estimation, inference and interpretation\n\nSecond midterm: Wednesday, November 18\n\nWeek 12: Regression wrap-up - polynomials, overfitting and penalized regression\nWeek 13: Weighting estimators - missing data, IPW and survey weights\nWeek 14: A preview of causal inference (and of PS 813)"
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Resources",
+    "section": "",
+    "text": "The main text for the course is listed first. The remaining books are useful supplements. Each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, P. M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version"
+  },
+  {
+    "objectID": "resources.html#textbooks",
+    "href": "resources.html#textbooks",
+    "title": "Resources",
+    "section": "",
+    "text": "The main text for the course is listed first. The remaining books are useful supplements. Each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, P. M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version"
+  },
+  {
+    "objectID": "resources.html#software",
+    "href": "resources.html#software",
+    "title": "Resources",
+    "section": "Software",
+    "text": "Software\n\nR and RStudio\nThis course uses R for all programming assignments. You are welcome to use the RStudio Interactive Development Environment (IDE) to write code and edit the assignment write-up. Due to the extensive integration of Quarto into Posit-developed IDEs, I encourage using either RStudio or the more recent Positron IDE.\n\nR: Download from https://www.r-project.org\nRStudio: Download from https://posit.co/download/rstudio-desktop/\nPositron: Download from https://positron.posit.co/\n\n\nRecommended Guides for R Programming\nThe following are excellent introductions to R, roughly in increasing order of difficulty.\n\nR For Data Science Available at https://r4ds.hadley.nz/\nData Visualization: A Practical Introduction Available at https://socviz.co/\nAdvanced R Wickham, Hadley. Available at https://adv-r.hadley.nz/\n\n\n\n\nQuarto and Markdown\nThe assignments are distributed as .qmd Quarto files. Quarto is the successor to R Markdown and lets you present your analysis, code, figures and written discussion all in a single document. It uses Markdown syntax for formatting text and supports embedded R code chunks that execute when you render the document.\nTo complete assignments, you will edit the provided .qmd file, adding your code and written responses, then render it to an HTML file for submission. Both your .html output and .qmd file will be submitted via Gradescope.\n\nQuarto: Download from https://quarto.org/docs/get-started/\nQuarto Guide: https://quarto.org/docs/guide/\nMarkdown Basics: https://quarto.org/docs/authoring/markdown-basics.html\nNote also the chapter on Quarto in R For Data Science\n\n\n\nLaTeX Math Notation\nProblem sets involve writing math, which you will typeset using LaTeX inside your Quarto document.\n\nQuarto math syntax: https://quarto.org/docs/authoring/markdown-basics.html#equations\nA quick LaTeX math reference: https://en.wikibooks.org/wiki/LaTeX/Mathematics"
+  },
+  {
+    "objectID": "resources.html#math-review",
+    "href": "resources.html#math-review",
+    "title": "Resources",
+    "section": "Math Review",
+    "text": "Math Review\nThe course assumes the algebra and single-variable calculus covered in the summer math camp. If you would like a refresher:\n\nMoore, Will H., and David A. Siegel. A Mathematics Course for Political and Social Research. Princeton University Press, 2013.\nKhan Academy calculus: https://www.khanacademy.org/math/calculus-1\n3Blue1Brown, Essence of Calculus: https://www.3blue1brown.com/topics/calculus"
+  },
+  {
+    "objectID": "resources.html#beyond-the-course",
+    "href": "resources.html#beyond-the-course",
+    "title": "Resources",
+    "section": "Beyond the Course",
+    "text": "Beyond the Course\n\nModels, Experiments and Data (MEAD) workshop: https://sites.google.com/view/meadwisc/home – the applied statistics workshop at UW-Madison. Attending is one of the best ways to see what quantitative political science actually looks like in practice, and you are strongly encouraged to come.\nSociety for Political Methodology: https://polmeth.org/"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "PoliSci 812",
+    "section": "",
+    "text": "Introduction to Statistical Methods in Political Science\nThe fundamentals of probability, statistical inference and regression\nPoliSci 812 • Fall 2026University of Wisconsin-Madison\n\n\n\n\n\n\n\n\nInstructor\n\n   Anton Strezhnev\n   North Hall 322D\n   strezhnev@wisc.edu\n\n\n\nTeaching Assistant\n\n   John Hicks\n   john.hicks@wisc.edu\n\n\n\n\nCourse details\n\n   Tuesdays & Wednesdays\n   9/8/2026 - 12/9/2026\n   3:30PM-4:45PM\n   Ogg Room (North Hall 422)\n   Section: Friday 9:30AM-10:20AM, Ogg Room (North Hall 422)\n\n\n\nContacting me\nSlack is the best way to get in touch with me. My dedicated office hours are Tuesdays 9am-11am if you want to meet in-person. I am also generally in my office on weekdays during normal hours and my door is open, so you are welcome to drop in. You can also feel free to contact me to confirm availability or to schedule a virtual meeting via Zoom."
+  },
+  {
+    "objectID": "assignments.html",
+    "href": "assignments.html",
+    "title": "Assignments",
+    "section": "",
+    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 8 (Week 1)\nSept 22 (Week 3)\n\n\nProblem Set 2\nSept 22 (Week 3)\nOct 6 (Week 5)\n\n\nFirst Midterm Exam\n–\nOct 7 (Week 5)\n\n\nProblem Set 3\nOct 6 (Week 5)\nOct 20 (Week 7)\n\n\nReplication project memo\nTBA\nOct 21 (Week 7)\n\n\nProblem Set 4\nOct 20 (Week 7)\nNov 3 (Week 9)\n\n\nProblem Set 5\nNov 3 (Week 9)\nNov 17 (Week 11)\n\n\nSecond Midterm Exam\n–\nNov 18 (Week 11)\n\n\nReplication Project Poster\nTBA\nDec 4 (Week 13)\n\n\n\nProblem sets are assigned and due on Tuesdays, at the start of lecture. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade."
+  },
+  {
+    "objectID": "assignments.html#schedule",
+    "href": "assignments.html#schedule",
+    "title": "Assignments",
+    "section": "",
+    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 8 (Week 1)\nSept 22 (Week 3)\n\n\nProblem Set 2\nSept 22 (Week 3)\nOct 6 (Week 5)\n\n\nFirst Midterm Exam\n–\nOct 7 (Week 5)\n\n\nProblem Set 3\nOct 6 (Week 5)\nOct 20 (Week 7)\n\n\nReplication project memo\nTBA\nOct 21 (Week 7)\n\n\nProblem Set 4\nOct 20 (Week 7)\nNov 3 (Week 9)\n\n\nProblem Set 5\nNov 3 (Week 9)\nNov 17 (Week 11)\n\n\nSecond Midterm Exam\n–\nNov 18 (Week 11)\n\n\nReplication Project Poster\nTBA\nDec 4 (Week 13)\n\n\n\nProblem sets are assigned and due on Tuesdays, at the start of lecture. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade."
+  },
+  {
+    "objectID": "assignments.html#problem-sets",
+    "href": "assignments.html#problem-sets",
+    "title": "Assignments",
+    "section": "Problem Sets",
+    "text": "Problem Sets\nProblem sets are distributed as .qmd files along with their rendered .html form. You should edit the provided .qmd file and render to .html when submitting the assignment. Additional files (e.g. datasets) are located in sub-folders. For convenience, all the combined files are also distributed as a .zip compressed archive.\nLinks become active when each assignment is released."
+  },
+  {
+    "objectID": "assignments.html#section-exercises",
+    "href": "assignments.html#section-exercises",
+    "title": "Assignments",
+    "section": "Section Exercises",
+    "text": "Section Exercises\nSection meets once a week and is built around short, guided exercises that implement the week’s material in . Section materials will be posted here as they are released."
+  },
+  {
+    "objectID": "lectures.html",
+    "href": "lectures.html",
+    "title": "Lectures",
+    "section": "",
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+  },
+  {
+    "objectID": "lectures.html#lecture-slides",
+    "href": "lectures.html#lecture-slides",
+    "title": "Lectures",
+    "section": "",
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+  },
+  {
     "objectID": "schedule.html",
     "href": "schedule.html",
     "title": "Schedule",
@@ -130,7 +277,7 @@
     "href": "schedule.html#week-7-estimation-part-2",
     "title": "Schedule",
     "section": "Week 7: Estimation: Part 2",
-    "text": "Week 7: Estimation: Part 2\nTuesday, October 20 & Wednesday, October 21\nTopics:\n\nConvergence in distribution and the central limit theorem\nPlug-in estimators of statistical functionals\nDensity estimation\n\nReadings:\n\nSection 3.3; Aronow and Miller 2019.\nLundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. “What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory.” American Sociological Review 86 (3): 532-565.\n\n\n\n\n\n\n\nProblem Set 3 due Tuesday, October 20. Problem Set 4 assigned Tuesday, October 20 – due Tuesday, November 3\n\n\n\n\n\n\n\n\n\n*Replication project memo due Wednesday, October 21"
+    "text": "Week 7: Estimation: Part 2\nTuesday, October 20 & Wednesday, October 21\nTopics:\n\nConvergence in distribution and the central limit theorem\nPlug-in estimators of statistical functionals\nDensity estimation\n\nReadings:\n\nSection 3.3; Aronow and Miller 2019.\nLundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. “What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory.” American Sociological Review 86 (3): 532-565.\n\n\n\n\n\n\n\nProblem Set 3 due Tuesday, October 20. Problem Set 4 assigned Tuesday, October 20 – due Tuesday, November 3\n\n\n\n\n\n\n\n\n\nReplication project memo due Wednesday, October 21"
   },
   {
     "objectID": "schedule.html#week-8-confidence-intervals-and-hypothesis-testing",
@@ -180,104 +327,6 @@
     "title": "Schedule",
     "section": "Week 14: Preview: Causal inference",
     "text": "Week 14: Preview: Causal inference\nTuesday, December 8 & Wednesday, December 9\nTopics:\n\nThe potential outcomes model for causal inference\nThe fundamental problem of causal inference\nThe “credibility revolution” and the centrality of research design\n\nReadings:\n\nSection 7.1; Aronow and Miller 2019.\nTorreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2026. “The Credibility Revolution in Political Science.” Working paper."
-  },
-  {
-    "objectID": "lectures.html",
-    "href": "lectures.html",
-    "title": "Lectures",
-    "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
-  },
-  {
-    "objectID": "lectures.html#lecture-slides",
-    "href": "lectures.html#lecture-slides",
-    "title": "Lectures",
-    "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
-  },
-  {
-    "objectID": "assignments.html",
-    "href": "assignments.html",
-    "title": "Assignments",
-    "section": "",
-    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 8 (Week 1)\nSept 22 (Week 3)\n\n\nProblem Set 2\nSept 22 (Week 3)\nOct 6 (Week 5)\n\n\nProblem Set 3\nOct 6 (Week 5)\nOct 20 (Week 7)\n\n\nFirst Midterm Exam\n–\nOct 7 (Week 5)\n\n\nProblem Set 4\nOct 20 (Week 7)\nNov 3 (Week 9)\n\n\nProblem Set 5\nNov 3 (Week 9)\nNov 17 (Week 11)\n\n\nSecond Midterm Exam\n–\nNov 18 (Week 11)\n\n\nReplication Project\nTBA\nDec 4 (Week 13)\n\n\n\nProblem sets are assigned and due on Tuesdays, at the start of lecture. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week."
-  },
-  {
-    "objectID": "assignments.html#schedule",
-    "href": "assignments.html#schedule",
-    "title": "Assignments",
-    "section": "",
-    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 8 (Week 1)\nSept 22 (Week 3)\n\n\nProblem Set 2\nSept 22 (Week 3)\nOct 6 (Week 5)\n\n\nProblem Set 3\nOct 6 (Week 5)\nOct 20 (Week 7)\n\n\nFirst Midterm Exam\n–\nOct 7 (Week 5)\n\n\nProblem Set 4\nOct 20 (Week 7)\nNov 3 (Week 9)\n\n\nProblem Set 5\nNov 3 (Week 9)\nNov 17 (Week 11)\n\n\nSecond Midterm Exam\n–\nNov 18 (Week 11)\n\n\nReplication Project\nTBA\nDec 4 (Week 13)\n\n\n\nProblem sets are assigned and due on Tuesdays, at the start of lecture. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week."
-  },
-  {
-    "objectID": "assignments.html#problem-sets",
-    "href": "assignments.html#problem-sets",
-    "title": "Assignments",
-    "section": "Problem Sets",
-    "text": "Problem Sets\nProblem sets are distributed as .qmd files along with their rendered .html form. You should edit the provided .qmd file and render to .html when submitting the assignment. Additional files (e.g. datasets) are located in sub-folders. For convenience, all the combined files are also distributed as a .zip compressed archive.\nLinks become active when each assignment is released."
-  },
-  {
-    "objectID": "assignments.html#section-exercises",
-    "href": "assignments.html#section-exercises",
-    "title": "Assignments",
-    "section": "Section Exercises",
-    "text": "Section Exercises\nSection meets once a week and is built around short, guided exercises that implement the week’s material in . Section materials will be posted here as they are released."
-  },
-  {
-    "objectID": "assignments.html#replication-project",
-    "href": "assignments.html#replication-project",
-    "title": "Assignments",
-    "section": "Replication Project",
-    "text": "Replication Project\nYou will work in groups of two on a replication project and present it as a poster at the MEAD Fall Grad Poster Presentations on Friday, December 4, 1:30-4pm in the Ogg Room. More details on the project will be provided later in the semester."
-  },
-  {
-    "objectID": "assignments.html#exams",
-    "href": "assignments.html#exams",
-    "title": "Assignments",
-    "section": "Exams",
-    "text": "Exams\nBoth midterms are in person, closed-book, pen-and-paper examinations involving both theory questions and practical interpretation of sample code and results.\n\nFirst Midterm: in class on Wednesday, October 7, covering the first five weeks of probability theory (probability, conditional probability and independence, random variables and distributions, joint distributions, expectation, variance and covariance).\nSecond Midterm: in class on Wednesday, November 18, covering statistical inference and linear regression (estimation, confidence intervals and hypothesis testing, OLS and its interpretation)."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "PoliSci 812",
-    "section": "",
-    "text": "Introduction to Statistical Methods in Political Science\nThe fundamentals of probability, statistical inference and regression\nPoliSci 812 • Fall 2026University of Wisconsin-Madison\n\n\n\n\n\n\n\n\nInstructor\n\n   Anton Strezhnev\n   North Hall 322D\n   strezhnev@wisc.edu\n\n\n\nTeaching Assistant\n\n   John Hicks\n   john.hicks@wisc.edu\n\n\n\n\nCourse details\n\n   Tuesdays & Wednesdays\n   9/8/2026 - 12/9/2026\n   3:30PM-4:45PM\n   Ogg Room (North Hall 422)\n   Section: Friday 9:30AM-10:20AM, Ogg Room (North Hall 422)\n\n\n\nContacting me\nSlack is the best way to get in touch with me. My dedicated office hours are Tuesdays 9am-11am if you want to meet in-person. I am also generally in my office on weekdays during normal hours and my door is open, so you are welcome to drop in. You can also feel free to contact me to confirm availability or to schedule a virtual meeting via Zoom."
-  },
-  {
-    "objectID": "resources.html",
-    "href": "resources.html",
-    "title": "Resources",
-    "section": "",
-    "text": "The main text for the course is listed first. The remaining books are useful supplements. Each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, P. M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version"
-  },
-  {
-    "objectID": "resources.html#textbooks",
-    "href": "resources.html#textbooks",
-    "title": "Resources",
-    "section": "",
-    "text": "The main text for the course is listed first. The remaining books are useful supplements. Each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, P. M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version"
-  },
-  {
-    "objectID": "resources.html#software",
-    "href": "resources.html#software",
-    "title": "Resources",
-    "section": "Software",
-    "text": "Software\n\nR and RStudio\nThis course uses R for all programming assignments. You are welcome to use the RStudio Interactive Development Environment (IDE) to write code and edit the assignment write-up. Due to the extensive integration of Quarto into Posit-developed IDEs, I encourage using either RStudio or the more recent Positron IDE.\n\nR: Download from https://www.r-project.org\nRStudio: Download from https://posit.co/download/rstudio-desktop/\nPositron: Download from https://positron.posit.co/\n\n\nRecommended Guides for R Programming\nThe following are excellent introductions to R, roughly in increasing order of difficulty.\n\nR For Data Science Available at https://r4ds.hadley.nz/\nData Visualization: A Practical Introduction Available at https://socviz.co/\nAdvanced R Wickham, Hadley. Available at https://adv-r.hadley.nz/\n\n\n\n\nQuarto and Markdown\nThe assignments are distributed as .qmd Quarto files. Quarto is the successor to R Markdown and lets you present your analysis, code, figures and written discussion all in a single document. It uses Markdown syntax for formatting text and supports embedded R code chunks that execute when you render the document.\nTo complete assignments, you will edit the provided .qmd file, adding your code and written responses, then render it to an HTML file for submission. Both your .html output and .qmd file will be submitted via Gradescope.\n\nQuarto: Download from https://quarto.org/docs/get-started/\nQuarto Guide: https://quarto.org/docs/guide/\nMarkdown Basics: https://quarto.org/docs/authoring/markdown-basics.html\nNote also the chapter on Quarto in R For Data Science\n\n\n\nLaTeX Math Notation\nProblem sets involve writing math, which you will typeset using LaTeX inside your Quarto document.\n\nQuarto math syntax: https://quarto.org/docs/authoring/markdown-basics.html#equations\nA quick LaTeX math reference: https://en.wikibooks.org/wiki/LaTeX/Mathematics"
-  },
-  {
-    "objectID": "resources.html#math-review",
-    "href": "resources.html#math-review",
-    "title": "Resources",
-    "section": "Math Review",
-    "text": "Math Review\nThe course assumes the algebra and single-variable calculus covered in the summer math camp. If you would like a refresher:\n\nMoore, Will H., and David A. Siegel. A Mathematics Course for Political and Social Research. Princeton University Press, 2013.\nKhan Academy calculus: https://www.khanacademy.org/math/calculus-1\n3Blue1Brown, Essence of Calculus: https://www.3blue1brown.com/topics/calculus"
-  },
-  {
-    "objectID": "resources.html#beyond-the-course",
-    "href": "resources.html#beyond-the-course",
-    "title": "Resources",
-    "section": "Beyond the Course",
-    "text": "Beyond the Course\n\nModels, Experiments and Data (MEAD) workshop: https://sites.google.com/view/meadwisc/home – the applied statistics workshop at UW-Madison. Attending is one of the best ways to see what quantitative political science actually looks like in practice, and you are strongly encouraged to come.\nSociety for Political Methodology: https://polmeth.org/"
   },
   {
     "objectID": "staff.html",
