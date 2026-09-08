@@ -74,7 +74,7 @@
     "href": "syllabus.html#acknowledgments",
     "title": "Syllabus",
     "section": "Acknowledgments",
-    "text": "Acknowledgments\nThis course is indebted to the many wonderful and generous scholars in political methodology, econometrics and sociology who have made their materials available to the public. In particular, I thank Adeline Lo, whose previous version of PS812 forms the core of this syllabus and its schedule, as well as Matthew Blackwell, P Aronow, Dalton Conley, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nLastly, thanks to Andrew Heiss and Matt Blackwell for their Quarto website templates, which I have extensively borrowed from in designing this course site."
+    "text": "Acknowledgments\nThis course is indebted to the many wonderful and generous scholars in political methodology, econometrics and sociology who have made their materials available to the public. In particular, I thank Adeline Lo, whose previous version of PS812 forms the core of this syllabus and its schedule, as well as Matthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nLastly, thanks to Andrew Heiss and Matt Blackwell for their Quarto website templates, which I have extensively borrowed from in designing this course site."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#welcome",
@@ -84,11 +84,25 @@
     "text": "Welcome!"
   },
   {
+    "objectID": "slides/week1/week1_intro_and_review.html#week-overview",
+    "href": "slides/week1/week1_intro_and_review.html#week-overview",
+    "title": "Week 1: Intro to Probability",
+    "section": "Week overview",
+    "text": "Week overview\n\nThis week\n\nIntroductions + course logistics\nIntro to probability\n\nNext week\n\nConditional probability\nIndependence\nBayes’ rule\n\nLong-run\n\nprobability \\(\\to\\) inference \\(\\to\\) regression"
+  },
+  {
     "objectID": "slides/week1/week1_intro_and_review.html#course-overview",
     "href": "slides/week1/week1_intro_and_review.html#course-overview",
     "title": "Week 1: Intro to Probability",
     "section": "Course Overview",
-    "text": "Course Overview\n\nInstructor: Anton Strezhnev\nTA: John Hicks\nMethods Mentor: Nastya Andreeva\nLogistics:\n\nLectures T/W - 3:30pm-4:45pm, Ogg Room (North Hall 422)\nSection F - 9:30am-10:20am, Ogg Room (North Hall 422)\n5 Problem Sets (~ 2 weeks)\nIn-class midterms (October 7, November 18)\nReplication project poster (December 4th)\nMy office hours: Tuesdays 9am-11am (North Hall 322D)\nJohn’s office hours: Thursdays 9am-11am (North Hall 201D)\nNastya’s office hours: Fridays 10:30am-12:30pm (North Hall 315)\nCourse Website: https://www.antonstrezhnev.com/ps812\nAnnouncements will be posted on Slack - you should have received an invite."
+    "text": "Course Overview\n\nInstructor: Anton Strezhnev\nTA: John Hicks\nMethods Mentor: Nastya Andreeva\nLogistics:\n\nLectures T/W - 3:30pm-4:45pm, Ogg Room (North Hall 422)\nSection F - 9:30am-10:20am, Ogg Room (North Hall 422)\n5 Problem Sets (~ 2 weeks)\nIn-class midterms (October 7, November 18)\nReplication project poster (December 4th)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-overview-1",
+    "href": "slides/week1/week1_intro_and_review.html#course-overview-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course Overview",
+    "text": "Course Overview\n\nMy office hours: Tuesdays 9am-11am (North Hall 322D)\nJohn’s office hours: Thursdays 9am-11am (North Hall 201D)\nNastya’s office hours: Fridays 10:30am-12:30pm (North Hall 315)\nCourse Website: https://www.antonstrezhnev.com/ps812\nAnnouncements will be posted on Slack - you should have received an invite."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-objectives",
@@ -98,18 +112,25 @@
     "text": "Course Objectives\n\nWhat is this course about?\n\nProbability - How do we talk about uncertainty in a structured manner?\nInference - Given what we observe, how do we learn about what we don’t?\nRegression - Can we characterize the average of one quantity given information about another?\n\nGoals for the course\n\nCritically read, interpret and evaluate quantitative social science articles\nConduct, interpret and communicate results from a regression analysis\nWrite clean, reusable and reliable analysis code in R\nSee how research is conducted by working with real replication data."
   },
   {
+    "objectID": "slides/week1/week1_intro_and_review.html#statistical-computing",
+    "href": "slides/week1/week1_intro_and_review.html#statistical-computing",
+    "title": "Week 1: Intro to Probability",
+    "section": "Statistical computing",
+    "text": "Statistical computing\n\nThis course will teach you how to work in the  programming language.\n\nA high-level language designed for statistical computing\n\nWe’ll focus on the concepts of computing\n\n(e.g. functions, data types, control structures)\nData cleaning/processing via tidyverse\nSyntax is important…but LLMs are making memorization less necessary.\n\nScientific publishing in Quarto\nMore broadly, I want you to learn how your computers work for research\n\nKieran Healy’s Modern Plain Text Computing (Healy 2025)"
+  },
+  {
     "objectID": "slides/week1/week1_intro_and_review.html#course-workflow",
     "href": "slides/week1/week1_intro_and_review.html#course-workflow",
     "title": "Week 1: Intro to Probability",
     "section": "Course workflow",
-    "text": "Course workflow\n\nLectures (Tuesdays/Wednesdays)\n\nOne set of slides for each of the two lectures in each week\nYour primary point of instruction - goal is to synthesize the core material + give you the tools to learn more.\nI want lectures to be interactive - you should ask questions and interrupt!\nLectures focus on the statistical material.\n\nSection (Fridays, led by John)\n\nMeets once a week - this is where we do the computing.\nStarts with questions and review, then short guided exercises in R.\nBring your laptop and bring your problem set questions!"
+    "text": "Course workflow\n\nLectures (Tuesdays/Wednesdays)\n\nOne set of slides for each of the two lectures in each week\nYour primary point of instruction - goal is to synthesize the core material + give you the tools to learn more.\nI want lectures to be interactive - you should ask questions and interrupt!\n\nSection (Fridays)\n\nMeets once a week - this is where we do the computing.\nStarts with questions and review, then short guided exercises in R.\nBring your laptop and bring your problem set questions!"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-1",
     "href": "slides/week1/week1_intro_and_review.html#course-workflow-1",
     "title": "Week 1: Intro to Probability",
     "section": "Course workflow",
-    "text": "Course workflow\n\nReadings\n\nCore textbook: Aronow and Miller: Foundations of Agnostic Statistics\nThe philosophy: Make as few assumptions as you need to. If you make assumptions, anchor them in beliefs about research design.\nSupplemental readings from other sources\nEverything is available digitally either directly or through the UW-Madison online library resources\nDo the readings prior to each week, but definitely be sure to do them before the Wednesday."
+    "text": "Course workflow\n\nReadings\n\nCore textbook: Foundations of Agnostic Statistics (Aronow and Miller 2019)\nSupplemental:\n\nA User’s Guide to Statistical Inference and Regression (Blackwell 2025)\nIntroduction to Probability (Blitzstein and Hwang 2019)\n\nVarious papers from political science and adjacent disciplines are assigned throughout.\nEverything is available digitally either directly or through the UW-Madison online library resources\nDo the readings prior to each week, but definitely be sure to do them before the Wednesday."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-2",
@@ -123,7 +144,14 @@
     "href": "slides/week1/week1_intro_and_review.html#course-workflow-3",
     "title": "Week 1: Intro to Probability",
     "section": "Course workflow",
-    "text": "Course workflow\n\nTwo in-class midterms (20% of your grade each)\n\nOctober 7 – the first five weeks of probability theory.\nNovember 18 – statistical inference and linear regression.\nClosed-book, pen-and-paper: theoretical questions + interpretation of code and results.\n\nReplication project (30% of your grade)\n\nWork in pairs to replicate and extend a published paper.\nPresented as a poster at the MEAD grad poster session, December 4th.\nAn ungraded check-in memo is due October 21 so I can keep you on track.\n\nParticipation (10% of your grade)\n\nIt is important that you actively engage with lecture, section, and the teaching staff – ask and answer questions.\nDo the reading!\nParticipating on Slack counts as well, as does attending MEAD talks."
+    "text": "Course workflow\n\nTwo in-class midterms (20% of your grade each)\n\nOctober 7 – the first five weeks of probability theory.\nNovember 18 – statistical inference and linear regression.\nClosed-book, pen-and-paper - similar format to comprehensive exams\n\nReplication project (30% of your grade)\n\nWork in groups of 2-3 to replicate and extend a published paper.\nPresented as a poster at the MEAD grad poster session, December 4th.\nAn ungraded check-in memo is due October 21\n\nParticipation (10% of your grade)\n\nIt is important that you actively engage with lecture, section, and the teaching staff – ask and answer questions.\nParticipating on Slack counts as well, as does attending MEAD talks."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-4",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow-4",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nModels, Experiments and Data workshop\n\nCheck out the Fall 2026 schedule here: https://sites.google.com/view/meadwisc/home\n\nGet added to the Slack workspace:\n\nhttps://join.slack.com/t/modelsanddata/shared_invite/zt-3cfv6l4lv-4XVF2V_toX_B0qQce55vCg"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#class-requirements",
@@ -133,11 +161,137 @@
     "text": "Class Requirements\n\nOverall: An interest in learning and willingness to ask questions.\nNo formal pre-requisites - Math camp should get you up to speed on topics/refresh your memory of HS math.\n\nWe’ll spend time on the really relevant stuff: probability/inference\n\nMath is not about intrinsic aptitude, it’s about effort\n\n…in mathematics you don’t understand things. You just get used to them.\n— John Von Neumann\n\nWe don’t do rigor for rigor’s sake\n\nBut rigor is important - we will tell you why we need to be clear and precise about things!\n\nYou’re developing your ability to reason and not just memorize\nIf you’re unsure or confused, always ask - we will match the effort you put in\nWe all come from different backgrounds. Please have patience with yourself and with others"
   },
   {
+    "objectID": "slides/week1/week1_intro_and_review.html#llm-policy",
+    "href": "slides/week1/week1_intro_and_review.html#llm-policy",
+    "title": "Week 1: Intro to Probability",
+    "section": "LLM Policy",
+    "text": "LLM Policy\n\nSee the syllabus for the long-winded write-up\nIn short…\n\nYou should have LLMs do things for you\nYou should not have LLMs think for you\nYou should definitely not have LLMs speak for you\n\nSometimes it’s valuable to not have the LLM do a think so that you can learn to think.\n\nTry to minimize use on the problem sets.\nThe exams are ultimately the check on this…\n…as is the poster session."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#acknowledgements",
+    "href": "slides/week1/week1_intro_and_review.html#acknowledgements",
+    "title": "Week 1: Intro to Probability",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\n\nFirst and foremost, this course is indebted to Adeline Lo who taught it for the last several years and has provided a wealth of materials.\nBut it’s also an iteration in the broader project of methods education in political methodology and is indebted to many of those who have taught versions of this course in the past and at other institutions\n\nMatthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto"
+  },
+  {
     "objectID": "slides/week1/week1_intro_and_review.html#a-brief-overview",
     "href": "slides/week1/week1_intro_and_review.html#a-brief-overview",
     "title": "Week 1: Intro to Probability",
     "section": "A brief overview",
     "text": "A brief overview\n\nWeeks 1-2: Probability, conditional probability and independence\nWeeks 3-5: Random variables, distributions, expectation, variance and covariance\n\nFirst midterm: Wednesday, October 7\n\nWeeks 6-7: Estimation - bias, variance, consistency and the central limit theorem\nWeek 8: Confidence intervals and hypothesis testing\nWeeks 9-11: Linear regression - estimation, inference and interpretation\n\nSecond midterm: Wednesday, November 18\n\nWeek 12: Regression wrap-up - polynomials, overfitting and penalized regression\nWeek 13: Weighting estimators - missing data, IPW and survey weights\nWeek 14: A preview of causal inference (and of PS 813)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#statistics-and-political-science",
+    "href": "slides/week1/week1_intro_and_review.html#statistics-and-political-science",
+    "title": "Week 1: Intro to Probability",
+    "section": "Statistics and Political Science",
+    "text": "Statistics and Political Science\n\nStatistics is an extremely recent field - hypothesis testing formalized in early 20th C\n\nProbability a bit older - 17th/18th century.\n\nEarly applied statistics mostly in medicine/biological sciences - biostatistics\nIn the social sciences, econometrics becomes a distinct discipline around the 1930s\nPolitical methodology starts to define itself as a separate field around 1984 (first PolMeth meeting)\nWhat is political methodology?\n\nA messy blend of all of these + computer science!"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#what-is-statistics",
+    "href": "slides/week1/week1_intro_and_review.html#what-is-statistics",
+    "title": "Week 1: Intro to Probability",
+    "section": "What is Statistics?",
+    "text": "What is Statistics?\n\nHow do we take something that we know and use it to learn about what we do not know?\n\nHow do we quantify our uncertainty around our predictions?\n\nOur main tools are assumptions about the data-generating process\n\nIf we assume that the thing we know came from some known process connected to the thing we don’t know…\n… then we can draw inferences about what we don’t know!"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#agnostic-statistics",
+    "href": "slides/week1/week1_intro_and_review.html#agnostic-statistics",
+    "title": "Week 1: Intro to Probability",
+    "section": "Agnostic Statistics",
+    "text": "Agnostic Statistics\n\nTraditional education in statistics often starts from very strong modeling assumptions\n\n(e.g. outcomes are known to be normally distributed)\n\nThis may work for some fields, but not the social sciences\n\nOur models are wrong - they’re analytical tools\n\nIf we make assumptions, we want them rooted in substantive knowledge.\n\n(e.g. randomization of a treatment)\n\nOtherwise, we want to be as agnostic as possible."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#probability-and-inference",
+    "href": "slides/week1/week1_intro_and_review.html#probability-and-inference",
+    "title": "Week 1: Intro to Probability",
+    "section": "Probability and Inference",
+    "text": "Probability and Inference\n\n\nFigure from Blackwell (2025), Ch. 2"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#interpreting-probability",
+    "href": "slides/week1/week1_intro_and_review.html#interpreting-probability",
+    "title": "Week 1: Intro to Probability",
+    "section": "Interpreting probability",
+    "text": "Interpreting probability\n\nProbability allows us to quantify how likely an event would be under a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#sample-space",
+    "href": "slides/week1/week1_intro_and_review.html#sample-space",
+    "title": "Week 1: Intro to Probability",
+    "section": "Sample space",
+    "text": "Sample space\n\nDefine the sample space \\(\\mathcal{S}\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nAfter Blitzstein and Hwang (2019), Figure 1.1"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#events",
+    "href": "slides/week1/week1_intro_and_review.html#events",
+    "title": "Week 1: Intro to Probability",
+    "section": "Events",
+    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nLet \\(\\mathcal{F}\\) be the set of all events (that can be assigned a probability)\n\n\n\n\n\n\n\n\n\n\nProbability is a function that maps from \\(\\mathcal{F}\\) to the interval \\([0,1]\\)\n\n\\(P \\colon \\mathcal{F} \\to [0, 1]\\)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#set-review",
+    "href": "slides/week1/week1_intro_and_review.html#set-review",
+    "title": "Week 1: Intro to Probability",
+    "section": "Set review",
+    "text": "Set review\n\nThe empty set \\(\\emptyset\\) is the set that contains no elements\nThe complement of a set \\(A\\), denoted \\(A^{c}\\), is the set of all elements not in \\(A\\)\n\nImplicitly complements are defined w.r.t. some “universal” set - here the sample space \\(\\mathcal{S}\\).\nWhat’s \\(\\mathcal{S}^c\\)?\n\nPractice: In the figure below, is \\(A^{c} = B\\)?"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#set-review-1",
+    "href": "slides/week1/week1_intro_and_review.html#set-review-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Set review",
+    "text": "Set review\n\nThe union of two events \\(A \\cup B\\) contains all elements in either \\(A\\) or \\(B\\)\n\nWe’ll sometimes use a \\(\\bigcup_i\\) to denote a union over many events\n\nThe intersection of two events \\(A \\cap B\\) contains all elements both in \\(A\\) and \\(B\\)\nTwo sets \\(A\\) and \\(B\\) are disjoint or mutually exclusive if \\(A \\cap B = \\emptyset\\)\nPractice: Are \\(A\\) and \\(B\\) below disjoint?"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#set-review-2",
+    "href": "slides/week1/week1_intro_and_review.html#set-review-2",
+    "title": "Week 1: Intro to Probability",
+    "section": "Set review",
+    "text": "Set review\n\nDe Morgan’s Law:\n\n\\((A \\cup B)^{c} = A^{c} \\cap B^{c}\\) – not in either means in neither\n\\((A \\cap B)^{c} = A^{c} \\cup B^{c}\\) – not in both means missing from at least one\nExtension to many events: \\(\\left(\\bigcup_i A_i\\right)^{c} = \\bigcap_i A_i^{c}\\)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#probability-axioms",
+    "href": "slides/week1/week1_intro_and_review.html#probability-axioms",
+    "title": "Week 1: Intro to Probability",
+    "section": "Probability axioms",
+    "text": "Probability axioms\n\nThe probability function \\(P\\) obeys three axioms (Kolmogorov’s Axioms)\n\nNon-negativity: \\(P(A) \\geq 0\\) for every event \\(A \\in \\mathcal{F}\\)\nNormalization: \\(P(\\mathcal{S}) = 1\\)\nCountable additivity: for pairwise disjoint events \\(A_1, A_2, A_3, \\dotsc\\)\n\\[P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)\\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#conjunctions",
+    "href": "slides/week1/week1_intro_and_review.html#conjunctions",
+    "title": "Week 1: Intro to Probability",
+    "section": "Conjunctions",
+    "text": "Conjunctions\n\nTversky and Kahneman (1983) gave this question to a sample of undergraduate students:\n\n\n\nA health survey was conducted in a representative sample of adult males in British Columbia of all ages and occupations. Mr. F. was included in the sample. He was selected by chance from the list of participants.\nWhich of the following statements is more probable? (check one)\n\nMr. F. has had one or more heart attacks.\nMr. F. has had one or more heart attacks and he is over 55 years old.\n\n\n\n\n\n\\(58\\%\\) of respondents incorrectly said the second option"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#the-union-rule",
+    "href": "slides/week1/week1_intro_and_review.html#the-union-rule",
+    "title": "Week 1: Intro to Probability",
+    "section": "The Union Rule",
+    "text": "The Union Rule\n\nThe probability of a union of two events is the sum of their respective probabilities minus the probability of their intersection\n\\[ P(A \\cup B) = P(A) + P(B) - P(A \\cap B) \\]\nProof\n\nSplit both \\(A \\cup B\\) and \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[A \\cup B = A \\cup (B \\cap A^{c}) \\qquad\\qquad B = (A \\cap B) \\cup (B \\cap A^{c})\\]\nAdditivity turns each union into a sum\n\\[P(A \\cup B) = P(A) + P(B \\cap A^{c}) \\qquad P(B) = P(A \\cap B) + P(B \\cap A^{c})\\]\nSolve the second for \\(P(B \\cap A^{c}) = P(B) - P(A \\cap B)\\), then substitute into the first."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection",
+    "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection",
+    "title": "Week 1: Intro to Probability",
+    "section": "Bounding the probability of an intersection",
+    "text": "Bounding the probability of an intersection\n\nRearrange the union rule to put the intersection on its own\n\\[P(A \\cap B) = P(A) + P(B) - P(A \\cup B)\\]\nFrom earlier, we can split the union into disjoint parts: \\(P(A \\cup B) = P(A) + P(B \\cap A^{c})\\)\n\nNon-negativity of \\(P(B \\cap A^{c})\\) bounds the union from below\n\\[P(A \\cup B) \\geq P(A) \\qquad\\qquad P(A \\cup B) \\geq P(B)\\]\n\nSubstituting \\(P(A \\cup B) \\geq P(B)\\) gives \\(P(A \\cap B) \\leq P(A)\\)\nSubstituting \\(P(A \\cup B) \\geq P(A)\\) gives \\(P(A \\cap B) \\leq P(B)\\)\nBoth hold at once, so the intersection is bounded by the smaller of the two\n\\[P(A \\cap B) \\leq \\min\\{P(A),\\, P(B)\\}\\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#fréchet-inequalities",
+    "href": "slides/week1/week1_intro_and_review.html#fréchet-inequalities",
+    "title": "Week 1: Intro to Probability",
+    "section": "Fréchet inequalities",
+    "text": "Fréchet inequalities\n\nFor any two events \\(A, B\\), their intersection is bounded by\n\\[\\max\\{0,\\, P(A) + P(B) - 1\\} \\;\\leq\\; P(A \\cap B) \\;\\leq\\; \\min\\{P(A),\\, P(B)\\}\\]\nFor any two events \\(A, B\\), their union is bounded by\n\\[\\max\\{P(A),\\, P(B)\\} \\;\\leq\\; P(A \\cup B) \\;\\leq\\; \\min\\{1,\\, P(A) + P(B)\\}\\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#references",
+    "href": "slides/week1/week1_intro_and_review.html#references",
+    "title": "Week 1: Intro to Probability",
+    "section": "References",
+    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. “Modern Plain Text Computing.” Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
   },
   {
     "objectID": "resources.html",
@@ -214,14 +368,14 @@
     "href": "lectures.html",
     "title": "Lectures",
     "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
   },
   {
     "objectID": "lectures.html#lecture-slides",
     "href": "lectures.html#lecture-slides",
     "title": "Lectures",
     "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
   },
   {
     "objectID": "schedule.html",
