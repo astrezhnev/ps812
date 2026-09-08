@@ -365,7 +365,7 @@ Modeled after @blitzstein2019introduction, Figure 1.1
 - The **union** of two events $A \cup B$ contains all elements in **either** $A$ **or** $B$
   - We'll sometimes use a big $\displaystyle\bigcup_{i=1}^N$ to denote a union over *many* events 
 - The **intersection** of two events $A \cap B$ contains all elements **both** in $A$ **and** $B$
-  - Same idea for notation $\displaystyle\bigcap_{i=1}^N$ to denote an intersection over *many* events 
+  - Same idea for notation: $\displaystyle\bigcap_{i=1}^N$ denotes an intersection over *many* events 
 - Two sets $A$ and $B$ are **disjoint** or **mutually exclusive** if $A \cap B = \emptyset$
 
 :::
