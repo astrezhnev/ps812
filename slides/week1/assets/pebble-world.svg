@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 660" width="640" height="660" role="img" aria-labelledby="pw-title pw-desc">
+  <title id="pw-title">Pebble world: a sample space with two overlapping events</title>
+  <desc id="pw-desc">A square denoting the sample space S contains nine pebbles arranged in a three-by-three grid. Event A encloses the four pebbles of the upper-left block. Event B encloses the right-hand column together with the bottom-middle pebble. The two events overlap at the centre pebble, which belongs to both. The lower-left pebble lies in neither event.</desc>
+
+  <!-- palette matches custom.scss: link-blue #0479A8, primary-color #c5050c, text-grey #333333 -->
+
+  <!-- sample space -->
+  <rect x="70" y="110" width="500" height="500" fill="none" stroke="#B0B0B0" stroke-width="2.5"/>
+  <text x="74" y="96" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="34" fill="#666666">S</text>
+
+  <!-- event A: upper-left block -->
+  <path d="M 165 185
+           C 245 158, 330 165, 372 205
+           C 400 250, 396 348, 370 392
+           C 336 436, 220 442, 172 412
+           C 128 380, 122 228, 165 185 Z"
+        fill="#0479A8" fill-opacity="0.13" stroke="#0479A8" stroke-width="3.5" stroke-linejoin="round"/>
+
+  <!-- event B: right column plus bottom-middle, overlapping A at the centre -->
+  <path d="M 400 168
+           C 455 155, 512 175, 522 210
+           C 534 300, 534 450, 514 530
+           C 492 566, 330 570, 272 548
+           C 244 528, 240 372, 258 320
+           C 272 288, 330 300, 362 288
+           C 392 275, 380 205, 400 168 Z"
+        fill="#c5050c" fill-opacity="0.13" stroke="#c5050c" stroke-width="3.5" stroke-linejoin="round"/>
+
+  <!-- the nine pebbles -->
+  <g fill="#333333">
+    <circle cx="195" cy="235" r="15"/>
+    <circle cx="320" cy="235" r="15"/>
+    <circle cx="445" cy="235" r="15"/>
+    <circle cx="195" cy="360" r="15"/>
+    <circle cx="320" cy="360" r="15"/>
+    <circle cx="445" cy="360" r="15"/>
+    <circle cx="195" cy="485" r="15"/>
+    <circle cx="320" cy="485" r="15"/>
+    <circle cx="445" cy="485" r="15"/>
+  </g>
+
+  <!-- event labels -->
+  <g font-family="'Red Hat Text', Helvetica, Arial, sans-serif" font-weight="700" font-size="34" text-anchor="middle">
+    <text x="140" y="172" fill="#0479A8">A</text>
+    <text x="500" y="597" fill="#c5050c">B</text>
+  </g>
+</svg>

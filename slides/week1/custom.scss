@@ -63,3 +63,24 @@ strong {
   border-left: 3px solid $text-muted;
   padding-left: 0.5em;
 }
+
+// Bibliography slide (works cited via ../ps812.bib)
+
+.reveal .refs-slide #refs {
+  font-size: 0.5em;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.reveal .refs-slide #refs .csl-entry {
+  margin-bottom: 0.6em;
+}
+
+// Small source line under a borrowed figure
+
+.reveal .attribution {
+  font-size: 0.45em;
+  color: $text-muted;
+  text-align: center;
+  margin-top: 0.4em;
+}

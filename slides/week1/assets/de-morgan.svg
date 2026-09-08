@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 380" width="920" height="380" role="img" aria-labelledby="dm-title dm-desc">
+  <title id="dm-title">De Morgan's laws as Venn diagrams</title>
+  <desc id="dm-desc">Two panels side by side. Each shows a rectangle denoting the sample space S containing two overlapping circles labelled A and B. In the left panel the whole of the union of A and B is shaded, captioned: the complement of A union B equals A complement intersect B complement. In the right panel only the lens where A and B overlap is shaded, captioned: the complement of A intersect B equals A complement union B complement.</desc>
+
+  <!-- palette matches custom.scss: link-blue #0479A8, text-grey #333333 -->
+
+  <g stroke-linejoin="round">
+
+    <!-- ============ panel 1: (A u B)^c ============ -->
+    <rect x="20" y="20" width="420" height="280" fill="#EDF2F5" stroke="#B0B0B0" stroke-width="2"/>
+    <!-- shaded region: the union. group opacity flattens the overlap so the fill stays even -->
+    <g fill="#0479A8" opacity="0.32">
+      <circle cx="181" cy="160" r="80"/>
+      <circle cx="279" cy="160" r="80"/>
+    </g>
+    <circle cx="181" cy="160" r="80" fill="none" stroke="#555555" stroke-width="2"/>
+    <circle cx="279" cy="160" r="80" fill="none" stroke="#555555" stroke-width="2"/>
+
+    <!-- ============ panel 2: (A n B)^c ============ -->
+    <rect x="480" y="20" width="420" height="280" fill="#EDF2F5" stroke="#B0B0B0" stroke-width="2"/>
+    <!-- shaded region: the lens, drawn as the two minor arcs between the circle intersections -->
+    <path d="M 690 96.76 A 80 80 0 0 0 690 223.24 A 80 80 0 0 0 690 96.76 Z"
+          fill="#0479A8" opacity="0.32"/>
+    <circle cx="641" cy="160" r="80" fill="none" stroke="#555555" stroke-width="2"/>
+    <circle cx="739" cy="160" r="80" fill="none" stroke="#555555" stroke-width="2"/>
+  </g>
+
+  <!-- set labels -->
+  <g font-family="'Red Hat Text', Helvetica, Arial, sans-serif" font-weight="700" font-size="30" fill="#333333" text-anchor="middle">
+    <text x="150" y="171">A</text>
+    <text x="310" y="171">B</text>
+    <text x="610" y="171">A</text>
+    <text x="770" y="171">B</text>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="30" fill="#666666" text-anchor="middle">
+    <text x="410" y="58">S</text>
+    <text x="870" y="58">S</text>
+  </g>
+
+  <!-- captions -->
+  <g font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="31" fill="#333333" text-anchor="middle">
+    <text x="230" y="352">(A &#8746; B)<tspan dy="-12" font-size="20">c</tspan><tspan dy="12">&#160;= A</tspan><tspan dy="-12" font-size="20">c</tspan><tspan dy="12">&#160;&#8745; B</tspan><tspan dy="-12" font-size="20">c</tspan></text>
+    <text x="690" y="352">(A &#8745; B)<tspan dy="-12" font-size="20">c</tspan><tspan dy="12">&#160;= A</tspan><tspan dy="-12" font-size="20">c</tspan><tspan dy="12">&#160;&#8746; B</tspan><tspan dy="-12" font-size="20">c</tspan></text>
+  </g>
+</svg>
