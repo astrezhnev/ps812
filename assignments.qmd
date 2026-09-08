@@ -10,11 +10,11 @@ title: "Assignments"
 | Problem Set 2                  | Sept 22 (Week 3) | Oct 6 (Week 5)       |
 | **First Midterm Exam**         | --               | **Oct 7 (Week 5)**   |
 | Problem Set 3                  | Oct 6 (Week 5)   | Oct 20 (Week 7)      |
-| Replication project memo       | TBA              | Oct 21 (Week 7)      |
+| Replication project memo       | --               | Oct 21 (Week 7)      |
 | Problem Set 4                  | Oct 20 (Week 7)  | Nov 3 (Week 9)       |
 | Problem Set 5                  | Nov 3 (Week 9)   | Nov 17 (Week 11)     |
 | **Second Midterm Exam**        | --               | **Nov 18 (Week 11)** |
-| **Replication Project Poster** | TBA              | **Dec 4 (Week 13)**  |
+| **Replication Project Poster** | --               | **Dec 4 (Week 13)**  |
 
 Problem sets are assigned and due on Tuesdays, at the start of lecture. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade.
 
