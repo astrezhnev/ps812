@@ -158,21 +158,21 @@
     "href": "slides/week1/week1_intro_and_review.html#class-requirements",
     "title": "Week 1: Intro to Probability",
     "section": "Class Requirements",
-    "text": "Class Requirements\n\nOverall: An interest in learning and willingness to ask questions.\nNo formal pre-requisites - Math camp should get you up to speed on topics/refresh your memory of HS math.\n\nWe’ll spend time on the really relevant stuff: probability/inference\n\nMath is not about intrinsic aptitude, it’s about effort\n\n…in mathematics you don’t understand things. You just get used to them.\n— John Von Neumann\n\nWe don’t do rigor for rigor’s sake\n\nBut rigor is important - we will tell you why we need to be clear and precise about things!\n\nYou’re developing your ability to reason and not just memorize\nIf you’re unsure or confused, always ask - we will match the effort you put in\nWe all come from different backgrounds. Please have patience with yourself and with others"
+    "text": "Class Requirements\n\nOverall: An interest in learning and willingness to ask questions.\nNo formal pre-requisites\n\nMath camp should get you up to speed on topics/refresh your memory of HS math.\nWe’ll spend time on the really relevant stuff: probability/inference\n\nMath is not about intrinsic aptitude, it’s about effort\n\n…in mathematics you don’t understand things. You just get used to them.\n— John Von Neumann\n\nWe don’t do rigor for rigor’s sake\n\nBut rigor is important - we will tell you why we need to be clear and precise about things!\n\nYou’re developing your ability to reason and not just memorize\nIf you’re unsure or confused, always ask - we will match the effort you put in\nWe all come from different backgrounds. Please have patience with yourself and with others"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#llm-policy",
     "href": "slides/week1/week1_intro_and_review.html#llm-policy",
     "title": "Week 1: Intro to Probability",
     "section": "LLM Policy",
-    "text": "LLM Policy\n\nSee the syllabus for the long-winded write-up\nIn short…\n\nYou should have LLMs do things for you\nYou should not have LLMs think for you\nYou should definitely not have LLMs speak for you\n\nSometimes it’s valuable to not have the LLM do a think so that you can learn to think.\n\nTry to minimize use on the problem sets.\nThe exams are ultimately the check on this…\n…as is the poster session."
+    "text": "LLM Policy\n\nSee the syllabus for the long version.\nIn short…\n\nYou should have LLMs do things for you\nYou should not have LLMs think for you\nYou should definitely not have LLMs speak for you\n\nSometimes it’s valuable to not have the LLM do something so that you can learn to think.\n\nTry to minimize use on the problem sets.\nThe exams are ultimately the check on this…\n…as is the poster session."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#acknowledgements",
     "href": "slides/week1/week1_intro_and_review.html#acknowledgements",
     "title": "Week 1: Intro to Probability",
     "section": "Acknowledgements",
-    "text": "Acknowledgements\n\nFirst and foremost, this course is indebted to Adeline Lo who taught it for the last several years and has provided a wealth of materials.\nBut it’s also an iteration in the broader project of methods education in political methodology and is indebted to many of those who have taught versions of this course in the past and at other institutions\n\nMatthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto"
+    "text": "Acknowledgements\n\nFirst and foremost, this course is indebted to Adeline Lo who taught it for the last several years and has provided a wealth of materials.\nBut it’s also an iteration in the broader project of methods education in political methodology and is indebted to many of those who have taught versions of this course in the past and at other institutions\n\nMatthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nAnd special thanks to Andrew Heiss for the modern website/Quarto approach to teaching materials."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#a-brief-overview",
@@ -186,7 +186,7 @@
     "href": "slides/week1/week1_intro_and_review.html#statistics-and-political-science",
     "title": "Week 1: Intro to Probability",
     "section": "Statistics and Political Science",
-    "text": "Statistics and Political Science\n\nStatistics is an extremely recent field - hypothesis testing formalized in early 20th C\n\nProbability a bit older - 17th/18th century.\n\nEarly applied statistics mostly in medicine/biological sciences - biostatistics\nIn the social sciences, econometrics becomes a distinct discipline around the 1930s\nPolitical methodology starts to define itself as a separate field around 1984 (first PolMeth meeting)\nWhat is political methodology?\n\nA messy blend of all of these + computer science!"
+    "text": "Statistics and Political Science\n\nStatistics is an extremely recent field - hypothesis testing formalized in early 20th century\n\nProbability a bit older - 17th/18th century.\n\nEarly applied statistics mostly in medicine/biological sciences - biostatistics\nIn the social sciences, econometrics becomes a distinct discipline around the 1930s\nPolitical methodology starts to define itself around 1984 (first PolMeth meeting)\nWhat is political methodology?\n\nA messy blend of all of these + computer science!"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#what-is-statistics",
@@ -210,25 +210,18 @@
     "text": "Probability and Inference\n\n\nFigure from Blackwell (2025), Ch. 2"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#interpreting-probability",
-    "href": "slides/week1/week1_intro_and_review.html#interpreting-probability",
+    "objectID": "slides/week1/week1_intro_and_review.html#what-is-probability",
+    "href": "slides/week1/week1_intro_and_review.html#what-is-probability",
     "title": "Week 1: Intro to Probability",
-    "section": "Interpreting probability",
-    "text": "Interpreting probability\n\nProbability allows us to quantify how likely an event would be under a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events"
-  },
-  {
-    "objectID": "slides/week1/week1_intro_and_review.html#sample-space",
-    "href": "slides/week1/week1_intro_and_review.html#sample-space",
-    "title": "Week 1: Intro to Probability",
-    "section": "Sample space",
-    "text": "Sample space\n\nDefine the sample space \\(\\mathcal{S}\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nAfter Blitzstein and Hwang (2019), Figure 1.1"
+    "section": "What is probability?",
+    "text": "What is probability?\n\nProbability allows us to quantify how likely an event would be under a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events\nDefine the sample space \\(\\mathcal{S}\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nAfter Blitzstein and Hwang (2019), Figure 1.1"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#events",
     "href": "slides/week1/week1_intro_and_review.html#events",
     "title": "Week 1: Intro to Probability",
     "section": "Events",
-    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nLet \\(\\mathcal{F}\\) be the set of all events (that can be assigned a probability)\n\n\n\n\n\n\n\n\n\n\nProbability is a function that maps from \\(\\mathcal{F}\\) to the interval \\([0,1]\\)\n\n\\(P \\colon \\mathcal{F} \\to [0, 1]\\)"
+    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nLet \\(\\mathcal{F}\\) be the set of all events (that can be assigned a probability)\n\nProbability is a function that maps from \\(\\mathcal{F}\\) to the interval \\([0,1]\\)\n\n\\(P \\colon \\mathcal{F} \\to [0, 1]\\)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review",
@@ -242,14 +235,14 @@
     "href": "slides/week1/week1_intro_and_review.html#set-review-1",
     "title": "Week 1: Intro to Probability",
     "section": "Set review",
-    "text": "Set review\n\nThe union of two events \\(A \\cup B\\) contains all elements in either \\(A\\) or \\(B\\)\n\nWe’ll sometimes use a \\(\\bigcup_i\\) to denote a union over many events\n\nThe intersection of two events \\(A \\cap B\\) contains all elements both in \\(A\\) and \\(B\\)\nTwo sets \\(A\\) and \\(B\\) are disjoint or mutually exclusive if \\(A \\cap B = \\emptyset\\)\nPractice: Are \\(A\\) and \\(B\\) below disjoint?"
+    "text": "Set review\n\nThe union of two events \\(A \\cup B\\) contains all elements in either \\(A\\) or \\(B\\)\n\nWe’ll sometimes use a \\(\\displaystyle\\bigcup_{i=1}^N\\) to denote a union over many events\n\nThe intersection of two events \\(A \\cap B\\) contains all elements both in \\(A\\) and \\(B\\)\nTwo sets \\(A\\) and \\(B\\) are disjoint or mutually exclusive if \\(A \\cap B = \\emptyset\\)\nPractice: Are \\(A\\) and \\(B\\) below disjoint?"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review-2",
     "href": "slides/week1/week1_intro_and_review.html#set-review-2",
     "title": "Week 1: Intro to Probability",
     "section": "Set review",
-    "text": "Set review\n\nDe Morgan’s Law:\n\n\\((A \\cup B)^{c} = A^{c} \\cap B^{c}\\) – not in either means in neither\n\\((A \\cap B)^{c} = A^{c} \\cup B^{c}\\) – not in both means missing from at least one\nExtension to many events: \\(\\left(\\bigcup_i A_i\\right)^{c} = \\bigcap_i A_i^{c}\\)"
+    "text": "Set review\n\nDe Morgan’s Laws:\n\n\\((A \\cup B)^{c} = A^{c} \\cap B^{c}\\) – not in either means in neither\n\\((A \\cap B)^{c} = A^{c} \\cup B^{c}\\) – not in both means missing from at least one\nExtension to many events: \\(\\left(\\bigcup_i A_i\\right)^{c} = \\bigcap_i A_i^{c}\\)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#probability-axioms",
@@ -263,21 +256,35 @@
     "href": "slides/week1/week1_intro_and_review.html#conjunctions",
     "title": "Week 1: Intro to Probability",
     "section": "Conjunctions",
-    "text": "Conjunctions\n\nTversky and Kahneman (1983) gave this question to a sample of undergraduate students:\n\n\n\nA health survey was conducted in a representative sample of adult males in British Columbia of all ages and occupations. Mr. F. was included in the sample. He was selected by chance from the list of participants.\nWhich of the following statements is more probable? (check one)\n\nMr. F. has had one or more heart attacks.\nMr. F. has had one or more heart attacks and he is over 55 years old.\n\n\n\n\n\n\\(58\\%\\) of respondents incorrectly said the second option"
+    "text": "Conjunctions\n\nTversky and Kahneman (1983) gave this question to a sample of undergraduate students:\n\n\n\nA health survey was conducted in a representative sample of adult males in British Columbia of all ages and occupations.\nMr. F. was included in the sample. He was selected by chance from the list of participants.\nWhich of the following statements is more probable? (check one)\n1. Mr. F. has had one or more heart attacks. 2. Mr. F. has had one or more heart attacks and he is over 55 years old.\n\n\n\n\n\\(58\\%\\) of respondents incorrectly said the second option\n\nLet’s prove why this is incorrect using the axioms of probability!\nWe’ll bound \\(P(A \\cap B)\\) in terms of \\(P(A)\\) and \\(P(B)\\)"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#the-union-rule",
-    "href": "slides/week1/week1_intro_and_review.html#the-union-rule",
+    "objectID": "slides/week1/week1_intro_and_review.html#inclusionexclusion",
+    "href": "slides/week1/week1_intro_and_review.html#inclusionexclusion",
     "title": "Week 1: Intro to Probability",
-    "section": "The Union Rule",
-    "text": "The Union Rule\n\nThe probability of a union of two events is the sum of their respective probabilities minus the probability of their intersection\n\\[ P(A \\cup B) = P(A) + P(B) - P(A \\cap B) \\]\nProof\n\nSplit both \\(A \\cup B\\) and \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[A \\cup B = A \\cup (B \\cap A^{c}) \\qquad\\qquad B = (A \\cap B) \\cup (B \\cap A^{c})\\]\nAdditivity turns each union into a sum\n\\[P(A \\cup B) = P(A) + P(B \\cap A^{c}) \\qquad P(B) = P(A \\cap B) + P(B \\cap A^{c})\\]\nSolve the second for \\(P(B \\cap A^{c}) = P(B) - P(A \\cap B)\\), then substitute into the first."
+    "section": "Inclusion/Exclusion",
+    "text": "Inclusion/Exclusion\n\nThe probability of a union of two events is the sum of their respective probabilities minus the probability of their intersection\n\\[ P(A \\cup B) = P(A) + P(B) - P(A \\cap B) \\]\nProof\n\nSplit both \\(A \\cup B\\) and \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[A \\cup B = A \\cup (B \\cap A^{c}) \\qquad\\qquad B = (A \\cap B) \\cup (B \\cap A^{c})\\]\nAdditivity turns each union into a sum\n\\[P(A \\cup B) = P(A) + P(B \\cap A^{c}) \\qquad P(B) = P(A \\cap B) + P(B \\cap A^{c})\\]\nSolve the second for \\(P(B \\cap A^{c}) = P(B) - P(A \\cap B)\\), then substitute into the first."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#inclusionexclusion-1",
+    "href": "slides/week1/week1_intro_and_review.html#inclusionexclusion-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Inclusion/Exclusion",
+    "text": "Inclusion/Exclusion\n\nThe same idea extends to more events: add the pieces, then fix the double-counting\n\nEach region below is numbered by how often the first sum counts it\n\n\n\n\n\n\n\n\n\n\nTwo events: one region is counted twice, so subtract it once\n\\[P(A \\cup B) = P(A) + P(B) - P(A \\cap B)\\]\nThree events: subtract the three pairwise overlaps – but that strips the centre entirely, so add it back\n\\[\\begin{aligned}\nP(A \\cup B \\cup C) = &\\; P(A) + P(B) + P(C) \\\\\n&- P(A \\cap B) - P(A \\cap C) - P(B \\cap C) \\\\\n&+ P(A \\cap B \\cap C)\n\\end{aligned}\\]"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection",
     "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection",
     "title": "Week 1: Intro to Probability",
     "section": "Bounding the probability of an intersection",
-    "text": "Bounding the probability of an intersection\n\nRearrange the union rule to put the intersection on its own\n\\[P(A \\cap B) = P(A) + P(B) - P(A \\cup B)\\]\nFrom earlier, we can split the union into disjoint parts: \\(P(A \\cup B) = P(A) + P(B \\cap A^{c})\\)\n\nNon-negativity of \\(P(B \\cap A^{c})\\) bounds the union from below\n\\[P(A \\cup B) \\geq P(A) \\qquad\\qquad P(A \\cup B) \\geq P(B)\\]\n\nSubstituting \\(P(A \\cup B) \\geq P(B)\\) gives \\(P(A \\cap B) \\leq P(A)\\)\nSubstituting \\(P(A \\cup B) \\geq P(A)\\) gives \\(P(A \\cap B) \\leq P(B)\\)\nBoth hold at once, so the intersection is bounded by the smaller of the two\n\\[P(A \\cap B) \\leq \\min\\{P(A),\\, P(B)\\}\\]"
+    "text": "Bounding the probability of an intersection\n\nRearrange the union rule\n\\[P(A \\cap B) = P(A) + P(B) - P(A \\cup B)\\]\nFrom earlier, we can split the union into disjoint parts: \\(P(A \\cup B) = P(A) + P(B \\cap A^{c})\\)\n\nNon-negativity of \\(P(B \\cap A^{c})\\) bounds the union from below\n\\[P(A \\cup B) \\geq P(A) \\qquad\\qquad P(A \\cup B) \\geq P(B)\\]\n\nSubstituting \\(P(A \\cup B) \\geq P(B)\\) gives \\(P(A \\cap B) \\leq P(A)\\)\nSubstituting \\(P(A \\cup B) \\geq P(A)\\) gives \\(P(A \\cap B) \\leq P(B)\\)\nBoth hold at once, so the intersection is bounded by the smaller of the two\n\\[P(A \\cap B) \\leq \\min\\{P(A),\\, P(B)\\}\\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection-1",
+    "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Bounding the probability of an intersection",
+    "text": "Bounding the probability of an intersection\n\nThat’s an upper bound, how about the lower bound?\nLet’s inspect our expression for \\(P(A \\cap B)\\) \\[ P(A \\cap B) = P(A) + P(B) - P(A \\cup B) \\]\nWe have \\(P(A) + P(B)\\)…but what about \\(P(A \\cup B)\\)\n\nWhat’s the worst case value in terms of making \\(P(A \\cap B)\\) as small as possible?\nBy normalization: \\(P(A \\cup B) = 1\\)\n\nSo one lower bound is\n\\[ P(A \\cap B) \\geq P(A) + P(B) - 1 \\]\n\n\nBut by non-negativity, the probability is also trivially bounded by \\(0\\), so we have\n\\[ P(A \\cap B) \\geq \\max\\{0,\\, P(A) + P(B) - 1\\} \\]"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#fréchet-inequalities",
@@ -285,6 +292,13 @@
     "title": "Week 1: Intro to Probability",
     "section": "Fréchet inequalities",
     "text": "Fréchet inequalities\n\nFor any two events \\(A, B\\), their intersection is bounded by\n\\[\\max\\{0,\\, P(A) + P(B) - 1\\} \\;\\leq\\; P(A \\cap B) \\;\\leq\\; \\min\\{P(A),\\, P(B)\\}\\]\nFor any two events \\(A, B\\), their union is bounded by\n\\[\\max\\{P(A),\\, P(B)\\} \\;\\leq\\; P(A \\cup B) \\;\\leq\\; \\min\\{1,\\, P(A) + P(B)\\}\\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#next-week",
+    "href": "slides/week1/week1_intro_and_review.html#next-week",
+    "title": "Week 1: Intro to Probability",
+    "section": "Next week",
+    "text": "Next week\n\nConditional probabilities\n\nHow do the chances of one event change if I know another event has occurred?\nConditioning restricts the sample space\n\nIndependence\n\nWhat happens when knowing one event tells me nothing about the probability of another?\n\nBayes’ rule\n\nHow do we relate the probability of \\(A\\) given \\(B\\) to the probability of \\(B\\) given \\(A\\)?"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#references",
