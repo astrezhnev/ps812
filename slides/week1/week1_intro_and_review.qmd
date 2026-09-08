@@ -321,7 +321,7 @@ Figure from @blackwell2025users, Ch. 2
 ![](assets/pebble-world.svg){fig-align="center" width="40%"}
 
 ::: {.attribution}
-After @blitzstein2019introduction, Figure 1.1
+Modeled after @blitzstein2019introduction, Figure 1.1
 :::
 :::
 
@@ -332,7 +332,7 @@ After @blitzstein2019introduction, Figure 1.1
 ::: {.incremental}
 
 - An **event** is a **subset** of the sample space (including the empty set)
-  - Let $\mathcal{F}$ be the set of all events (that can be assigned a probability) 
+  - We'll denote the set of all events that can be assigned a probability as $\mathcal{F}$ (this is called the "$\sigma$-algebra")
 
 ::: {.fragment}
 ![](assets/pebble-world.svg){fig-align="center" width="40%"}
@@ -349,7 +349,7 @@ After @blitzstein2019introduction, Figure 1.1
   - Implicitly complements are defined w.r.t. some "universal" set - here the sample space $\mathcal{S}$.
   - What's $\mathcal{S}^c$?
 
-- Practice: In the figure below, is $A^{c} = B$?
+- **Practice**: In the figure below, is $A^{c} = B$?
 
 ::: {.fragment}
 ![](assets/pebble-world.svg){fig-align="center" width="40%"}
@@ -363,14 +363,22 @@ After @blitzstein2019introduction, Figure 1.1
 ::: {.incremental}
 
 - The **union** of two events $A \cup B$ contains all elements in **either** $A$ **or** $B$
-  - We'll sometimes use a $\displaystyle\bigcup_{i=1}^N$ to denote a union over *many* events 
+  - We'll sometimes use a big $\displaystyle\bigcup_{i=1}^N$ to denote a union over *many* events 
 - The **intersection** of two events $A \cap B$ contains all elements **both** in $A$ **and** $B$
+  - Same idea for notation $\displaystyle\bigcap_{i=1}^N$ to denote an intersection over *many* events 
 - Two sets $A$ and $B$ are **disjoint** or **mutually exclusive** if $A \cap B = \emptyset$
+
+:::
+
+## Set review
+
+::: {.incremental}
+
+- **Practice**: In the figure below, are $A$ and $B$ disjoint?
 
 ::: {.fragment}
 ![](assets/pebble-world.svg){fig-align="center" width="40%"}
 :::
-
 
 :::
 
