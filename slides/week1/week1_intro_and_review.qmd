@@ -194,7 +194,8 @@ link-citations: true
 ::: {.incremental}
 
 - **Overall**: An interest in learning and willingness to ask questions.
-- No formal pre-requisites - Math camp should get you up to speed on topics/refresh your memory of HS math.
+- No formal pre-requisites 
+  - Math camp should get you up to speed on topics/refresh your memory of HS math.
   - We'll spend time on the really relevant stuff: probability/inference 
 - Math is not about intrinsic aptitude, it's about **effort**
 
@@ -214,12 +215,12 @@ link-citations: true
 
 ::: {.incremental}
 
-- See the syllabus for the long-winded write-up
+- See the syllabus for the long version.
 - In short...
   - You should have LLMs **do** things for you
   - You should not have LLMs **think** for you
   - You should *definitely* not have LLMs **speak** for you
-- Sometimes it's valuable to *not* have the LLM **do** a think so that you can learn to **think**.
+- Sometimes it's valuable to *not* have the LLM **do** something so that you can learn to **think**.
   - Try to minimize use on the problem sets.
   - The exams are ultimately the check on this...
   - ...as is the poster session.
@@ -234,6 +235,7 @@ link-citations: true
 
 - But it's also an iteration in the broader project of methods education in **political methodology** and is indebted to many of those who have taught versions of this course in the past and at other institutions
   - Matthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto
+  - And special thanks to Andrew Heiss for the modern website/Quarto approach to teaching materials.
 
 :::
 
@@ -259,11 +261,11 @@ link-citations: true
 
 ::: {.incremental}
 
-- **Statistics** is an *extremely* recent field - hypothesis testing formalized in early 20th C
+- **Statistics** is an *extremely* recent field - hypothesis testing formalized in early 20th century
   - **Probability** a bit older - 17th/18th century.
 - Early applied statistics mostly in medicine/biological sciences - **biostatistics**
 - In the social sciences, **econometrics** becomes a distinct discipline around the 1930s
-- **Political methodology** starts to define itself as a separate field around 1984 (first PolMeth meeting)
+- **Political methodology** starts to define itself around 1984 (first PolMeth meeting)
 - What is **political methodology**?
   - A messy blend of all of these + computer science!
 
@@ -305,7 +307,7 @@ Figure from @blackwell2025users, Ch. 2
 :::
 
 
-## Interpreting probability
+## What is probability?
 
 ::: {.incremental}
 
@@ -313,13 +315,6 @@ Figure from @blackwell2025users, Ch. 2
   - **Objectivist** interpretation: probabilities are **long-run frequencies**
   - **Subjectivist** interpretation: probabilities are **degrees of belief**
 - To talk about *probability*, we first need to talk about *events*
-
-:::
-
-## Sample space
-
-:::: {.incremental}
-
 - Define the **sample space** $\mathcal{S}$ as the set of all possible outcomes of an "experiment"
 
 ::: {.fragment}
@@ -338,13 +333,12 @@ After @blitzstein2019introduction, Figure 1.1
 
 - An **event** is a **subset** of the sample space (including the empty set)
   - Let $\mathcal{F}$ be the set of all events (that can be assigned a probability) 
+- Probability is a function that maps from $\mathcal{F}$ to the interval $[0,1]$
+  - $P \colon \mathcal{F} \to [0, 1]$
 
 ::: {.fragment}
 ![](assets/pebble-world.svg){fig-align="center" width="40%"}
 :::
-
-- Probability is a function that maps from $\mathcal{F}$ to the interval $[0,1]$
-  - $P \colon \mathcal{F} \to [0, 1]$
 
 :::
 
@@ -371,11 +365,11 @@ After @blitzstein2019introduction, Figure 1.1
 ::: {.incremental}
 
 - The **union** of two events $A \cup B$ contains all elements in **either** $A$ **or** $B$
-  - We'll sometimes use a $\bigcup_i$ to denote a union over *many* events 
+  - We'll sometimes use a $\displaystyle\bigcup_{i=1}^N$ to denote a union over *many* events 
 - The **intersection** of two events $A \cap B$ contains all elements **both** in $A$ **and** $B$
 - Two sets $A$ and $B$ are **disjoint** or **mutually** exclusive if $A \cap B = \emptyset$
 
-- Practice: Are $A$ and $B$ below disjoint?
+- **Practice**: Are $A$ and $B$ below disjoint?
 
 ::: {.fragment}
 ![](assets/pebble-world.svg){fig-align="center" width="40%"}
@@ -388,7 +382,7 @@ After @blitzstein2019introduction, Figure 1.1
 
 :::: {.incremental}
 
-- **De Morgan's Law**:
+- **De Morgan's Laws**:
   - $(A \cup B)^{c} = A^{c} \cap B^{c}$ -- *not in either* means *in neither*
   - $(A \cap B)^{c} = A^{c} \cup B^{c}$ -- *not in both* means *missing from at least one*
   - Extension to  many events: $\left(\bigcup_i A_i\right)^{c} = \bigcap_i A_i^{c}$
@@ -410,7 +404,6 @@ After @blitzstein2019introduction, Figure 1.1
   3) **Countable additivity**: for *pairwise disjoint* events $A_1, A_2, A_3, \dotsc$
 
      $$P\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} P(A_i)$$
-
 :::
 
 ## Conjunctions
@@ -420,23 +413,27 @@ After @blitzstein2019introduction, Figure 1.1
 ::: {.fragment}
 
 > A health survey was conducted in a representative sample of adult males in
-> British Columbia of all ages and occupations. Mr. F. was included in the
+> British Columbia of all ages and occupations. 
+>
+> Mr. F. was included in the
 > sample. He was selected by chance from the list of participants.
 >
 > Which of the following statements is more probable? (check one)
 >
-> 1. Mr. F. has had one or more heart attacks.
-> 2. Mr. F. has had one or more heart attacks and he is over 55 years old.
+> **1.** Mr. F. has had one or more heart attacks.
+> **2.** Mr. F. has had one or more heart attacks and he is over 55 years old.
 
 :::
 
 ::: {.fragment}
 
 - $58\%$ of respondents **incorrectly** said the **second** option
+  - Let's prove *why* this is incorrect using the axioms of probability!
+  - We'll **bound** $P(A \cap B)$ in terms of $P(A)$ and $P(B)$
 
 :::
 
-## The Union Rule
+## Inclusion/Exclusion 
 
 ::: {.incremental}
 
@@ -456,11 +453,38 @@ After @blitzstein2019introduction, Figure 1.1
 
 :::
 
+## Inclusion/Exclusion {.smaller}
+
+:::: {.incremental}
+
+- The same idea extends to more events: **add** the pieces, then fix the double-counting
+  - Each region below is numbered by how often the *first* sum counts it
+
+::: {.fragment}
+![](assets/inclusion-exclusion.svg){fig-align="center" width="80%"}
+:::
+
+- **Two events**: one region is counted twice, so subtract it once
+
+  $$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$
+
+- **Three events**: subtract the three pairwise overlaps -- but that strips the centre
+  entirely, so **add it back**
+
+  $$\begin{aligned}
+  P(A \cup B \cup C) = &\; P(A) + P(B) + P(C) \\
+  &- P(A \cap B) - P(A \cap C) - P(B \cap C) \\
+  &+ P(A \cap B \cap C)
+  \end{aligned}$$
+
+::::
+
+
 ## Bounding the probability of an intersection
 
 ::: {.incremental}
 
-- Rearrange the **union rule** to put the intersection on its own
+- Rearrange the **union rule**
 
   $$P(A \cap B) = P(A) + P(B) - P(A \cup B)$$
 
@@ -477,6 +501,27 @@ After @blitzstein2019introduction, Figure 1.1
 :::
 
 
+## Bounding the probability of an intersection
+
+::: {.incremental}
+
+- That's an upper bound, how about the lower bound?
+- Let's inspect our expression for $P(A \cap B)$
+  $$ P(A \cap B) = P(A) + P(B) - P(A \cup B) $$
+- We have $P(A) + P(B)$...but what about $P(A \cup B)$
+  - What's the *worst case* value in terms of making $P(A \cap B)$ as small as possible?
+  - By **normalization**: $P(A \cup B) = 1$
+
+- So one lower bound is 
+
+  $$ P(A \cap B) \geq P(A) + P(B) - 1 $$
+
+:::
+
+- But by **non-negativity**, the probability is also trivially bounded by $0$, so we have
+
+  $$ P(A \cap B) \geq \max\{0,\, P(A) + P(B) - 1\} $$
+
 ## Fréchet inequalities
 
 ::: {.incremental}
@@ -489,6 +534,16 @@ After @blitzstein2019introduction, Figure 1.1
   $$\max\{P(A),\, P(B)\} \;\leq\; P(A \cup B) \;\leq\; \min\{1,\, P(A) + P(B)\}$$
 
 :::
+
+## Next week
+
+- Conditional probabilities
+  - How do the chances of one event change if I **know** another event has occurred?
+  - Conditioning **restricts the sample space**
+- Independence
+  - What happens when knowing one event **tells me nothing** about the probability of another?
+- Bayes' rule
+  - How do we relate the probability of $A$ given $B$ to the probability of $B$ given $A$?
 
 ## References {.refs-slide}
 
