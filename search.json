@@ -214,14 +214,14 @@
     "href": "slides/week1/week1_intro_and_review.html#what-is-probability",
     "title": "Week 1: Intro to Probability",
     "section": "What is probability?",
-    "text": "What is probability?\n\nProbability quantifies the likelihood of an event from a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events\nDefine the sample space \\(\\mathcal{S}\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nAfter Blitzstein and Hwang (2019), Figure 1.1"
+    "text": "What is probability?\n\nProbability quantifies the likelihood of an event from a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events\nDefine the sample space \\(\\mathcal{S}\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nModeled after Blitzstein and Hwang (2019), Figure 1.1"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#events",
     "href": "slides/week1/week1_intro_and_review.html#events",
     "title": "Week 1: Intro to Probability",
     "section": "Events",
-    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nLet \\(\\mathcal{F}\\) be the set of all events (that can be assigned a probability)"
+    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nWe’ll denote the set of all events that can be assigned a probability as \\(\\mathcal{F}\\) (this is called the “\\(\\sigma\\)-algebra”)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review",
@@ -235,11 +235,18 @@
     "href": "slides/week1/week1_intro_and_review.html#set-review-1",
     "title": "Week 1: Intro to Probability",
     "section": "Set review",
-    "text": "Set review\n\nThe union of two events \\(A \\cup B\\) contains all elements in either \\(A\\) or \\(B\\)\n\nWe’ll sometimes use a \\(\\displaystyle\\bigcup_{i=1}^N\\) to denote a union over many events\n\nThe intersection of two events \\(A \\cap B\\) contains all elements both in \\(A\\) and \\(B\\)\nTwo sets \\(A\\) and \\(B\\) are disjoint or mutually exclusive if \\(A \\cap B = \\emptyset\\)"
+    "text": "Set review\n\nThe union of two events \\(A \\cup B\\) contains all elements in either \\(A\\) or \\(B\\)\n\nWe’ll sometimes use a big \\(\\displaystyle\\bigcup_{i=1}^N\\) to denote a union over many events\n\nThe intersection of two events \\(A \\cap B\\) contains all elements both in \\(A\\) and \\(B\\)\n\nSame idea for notation: \\(\\displaystyle\\bigcap_{i=1}^N\\) denotes an intersection over many events\n\nTwo sets \\(A\\) and \\(B\\) are disjoint or mutually exclusive if \\(A \\cap B = \\emptyset\\)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review-2",
     "href": "slides/week1/week1_intro_and_review.html#set-review-2",
+    "title": "Week 1: Intro to Probability",
+    "section": "Set review",
+    "text": "Set review\n\nPractice: In the figure below, are \\(A\\) and \\(B\\) disjoint?"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#set-review-3",
+    "href": "slides/week1/week1_intro_and_review.html#set-review-3",
     "title": "Week 1: Intro to Probability",
     "section": "Set review",
     "text": "Set review\n\nDe Morgan’s Laws:\n\n\\((A \\cup B)^{c} = A^{c} \\cap B^{c}\\) – not in either means in neither\n\\((A \\cap B)^{c} = A^{c} \\cup B^{c}\\) – not in both means missing from at least one\nExtension to many events: \\(\\left(\\bigcup_i A_i\\right)^{c} = \\bigcap_i A_i^{c}\\)"
