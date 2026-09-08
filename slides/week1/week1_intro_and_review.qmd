@@ -507,7 +507,7 @@ After @blitzstein2019introduction, Figure 1.1
 
   $$ P(A \cup B) \geq \max\{P(A),\, P(B)\} $$
 
-- And an upper bound follows from the Union Rule + non-negativity of $P(A \cap B) \geq 0$
+- And an upper bound follows from the Union Rule + non-negativity: $P(A \cap B) \geq 0$
 
   $$ P(A \cup B) \leq P(A) + P(B) $$
 
