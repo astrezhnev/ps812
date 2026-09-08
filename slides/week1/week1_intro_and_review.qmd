@@ -311,7 +311,7 @@ Figure from @blackwell2025users, Ch. 2
 
 ::: {.incremental}
 
-- **Probability** allows us to quantify how *likely* an event would be under a given data-generating process
+- **Probability** quantifies the likelihood of an event from a given data-generating process
   - **Objectivist** interpretation: probabilities are **long-run frequencies**
   - **Subjectivist** interpretation: probabilities are **degrees of belief**
 - To talk about *probability*, we first need to talk about *events*
@@ -325,7 +325,7 @@ After @blitzstein2019introduction, Figure 1.1
 :::
 :::
 
-::::
+:::
 
 ## Events
 
@@ -333,8 +333,6 @@ After @blitzstein2019introduction, Figure 1.1
 
 - An **event** is a **subset** of the sample space (including the empty set)
   - Let $\mathcal{F}$ be the set of all events (that can be assigned a probability) 
-- Probability is a function that maps from $\mathcal{F}$ to the interval $[0,1]$
-  - $P \colon \mathcal{F} \to [0, 1]$
 
 ::: {.fragment}
 ![](assets/pebble-world.svg){fig-align="center" width="40%"}
@@ -367,9 +365,7 @@ After @blitzstein2019introduction, Figure 1.1
 - The **union** of two events $A \cup B$ contains all elements in **either** $A$ **or** $B$
   - We'll sometimes use a $\displaystyle\bigcup_{i=1}^N$ to denote a union over *many* events 
 - The **intersection** of two events $A \cap B$ contains all elements **both** in $A$ **and** $B$
-- Two sets $A$ and $B$ are **disjoint** or **mutually** exclusive if $A \cap B = \emptyset$
-
-- **Practice**: Are $A$ and $B$ below disjoint?
+- Two sets $A$ and $B$ are **disjoint** or **mutually exclusive** if $A \cap B = \emptyset$
 
 ::: {.fragment}
 ![](assets/pebble-world.svg){fig-align="center" width="40%"}
@@ -397,6 +393,8 @@ After @blitzstein2019introduction, Figure 1.1
 
 ::: {.incremental}
 
+- Probability is a function that maps from $\mathcal{F}$ to the real numbers.
+  - $P \colon \mathcal{F} \to \mathbb{R}$
 - The probability function $P$ obeys three axioms (*Kolmogorov's Axioms*)
 
   1) **Non-negativity**: $P(A) \geq 0$ for every event $A \in \mathcal{F}$
@@ -427,7 +425,7 @@ After @blitzstein2019introduction, Figure 1.1
 
 ::: {.fragment}
 
-- $58\%$ of respondents **incorrectly** said the **second** option
+- 58% of respondents **incorrectly** said the **second** option
   - Let's prove *why* this is incorrect using the axioms of probability!
   - We'll **bound** $P(A \cap B)$ in terms of $P(A)$ and $P(B)$
 
@@ -453,32 +451,11 @@ After @blitzstein2019introduction, Figure 1.1
 
 :::
 
-## Inclusion/Exclusion {.smaller}
-
-:::: {.incremental}
-
-- The same idea extends to more events: **add** the pieces, then fix the double-counting
-  - Each region below is numbered by how often the *first* sum counts it
+## Inclusion/Exclusion
 
 ::: {.fragment}
 ![](assets/inclusion-exclusion.svg){fig-align="center" width="80%"}
 :::
-
-- **Two events**: one region is counted twice, so subtract it once
-
-  $$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$
-
-- **Three events**: subtract the three pairwise overlaps -- but that strips the centre
-  entirely, so **add it back**
-
-  $$\begin{aligned}
-  P(A \cup B \cup C) = &\; P(A) + P(B) + P(C) \\
-  &- P(A \cap B) - P(A \cap C) - P(B \cap C) \\
-  &+ P(A \cap B \cap C)
-  \end{aligned}$$
-
-::::
-
 
 ## Bounding the probability of an intersection
 
@@ -489,7 +466,7 @@ After @blitzstein2019introduction, Figure 1.1
   $$P(A \cap B) = P(A) + P(B) - P(A \cup B)$$
 
 - From earlier, we can split the union into disjoint parts: $P(A \cup B) = P(A) + P(B \cap A^{c})$
-  - **Non-negativity** of $P(B \cap A^{c})$ bounds the union from below
+  - **Non-negativity** of $P(B \cap A^{c})$ bounds the union from below and, symmetrically, splitting on $B$ and $B^c$ gives us two bounds:
 
     $$P(A \cup B) \geq P(A) \qquad\qquad P(A \cup B) \geq P(B)$$
 - Substituting $P(A \cup B) \geq P(B)$ gives $P(A \cap B) \leq P(A)$
@@ -509,20 +486,37 @@ After @blitzstein2019introduction, Figure 1.1
 - Let's inspect our expression for $P(A \cap B)$
   $$ P(A \cap B) = P(A) + P(B) - P(A \cup B) $$
 - We have $P(A) + P(B)$...but what about $P(A \cup B)$
-  - What's the *worst case* value in terms of making $P(A \cap B)$ as small as possible?
-  - By **normalization**: $P(A \cup B) = 1$
+  - $A \cup B \subseteq \mathcal{S}$ and $P(\mathcal{S}) = 1$. So $P(A \cup B) \leq 1$
 
 - So one lower bound is 
 
   $$ P(A \cap B) \geq P(A) + P(B) - 1 $$
 
-:::
-
-- But by **non-negativity**, the probability is also trivially bounded by $0$, so we have
+- But by **non-negativity**, the probability is also trivially bounded below by $0$, so we have
 
   $$ P(A \cap B) \geq \max\{0,\, P(A) + P(B) - 1\} $$
 
-## Fréchet inequalities
+:::
+
+## Bounding the probability of a union
+
+::: {.incremental}
+
+- How about $P(A \cup B)$?
+- We have a **lower bound** from earlier
+
+  $$ P(A \cup B) \geq \max\{P(A),\, P(B)\} $$
+
+- And an upper bound follows from the Union Rule + non-negativity of $P(A \cap B) \geq 0$
+
+  $$ P(A \cup B) \leq P(A) + P(B) $$
+
+- And from before, we also have $P(A \cup B) \leq 1$
+
+  $$ P(A \cup B) \leq \min\{1,\, P(A) + P(B)\} $$
+:::
+
+## Fréchet inequalities for two events
 
 ::: {.incremental}
 
@@ -537,6 +531,8 @@ After @blitzstein2019introduction, Figure 1.1
 
 ## Next week
 
+::: {.incremental}
+
 - Conditional probabilities
   - How do the chances of one event change if I **know** another event has occurred?
   - Conditioning **restricts the sample space**
@@ -544,6 +540,8 @@ After @blitzstein2019introduction, Figure 1.1
   - What happens when knowing one event **tells me nothing** about the probability of another?
 - Bayes' rule
   - How do we relate the probability of $A$ given $B$ to the probability of $B$ given $A$?
+
+:::
 
 ## References {.refs-slide}
 
