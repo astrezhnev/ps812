@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="40 80 560 560" width="560" height="560" role="img" aria-labelledby="pw-title pw-desc">
   <title id="pw-title">Pebble world: a sample space with two overlapping events</title>
-  <desc id="pw-desc">A square denoting the sample space S contains nine pebbles arranged in a three-by-three grid. Event A encloses the four pebbles of the upper-left block. Event B encloses the right-hand column together with the bottom-middle pebble. The two events overlap at the centre pebble, which belongs to both. The lower-left pebble lies in neither event.</desc>
+  <desc id="pw-desc">A square denoting the sample space Ω contains nine pebbles arranged in a three-by-three grid. Event A encloses the four pebbles of the upper-left block. Event B encloses the right-hand column together with the bottom-middle pebble. The two events overlap at the centre pebble, which belongs to both. The lower-left pebble lies in neither event.</desc>
 
   <!-- palette matches custom.scss: link-blue #0479A8, primary-color #c5050c, text-grey #333333 -->
 
   <!-- sample space -->
   <rect x="70" y="110" width="500" height="500" fill="none" stroke="#B0B0B0" stroke-width="2.5"/>
-  <text x="535" y="150" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="34" fill="#666666">S</text>
+  <text x="535" y="150" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="34" fill="#666666">Ω</text>
 
   <!-- event A: upper-left block -->
   <path d="M 165 185

@@ -214,21 +214,21 @@
     "href": "slides/week1/week1_intro_and_review.html#what-is-probability",
     "title": "Week 1: Intro to Probability",
     "section": "What is probability?",
-    "text": "What is probability?\n\nProbability quantifies the likelihood of an event from a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events\nDefine the sample space \\(\\mathcal{S}\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nModeled after Blitzstein and Hwang (2019), Figure 1.1"
+    "text": "What is probability?\n\nProbability quantifies the likelihood of an event from a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events\nDefine the sample space \\(\\Omega\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nModeled after Blitzstein and Hwang (2019), Figure 1.1"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#events",
     "href": "slides/week1/week1_intro_and_review.html#events",
     "title": "Week 1: Intro to Probability",
     "section": "Events",
-    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nWe’ll denote the set of all events that can be assigned a probability as \\(\\mathcal{F}\\) (this is called the “\\(\\sigma\\)-algebra”)"
+    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nWe’ll denote the event space – the set of all events that can be assigned a probability – as \\(\\mathcal{S}\\) (this is called the “\\(\\sigma\\)-algebra”)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review",
     "href": "slides/week1/week1_intro_and_review.html#set-review",
     "title": "Week 1: Intro to Probability",
     "section": "Set review",
-    "text": "Set review\n\nThe empty set \\(\\emptyset\\) is the set that contains no elements\nThe complement of a set \\(A\\), denoted \\(A^{c}\\), is the set of all elements not in \\(A\\)\n\nImplicitly complements are defined w.r.t. some “universal” set - here the sample space \\(\\mathcal{S}\\).\nWhat’s \\(\\mathcal{S}^c\\)?\n\nPractice: In the figure below, is \\(A^{c} = B\\)?"
+    "text": "Set review\n\nThe empty set \\(\\emptyset\\) is the set that contains no elements\nThe complement of a set \\(A\\), denoted \\(A^{c}\\), is the set of all elements not in \\(A\\)\n\nImplicitly complements are defined w.r.t. some “universal” set - here the sample space \\(\\Omega\\).\nWhat’s \\(\\Omega^c\\)?\n\nPractice: In the figure below, is \\(A^{c} = B\\)?"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review-1",
@@ -256,14 +256,28 @@
     "href": "slides/week1/week1_intro_and_review.html#probability-axioms",
     "title": "Week 1: Intro to Probability",
     "section": "Probability axioms",
-    "text": "Probability axioms\n\nProbability is a function that maps from \\(\\mathcal{F}\\) to the real numbers.\n\n\\(P \\colon \\mathcal{F} \\to \\mathbb{R}\\)\n\nThe probability function \\(P\\) obeys three axioms (Kolmogorov’s Axioms)\n\nNon-negativity: \\(P(A) \\geq 0\\) for every event \\(A \\in \\mathcal{F}\\)\nNormalization: \\(P(\\mathcal{S}) = 1\\)\nCountable additivity: for pairwise disjoint events \\(A_1, A_2, A_3, \\dotsc\\)\n\\[P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)\\]"
+    "text": "Probability axioms\n\nProbability is a function that maps from the event space \\(\\mathcal{S}\\) to the real numbers.\n\n\\(P \\colon \\mathcal{S} \\to \\mathbb{R}\\)\n\nThe probability function \\(P\\) obeys three axioms (Kolmogorov’s Axioms)\n\nNon-negativity: \\(P(A) \\geq 0\\) for every event \\(A \\in \\mathcal{S}\\)\nNormalization: \\(P(\\Omega) = 1\\)\nCountable additivity: for pairwise disjoint events \\(A_1, A_2, A_3, \\dotsc\\)\n\\[P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)\\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#conjunctions",
-    "href": "slides/week1/week1_intro_and_review.html#conjunctions",
+    "objectID": "slides/week1/week1_intro_and_review.html#probability-isnt-always-intuitive",
+    "href": "slides/week1/week1_intro_and_review.html#probability-isnt-always-intuitive",
     "title": "Week 1: Intro to Probability",
-    "section": "Conjunctions",
-    "text": "Conjunctions\n\nTversky and Kahneman (1983) gave this question to a sample of undergraduate students:\n\n\n\nA health survey was conducted in a representative sample of adult males in British Columbia of all ages and occupations.\nMr. F. was included in the sample. He was selected by chance from the list of participants.\nWhich of the following statements is more probable? (check one)\n1. Mr. F. has had one or more heart attacks. 2. Mr. F. has had one or more heart attacks and he is over 55 years old.\n\n\n\n\n58% of respondents incorrectly said the second option\n\nLet’s prove why this is incorrect using the axioms of probability!\nWe’ll bound \\(P(A \\cap B)\\) in terms of \\(P(A)\\) and \\(P(B)\\)"
+    "section": "Probability isn’t always intuitive",
+    "text": "Probability isn’t always intuitive\n\nTversky and Kahneman (1983) gave this question to a sample of undergraduate students:\n\n\n\nA health survey was conducted in a representative sample of adult males in British Columbia of all ages and occupations.\nMr. F. was included in the sample. He was selected by chance from the list of participants.\nWhich of the following statements is more probable? (check one)\n1. Mr. F. has had one or more heart attacks. 2. Mr. F. has had one or more heart attacks and he is over 55 years old.\n\n\n\n\n58% of respondents incorrectly said the second option\n\nWhy?"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#monotonicity",
+    "href": "slides/week1/week1_intro_and_review.html#monotonicity",
+    "title": "Week 1: Intro to Probability",
+    "section": "Monotonicity",
+    "text": "Monotonicity\n\nIf \\(A \\subseteq B\\), then \\(P(A) \\leq P(B)\\)\n\nA bigger event can’t be less likely\n\nProof\n\nSplit \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[B = A \\cup (B \\cap A^{c})\\]\nAdditivity turns the union into a sum, and \\(P(B \\cap A^{c}) \\geq 0\\) by non-negativity\n\\[P(B) = P(A) + \\underbrace{P(B \\cap A^{c})}_{\\geq 0} \\geq P(A)\\]\n\nEvery event is a subset of the sample space: \\(A \\subseteq \\Omega\\), so \\(P(A) \\leq P(\\Omega) = 1\\)\n\nWith non-negativity, this pins probabilities to the interval \\([0, 1]\\)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#the-complement-rule",
+    "href": "slides/week1/week1_intro_and_review.html#the-complement-rule",
+    "title": "Week 1: Intro to Probability",
+    "section": "The complement rule",
+    "text": "The complement rule\n\nThe probability of an event is one minus the probability that it doesn’t happen\n\\[P(A) = 1 - P(A^{c})\\]\nProof\n\n\\(A\\) and \\(A^{c}\\) are disjoint and together they make up the whole sample space\n\\[A \\cup A^{c} = \\Omega\\]\nAdditivity and then normalization give us\n\\[P(A) + P(A^{c}) = P(\\Omega) = 1\\]\n\nOften it’s much easier to compute the probability of the complement – take \\(A\\) = “at least one” and \\(A^{c}\\) = “none”\nSetting \\(A = \\Omega\\) gives us \\(P(\\emptyset) = 1 - P(\\Omega) = 0\\)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#inclusionexclusion",
@@ -291,7 +305,7 @@
     "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection-1",
     "title": "Week 1: Intro to Probability",
     "section": "Bounding the probability of an intersection",
-    "text": "Bounding the probability of an intersection\n\nThat’s an upper bound, how about the lower bound?\nLet’s inspect our expression for \\(P(A \\cap B)\\) \\[ P(A \\cap B) = P(A) + P(B) - P(A \\cup B) \\]\nWe have \\(P(A) + P(B)\\)…but what about \\(P(A \\cup B)\\)\n\n\\(A \\cup B \\subseteq \\mathcal{S}\\) and \\(P(\\mathcal{S}) = 1\\). So \\(P(A \\cup B) \\leq 1\\)\n\nSo one lower bound is\n\\[ P(A \\cap B) \\geq P(A) + P(B) - 1 \\]\nBut by non-negativity, the probability is also trivially bounded below by \\(0\\), so we have\n\\[ P(A \\cap B) \\geq \\max\\{0,\\, P(A) + P(B) - 1\\} \\]"
+    "text": "Bounding the probability of an intersection\n\nThat’s an upper bound, how about the lower bound?\nLet’s inspect our expression for \\(P(A \\cap B)\\) \\[ P(A \\cap B) = P(A) + P(B) - P(A \\cup B) \\]\nWe have \\(P(A) + P(B)\\)…but what about \\(P(A \\cup B)\\)\n\n\\(A \\cup B \\subseteq \\Omega\\) and \\(P(\\Omega) = 1\\). So \\(P(A \\cup B) \\leq 1\\)\n\nSo one lower bound is\n\\[ P(A \\cap B) \\geq P(A) + P(B) - 1 \\]\nBut by non-negativity, the probability is also trivially bounded below by \\(0\\), so we have\n\\[ P(A \\cap B) \\geq \\max\\{0,\\, P(A) + P(B) - 1\\} \\]"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-a-union",

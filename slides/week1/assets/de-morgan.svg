@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 380" width="920" height="380" role="img" aria-labelledby="dm-title dm-desc">
   <title id="dm-title">De Morgan's laws as Venn diagrams</title>
-  <desc id="dm-desc">Two panels side by side. Each shows a rectangle denoting the sample space S containing two overlapping circles labelled A and B. In each panel the shaded region is the set named on the left-hand side of the caption. In the left panel everything outside both circles is shaded, captioned: the complement of A union B equals A complement intersect B complement. In the right panel everything except the lens where A and B overlap is shaded, captioned: the complement of A intersect B equals A complement union B complement.</desc>
+  <desc id="dm-desc">Two panels side by side. Each shows a rectangle denoting the sample space Ω containing two overlapping circles labelled A and B. In each panel the shaded region is the set named on the left-hand side of the caption. In the left panel everything outside both circles is shaded, captioned: the complement of A union B equals A complement intersect B complement. In the right panel everything except the lens where A and B overlap is shaded, captioned: the complement of A intersect B equals A complement union B complement.</desc>
 
   <!-- palette matches custom.scss: link-blue #0479A8, text-grey #333333 -->
 
@@ -43,9 +43,9 @@
     <text x="610" y="171">A</text>
     <text x="770" y="171">B</text>
   </g>
-  <g font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="30" fill="#666666" text-anchor="middle">
-    <text x="410" y="58">S</text>
-    <text x="870" y="58">S</text>
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#666666" text-anchor="middle">
+    <text x="410" y="58">Ω</text>
+    <text x="870" y="58">Ω</text>
   </g>
 
   <!-- captions -->

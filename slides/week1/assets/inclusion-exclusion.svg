@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 400" width="920" height="400" role="img" aria-labelledby="ie-title ie-desc">
   <title id="ie-title">Inclusion-exclusion for two and three events</title>
-  <desc id="ie-desc">Two panels side by side, each a rectangle denoting the sample space S. The left panel holds two overlapping circles A and B; each region is numbered by how many times it is counted in the sum of the individual probabilities: one for the parts belonging to a single event and two for the overlap. The right panel holds three overlapping circles A, B and C, numbered one for the parts in a single event, two for each pairwise overlap, and three for the region common to all of them. Shading darkens with the count.</desc>
+  <desc id="ie-desc">Two panels side by side, each a rectangle denoting the sample space Ω. The left panel holds two overlapping circles A and B; each region is numbered by how many times it is counted in the sum of the individual probabilities: one for the parts belonging to a single event and two for the overlap. The right panel holds three overlapping circles A, B and C, numbered one for the parts in a single event, two for each pairwise overlap, and three for the region common to all of them. Shading darkens with the count.</desc>
 
   <!-- palette matches custom.scss: link-blue #0479A8, text-grey #333333 -->
   <!-- circles use per-shape fill-opacity so overlaps compound: the more often a
@@ -55,8 +55,8 @@
   </g>
 
   <!-- sample space -->
-  <g font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="30" fill="#666666" text-anchor="middle">
-    <text x="410" y="58">S</text>
-    <text x="870" y="58">S</text>
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#666666" text-anchor="middle">
+    <text x="410" y="58">Ω</text>
+    <text x="870" y="58">Ω</text>
   </g>
 </svg>
