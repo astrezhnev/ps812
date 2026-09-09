@@ -1,0 +1,137 @@
+---
+title: 'PS 812: Problem Set 1'
+author: "YOUR NAME"
+date: "September 8, 2026"
+output:
+  html_document:
+    df_print: paged
+code:
+  execute: 
+    - r
+    - python
+embed-resources: true
+bibliography: references.bib
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Useful packages
+library(tidyverse)
+library(haven)
+```
+
+
+> This problem set is due at the start of lecture on **Tuesday, September 22**. Please submit your solutions via [Gradescope](https://www.gradescope.com/). Upload both a rendered `.html` file saved as "Yourlastname_Yourfirstinitial_pset1.html" and the corresponding Quarto file saved as "Yourlastname_Yourfirstinitial_pset1.qmd". We recommend editing the provided `.qmd` file directly and writing your answers and code in line with the questions. We should be able to run your code without error messages. You are strongly encouraged to discuss the problems with other students, but each student must write up their own answers and code. In order to receive credit, homework submissions must be substantially started and all work must be shown.
+
+# Problem 1
+
+Statistical analysis of administrative data is a very difficult task, especially when the quantity of interest is not clearly specified. The story of a recent publication (and subsequent retraction) in the *Proceedings of the National Academy of Sciences* (PNAS) provides a cautionary tale in being precise about what your data can and cannot speak to.
+
+@johnson2019officer study racial disparities in police officer shootings in the United States. They collect a dataset of all fatal shootings in 2015 and observe officer and civilian race as well as a battery of demographic covariates of the officer (e.g. sex, years of experience). We'll set aside these covariates for simplicity (assume the analyses are within demographic strata of the officer characteristics and are all-else-equal)
+
+The study argues that although "[c]oncerns that White officers might disproportionately fatally shoot racial minorities can have powerful effects on police legitimacy" it claims to not find any evidence "for anti-Black or anti-Hispanic disparity in police use of force across all shootings" - that is, that white officers are not more likely to use force against minority civilians compared to minority officers.
+
+In response, @knox2020making argue that @johnson2019officer analyzes the wrong quantity. They argue that the question of whether white officers are more or less likely to use force, is the difference between the following two conditional probabilities:
+
+$$ Pr(\text{shot} \mid \text{minority civilian}, \text{white officer}) - Pr(\text{shot} \mid \text{minority civilian}, \text{minority officer})$$
+
+However, because @johnson2019officer only observe cases where fatal shootings occur, they can only tell us about probabilities **conditional** on observing a shooting.
+
+$$ Pr( \text{minority civilian} \mid \text{shot}, \text{white officer}) $$
+
+and 
+
+$$ Pr( \text{minority civilian} \mid \text{shot}, \text{minority officer}) $$
+
+## Part A
+
+Using Bayes' rule, write the actual quantity of interest suggested by @knox2020making in terms of the conditional probabilities observed by @johnson2019officer.
+
+Hint: Add the other quantities you need, including those that are not observable in the @johnson2019officer data.
+
+## Part B
+
+Assume that @johnson2019officer correctly estimates its quantities and therefore that 
+
+$$ Pr( \text{minority civilian} \mid \text{shot}, \text{white officer})  = Pr( \text{minority civilian} \mid \text{shot}, \text{minority officer}) $$
+
+In other words, that among fatal shootings involving a white officer compared to fatal shootings involving a minority officer, the probability that the civilian involved is a minority is the same. Can we conclude that there is no racial bias among white officers compared to minority officers?
+
+## Part C
+
+A study of police use of force incidents in Chicago by @ba2021role found that on average, white officers are generally more likely to use force than minority officers. Given this result, and the assumption from Part B, what would have to be true in order to conclude that there is no racial bias in use of force among white officers compared to minority officers? Would this be a case where we would conclude that there is no differences in the behavior of white officers and minority officers in general?
+
+## Part D
+
+@johnson2019officer was later retracted by the authors. Briefly summarize your conclusions from this exercise. What are the limitations of the data used by @johnson2019officer and what is the logical flaw in its conclusions? 
+
+# Problem 2
+
+The age at which routine breast cancer screening should begin has been a politically contentious issue for over a decade and recommendations have moved in both directions. In November 2009, the US Preventive Services Task Force recommended against routine screening mammography for women in their 40s, moving the recommended starting age from 40 to 50. At the time, Republicans [criticized the Obama administration](https://archive.nytimes.com/prescriptions.blogs.nytimes.com/2009/11/17/republicans-say-cancer-screening-guidelines-portend-medical-rationing/) arguing that this was a move towards rationing healthcare. In 2024, the Task Force reversed course and now recommends biennial screening for all women aged 40 to 74 [@uspstf2024breast]. This problem examines the probability theory behind this debate.
+
+Suppose you have a friend in her early 40s who has just gone to the hospital for a screening mammogram. Among women in this age group who select into screening, roughly **3.5 in 1,000** have a breast cancer that the exam could detect. The mammogram is accurate but it is not perfect. About **82%** of women who have breast cancer will test positive, and about **89%** of women who do not have breast cancer will test negative. (These figures are rounded from national performance benchmarks for screening digital mammography; see @lehman2017national.)
+
+## Part A
+
+Your friend takes the test and it comes back **positive**. Calculate the probability that she actually has breast cancer given this result. State the formula and the probabilities you use, and explain your reasoning. How worried should she be?
+
+## Part B
+
+Instead, suppose the test comes back **negative**. What is the probability that she has breast cancer given this result?
+
+## Part C
+
+Now suppose your friend is in her early 50s instead. In this age group the prevalence among women screened is roughly **4.7 in 1,000**, and the exam performs somewhat better: about **86%** of women with breast cancer test positive and about **90%** of women without it test negative.
+
+Recalculate both quantities -- the probability she has cancer given a positive result, and given a negative result. Compare all four numbers you have now computed. Which one changes most between the two age groups, and which barely moves at all? Discuss how your results might explain the motivation for the 2009 policy change. 
+
+## Part D
+
+In 2024 the Task Force lowered the recommended age to 40 [@uspstf2024breast]. While this was in part driven by a change in the assessment of the relative costs of false positives versus benefits of early detection in lives saved as well as concerns over racial equity -- breast cancer mortality is about 40% higher among Black women compared to white women -- the report also noted that the incidence of breast cancer in women aged 40 to 49 years had grown slightly from 2015 to 2019. Explain how this change would affect your calculations from Parts A and B.
+
+# Problem 3
+
+In this exercise, we will use data from @pan2018concealing. "Concealing Corruption: How Chinese Officials Distort Upward Reporting of Online Grievances." *The American Political Science Review*. 
+
+The dataset contains the following variables describing corruption complaints filed online in China:
+
+- `daily`: whether the post is from a daily report or from the non-daily report
+- `send`: whether post was sent to upper-level leaders, 1 = yes
+- `wd`: whether post accuses government of wrongdoing, 1 = yes
+- `prefecturewd`: whether accusation relates to prefecture government, 1 = yes
+- `countywd`: whether accusation relates to county wrongdoing, 1 = yes
+- `censorship`: whether complaint cannot be found online, 1 = yes
+- `realworldca`: whether post discusses real-world collective action events, 1 = yes
+
+The code below loads the `panchen.csv` file in the `data` folder in as the data.frame `panchen`
+
+```{r loadpanchen}
+panchen <- read_csv("data/panchen.csv")
+```
+
+## Part A
+
+How many observations are in the dataset?
+
+## Part B
+
+Compute (i) the number of complaints related to the prefecture government and (ii) the number of complaints that relate to county government.
+
+## Part C
+
+Compute the proportion of complaints that simultaneously (i) allege wrongdoing by prefecture officials and (ii) were forwarded to upper-level leaders.
+
+## Part D
+
+Conditional on alleging wrongdoing by prefecture officials, compute the proportion that were forwarded. How does this compare to the proportion that were forwarded conditional on *not* alleging wrongdoing by prefecture officials?
+
+## Part E
+
+Sample $K=100$ complaints without replacement, using the `sample()` function, and compute the proportion that simultaneously (i) allege wrongdoing by prefecture officials and (ii) were forwarded to upper-level leaders. Repeat for $K \in \{10, \dots, 1000\}$ and create an appropriately labeled plot that indicates how sample results grow closer to the result in Part C as $K$ increases.
+
+{{< pagebreak >}}
+
+# References
+
+::: {#refs}
+:::
