@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 400" width="920" height="400" role="img" aria-labelledby="ie-title ie-desc">
+  <title id="ie-title">Inclusion-exclusion for two and three events</title>
+  <desc id="ie-desc">Two panels side by side, each a rectangle denoting the sample space S. The left panel holds two overlapping circles A and B; each region is numbered by how many times it is counted in the sum of the individual probabilities: one for the parts belonging to a single event and two for the overlap. The right panel holds three overlapping circles A, B and C, numbered one for the parts in a single event, two for each pairwise overlap, and three for the region common to all of them. Shading darkens with the count.</desc>
+
+  <!-- palette matches custom.scss: link-blue #0479A8, text-grey #333333 -->
+  <!-- circles use per-shape fill-opacity so overlaps compound: the more often a
+       region is counted, the darker it reads -->
+
+  <!-- ============ panel 1: two events ============ -->
+  <rect x="20" y="20" width="420" height="360" fill="#EDF2F5" stroke="#B0B0B0" stroke-width="2"/>
+  <g fill="#0479A8" fill-opacity="0.22">
+    <circle cx="181" cy="200" r="80"/>
+    <circle cx="279" cy="200" r="80"/>
+  </g>
+  <g fill="none" stroke="#555555" stroke-width="2">
+    <circle cx="181" cy="200" r="80"/>
+    <circle cx="279" cy="200" r="80"/>
+  </g>
+
+  <!-- ============ panel 2: three events ============ -->
+  <rect x="480" y="20" width="420" height="360" fill="#EDF2F5" stroke="#B0B0B0" stroke-width="2"/>
+  <g fill="#0479A8" fill-opacity="0.22">
+    <circle cx="690" cy="158" r="88"/>
+    <circle cx="644.97" cy="236" r="88"/>
+    <circle cx="735.03" cy="236" r="88"/>
+  </g>
+  <g fill="none" stroke="#555555" stroke-width="2">
+    <circle cx="690" cy="158" r="88"/>
+    <circle cx="644.97" cy="236" r="88"/>
+    <circle cx="735.03" cy="236" r="88"/>
+  </g>
+
+  <!-- how many times each region is counted by the first sum -->
+  <g font-family="'Red Hat Text', Helvetica, Arial, sans-serif" font-weight="700" font-size="27" fill="#333333" text-anchor="middle">
+    <text x="150" y="210">1</text>
+    <text x="230" y="210">2</text>
+    <text x="310" y="210">1</text>
+
+    <text x="690" y="113">1</text>
+    <text x="615" y="276">1</text>
+    <text x="765" y="276">1</text>
+    <text x="640" y="196">2</text>
+    <text x="740" y="196">2</text>
+    <text x="690" y="278">2</text>
+    <text x="690" y="221">3</text>
+  </g>
+
+  <!-- set labels, placed outside their circles -->
+  <g font-family="'Red Hat Text', Helvetica, Arial, sans-serif" font-weight="700" font-size="30" fill="#333333" text-anchor="middle">
+    <text x="108" y="130">A</text>
+    <text x="352" y="130">B</text>
+    <text x="690" y="52">A</text>
+    <text x="556" y="300">B</text>
+    <text x="824" y="300">C</text>
+  </g>
+
+  <!-- sample space -->
+  <g font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="30" fill="#666666" text-anchor="middle">
+    <text x="410" y="58">S</text>
+    <text x="870" y="58">S</text>
+  </g>
+</svg>

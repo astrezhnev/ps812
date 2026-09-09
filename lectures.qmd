@@ -17,7 +17,8 @@ Links become active as the materials for each week are posted.
 
 ### Week 1: Introduction and Foundations of Probability
 
-*To be posted*
+- [Week 1 Github Repository](https://github.com/astrezhnev/ps812/tree/main/slides/week1/)
+- [Week 1 `.html` slides](https://www.antonstrezhnev.com/ps812/slides/week1/week1_intro_and_review.html)
 
 ### Week 2: Conditional Probability and Independence
 

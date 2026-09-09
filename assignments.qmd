@@ -4,18 +4,19 @@ title: "Assignments"
 
 ## Schedule
 
-| Assignment                 | Assigned         | Due                  |
-|----------------------------|------------------|----------------------|
-| Problem Set 1              | Sept 8 (Week 1)  | Sept 22 (Week 3)     |
-| Problem Set 2              | Sept 22 (Week 3) | Oct 6 (Week 5)       |
-| Problem Set 3              | Oct 6 (Week 5)   | Oct 20 (Week 7)      |
-| **First Midterm Exam**     | --               | **Oct 7 (Week 5)**   |
-| Problem Set 4              | Oct 20 (Week 7)  | Nov 3 (Week 9)       |
-| Problem Set 5              | Nov 3 (Week 9)   | Nov 17 (Week 11)     |
-| **Second Midterm Exam**    | --               | **Nov 18 (Week 11)** |
-| **Replication Project**    | TBA              | **Dec 4 (Week 13)**  |
+| Assignment                     | Assigned         | Due                  |
+|--------------------------------|------------------|----------------------|
+| Problem Set 1                  | Sept 8 (Week 1)  | Sept 22 (Week 3)     |
+| Problem Set 2                  | Sept 22 (Week 3) | Oct 6 (Week 5)       |
+| **First Midterm Exam**         | --               | **Oct 7 (Week 5)**   |
+| Problem Set 3                  | Oct 6 (Week 5)   | Oct 20 (Week 7)      |
+| Replication project memo       | --               | Oct 21 (Week 7)      |
+| Problem Set 4                  | Oct 20 (Week 7)  | Nov 3 (Week 9)       |
+| Problem Set 5                  | Nov 3 (Week 9)   | Nov 17 (Week 11)     |
+| **Second Midterm Exam**        | --               | **Nov 18 (Week 11)** |
+| **Replication Project Poster** | --               | **Dec 4 (Week 13)**  |
 
-Problem sets are assigned and due on Tuesdays, at the start of lecture. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week.
+Problem sets are assigned and due on Tuesdays, at the start of lecture. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade.
 
 ---
 
@@ -32,16 +33,3 @@ Links become active when each assignment is released.
 Section meets once a week and is built around short, guided exercises that implement the week's material in {{< fa brands r-project >}}. Section materials will be posted here as they are released.
 
 ---
-
-## Replication Project
-
-You will work in groups of two on a replication project and present it as a poster at the MEAD Fall Grad Poster Presentations on **Friday, December 4, 1:30-4pm** in the Ogg Room. More details on the project will be provided later in the semester.
-
----
-
-## Exams
-
-Both midterms are **in person**, closed-book, pen-and-paper examinations involving both theory questions and practical interpretation of sample code and results.
-
-- **First Midterm:** in class on Wednesday, October 7, covering the first five weeks of probability theory (probability, conditional probability and independence, random variables and distributions, joint distributions, expectation, variance and covariance).
-- **Second Midterm:** in class on Wednesday, November 18, covering statistical inference and linear regression (estimation, confidence intervals and hypothesis testing, OLS and its interpretation).
