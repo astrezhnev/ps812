@@ -32,7 +32,7 @@ Links become active as the materials for each week are posted.
 
 *Friday, September 25*
 
-*To be posted*
+- [Week 3 GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/sections/week3/) *(test upload -- not finalized)*
 
 ### Week 4: Joint Distributions and Expectation
 
