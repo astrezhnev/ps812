@@ -1,0 +1,102 @@
+---
+title: "Section Exercises"
+---
+
+## Section Materials
+
+Section meets **Fridays, 9:30AM-10:20AM, in the Ogg Room (North Hall 422)**. Each meeting typically begins with questions and review, and the remainder is devoted to short, guided exercises that implement the week's material in {{< fa brands r-project >}}.
+
+Section materials are distributed as `.qmd` files along with their rendered `.html` form. You are welcome to follow along in the rendered handout, but you will get more out of section by opening the `.qmd` and running the code yourself. Any supporting files (e.g. datasets) are located in sub-folders of the week's directory.
+
+Section exercises are not graded and are not submitted -- they are there to build the practical computing skills the problem sets and the replication project assume.
+
+Links become active as the materials for each week are posted.
+
+<!-- Template for each week once materials are posted:
+
+- [Week N GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/sections/weekN/)
+- [Week N `.html` handout](https://www.antonstrezhnev.com/ps812/sections/weekN/weekN_topic.html)
+
+-->
+
+### Week 1: Introduction and Foundations of Probability
+
+*Friday, September 11*
+
+*To be posted*
+
+### Week 2: Conditional Probability and Independence
+
+*Friday, September 18*
+
+*To be posted*
+
+### Week 3: Random Variables and Distributions
+
+*Friday, September 25*
+
+*To be posted*
+
+### Week 4: Joint Distributions and Expectation
+
+*Friday, October 2*
+
+*To be posted*
+
+### Week 5: Variance, Covariance, and Conditional Expectation
+
+*Friday, October 9*
+
+*To be posted*
+
+### Week 6: Estimation: Part 1
+
+*Friday, October 16*
+
+*To be posted*
+
+### Week 7: Estimation: Part 2
+
+*Friday, October 23*
+
+*To be posted*
+
+### Week 8: Confidence Intervals and Hypothesis Testing
+
+*Friday, October 30*
+
+*To be posted*
+
+### Week 9: Introduction to Regression
+
+*Friday, November 6*
+
+*To be posted*
+
+### Week 10: Inference for Regression
+
+*Friday, November 13*
+
+*To be posted*
+
+### Week 11: Interpreting Regressions
+
+*Friday, November 20*
+
+*To be posted*
+
+### Week 12: Regression Wrap-up
+
+*No section -- Thanksgiving recess runs November 26-29*
+
+### Week 13: Weighting Estimators
+
+*Friday, December 4*
+
+*To be posted*
+
+### Week 14: Preview: Causal Inference
+
+*Friday, December 11*
+
+*To be posted*

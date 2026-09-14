@@ -59,11 +59,3 @@ Links become active as each problem set is assigned.
 *Assigned Tuesday, November 3 -- due Tuesday, November 17*
 
 *To be posted*
-
----
-
-## Section Exercises
-
-Section meets once a week and is built around short, guided exercises that implement the week's material in {{< fa brands r-project >}}. Section materials will be posted here as they are released.
-
----

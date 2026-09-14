@@ -27,6 +27,8 @@ website:
         href: staff.qmd
       - text: "Lectures"
         href: lectures.qmd
+      - text: "Sections"
+        href: sections.qmd
       - text: "Assignments"
         href: assignments.qmd
       - text: "Resources"
