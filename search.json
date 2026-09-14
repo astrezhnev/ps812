@@ -77,6 +77,41 @@
     "text": "Acknowledgments\nThis course is indebted to the many wonderful and generous scholars in political methodology, econometrics and sociology who have made their materials available to the public. In particular, I thank Adeline Lo, whose previous version of PS812 forms the core of this syllabus and its schedule, as well as Matthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nLastly, thanks to Andrew Heiss and Matt Blackwell for their Quarto website templates, which I have extensively borrowed from in designing this course site."
   },
   {
+    "objectID": "slides/week2/week2_conditional_probability.html#welcome-back",
+    "href": "slides/week2/week2_conditional_probability.html#welcome-back",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Welcome back!",
+    "text": "Welcome back!"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#week-overview",
+    "href": "slides/week2/week2_conditional_probability.html#week-overview",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Week overview",
+    "text": "Week overview\n\nLast week\n\nSample spaces, events and the probability measure\nThe axioms of probability and their implications\n\nThis week\n\nConditional probability\nIndependence and conditional independence\nBayes’ rule\n\nLong-run\n\nprobability \\(\\to\\) inference \\(\\to\\) regression"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#conditioning-live",
+    "href": "slides/week2/week2_conditional_probability.html#conditioning-live",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Conditioning, live",
+    "text": "Conditioning, live\n\n\n\n\n\nCES Common Content 2025 (n = 17,000), weighted by commonweight"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#next-week",
+    "href": "slides/week2/week2_conditional_probability.html#next-week",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Next week",
+    "text": "Next week\n\nRandom variables\n\nHow do we go from events to numbers?\n\nDistributions\n\nDiscrete and continuous random variables; PMFs, PDFs and CDFs\n\nCommon distributions\n\nBernoulli, Binomial, Uniform, Normal…"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#references",
+    "href": "slides/week2/week2_conditional_probability.html#references",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "References",
+    "text": "References"
+  },
+  {
     "objectID": "slides/week1/week1_intro_and_review.html#welcome",
     "href": "slides/week1/week1_intro_and_review.html#welcome",
     "title": "Week 1: Intro to Probability",
@@ -445,14 +480,14 @@
     "href": "lectures.html",
     "title": "Lectures",
     "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nConditioning widget – how the distribution of party ID shifts as you condition on policy positions (CES 2025)\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
   },
   {
     "objectID": "lectures.html#lecture-slides",
     "href": "lectures.html#lecture-slides",
     "title": "Lectures",
     "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nConditioning widget – how the distribution of party ID shifts as you condition on policy positions (CES 2025)\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
   },
   {
     "objectID": "assignments.html",
