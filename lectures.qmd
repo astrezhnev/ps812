@@ -24,7 +24,7 @@ Links become active as the materials for each week are posted.
 
 - [Week 2 Github Repository](https://github.com/astrezhnev/ps812/tree/main/slides/week2/)
 - [Week 2 `.html` slides](https://www.antonstrezhnev.com/ps812/slides/week2/week2_conditional_probability.html)
-- [Conditioning widget](https://www.antonstrezhnev.com/ps812/slides/week2/ces_conditioning_app.html) -- how the distribution of party ID shifts as you condition on policy positions (CES 2025)
+- [Illustrating conditional probability](https://www.antonstrezhnev.com/ps812/slides/week2/ces_conditioning_app.html) - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)
 
 ### Week 3: Random Variables and Distributions
 
