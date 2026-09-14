@@ -34,17 +34,18 @@ ABORTION <- list(
   )
 )
 
-# Wasserstein distance needs a metric on the support. Party ID is categorical,
-# but the three categories have a natural left-to-right order, so we place them
-# on an ordinal scale with unit spacing and use the 1-Wasserstein distance:
-# W1 = sum over cut points of |F_conditional - F_unconditional|. This runs from
-# 0 (identical) to 2 (all mass moved from one end of the scale to the other).
-PID_ORDER <- c("D", "I", "R")
+# Party ID is nominal -- the three categories have no meaningful order, and in
+# particular the middle one lumps together Independent, Other and Not sure. So
+# the ground metric is the discrete one: every distinct category sits at
+# distance 1 from every other. Under that metric the 1-Wasserstein distance is
+# exactly the total variation distance, half the summed absolute difference in
+# category probabilities, running from 0 (identical) to 1 (disjoint support).
+PID_CATS <- c("D", "I", "R")
 
-w1 <- function(p, q) sum(abs(cumsum(p)[-length(p)] - cumsum(q)[-length(q)]))
+w1 <- function(p, q) 0.5 * sum(abs(p - q))
 
 pid_dist <- function(w, p) {
-  vapply(PID_ORDER, function(k) sum(w[p == k]), numeric(1)) / sum(w)
+  vapply(PID_CATS, function(k) sum(w[p == k]), numeric(1)) / sum(w)
 }
 
 # The unconditional distribution every conditional one is compared against.
@@ -220,11 +221,10 @@ server <- function(input, output, session) {
         ),
         div(class = "wass-bar",
           div(class = "wass-fg",
-              style = paste0("width:", sprintf("%.1f", 100 * dist_val / 2), "%"))
+              style = paste0("width:", sprintf("%.1f", 100 * dist_val), "%"))
         ),
         div(class = "wass-sub",
-            "from the unconditional distribution, on the ordered scale ",
-            "Democrat–Independent–Republican (0 to 2)")
+            "from the unconditional distribution (0 to 1)")
       ),
       div(class = "nbox",
         sprintf("%s respondent%s (%.1f%% of sample)", format(n, big.mark = ","),
