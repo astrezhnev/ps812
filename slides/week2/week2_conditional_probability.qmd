@@ -56,14 +56,49 @@ link-citations: true
 
 ## Conditioning, live {.app-slide}
 
-::: {.app-frame}
-<iframe src="ces_conditioning_app.html" title="Conditioning on policy preferences"
-        loading="lazy" allow="clipboard-write"></iframe>
+::: {.app-frame data-app="ces_conditioning_app.html"}
 :::
 
 ::: {.attribution}
 CES Common Content 2025 (n = 17,000), weighted by `commonweight`
 :::
+
+```{=html}
+<script>
+// The widget is a separate page framed here. Its <iframe> is built at runtime
+// rather than written into the markdown because `embed-resources: true` would
+// otherwise inline the target into a data: URI, breaking the app's relative
+// asset paths and its service worker. Mounting on first visit to the slide
+// also keeps the webR runtime from downloading until it is actually needed.
+(function () {
+  function mount(el) {
+    if (el.dataset.mounted) return;
+    el.dataset.mounted = "1";
+    var f = document.createElement("iframe");
+    f.src = el.dataset.app;
+    f.title = "Conditioning on policy preferences";
+    f.setAttribute("allow", "clipboard-write");
+    el.appendChild(f);
+  }
+  function check() {
+    document.querySelectorAll(".app-frame[data-app]").forEach(function (el) {
+      if (el.closest("section.present")) mount(el);
+    });
+  }
+  function wire() {
+    if (!window.Reveal) { check(); return; }
+    if (typeof Reveal.on === "function") Reveal.on("slidechanged", check);
+    check();
+  }
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(wire, 0);
+  } else {
+    document.addEventListener("DOMContentLoaded", wire);
+  }
+  window.addEventListener("load", check);
+})();
+</script>
+```
 
 ## Next week
 
