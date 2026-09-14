@@ -6,9 +6,7 @@ title: "Section Exercises"
 
 Section meets **Fridays, 9:30AM-10:20AM, in the Ogg Room (North Hall 422)**. Each meeting typically begins with questions and review, and the remainder is devoted to short, guided exercises that implement the week's material in {{< fa brands r-project >}}.
 
-Section materials live in the course GitHub repository rather than on this site. Each week's folder holds the `.qmd` file we work through together along with any supporting files it needs. Unlike the lecture slides, these are not rendered here -- download the folder (or clone the repository) and run the code yourself in {{< fa brands r-project >}}.
-
-Section exercises are not graded and are not submitted -- they are there to build the practical computing skills the problem sets and the replication project assume.
+Links to the section materials on Github are available below. Download the folder (or clone the repository) to access the code yourself in {{< fa brands r-project >}}.
 
 Links become active as the materials for each week are posted.
 
