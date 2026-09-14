@@ -1,0 +1,85 @@
+---
+title: "Week 2: Conditional Probability and Independence"
+subtitle: "PS 812 - Introduction to Statistical Methods in Political Science"
+author:
+  - name: "Anton Strezhnev"
+    affiliation: "University of Wisconsin-Madison"
+    email: strezhnev@wisc.edu
+date: "September 15, 2026"
+date-format: "MMMM D, YYYY"
+editor: 
+  render-on-save: true
+format: 
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    overview: true
+    navigation-mode: vertical
+    progress: false
+    controls: true
+    link-external-newwindow: true
+    footer: "PS 812 - University of Wisconsin-Madison"
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+execute: 
+  cache: false
+code:
+  execute: 
+    - r
+    - python
+embed-resources: true
+bibliography: ../ps812.bib
+link-citations: true
+
+---
+
+## Welcome back! {.title-slide}
+
+## Week overview
+
+::: {.incremental}
+
+- Last week
+  - Sample spaces, events and the probability measure
+  - The axioms of probability and their implications
+- This week
+  - **Conditional probability** 
+  - **Independence** and **conditional independence**
+  - **Bayes' rule**
+- Long-run
+  - probability $\to$ inference $\to$ regression
+
+:::
+
+
+
+## Conditioning, live {.app-slide}
+
+::: {.app-frame}
+<iframe src="ces_conditioning_app.html" title="Conditioning on policy preferences"
+        loading="lazy" allow="clipboard-write"></iframe>
+:::
+
+::: {.attribution}
+CES Common Content 2025 (n = 17,000), weighted by `commonweight`
+:::
+
+## Next week
+
+
+::: {.incremental}
+
+- Random variables
+  - How do we go from **events** to **numbers**?
+- Distributions
+  - Discrete and continuous random variables; PMFs, PDFs and CDFs
+- Common distributions
+  - Bernoulli, Binomial, Uniform, Normal...
+
+:::
+
+## References {.refs-slide}
+
+::: {#refs}
+:::
