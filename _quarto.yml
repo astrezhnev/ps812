@@ -4,8 +4,13 @@ project:
   render:
       - "*.qmd"
       - "!psets/"
+      - "!sections/"
   # Problem sets are not rendered by the site (the .qmd files are student
   # templates); they are copied over as-is so the posted .html/.zip resolve.
+  #
+  # Section exercises are neither rendered nor copied: they can depend on
+  # datasets that only exist locally, so they are distributed through the
+  # GitHub repository and must stay out of _site entirely.
   resources:
       - "psets/**"
 
