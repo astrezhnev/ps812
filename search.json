@@ -130,14 +130,14 @@
     "href": "slides/week2/week2_conditional_probability.html#practice-the-birthday-problem",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Practice: The Birthday Problem",
-    "text": "Practice: The Birthday Problem\n\nWhat is the probability that in a room of \\(k\\) people, at least two people will be born on the same day.\n\nAssume no leap years and equal probability of being born on any day.\n\n\\(Pr(\\text{Any two of } k \\text{ people share a birthday})\\) is hard to work with.\n\nWe’ll instead calculate the complement: \\(Pr(\\text{All } k \\text{ people born on different days})\\) and subtract from \\(1\\).\n\nDenominator: Sampling with replacement from the set of birthdays where order matters\nNumerator: Sampling without replacement from the set of birthdays where order matters"
+    "text": "Practice: The Birthday Problem\n\nWhat is the probability that in a room of \\(k\\) people, at least two people will be born on the same day.\n\nAssume no leap years and equal probability of being born on any day.\n\n\\(P(\\text{Any two of } k \\text{ people share a birthday})\\) is hard to work with.\n\nWe’ll instead calculate the complement: \\(P(\\text{All } k \\text{ people born on different days})\\) and subtract from \\(1\\).\n\nDenominator: Sampling with replacement from the set of birthdays where order matters\nNumerator: Sampling without replacement from the set of birthdays where order matters"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#practice-the-birthday-problem-1",
     "href": "slides/week2/week2_conditional_probability.html#practice-the-birthday-problem-1",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Practice: The Birthday Problem",
-    "text": "Practice: The Birthday Problem\n\nSo we can calculate the probability as\n\\[ Pr(\\text{Any two of } k \\text{ people share a birthday}) = 1 - \\frac{\\frac{365!}{(365-k)!}}{365^k} \\]\nHow quickly does this hit \\(1\\)?\n\n\n\nThe probability of any one coincidence is low but the probability of some coincidence is high!"
+    "text": "Practice: The Birthday Problem\n\nSo we can calculate the probability as\n\\[ P(\\text{Any two of } k \\text{ people share a birthday}) = 1 - \\frac{\\frac{365!}{(365-k)!}}{365^k} \\]\nHow quickly does this hit \\(1\\)?\n\n\n\nThe probability of any one coincidence is low but the probability of some coincidence is high!"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#when-the-naive-definition-fails",
