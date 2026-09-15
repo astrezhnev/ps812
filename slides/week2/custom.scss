@@ -104,3 +104,11 @@ strong {
     background: #F7F7F7;
   }
 }
+
+// A framed video keeps 16:9 rather than filling the slide the way the app does
+.reveal .video-frame {
+  height: auto;
+  max-width: 900px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+}
