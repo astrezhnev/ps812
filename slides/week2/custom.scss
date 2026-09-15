@@ -112,3 +112,31 @@ strong {
   margin: 0 auto;
   aspect-ratio: 16 / 9;
 }
+
+// Outcome table for the collider example. The last row is the one conditioning
+// on W throws away, so it is greyed rather than deleted.
+
+.reveal .outcome-table table {
+  width: 74%;
+  margin: 0.5em auto 0.3em;
+  border-collapse: collapse;
+  font-size: 0.9em;
+
+  th, td {
+    text-align: center;
+    padding: 0.3em 0.7em;
+    border: none;
+    border-bottom: 1px solid #dcdcdc;
+  }
+
+  thead th {
+    font-weight: 700;
+    color: $text-grey;
+    border-bottom: 2px solid $text-grey;
+  }
+
+  tbody tr:last-child {
+    color: #aaaaaa;
+    background: rgba(0, 0, 0, 0.045);
+  }
+}
