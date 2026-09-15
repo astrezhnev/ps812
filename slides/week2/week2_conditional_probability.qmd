@@ -69,9 +69,9 @@ $$
 
 - When all **outcomes** in the **sample space** $\Omega$ are equally likely and the sample space is **finite**...
   - ...the probability of some event $A$ is just the share of outcomes in $\Omega$ that fall into $A$
-  - This is the **naive definition of probability** @blitzstein2019introduction
+  - This is the **naive definition of probability** [@blitzstein2019introduction]
 
-$$ P(A) =  \frac{\text{number of outcomes contained in } A}{\text{number of outcomes in } \Omega} $$
+  $$ P(A) =  \frac{\text{number of outcomes contained in } A}{\text{number of outcomes in } \Omega} $$
 
 - This turns calculating a **probability** into a **combinatorics** exercise
   - We just need to count!
@@ -135,7 +135,7 @@ $$ P(A) =  \frac{\text{number of outcomes contained in } A}{\text{number of outc
   - This is a harder problem (and less common)! We'll try to define it in an *equivalent* way that lets us use what we already know.
   - Imagine instead we want to count how many ways to put $k$ **identical** objects in $n$ **distinguishable** boxes
 
-<svg viewBox="0 0 900 192" role="img" aria-label="A row of five dots separated by three dividers, bracketed as eight symbols in a row." font-family="Red Hat Text, sans-serif" style="width:100%;max-width:800px;height:auto;display:block;margin:0 auto;"><text x="450" y="26" text-anchor="middle" font-size="25" fill="#333333">n = 4 boxes, k = 5 identical objects</text><g fill="#333333"><circle cx="205" cy="88" r="16"/><circle cx="275" cy="88" r="16"/><circle cx="415" cy="88" r="16"/><circle cx="625" cy="88" r="16"/><circle cx="695" cy="88" r="16"/></g><g stroke="#c5050c" stroke-width="7" stroke-linecap="round"><line x1="345" y1="52" x2="345" y2="124"/><line x1="485" y1="52" x2="485" y2="124"/><line x1="555" y1="52" x2="555" y2="124"/></g><path d="M170 140 L170 149 L730 149 L730 140" stroke="#888888" stroke-width="2" fill="none"/><text x="450" y="184" text-anchor="middle" font-size="24"><tspan fill="#333333">n + k &#8722; 1 = 8 symbols: </tspan><tspan fill="#333333" font-weight="600">k = 5 dots</tspan><tspan fill="#666666"> and </tspan><tspan fill="#c5050c" font-weight="600">n &#8722; 1 = 3 dividers</tspan></text></svg>
+  <svg viewBox="0 0 900 192" role="img" aria-label="A row of five dots separated by three dividers, bracketed as eight symbols in a row." font-family="Red Hat Text, sans-serif" style="width:100%;max-width:800px;height:auto;display:block;margin:0 auto;"><text x="450" y="26" text-anchor="middle" font-size="25" fill="#333333">n = 4 boxes, k = 5 identical objects</text><g fill="#333333"><circle cx="205" cy="88" r="16"/><circle cx="275" cy="88" r="16"/><circle cx="415" cy="88" r="16"/><circle cx="625" cy="88" r="16"/><circle cx="695" cy="88" r="16"/></g><g stroke="#c5050c" stroke-width="7" stroke-linecap="round"><line x1="345" y1="52" x2="345" y2="124"/><line x1="485" y1="52" x2="485" y2="124"/><line x1="555" y1="52" x2="555" y2="124"/></g><path d="M170 140 L170 149 L730 149 L730 140" stroke="#888888" stroke-width="2" fill="none"/><text x="450" y="184" text-anchor="middle" font-size="24"><tspan fill="#333333">n + k &#8722; 1 = 8 symbols: </tspan><tspan fill="#333333" font-weight="600">k = 5 dots</tspan><tspan fill="#666666"> and </tspan><tspan fill="#c5050c" font-weight="600">n &#8722; 1 = 3 dividers</tspan></text></svg>
 
   - We have $n + k - 1$ "slots" in between the outer dividers
     - We just need to select the location of the $k$ objects, then the dividers fill in the rest.
@@ -161,11 +161,9 @@ $$ P(A) =  \frac{\text{number of outcomes contained in } A}{\text{number of outc
 
 ## Practice: The Birthday Problem
 
-::: {.incremental}
-
 - So we can calculate the probability as
 
-$$ Pr(\text{Any two of } k \text{ people share a birthday}) = 1 - \frac{\frac{365!}{(365-k)!}}{365^k} $$
+  $$ Pr(\text{Any two of } k \text{ people share a birthday}) = 1 - \frac{\frac{365!}{(365-k)!}}{365^k} $$
 
 - How quickly does this hit $1$?
 
@@ -194,7 +192,6 @@ ggplot(data.frame(k = k, p = p), aes(k, p)) +
 
 - The probability of any one coincidence is **low** but the probability of **some** coincidence is **high**!
 
-:::
 
 ## When the naive definition fails
 
@@ -209,14 +206,12 @@ ggplot(data.frame(k = k, p = p), aes(k, p)) +
 - So far we've talked about the probability of **single events**
   - We've created new events by taking **unions** $\cup$ and **intersections** $\cap$
 
-- But very often we want to know how the probability of **one event** changes if another event is **known** to have occurred
+- But very often we want to know how the probability of **one event** $A$ changes if another event $B$ is **known** to have occurred (assuming that event *can* occur: $P(B) > 0$)
   - This is a **conditional probability**
 
-$$ P(A \mid B) = \frac{P(A \cap B)}{P(B)} $$
+  $$ P(A \mid B) = \frac{P(A \cap B)}{P(B)} $$
 
-- We assume $P(B) > 0$ - can't condition on an event that can never occur!
-
-![](assets/pebble_world_conditional.svg){fig-align="center" width="90%"}
+  ![](assets/pebble_world_conditional.svg){fig-align="center" width="90%"}
 
 :::
 
@@ -279,7 +274,7 @@ CES Common Content 2025 (n = 17,000), weighted by `commonweight`
 
   $$ P(A_1 , A_2, A_3, \dotsc A_n) = P(A_{n} \mid A_{n-1}, \dotsc A_{1})\cdots P(A_3 \mid A_2, A_1)P(A_2 \mid A_1)P(A_1)$$
 
-![](assets/factorization_venn.svg){fig-align="center" width="88%"}
+  ![](assets/factorization_venn.svg){fig-align="center" width="88%"}
 
 :::
 
@@ -304,15 +299,12 @@ CES Common Content 2025 (n = 17,000), weighted by `commonweight`
 
 ## Law of Total Probability
 
-::: {.incremental}
-
 - This gives us the **law of total probability**
 
   $$ P(B) = \sum_{i=1}^n P(B \mid A_i)P(A_i) $$
 
 ![](assets/total_probability.svg){fig-align="center" width="72%"}
 
-:::
 
 ## Bayes' rule
 
@@ -326,7 +318,7 @@ CES Common Content 2025 (n = 17,000), weighted by `commonweight`
 
   $$ P(A \mid B) = \frac{P(B \mid A) P(A)}{P(B)} $$
 
-- You'll sometimes see this written with LOTP applied to the denominator
+- You'll sometimes see this written with **law of total probability** applied to the denominator
 
   $$ P(A \mid B) = \frac{P(B \mid A) P(A)}{P(B \mid A) P(A) + P(B \mid A^c)P(A^c)} $$
 
@@ -374,10 +366,11 @@ $$ P(A \mid B) = \frac{P(B \mid A) P(A)}{P(B)} $$
 - We want to know the probability that you picked the **car** given that the game show host revealed a **goat** behind door number 3.
   - We can solve this with an application of **Bayes' rule**
 
-$$ P(\text{car}_1 \mid \text{goat}_3) = \frac{P(\text{goat}_3 \mid \text{car}_1)}{P(\text{goat}_3)}P(\text{car}_1) $$
+  $$ P(\text{car}_1 \mid \text{goat}_3) = \frac{P(\text{goat}_3 \mid \text{car}_1)}{P(\text{goat}_3)}P(\text{car}_1) $$
+
 - Substituting in what we know
 
-$$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2}}{P(\text{goat}_3)} \cdot \frac{1}{3} $$
+  $$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2}}{P(\text{goat}_3)} \cdot \frac{1}{3} $$
 
 :::
 
@@ -387,15 +380,15 @@ $$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2}}{P(\text{goat}_3)} \cd
 
 - For the denominator, we'll use the law of total probability and consider all possible locations of the car.
 
-$$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2}}{P(\text{goat}_3 \mid \text{car}_1)P(\text{car}_1) + P(\text{goat}_3 \mid \text{car}_2)P(\text{car}_2) + P(\text{goat}_3 \mid \text{car}_3)P(\text{car}_3)} \cdot \frac{1}{3} $$
+  $$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2}}{P(\text{goat}_3 \mid \text{car}_1)P(\text{car}_1) + P(\text{goat}_3 \mid \text{car}_2)P(\text{car}_2) + P(\text{goat}_3 \mid \text{car}_3)P(\text{car}_3)} \cdot \frac{1}{3} $$
 
 - The host **always** opens 3 if the car is behind 2 and **never** opens 3 if the car is behind 3, so we have
 
-$$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2}}{\frac{1}{2}\cdot\frac{1}{3} + 1\cdot \frac{1}{3} + 0 \cdot \frac{1}{3}} \cdot \frac{1}{3} $$
+  $$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2}}{\frac{1}{2}\cdot\frac{1}{3} + 1\cdot \frac{1}{3} + 0 \cdot \frac{1}{3}} \cdot \frac{1}{3} $$
 
 - Therefore 
 
-$$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2} \cdot \frac{1}{3} }{\frac{1}{2}} = \frac{1}{3} $$
+  $$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2} \cdot \frac{1}{3} }{\frac{1}{2}} = \frac{1}{3} $$
 
 :::
 
@@ -406,7 +399,7 @@ $$ P(\text{car}_1 \mid \text{goat}_3) = \frac{\frac{1}{2} \cdot \frac{1}{3} }{\f
 - Staying with door 1 still leaves you with $\frac{1}{3}$ probability of winning the car.
 - The three cases partition the sample space, so their **conditional** probabilities sum to $1$
 
-$$ P(\text{car}_2 \mid \text{goat}_3) = 1 - P(\text{car}_1 \mid \text{goat}_3) - P(\text{car}_3 \mid \text{goat}_3) = 1 - \frac{1}{3} - 0 = \frac{2}{3} $$
+  $$ P(\text{car}_2 \mid \text{goat}_3) = 1 - P(\text{car}_1 \mid \text{goat}_3) - P(\text{car}_3 \mid \text{goat}_3) = 1 - \frac{1}{3} - 0 = \frac{2}{3} $$
 
 - Switching doubles your chances of winning!
 
@@ -469,7 +462,10 @@ $$ P(\text{car}_2 \mid \text{goat}_3) = 1 - P(\text{car}_1 \mid \text{goat}_3) -
 - A very tricky feature of conditioning is that we can **create dependence** by conditioning on certain events
   - A common setting is conditioning on **common effects** - this is known as **collider bias** in causal inference.
 
-- **Example**: Let $R$ be the event that it rained today. Let $S$ be the event that the lawn sprinkler turned on today. Let $W$ be the event that the grass is wet.
+- **Example**: How knowing the grass is wet creates a relationship between your sprinkler and the rain.
+  - Let $R$ be the event that it rained today. 
+  - Let $S$ be the event that the lawn sprinkler turned on today. 
+  - Let $W$ be the event that the grass is wet.
   - Assume $P(R) = \frac{1}{2}$ and $P(S) = \frac{1}{2}$. $S \indep R$
 
 - Suppose I know that the grass is wet. Is $S \indep R \mid W$?
@@ -477,8 +473,6 @@ $$ P(\text{car}_2 \mid \text{goat}_3) = 1 - P(\text{car}_1 \mid \text{goat}_3) -
 :::
 
 ## Independence does not imply conditional independence
-
-::: {.incremental}
 
 - The grass is wet if it rained **or** the sprinkler went on: $W = R \cup S$
   - By independence, each of the four combinations of $R$ and $S$ has probability $\frac{1}{4}$
@@ -496,7 +490,6 @@ $$ P(\text{car}_2 \mid \text{goat}_3) = 1 - P(\text{car}_1 \mid \text{goat}_3) -
 
 - Conditioning on $W$ **discards** the bottom row and renormalizes
 
-:::
 
 ## Independence does not imply conditional independence
 
@@ -504,15 +497,15 @@ $$ P(\text{car}_2 \mid \text{goat}_3) = 1 - P(\text{car}_1 \mid \text{goat}_3) -
 
 - Rain always makes the grass wet, so $P(R \cap W) = P(R)$.
 
-$$ P(R \mid W) = \frac{P(R \cap W)}{P(W)} = \frac{\frac{1}{2}}{\frac{3}{4}} = \frac{2}{3} $$
+  $$ P(R \mid W) = \frac{P(R \cap W)}{P(W)} = \frac{\frac{1}{2}}{\frac{3}{4}} = \frac{2}{3} $$
 
 - Now condition on the sprinkler as well - only one of the four rows has both $R$ and $S$
 
-$$ P(R \mid S, W) = \frac{P(R \cap S \cap W)}{P(S \cap W)} = \frac{\frac{1}{4}}{\frac{1}{2}} = \frac{1}{2} $$
+  $$ P(R \mid S, W) = \frac{P(R \cap S \cap W)}{P(S \cap W)} = \frac{\frac{1}{4}}{\frac{1}{2}} = \frac{1}{2} $$
 
 - Learning that the sprinkler went on makes rain **less** likely - conditioning induces dependence!
 
-$$ P(R \mid S, W) = \frac{1}{2} \neq \frac{2}{3} = P(R \mid W) \quad \Longrightarrow \quad R \nindep S \mid W $$
+  $$ P(R \mid S, W) = \frac{1}{2} \neq \frac{2}{3} = P(R \mid W) \quad \Longrightarrow \quad R \nindep S \mid W $$
 
 :::
 
@@ -522,13 +515,13 @@ $$ P(R \mid S, W) = \frac{1}{2} \neq \frac{2}{3} = P(R \mid W) \quad \Longrighta
 
 - Administrative datasets often have data on individuals' **names** and **place of residence** but don't have data on race and ethnicity.
   - We may want to **infer** race/ethnicity in order to learn about disparities in turnout, representation and other outcomes of interest!
-- **Bayesian Improved Surname Geocoding** (BISG) [@elliott2009surname], with extensions to more covariates in @imai2016ecological
+- **Bayesian Improved Surname Geocoding** (BISG) [@elliott2009surname; @imai2016ecological]
   - Let $H$ denote the event that an individual is Hispanic/Latino
   - Let $S$ denote that a particular surname is observed (e.g. "Hernandez" or "Smith")
   - Let $G$ denote the location where that individual lives (e.g. Dane County or Cook County)
-- By Bayes' rule
+- By **Bayes' rule**
 
-$$ P(H \mid S, G) = \frac{P(S, G \mid H) P(H)}{P(S, G)} $$
+  $$ P(H \mid S, G) = \frac{P(S, G \mid H) P(H)}{P(S, G)} $$
 
 :::
 
@@ -542,7 +535,7 @@ $$ P(H \mid S, G) = \frac{P(S, G \mid H) P(H)}{P(S, G)} $$
 
   $$ S \indep G \mid H $$
 
-- Once we know race/ethnicity, the observed last name is independent of where a person resides.
+- Once we know race/ethnicity, the observed surname is independent of where a person resides.
   - How might this assumption be violated?
 
 :::
@@ -553,13 +546,13 @@ $$ P(H \mid S, G) = \frac{P(S, G \mid H) P(H)}{P(S, G)} $$
 
 - Under the conditional independence assumption, we can factor the joint probability $P(S, G \mid H)$
 
-$$ P(H \mid S, G) = \frac{P(S \mid H)P(G \mid H) P(H)}{P(S, G)} $$
+  $$ P(H \mid S, G) = \frac{P(S \mid H)P(G \mid H) P(H)}{P(S, G)} $$
 
 - Census data gives us $P(S \mid H)$
 - And we can use Bayes' rule again to get $P(G \mid H) = \frac{P(H \mid G)P(G)}{P(H)}$
   - The denominator $P(S, G)$ is just the numerator summed over all of the race/ethnicity categories (law of total probability)
 
-$$ P(H \mid S, G) = \frac{P(S \mid H)P(H \mid G)P(G)}{P(S, G)} $$
+  $$ P(H \mid S, G) = \frac{P(S \mid H)P(H \mid G)P(G)}{P(S, G)} $$
 
 :::
 

@@ -42,16 +42,6 @@ RACE <- list(
   oth = list(label = "Other",    col = "#5E7A2E")
 )
 
-GROUP_LAB <- c(
-  split = "Split between groups",
-  whi   = "Mostly White",
-  bla   = "Mostly Black",
-  his   = "Mostly Hispanic",
-  asi   = "Mostly Asian",
-  oth   = "Mostly Other"
-)
-GROUP_ORDER <- intersect(names(GROUP_LAB), unique(nm$group))
-
 normalise <- function(x) x / sum(x)
 
 css <- "
@@ -96,6 +86,11 @@ h1,h2,h3,h4 { font-family:'Red Hat Display',system-ui,sans-serif; margin:0 0 6px
             font-family:'Red Hat Text',sans-serif; font-size:12px; line-height:1.25;
             text-align:left; white-space:nowrap; vertical-align:top; }
 .btn-item:hover { border-color:#999; }
+/* The surnames sit in an even grid with no headings: which group a name
+   belongs to is the thing students are meant to work out by clicking. */
+.name-grid { display:grid; grid-template-columns:repeat(5,1fr);
+             gap:6px; margin-top:5px; }   /* 40 names -> a clean 5 x 8 */
+.name-grid .btn-item { margin:0; width:100%; text-align:center; box-sizing:border-box; }
 .btn-on { background:#5a3d8a; border-color:#4c3376; color:#fff; font-weight:500; }
 .btn-geo { font-size:12.5px; }
 .tag { display:block; font-size:10px; opacity:.85; margin-top:1px; white-space:normal; }
@@ -117,8 +112,7 @@ ui <- fluidPage(
       div(class = "card",
         div(class = "hdr", h4("Pick a surname and a county")),
         div(class = "note",
-            "The county sets the prior, the surname supplies the likelihood. ",
-            "Names are grouped by what the surname alone implies."),
+            "The county sets the prior, the surname supplies the likelihood."),
         uiOutput("geo_buttons"),
         uiOutput("name_buttons")
       )
@@ -216,11 +210,10 @@ server <- function(input, output, session) {
   })
 
   output$name_buttons <- renderUI({
-    lapply(GROUP_ORDER, function(grp) {
-      js <- which(nm$group == grp)
-      tagList(
-        div(class = "topic", GROUP_LAB[[grp]]),
-        lapply(js, function(j) {
+    tagList(
+      div(class = "topic", "Surname"),
+      div(class = "name-grid",
+        lapply(seq_len(nrow(nm)), function(j) {
           tags$button(
             id = paste0("nm_", j),
             class = paste("btn-item action-button", if (j == st$name) "btn-on" else ""),
@@ -228,7 +221,7 @@ server <- function(input, output, session) {
           )
         })
       )
-    })
+    )
   })
 }
 

@@ -131,7 +131,7 @@ cdict <- readRDS(dict_path)
 
 SURNAMES <- c(
   "SMITH", "JOHNSON", "WILLIAMS", "BROWN", "JONES", "DAVIS", "MILLER", "ANDERSON",
-  "MURPHY", "OCONNOR", "OLSON", "SCHNEIDER", "YODER", "KOWALSKI", "COHEN",
+  "MURPHY", "OCONNOR", "OLSON", "SCHNEIDER", "KOWALSKI", "COHEN",
   "WASHINGTON", "JEFFERSON", "BOOKER", "BANKS", "MOSLEY", "PIERRE", "JOSEPH",
   "GARCIA", "RODRIGUEZ", "HERNANDEZ", "LOPEZ", "MARTINEZ", "RIVERA", "CASTILLO",
   "NGUYEN", "TRAN", "KIM", "PARK", "PATEL", "WANG", "CHEN", "CHOI",
@@ -143,24 +143,21 @@ if (anyNA(idx)) stop("surname not in dictionary: ",
                      paste(SURNAMES[is.na(idx)], collapse = ", "))
 cmat <- as.matrix(cdict[idx, paste0("c_", ETH, "_last")])
 
-# Surname-only prediction, exactly as wru does it with surname.only = TRUE:
-# P(race | surname) proportional to P(surname | race) P(race).
-sonly <- sweep(cmat, 2, RACE_MARGIN, `*`)
-sonly <- sonly / rowSums(sonly)
-
-# Group names for the menu by what the surname alone implies. Anything whose
-# strongest category is under 0.6 is genuinely split and gets its own group --
-# those are the names where the county does the most work.
-modal <- ETH[max.col(sonly)]
-group <- ifelse(apply(sonly, 1, max) < 0.6, "split", modal)
+# Shuffle the menu order. The names are listed above in blocks by what the
+# surname implies, which would hand students the answer before they clicked
+# anything; the widget is supposed to let them find the pattern themselves.
+# A fixed seed keeps the grid stable across rebuilds, and LEE leads because
+# it is the name the app opens on.
+set.seed(812)
+lee <- which(SURNAMES == "LEE")
+ord <- c(lee, sample(setdiff(seq_along(SURNAMES), lee)))
 
 names_out <- data.frame(
-  surname = SURNAMES,
-  group   = group,
-  signif(cmat, 7),
+  surname = SURNAMES[ord],
+  signif(cmat[ord, ], 7),
   stringsAsFactors = FALSE
 )
-names(names_out)[3:7] <- paste0("c_", ETH)
+names(names_out)[2:6] <- paste0("c_", ETH)
 
 write.csv(names_out, "bisg_names.csv", row.names = FALSE)
 

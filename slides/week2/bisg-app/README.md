@@ -7,7 +7,7 @@ application of Bayes' rule:
 P(race | surname, county)  ∝  P(surname | race) · P(race | county)
 ```
 
-Pick one of 41 surnames and one of 6 counties; the left panel shows the
+Pick one of 40 surnames and one of 6 counties; the left panel shows the
 posterior over the five race categories wru uses (White, Black, Hispanic,
 Asian, Other), with the county-only prior and the surname-only prediction
 underneath as 100% stacked bars.
@@ -20,7 +20,7 @@ compiled to WebAssembly — no Shiny server, so it works on the static course si
 | File | Role |
 | --- | --- |
 | `app.R` | The app itself. **Edit this.** |
-| `bisg_names.csv` | 41 surnames: `P(surname | race)` and a menu group. ~3 KB. |
+| `bisg_names.csv` | 40 surnames and their `P(surname | race)`, in menu order. ~3 KB. |
 | `bisg_geos.csv` | 6 counties: `P(race | county)` and population. ~0.7 KB. |
 | `prepare_data.R` | Rebuilds both CSVs. Needs a Census API key. |
 | `build_app_qmd.R` | Regenerates `../bisg_app.qmd` from the files above. |
@@ -76,13 +76,13 @@ The Census API **requires a key** — an unkeyed request 302-redirects to
 
 The CSV-driven arithmetic in `app.R` was checked against
 `wru::predict_race(census.geo = "county", year = "2020")` over all
-41 × 6 = 246 combinations: **maximum absolute difference 9.1e-06**, which is
+40 × 6 = 240 combinations: **maximum absolute difference 9.1e-06**, which is
 the rounding applied when writing the CSVs.
 
 ## Why the CSVs are tiny
 
 BISG needs only two small tables, not a person-level file: five numbers per
-surname and five per county. 41 names + 6 counties is under 4 KB total, so
+surname and five per county. 40 names + 6 counties is under 4 KB total, so
 both are committed and the app needs no network access at runtime.
 
 ## Choosing the counties
@@ -101,3 +101,12 @@ Picked to span the composition space, so the prior visibly moves the answer:
 The teaching case is **LEE**, which the surname alone leaves genuinely split
 (49% Asian, 28% White, 14% Black). The county resolves it: 51% Asian in Dane,
 59% *Black* in Prince George's, 92% Asian in Honolulu.
+
+## Menu order
+
+The surnames are presented as one unlabelled grid, deliberately: which group a
+name points to is what students are meant to discover by clicking, so the menu
+must not announce it. `prepare_data.R` shuffles the list under a fixed seed
+(812) and writes it to the CSV in that order, with LEE first because the app
+opens on it. The seed keeps the grid stable across rebuilds. The list is kept
+at exactly 40 so the menu fills a clean 5 x 8 grid.
