@@ -81,35 +81,196 @@
     "href": "slides/week2/week2_conditional_probability.html#welcome-back",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Welcome back!",
-    "text": "Welcome back!"
+    "text": "Welcome back!\n\n\n\\[\n\\newcommand{\\indep}{\\mathrel{\\perp\\mkern-10mu\\perp}}\n\\newcommand{\\nindep}{\\mathrel{\\rlap{\\hspace{0.30em}/}{\\perp\\mkern-10mu\\perp}}}\n\\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#week-overview",
     "href": "slides/week2/week2_conditional_probability.html#week-overview",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Week overview",
-    "text": "Week overview\n\nLast week\n\nSample spaces, events and the probability measure\nThe axioms of probability and their implications\n\nThis week\n\nConditional probability\nIndependence and conditional independence\nBayes’ rule\n\nLong-run\n\nprobability \\(\\to\\) inference \\(\\to\\) regression"
+    "text": "Week overview\n\n\nLast week\n\nSample spaces, events and the probability measure\nThe axioms of probability and their implications\n\nThis week\n\nConditional probability\nIndependence and conditional independence\nBayes’ rule\n\nLong-run\n\nprobability \\(\\to\\) inference \\(\\to\\) regression"
   },
   {
-    "objectID": "slides/week2/week2_conditional_probability.html#conditioning-live",
-    "href": "slides/week2/week2_conditional_probability.html#conditioning-live",
+    "objectID": "slides/week2/week2_conditional_probability.html#probability-as-counting",
+    "href": "slides/week2/week2_conditional_probability.html#probability-as-counting",
     "title": "Week 2: Conditional Probability and Independence",
-    "section": "Conditioning, live",
-    "text": "Conditioning, live\n\n\n\n\nCES Common Content 2025 (n = 17,000), weighted by commonweight"
+    "section": "Probability as counting",
+    "text": "Probability as counting\n\n\nWhen all events in the sample space \\(\\Omega\\) are equally likely and the sample space is finite…\n\n…the probability of some event \\(A\\) is just the share of outcomes in \\(\\Omega\\) that fall into \\(A\\)\nThis is the naive definition of probability Blitzstein and Hwang (2019)\n\n\n\\[ P(A) =  \\frac{\\text{number of outcomes contained in } A}{\\text{number of outcomes in } \\Omega} \\]\n\nThis turns calculating a probability into a combinatorics exercise\n\nWe just need to count!"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#ways-of-counting",
+    "href": "slides/week2/week2_conditional_probability.html#ways-of-counting",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Ways of counting",
+    "text": "Ways of counting\n\n\nMultiplication rule\n\nIf two separate experiments \\(A\\) and \\(B\\) have \\(a\\) and \\(b\\) possible outcomes respectively…\n…then the total number possible outcomes in the compound experiment is \\(a \\times b\\)\n\nSampling with replacement\n\nIf I sample \\(k\\) elements from a total of \\(n\\) with replacement and order matters, the total number of possibilities is \\(n^k\\)\nApplying the multiplication rule across \\(k\\) identical sub-experiments\n\nSampling without replacement\n\nIf I sample \\(k\\) elements from a total of \\(n\\) without replacement and order matters, the number of possible outcomes changes for each “trial”\n\\(n \\times (n-1) \\times (n-2) \\dotsc (n - k + 1) = \\frac{n!}{(n-k)!}\\)\n\nPermutations\n\nA permutation of \\(n\\) items is equivalent to sampling \\(n\\) elements without replacement where order matters\n\\(n \\times (n-1) \\times (n-2) \\dotsc 1 = n!\\)"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#ways-of-counting-1",
+    "href": "slides/week2/week2_conditional_probability.html#ways-of-counting-1",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Ways of counting",
+    "text": "Ways of counting\n\n\nSampling without replacement where order doesn’t matter\n\nWhen order doesn’t matter, we need to adjust for overcounting permutations of size \\(k\\)\n\\[ {n \\choose k} = \\frac{n!}{(n-k)!k!} \\]\nThis is known as the binomial coefficient and shows up in many areas of mathematics (you’ll see it in the Binomial PMF later!)\nAnother place is Pascal’s triangle - each element is the binomial coefficient \\(\\text{row} \\choose \\text{column}\\) \\[\n\\begin{array}{ccccccccc}\n  &   &   &   & 1 &   &   &   &   \\\\\n  &   &   & 1 &   & 1 &   &   &   \\\\\n  &   & 1 &   & 2 &   & 1 &   &   \\\\\n  & 1 &   & 3 &   & 3 &   & 1 &   \\\\\n1 &   & 4 &   & 6 &   & 4 &   & 1\n\\end{array}\n\\]"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#ways-of-counting-2",
+    "href": "slides/week2/week2_conditional_probability.html#ways-of-counting-2",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Ways of counting",
+    "text": "Ways of counting\n\n\nSampling with replacement where order doesn’t matter\n\nThis is a harder problem (and less common)! We’ll try to define it in an equivalent way that lets us use what we already know.\nImagine instead we want to count how many ways to put \\(k\\) identical objects in \\(n\\) distinguishable boxes\n\n\n\nn = 4 boxes, k = 5 identical objectsn + k − 1 = 8 symbols: k = 5 dots and n − 1 = 3 dividers\n\n\nWe have \\(n + k - 1\\) “slots” in between the outer dividers\n\nWe just need to select the location of the \\(k\\) objects, then the dividers fill in the rest.\n\nSo the number of possibilities is\n\\[ {n + k - 1 \\choose k} = \\frac{(n + k - 1)!}{(n-1)!k!} \\]"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#practice-the-birthday-problem",
+    "href": "slides/week2/week2_conditional_probability.html#practice-the-birthday-problem",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Practice: The Birthday Problem",
+    "text": "Practice: The Birthday Problem\n\n\nWhat is the probability that in a room of \\(k\\) people, two people will be born on the same day.\n\nAssume no leap years and equal probability of being born on any day.\n\n\\(Pr(\\text{Any two of } k \\text{ people share a birthday})\\) is hard to work with.\n\nWe’ll instead calculate 1 minus the complement: \\(Pr(\\text{All } k \\text{ people born on different days})\\)\n\nDenominator: Sampling with replacement from the set of birthdays where order matters\nNumerator: Sampling without replacement from the set of birthdays where order matters"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#practice-the-birthday-problem-1",
+    "href": "slides/week2/week2_conditional_probability.html#practice-the-birthday-problem-1",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Practice: The Birthday Problem",
+    "text": "Practice: The Birthday Problem\n\n\nSo we can calculate the probability as\n\n\\[ Pr(\\text{Any two of } k \\text{ people share a birthday}) = 1 - \\frac{\\frac{365!}{(365-k)!}}{365^k} \\]\n\nHow quickly does this hit \\(1\\)?\n\n\n\n\n\n\n\n\n\n\n\nThe probability of any one coincidence is low but the probability of some coincidence is high!"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#when-the-naive-definition-fails",
+    "href": "slides/week2/week2_conditional_probability.html#when-the-naive-definition-fails",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "When the naive definition fails",
+    "text": "When the naive definition fails"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#conditional-probability",
+    "href": "slides/week2/week2_conditional_probability.html#conditional-probability",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Conditional probability",
+    "text": "Conditional probability\n\n\nSo far we’ve talked about the probability of single events\n\nWe’ve created new events by taking unions \\(\\cup\\) and intersections \\(\\cap\\)\n\nBut very often we want to know how the probability of one event changes if another event is known to have occurred\n\nThis is a conditional probability\n\n\n\\[ P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)} \\]"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#conditional-probability-and-party-id",
+    "href": "slides/week2/week2_conditional_probability.html#conditional-probability-and-party-id",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Conditional probability and party ID",
+    "text": "Conditional probability and party ID\n\n\n\n\nCES Common Content 2025 (n = 17,000), weighted by commonweight"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#factoring-into-conditional-probabilities",
+    "href": "slides/week2/week2_conditional_probability.html#factoring-into-conditional-probabilities",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Factoring into conditional probabilities",
+    "text": "Factoring into conditional probabilities\n\nFrom our definition of conditional probability, we also have a way of factoring any joint probability into a product of conditionals\n\\[ P(A \\cap B) = P(A \\mid B) P(B) = P(B \\mid A) P(A) \\]\nWe can extend this to any intersection of \\(n\\) events - and in fact there are \\(n!\\) different factorizations\n\\[ P(A_1 , A_2, A_3, \\dotsc A_n) = P(A_{n} \\mid A_{n-1}, \\dotsc A_{1})\\cdots P(A_3 \\mid A_2, A_1)P(A_2 \\mid A_1)P(A_1)\\]"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#law-of-total-probability",
+    "href": "slides/week2/week2_conditional_probability.html#law-of-total-probability",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Law of Total Probability",
+    "text": "Law of Total Probability\n\nCan we decompose the unconditional probability of some event \\(B\\) into conditional probabilities?\nLet \\(A_1, A_2, A_3, \\dotsc A_n\\) be a set of disjoint events that partition the sample space \\(\\Omega\\)\nWe can write \\(B\\) as the union of the disjoint sets intersecting \\(B\\) with each piece \\(A_1, A_2, \\dotsc A_n\\)\n\\[ P(B) = P(B \\cap A_1) \\cup P(B \\cap A_2) \\cup \\cdots \\cup P(B \\cap A_n) \\]\nThen we apply additivity\n\\[ P(B) = P(B \\cap A_1) + P(B \\cap A_2) + \\cdots + P(B \\cap A_n) \\]\nThen plug in our factorization of the joint\n\\[ P(B) = P(B \\mid A_1)P(A_1) + P(B \\mid A_2)P(A_2) + \\cdots + P(B \\mid A_n)P(A_n) \\]"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#law-of-total-probability-1",
+    "href": "slides/week2/week2_conditional_probability.html#law-of-total-probability-1",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Law of Total Probability",
+    "text": "Law of Total Probability\n\nThis gives us the law of total probability\n\\[ P(B) = \\sum_{i=1}^n P(B \\mid A_i)P(A_i) \\]"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#bayes-rule",
+    "href": "slides/week2/week2_conditional_probability.html#bayes-rule",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Bayes’ rule",
+    "text": "Bayes’ rule\n\nGoing back to our two equivalent expressions for \\(P(A \\cap B)\\)\n\\[ P(A \\mid B) P(B) = P(B \\mid A) P(A) \\]\nDividing both sides by \\(P(B)\\) gives us a formula for relating one conditional probability to another: Bayes’ rule\n\\[ P(A \\mid B) = \\frac{P(B \\mid A) P(A)}{P(B)} \\]\nYou’ll sometimes see this written with LOTP applied to the denominator\n\\[ P(A \\mid B) = \\frac{P(B \\mid A) P(A)}{P(B \\mid A) P(A) + P(B \\mid A^c)P(A^c)} \\] ## Bayes’ rule\n\n\\[ P(A \\mid B) = \\frac{P(B \\mid A) P(A)}{P(B)} \\]\n\nWe’ll often use Bayes’ rule in the context of using new information to update our beliefs about the probability of a particular event.\n\n\\(P(A)\\) is our prior probability of event \\(A\\)\n\\(P(A \\mid B)\\) is our posterior probability of event \\(A\\) once we know that \\(B\\) has occurred.\n\nTo get from prior to posterior we multiply by the factor \\(P(B \\mid A)/P(B)\\)"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem",
+    "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "The Monty Hall Problem",
+    "text": "The Monty Hall Problem"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-1",
+    "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-1",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "The Monty Hall Problem",
+    "text": "The Monty Hall Problem\n\nYou picked the first door, the host revealed a goat behind the third door\nWe want to know the probability that you picked the car given that the game show host revealed a goat behind door number 3.\n\nWe can solve this with an application of Bayes’ rule\n\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{P(\\text{goat}_3 \\mid \\text{car}_1)}{P(\\text{goat}_3)}P(\\text{car}_1) \\] - Substituting in what we know\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{P(\\text{goat}_3)} \\cdot \\frac{1}{3} \\]"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-2",
+    "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-2",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "The Monty Hall Problem",
+    "text": "The Monty Hall Problem\n\nFor the denominator, we’ll use the law of total probability and consider all possible locations of the car.\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{P(\\text{goat}_3 | \\text{car}_1)P(\\text{car}_1) + P(\\text{goat}_3 | \\text{car}_2)P(\\text{car}_2) + P(\\text{goat}_3 | \\text{car}_3)P(\\text{car}_3)} \\cdot \\frac{1}{3} \\]\n\nThe host always opens 3 if the car is behind 2 and never opens 3 if the car is behind 3, so we have\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{\\frac{1}{2}\\cdot\\frac{1}{3} + 1\\cdot \\frac{1}{3} + 0 \\cdot \\frac{1}{3}} \\cdot \\frac{1}{3} \\]\n\nTherefore\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2} \\cdot \\frac{1}{3} }{\\frac{1}{2}} = \\frac{1}{3} \\]\n\nAnd by law of total probability\n\n\\[ P(\\text{car}_2 | \\text{goat}_3) = 1 - P(\\text{car}_1 \\mid \\text{goat}_3) - P(\\text{car}_3 \\mid \\text{goat}_3) = 1 - \\frac{1}{3} - 0 = \\frac{2}{3} \\]"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-3",
+    "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-3",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "The Monty Hall Problem",
+    "text": "The Monty Hall Problem"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-4",
+    "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-4",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "The Monty Hall Problem",
+    "text": "The Monty Hall Problem"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-5",
+    "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-5",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "The Monty Hall Problem",
+    "text": "The Monty Hall Problem"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-6",
+    "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-6",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "The Monty Hall Problem",
+    "text": "The Monty Hall Problem"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#independence",
+    "href": "slides/week2/week2_conditional_probability.html#independence",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Independence",
+    "text": "Independence"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#conditional-independence",
+    "href": "slides/week2/week2_conditional_probability.html#conditional-independence",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Conditional Independence",
+    "text": "Conditional Independence"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#conditional-independence-does-not-imply-independence",
+    "href": "slides/week2/week2_conditional_probability.html#conditional-independence-does-not-imply-independence",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Conditional independence does not imply independence",
+    "text": "Conditional independence does not imply independence"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#independence-does-not-imply-conditional-independence",
+    "href": "slides/week2/week2_conditional_probability.html#independence-does-not-imply-conditional-independence",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "Independence does not imply conditional independence",
+    "text": "Independence does not imply conditional independence\n\nA very tricky feature of conditioning is that we can create dependence by conditioning on certain events\n\nA common setting is conditioning on common effects - this is known as collider bias in causal inference.\n\nExample: Let \\(R\\) be the event that it rained today. Let \\(S\\) be the event that the lawn sprinkler turned on today. Let \\(W\\) be the event that the grass is wet.\n\nAssume \\(P(R) = \\frac{1}{2}\\) and \\(P(S) = \\frac{1}{2}\\). \\(S \\indep R\\)\n\nSuppose I know that the grass is wet. Is \\(S \\indep R \\mid W\\)?"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#next-week",
     "href": "slides/week2/week2_conditional_probability.html#next-week",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Next week",
-    "text": "Next week\n\nRandom variables\n\nHow do we go from events to numbers?\n\nDistributions\n\nDiscrete and continuous random variables; PMFs, PDFs and CDFs\n\nCommon distributions\n\nBernoulli, Binomial, Uniform, Normal…"
+    "text": "Next week\n\n\nRandom variables\n\nHow do we go from events to numbers?\n\nDistributions\n\nDiscrete and continuous random variables; PMFs, PDFs and CDFs\n\nCommon distributions\n\nBernoulli, Binomial, Uniform, Normal…"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#references",
     "href": "slides/week2/week2_conditional_probability.html#references",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "References",
-    "text": "References"
+    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#welcome",
@@ -123,119 +284,119 @@
     "href": "slides/week1/week1_intro_and_review.html#week-overview",
     "title": "Week 1: Intro to Probability",
     "section": "Week overview",
-    "text": "Week overview\n\nThis week\n\nIntroductions + course logistics\nIntro to probability\n\nNext week\n\nConditional probability\nIndependence\nBayes’ rule\n\nLong-run\n\nprobability \\(\\to\\) inference \\(\\to\\) regression"
+    "text": "Week overview\n\n\nThis week\n\nIntroductions + course logistics\nIntro to probability\n\nNext week\n\nConditional probability\nIndependence\nBayes’ rule\n\nLong-run\n\nprobability \\(\\to\\) inference \\(\\to\\) regression"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-overview",
     "href": "slides/week1/week1_intro_and_review.html#course-overview",
     "title": "Week 1: Intro to Probability",
     "section": "Course Overview",
-    "text": "Course Overview\n\nInstructor: Anton Strezhnev\nTA: John Hicks\nMethods Mentor: Nastya Andreeva\nLogistics:\n\nLectures T/W - 3:30pm-4:45pm, Ogg Room (North Hall 422)\nSection F - 9:30am-10:20am, Ogg Room (North Hall 422)\n5 Problem Sets (~ 2 weeks)\nIn-class midterms (October 7, November 18)\nReplication project poster (December 4th)"
+    "text": "Course Overview\n\n\nInstructor: Anton Strezhnev\nTA: John Hicks\nMethods Mentor: Nastya Andreeva\nLogistics:\n\nLectures T/W - 3:30pm-4:45pm, Ogg Room (North Hall 422)\nSection F - 9:30am-10:20am, Ogg Room (North Hall 422)\n5 Problem Sets (~ 2 weeks)\nIn-class midterms (October 7, November 18)\nReplication project poster (December 4th)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-overview-1",
     "href": "slides/week1/week1_intro_and_review.html#course-overview-1",
     "title": "Week 1: Intro to Probability",
     "section": "Course Overview",
-    "text": "Course Overview\n\nMy office hours: Tuesdays 9am-11am (North Hall 322D)\nJohn’s office hours: Thursdays 9am-11am (North Hall 201D)\nNastya’s office hours: Fridays 10:30am-12:30pm (North Hall 315)\nCourse Website: https://www.antonstrezhnev.com/ps812\nAnnouncements will be posted on Slack - you should have received an invite."
+    "text": "Course Overview\n\n\nMy office hours: Tuesdays 9am-11am (North Hall 322D)\nJohn’s office hours: Thursdays 9am-11am (North Hall 201D)\nNastya’s office hours: Fridays 10:30am-12:30pm (North Hall 315)\nCourse Website: https://www.antonstrezhnev.com/ps812\nAnnouncements will be posted on Slack - you should have received an invite."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-objectives",
     "href": "slides/week1/week1_intro_and_review.html#course-objectives",
     "title": "Week 1: Intro to Probability",
     "section": "Course Objectives",
-    "text": "Course Objectives\n\nWhat is this course about?\n\nProbability - How do we talk about uncertainty in a structured manner?\nInference - Given what we observe, how do we learn about what we don’t?\nRegression - Can we characterize the average of one quantity given information about another?\n\nGoals for the course\n\nCritically read, interpret and evaluate quantitative social science articles\nConduct, interpret and communicate results from a regression analysis\nWrite clean, reusable and reliable analysis code in R\nSee how research is conducted by working with real replication data."
+    "text": "Course Objectives\n\n\nWhat is this course about?\n\nProbability - How do we talk about uncertainty in a structured manner?\nInference - Given what we observe, how do we learn about what we don’t?\nRegression - Can we characterize the average of one quantity given information about another?\n\nGoals for the course\n\nCritically read, interpret and evaluate quantitative social science articles\nConduct, interpret and communicate results from a regression analysis\nWrite clean, reusable and reliable analysis code in R\nSee how research is conducted by working with real replication data."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#statistical-computing",
     "href": "slides/week1/week1_intro_and_review.html#statistical-computing",
     "title": "Week 1: Intro to Probability",
     "section": "Statistical computing",
-    "text": "Statistical computing\n\nThis course will teach you how to work in the  programming language.\n\nA high-level language designed for statistical computing\n\nWe’ll focus on the concepts of computing\n\n(e.g. functions, data types, control structures)\nData cleaning/processing via tidyverse\nSyntax is important…but LLMs are making memorization less necessary.\n\nScientific publishing in Quarto\nMore broadly, I want you to learn how your computers work for research\n\nKieran Healy’s Modern Plain Text Computing (Healy 2025)"
+    "text": "Statistical computing\n\n\nThis course will teach you how to work in the  programming language.\n\nA high-level language designed for statistical computing\n\nWe’ll focus on the concepts of computing\n\n(e.g. functions, data types, control structures)\nData cleaning/processing via tidyverse\nSyntax is important…but LLMs are making memorization less necessary.\n\nScientific publishing in Quarto\nMore broadly, I want you to learn how your computers work for research\n\nKieran Healy’s Modern Plain Text Computing (Healy 2025)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-workflow",
     "href": "slides/week1/week1_intro_and_review.html#course-workflow",
     "title": "Week 1: Intro to Probability",
     "section": "Course workflow",
-    "text": "Course workflow\n\nLectures (Tuesdays/Wednesdays)\n\nOne set of slides for each of the two lectures in each week\nYour primary point of instruction - goal is to synthesize the core material + give you the tools to learn more.\nI want lectures to be interactive - you should ask questions and interrupt!\n\nSection (Fridays)\n\nMeets once a week - this is where we do the computing.\nStarts with questions and review, then short guided exercises in R.\nBring your laptop and bring your problem set questions!"
+    "text": "Course workflow\n\n\nLectures (Tuesdays/Wednesdays)\n\nOne set of slides for each of the two lectures in each week\nYour primary point of instruction - goal is to synthesize the core material + give you the tools to learn more.\nI want lectures to be interactive - you should ask questions and interrupt!\n\nSection (Fridays)\n\nMeets once a week - this is where we do the computing.\nStarts with questions and review, then short guided exercises in R.\nBring your laptop and bring your problem set questions!"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-1",
     "href": "slides/week1/week1_intro_and_review.html#course-workflow-1",
     "title": "Week 1: Intro to Probability",
     "section": "Course workflow",
-    "text": "Course workflow\n\nReadings\n\nCore textbook: Foundations of Agnostic Statistics (Aronow and Miller 2019)\nSupplemental:\n\nA User’s Guide to Statistical Inference and Regression (Blackwell 2025)\nIntroduction to Probability (Blitzstein and Hwang 2019)\n\nVarious papers from political science and adjacent disciplines are assigned throughout.\nEverything is available digitally either directly or through the UW-Madison online library resources\nDo the readings prior to each week, but definitely be sure to do them before the Wednesday."
+    "text": "Course workflow\n\n\nReadings\n\nCore textbook: Foundations of Agnostic Statistics (Aronow and Miller 2019)\nSupplemental:\n\nA User’s Guide to Statistical Inference and Regression (Blackwell 2025)\nIntroduction to Probability (Blitzstein and Hwang 2019)\n\nVarious papers from political science and adjacent disciplines are assigned throughout.\nEverything is available digitally either directly or through the UW-Madison online library resources\nDo the readings prior to each week, but definitely be sure to do them before the Wednesday."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-2",
     "href": "slides/week1/week1_intro_and_review.html#course-workflow-2",
     "title": "Week 1: Intro to Probability",
     "section": "Course workflow",
-    "text": "Course workflow\n\nProblem sets (20% of your grade)\n\nFive problem sets, each covering roughly a two-week block of material.\nMain day-to-day component of the class – meant to get you working with your colleagues and thinking hard about the material.\nCollaboration is strongly encouraged – you should ask and answer questions on our class Slack Discussion board\nSubmit on the Gradescope assignment platform\nGrading is on a plus/check/minus scale.\n\nConversion to grade point is somewhat holistic.\nMajority plusses is an A, Majority checks is an AB, Majority minus is a B\n\nSolutions will be posted to Canvas after the due-date."
+    "text": "Course workflow\n\n\nProblem sets (20% of your grade)\n\nFive problem sets, each covering roughly a two-week block of material.\nMain day-to-day component of the class – meant to get you working with your colleagues and thinking hard about the material.\nCollaboration is strongly encouraged – you should ask and answer questions on our class Slack Discussion board\nSubmit on the Gradescope assignment platform\nGrading is on a plus/check/minus scale.\n\nConversion to grade point is somewhat holistic.\nMajority plusses is an A, Majority checks is an AB, Majority minus is a B\n\nSolutions will be posted to Canvas after the due-date."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-3",
     "href": "slides/week1/week1_intro_and_review.html#course-workflow-3",
     "title": "Week 1: Intro to Probability",
     "section": "Course workflow",
-    "text": "Course workflow\n\nTwo in-class midterms (20% of your grade each)\n\nOctober 7 – the first five weeks of probability theory.\nNovember 18 – statistical inference and linear regression.\nClosed-book, pen-and-paper - similar format to comprehensive exams\n\nReplication project (30% of your grade)\n\nWork in groups of 2-3 to replicate and extend a published paper.\nPresented as a poster at the MEAD grad poster session, December 4th.\nAn ungraded check-in memo is due October 21\n\nParticipation (10% of your grade)\n\nIt is important that you actively engage with lecture, section, and the teaching staff – ask and answer questions.\nParticipating on Slack counts as well, as does attending MEAD talks."
+    "text": "Course workflow\n\n\nTwo in-class midterms (20% of your grade each)\n\nOctober 7 – the first five weeks of probability theory.\nNovember 18 – statistical inference and linear regression.\nClosed-book, pen-and-paper - similar format to comprehensive exams\n\nReplication project (30% of your grade)\n\nWork in groups of 2-3 to replicate and extend a published paper.\nPresented as a poster at the MEAD grad poster session, December 4th.\nAn ungraded check-in memo is due October 21\n\nParticipation (10% of your grade)\n\nIt is important that you actively engage with lecture, section, and the teaching staff – ask and answer questions.\nParticipating on Slack counts as well, as does attending MEAD talks."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-4",
     "href": "slides/week1/week1_intro_and_review.html#course-workflow-4",
     "title": "Week 1: Intro to Probability",
     "section": "Course workflow",
-    "text": "Course workflow\n\nModels, Experiments and Data workshop\n\nCheck out the Fall 2026 schedule here: https://sites.google.com/view/meadwisc/home\n\nGet added to the Slack workspace:\n\nhttps://join.slack.com/t/modelsanddata/shared_invite/zt-3cfv6l4lv-4XVF2V_toX_B0qQce55vCg"
+    "text": "Course workflow\n\n\nModels, Experiments and Data workshop\n\nCheck out the Fall 2026 schedule here: https://sites.google.com/view/meadwisc/home\n\nGet added to the Slack workspace:\n\nhttps://join.slack.com/t/modelsanddata/shared_invite/zt-3cfv6l4lv-4XVF2V_toX_B0qQce55vCg"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#class-requirements",
     "href": "slides/week1/week1_intro_and_review.html#class-requirements",
     "title": "Week 1: Intro to Probability",
     "section": "Class Requirements",
-    "text": "Class Requirements\n\nOverall: An interest in learning and willingness to ask questions.\nNo formal pre-requisites\n\nMath camp should get you up to speed on topics/refresh your memory of HS math.\nWe’ll spend time on the really relevant stuff: probability/inference\n\nMath is not about intrinsic aptitude, it’s about effort\n\n…in mathematics you don’t understand things. You just get used to them.\n— John Von Neumann\n\nWe don’t do rigor for rigor’s sake\n\nBut rigor is important - we will tell you why we need to be clear and precise about things!\n\nYou’re developing your ability to reason and not just memorize\nIf you’re unsure or confused, always ask - we will match the effort you put in\nWe all come from different backgrounds. Please have patience with yourself and with others"
+    "text": "Class Requirements\n\n\nOverall: An interest in learning and willingness to ask questions.\nNo formal pre-requisites\n\nMath camp should get you up to speed on topics/refresh your memory of HS math.\nWe’ll spend time on the really relevant stuff: probability/inference\n\nMath is not about intrinsic aptitude, it’s about effort\n\n…in mathematics you don’t understand things. You just get used to them.\n— John Von Neumann\n\nWe don’t do rigor for rigor’s sake\n\nBut rigor is important - we will tell you why we need to be clear and precise about things!\n\nYou’re developing your ability to reason and not just memorize\nIf you’re unsure or confused, always ask - we will match the effort you put in\nWe all come from different backgrounds. Please have patience with yourself and with others"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#llm-policy",
     "href": "slides/week1/week1_intro_and_review.html#llm-policy",
     "title": "Week 1: Intro to Probability",
     "section": "LLM Policy",
-    "text": "LLM Policy\n\nSee the syllabus for the long version.\nIn short…\n\nYou should have LLMs do things for you\nYou should not have LLMs think for you\nYou should definitely not have LLMs speak for you\n\nSometimes it’s valuable to not have the LLM do something so that you can learn to think.\n\nTry to minimize use on the problem sets.\nThe exams are ultimately the check on this…\n…as is the poster session."
+    "text": "LLM Policy\n\n\nSee the syllabus for the long version.\nIn short…\n\nYou should have LLMs do things for you\nYou should not have LLMs think for you\nYou should definitely not have LLMs speak for you\n\nSometimes it’s valuable to not have the LLM do something so that you can learn to think.\n\nTry to minimize use on the problem sets.\nThe exams are ultimately the check on this…\n…as is the poster session."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#acknowledgements",
     "href": "slides/week1/week1_intro_and_review.html#acknowledgements",
     "title": "Week 1: Intro to Probability",
     "section": "Acknowledgements",
-    "text": "Acknowledgements\n\nFirst and foremost, this course is indebted to Adeline Lo who taught it for the last several years and has provided a wealth of materials.\nBut it’s also an iteration in the broader project of methods education in political methodology and is indebted to many of those who have taught versions of this course in the past and at other institutions\n\nMatthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nAnd special thanks to Andrew Heiss for the modern website/Quarto approach to teaching materials."
+    "text": "Acknowledgements\n\n\nFirst and foremost, this course is indebted to Adeline Lo who taught it for the last several years and has provided a wealth of materials.\nBut it’s also an iteration in the broader project of methods education in political methodology and is indebted to many of those who have taught versions of this course in the past and at other institutions\n\nMatthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nAnd special thanks to Andrew Heiss for the modern website/Quarto approach to teaching materials."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#a-brief-overview",
     "href": "slides/week1/week1_intro_and_review.html#a-brief-overview",
     "title": "Week 1: Intro to Probability",
     "section": "A brief overview",
-    "text": "A brief overview\n\nWeeks 1-2: Probability, conditional probability and independence\nWeeks 3-5: Random variables, distributions, expectation, variance and covariance\n\nFirst midterm: Wednesday, October 7\n\nWeeks 6-7: Estimation - bias, variance, consistency and the central limit theorem\nWeek 8: Confidence intervals and hypothesis testing\nWeeks 9-11: Linear regression - estimation, inference and interpretation\n\nSecond midterm: Wednesday, November 18\n\nWeek 12: Regression wrap-up - polynomials, overfitting and penalized regression\nWeek 13: Weighting estimators - missing data, IPW and survey weights\nWeek 14: A preview of causal inference (and of PS 813)"
+    "text": "A brief overview\n\n\nWeeks 1-2: Probability, conditional probability and independence\nWeeks 3-5: Random variables, distributions, expectation, variance and covariance\n\nFirst midterm: Wednesday, October 7\n\nWeeks 6-7: Estimation - bias, variance, consistency and the central limit theorem\nWeek 8: Confidence intervals and hypothesis testing\nWeeks 9-11: Linear regression - estimation, inference and interpretation\n\nSecond midterm: Wednesday, November 18\n\nWeek 12: Regression wrap-up - polynomials, overfitting and penalized regression\nWeek 13: Weighting estimators - missing data, IPW and survey weights\nWeek 14: A preview of causal inference (and of PS 813)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#statistics-and-political-science",
     "href": "slides/week1/week1_intro_and_review.html#statistics-and-political-science",
     "title": "Week 1: Intro to Probability",
     "section": "Statistics and Political Science",
-    "text": "Statistics and Political Science\n\nStatistics is an extremely recent field - hypothesis testing formalized in early 20th century\n\nProbability a bit older - 17th/18th century.\n\nEarly applied statistics mostly in medicine/biological sciences - biostatistics\nIn the social sciences, econometrics becomes a distinct discipline around the 1930s\nPolitical methodology starts to define itself around 1984 (first PolMeth meeting)\nWhat is political methodology?\n\nA messy blend of all of these + computer science!"
+    "text": "Statistics and Political Science\n\n\nStatistics is an extremely recent field - hypothesis testing formalized in early 20th century\n\nProbability a bit older - 17th/18th century.\n\nEarly applied statistics mostly in medicine/biological sciences - biostatistics\nIn the social sciences, econometrics becomes a distinct discipline around the 1930s\nPolitical methodology starts to define itself around 1984 (first PolMeth meeting)\nWhat is political methodology?\n\nA messy blend of all of these + computer science!"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#what-is-statistics",
     "href": "slides/week1/week1_intro_and_review.html#what-is-statistics",
     "title": "Week 1: Intro to Probability",
     "section": "What is Statistics?",
-    "text": "What is Statistics?\n\nHow do we take something that we know and use it to learn about what we do not know?\n\nHow do we quantify our uncertainty around our predictions?\n\nOur main tools are assumptions about the data-generating process\n\nIf we assume that the thing we know came from some known process connected to the thing we don’t know…\n… then we can draw inferences about what we don’t know!"
+    "text": "What is Statistics?\n\n\nHow do we take something that we know and use it to learn about what we do not know?\n\nHow do we quantify our uncertainty around our predictions?\n\nOur main tools are assumptions about the data-generating process\n\nIf we assume that the thing we know came from some known process connected to the thing we don’t know…\n… then we can draw inferences about what we don’t know!"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#agnostic-statistics",
     "href": "slides/week1/week1_intro_and_review.html#agnostic-statistics",
     "title": "Week 1: Intro to Probability",
     "section": "Agnostic Statistics",
-    "text": "Agnostic Statistics\n\nTraditional education in statistics often starts from very strong modeling assumptions\n\n(e.g. outcomes are known to be normally distributed)\n\nThis may work for some fields, but not the social sciences\n\nOur models are wrong - they’re analytical tools\n\nIf we make assumptions, we want them rooted in substantive knowledge.\n\n(e.g. randomization of a treatment)\n\nOtherwise, we want to be as agnostic as possible."
+    "text": "Agnostic Statistics\n\n\nTraditional education in statistics often starts from very strong modeling assumptions\n\n(e.g. outcomes are known to be normally distributed)\n\nThis may work for some fields, but not the social sciences\n\nOur models are wrong - they’re analytical tools\n\nIf we make assumptions, we want them rooted in substantive knowledge.\n\n(e.g. randomization of a treatment)\n\nOtherwise, we want to be as agnostic as possible."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#probability-and-inference",
@@ -249,49 +410,49 @@
     "href": "slides/week1/week1_intro_and_review.html#what-is-probability",
     "title": "Week 1: Intro to Probability",
     "section": "What is probability?",
-    "text": "What is probability?\n\nProbability quantifies the likelihood of an event from a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events\nDefine the sample space \\(\\Omega\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nModeled after Blitzstein and Hwang (2019), Figure 1.1"
+    "text": "What is probability?\n\n\nProbability quantifies the likelihood of an event from a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events\nDefine the sample space \\(\\Omega\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nModeled after Blitzstein and Hwang (2019), Figure 1.1"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#events",
     "href": "slides/week1/week1_intro_and_review.html#events",
     "title": "Week 1: Intro to Probability",
     "section": "Events",
-    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nWe’ll denote the event space – the set of all events that can be assigned a probability – as \\(\\mathcal{S}\\) (this is called the “\\(\\sigma\\)-algebra”)"
+    "text": "Events\n\n\nAn event is a subset of the sample space (including the empty set)\n\nWe’ll denote the event space – the set of all events that can be assigned a probability – as \\(\\mathcal{S}\\) (this is called the “\\(\\sigma\\)-algebra”)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review",
     "href": "slides/week1/week1_intro_and_review.html#set-review",
     "title": "Week 1: Intro to Probability",
     "section": "Set review",
-    "text": "Set review\n\nThe empty set \\(\\emptyset\\) is the set that contains no elements\nThe complement of a set \\(A\\), denoted \\(A^{c}\\), is the set of all elements not in \\(A\\)\n\nImplicitly complements are defined w.r.t. some “universal” set - here the sample space \\(\\Omega\\).\nWhat’s \\(\\Omega^c\\)?\n\nPractice: In the figure below, is \\(A^{c} = B\\)?"
+    "text": "Set review\n\n\nThe empty set \\(\\emptyset\\) is the set that contains no elements\nThe complement of a set \\(A\\), denoted \\(A^{c}\\), is the set of all elements not in \\(A\\)\n\nImplicitly complements are defined w.r.t. some “universal” set - here the sample space \\(\\Omega\\).\nWhat’s \\(\\Omega^c\\)?\n\nPractice: In the figure below, is \\(A^{c} = B\\)?"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review-1",
     "href": "slides/week1/week1_intro_and_review.html#set-review-1",
     "title": "Week 1: Intro to Probability",
     "section": "Set review",
-    "text": "Set review\n\nThe union of two events \\(A \\cup B\\) contains all elements in either \\(A\\) or \\(B\\)\n\nWe’ll sometimes use a big \\(\\displaystyle\\bigcup_{i=1}^N\\) to denote a union over many events\n\nThe intersection of two events \\(A \\cap B\\) contains all elements both in \\(A\\) and \\(B\\)\n\nSame idea for notation: \\(\\displaystyle\\bigcap_{i=1}^N\\) denotes an intersection over many events\n\nTwo sets \\(A\\) and \\(B\\) are disjoint or mutually exclusive if \\(A \\cap B = \\emptyset\\)"
+    "text": "Set review\n\n\nThe union of two events \\(A \\cup B\\) contains all elements in either \\(A\\) or \\(B\\)\n\nWe’ll sometimes use a big \\(\\displaystyle\\bigcup_{i=1}^N\\) to denote a union over many events\n\nThe intersection of two events \\(A \\cap B\\) contains all elements both in \\(A\\) and \\(B\\)\n\nSame idea for notation: \\(\\displaystyle\\bigcap_{i=1}^N\\) denotes an intersection over many events\n\nTwo sets \\(A\\) and \\(B\\) are disjoint or mutually exclusive if \\(A \\cap B = \\emptyset\\)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review-2",
     "href": "slides/week1/week1_intro_and_review.html#set-review-2",
     "title": "Week 1: Intro to Probability",
     "section": "Set review",
-    "text": "Set review\n\nPractice: In the figure below, are \\(A\\) and \\(B\\) disjoint?"
+    "text": "Set review\n\n\nPractice: In the figure below, are \\(A\\) and \\(B\\) disjoint?"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#set-review-3",
     "href": "slides/week1/week1_intro_and_review.html#set-review-3",
     "title": "Week 1: Intro to Probability",
     "section": "Set review",
-    "text": "Set review\n\nDe Morgan’s Laws:\n\n\\((A \\cup B)^{c} = A^{c} \\cap B^{c}\\) – not in either means in neither\n\\((A \\cap B)^{c} = A^{c} \\cup B^{c}\\) – not in both means missing from at least one\nExtension to many events: \\(\\left(\\bigcup_i A_i\\right)^{c} = \\bigcap_i A_i^{c}\\)"
+    "text": "Set review\n\n\nDe Morgan’s Laws:\n\n\\((A \\cup B)^{c} = A^{c} \\cap B^{c}\\) – not in either means in neither\n\\((A \\cap B)^{c} = A^{c} \\cup B^{c}\\) – not in both means missing from at least one\nExtension to many events: \\(\\left(\\bigcup_i A_i\\right)^{c} = \\bigcap_i A_i^{c}\\)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#probability-axioms",
     "href": "slides/week1/week1_intro_and_review.html#probability-axioms",
     "title": "Week 1: Intro to Probability",
     "section": "Probability axioms",
-    "text": "Probability axioms\n\nProbability is a function that maps from the event space \\(\\mathcal{S}\\) to the real numbers.\n\n\\(P \\colon \\mathcal{S} \\to \\mathbb{R}\\)\n\nThe probability function \\(P\\) obeys three axioms (Kolmogorov’s Axioms)\n\nNon-negativity: \\(P(A) \\geq 0\\) for every event \\(A \\in \\mathcal{S}\\)\nNormalization: \\(P(\\Omega) = 1\\)\nCountable additivity: for pairwise disjoint events \\(A_1, A_2, A_3, \\dotsc\\)\n\\[P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)\\]"
+    "text": "Probability axioms\n\n\nProbability is a function that maps from the event space \\(\\mathcal{S}\\) to the real numbers.\n\n\\(P \\colon \\mathcal{S} \\to \\mathbb{R}\\)\n\nThe probability function \\(P\\) obeys three axioms (Kolmogorov’s Axioms)\n\nNon-negativity: \\(P(A) \\geq 0\\) for every event \\(A \\in \\mathcal{S}\\)\nNormalization: \\(P(\\Omega) = 1\\)\nCountable additivity: for pairwise disjoint events \\(A_1, A_2, A_3, \\dotsc\\)\n\\[P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)\\]"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#probability-isnt-always-intuitive",
@@ -305,21 +466,21 @@
     "href": "slides/week1/week1_intro_and_review.html#monotonicity",
     "title": "Week 1: Intro to Probability",
     "section": "Monotonicity",
-    "text": "Monotonicity\n\nIf \\(A \\subseteq B\\), then \\(P(A) \\leq P(B)\\)\n\nA bigger event can’t be less likely\n\nProof\n\nSplit \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[B = A \\cup (B \\cap A^{c})\\]\nAdditivity turns the union into a sum, and \\(P(B \\cap A^{c}) \\geq 0\\) by non-negativity\n\\[P(B) = P(A) + \\underbrace{P(B \\cap A^{c})}_{\\geq 0} \\geq P(A)\\]\n\nEvery event is a subset of the sample space: \\(A \\subseteq \\Omega\\), so \\(P(A) \\leq P(\\Omega) = 1\\)\n\nWith non-negativity, this pins probabilities to the interval \\([0, 1]\\)"
+    "text": "Monotonicity\n\n\nIf \\(A \\subseteq B\\), then \\(P(A) \\leq P(B)\\)\n\nA bigger event can’t be less likely\n\nProof\n\nSplit \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[B = A \\cup (B \\cap A^{c})\\]\nAdditivity turns the union into a sum, and \\(P(B \\cap A^{c}) \\geq 0\\) by non-negativity\n\\[P(B) = P(A) + \\underbrace{P(B \\cap A^{c})}_{\\geq 0} \\geq P(A)\\]\n\nEvery event is a subset of the sample space: \\(A \\subseteq \\Omega\\), so \\(P(A) \\leq P(\\Omega) = 1\\)\n\nWith non-negativity, this pins probabilities to the interval \\([0, 1]\\)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#the-complement-rule",
     "href": "slides/week1/week1_intro_and_review.html#the-complement-rule",
     "title": "Week 1: Intro to Probability",
     "section": "The complement rule",
-    "text": "The complement rule\n\nThe probability of an event is one minus the probability that it doesn’t happen\n\\[P(A) = 1 - P(A^{c})\\]\nProof\n\n\\(A\\) and \\(A^{c}\\) are disjoint and together they make up the whole sample space\n\\[A \\cup A^{c} = \\Omega\\]\nAdditivity and then normalization give us\n\\[P(A) + P(A^{c}) = P(\\Omega) = 1\\]\n\nOften it’s much easier to compute the probability of the complement – take \\(A\\) = “at least one” and \\(A^{c}\\) = “none”\nSetting \\(A = \\Omega\\) gives us \\(P(\\emptyset) = 1 - P(\\Omega) = 0\\)"
+    "text": "The complement rule\n\n\nThe probability of an event is one minus the probability that it doesn’t happen\n\\[P(A) = 1 - P(A^{c})\\]\nProof\n\n\\(A\\) and \\(A^{c}\\) are disjoint and together they make up the whole sample space\n\\[A \\cup A^{c} = \\Omega\\]\nAdditivity and then normalization give us\n\\[P(A) + P(A^{c}) = P(\\Omega) = 1\\]\n\nOften it’s much easier to compute the probability of the complement – take \\(A\\) = “at least one” and \\(A^{c}\\) = “none”\nSetting \\(A = \\Omega\\) gives us \\(P(\\emptyset) = 1 - P(\\Omega) = 0\\)"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#inclusionexclusion",
     "href": "slides/week1/week1_intro_and_review.html#inclusionexclusion",
     "title": "Week 1: Intro to Probability",
     "section": "Inclusion/Exclusion",
-    "text": "Inclusion/Exclusion\n\nThe probability of a union of two events is the sum of their respective probabilities minus the probability of their intersection\n\\[ P(A \\cup B) = P(A) + P(B) - P(A \\cap B) \\]\nProof\n\nSplit both \\(A \\cup B\\) and \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[A \\cup B = A \\cup (B \\cap A^{c}) \\qquad\\qquad B = (A \\cap B) \\cup (B \\cap A^{c})\\]\nAdditivity turns each union into a sum\n\\[P(A \\cup B) = P(A) + P(B \\cap A^{c}) \\qquad P(B) = P(A \\cap B) + P(B \\cap A^{c})\\]\nSolve the second for \\(P(B \\cap A^{c}) = P(B) - P(A \\cap B)\\), then substitute into the first."
+    "text": "Inclusion/Exclusion\n\n\nThe probability of a union of two events is the sum of their respective probabilities minus the probability of their intersection\n\\[ P(A \\cup B) = P(A) + P(B) - P(A \\cap B) \\]\nProof\n\nSplit both \\(A \\cup B\\) and \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[A \\cup B = A \\cup (B \\cap A^{c}) \\qquad\\qquad B = (A \\cap B) \\cup (B \\cap A^{c})\\]\nAdditivity turns each union into a sum\n\\[P(A \\cup B) = P(A) + P(B \\cap A^{c}) \\qquad P(B) = P(A \\cap B) + P(B \\cap A^{c})\\]\nSolve the second for \\(P(B \\cap A^{c}) = P(B) - P(A \\cap B)\\), then substitute into the first."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#inclusionexclusion-1",
@@ -333,35 +494,35 @@
     "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection",
     "title": "Week 1: Intro to Probability",
     "section": "Bounding the probability of an intersection",
-    "text": "Bounding the probability of an intersection\n\nRearrange the union rule\n\\[P(A \\cap B) = P(A) + P(B) - P(A \\cup B)\\]\nFrom earlier, we can split the union into disjoint parts: \\(P(A \\cup B) = P(A) + P(B \\cap A^{c})\\)\n\nNon-negativity of \\(P(B \\cap A^{c})\\) bounds the union from below and, symmetrically, splitting on \\(B\\) and \\(B^c\\) gives us two bounds:\n\\[P(A \\cup B) \\geq P(A) \\qquad\\qquad P(A \\cup B) \\geq P(B)\\]\n\nSubstituting \\(P(A \\cup B) \\geq P(B)\\) gives \\(P(A \\cap B) \\leq P(A)\\)\nSubstituting \\(P(A \\cup B) \\geq P(A)\\) gives \\(P(A \\cap B) \\leq P(B)\\)\nBoth hold at once, so the intersection is bounded by the smaller of the two\n\\[P(A \\cap B) \\leq \\min\\{P(A),\\, P(B)\\}\\]"
+    "text": "Bounding the probability of an intersection\n\n\nRearrange the union rule\n\\[P(A \\cap B) = P(A) + P(B) - P(A \\cup B)\\]\nFrom earlier, we can split the union into disjoint parts: \\(P(A \\cup B) = P(A) + P(B \\cap A^{c})\\)\n\nNon-negativity of \\(P(B \\cap A^{c})\\) bounds the union from below and, symmetrically, splitting on \\(B\\) and \\(B^c\\) gives us two bounds:\n\\[P(A \\cup B) \\geq P(A) \\qquad\\qquad P(A \\cup B) \\geq P(B)\\]\n\nSubstituting \\(P(A \\cup B) \\geq P(B)\\) gives \\(P(A \\cap B) \\leq P(A)\\)\nSubstituting \\(P(A \\cup B) \\geq P(A)\\) gives \\(P(A \\cap B) \\leq P(B)\\)\nBoth hold at once, so the intersection is bounded by the smaller of the two\n\\[P(A \\cap B) \\leq \\min\\{P(A),\\, P(B)\\}\\]"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection-1",
     "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection-1",
     "title": "Week 1: Intro to Probability",
     "section": "Bounding the probability of an intersection",
-    "text": "Bounding the probability of an intersection\n\nThat’s an upper bound, how about the lower bound?\nLet’s inspect our expression for \\(P(A \\cap B)\\) \\[ P(A \\cap B) = P(A) + P(B) - P(A \\cup B) \\]\nWe have \\(P(A) + P(B)\\)…but what about \\(P(A \\cup B)\\)\n\n\\(A \\cup B \\subseteq \\Omega\\) and \\(P(\\Omega) = 1\\). So \\(P(A \\cup B) \\leq 1\\)\n\nSo one lower bound is\n\\[ P(A \\cap B) \\geq P(A) + P(B) - 1 \\]\nBut by non-negativity, the probability is also trivially bounded below by \\(0\\), so we have\n\\[ P(A \\cap B) \\geq \\max\\{0,\\, P(A) + P(B) - 1\\} \\]"
+    "text": "Bounding the probability of an intersection\n\n\nThat’s an upper bound, how about the lower bound?\nLet’s inspect our expression for \\(P(A \\cap B)\\) \\[ P(A \\cap B) = P(A) + P(B) - P(A \\cup B) \\]\nWe have \\(P(A) + P(B)\\)…but what about \\(P(A \\cup B)\\)\n\n\\(A \\cup B \\subseteq \\Omega\\) and \\(P(\\Omega) = 1\\). So \\(P(A \\cup B) \\leq 1\\)\n\nSo one lower bound is\n\\[ P(A \\cap B) \\geq P(A) + P(B) - 1 \\]\nBut by non-negativity, the probability is also trivially bounded below by \\(0\\), so we have\n\\[ P(A \\cap B) \\geq \\max\\{0,\\, P(A) + P(B) - 1\\} \\]"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-a-union",
     "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-a-union",
     "title": "Week 1: Intro to Probability",
     "section": "Bounding the probability of a union",
-    "text": "Bounding the probability of a union\n\nHow about \\(P(A \\cup B)\\)?\nWe have a lower bound from earlier\n\\[ P(A \\cup B) \\geq \\max\\{P(A),\\, P(B)\\} \\]\nAnd an upper bound follows from the Union Rule + non-negativity: \\(P(A \\cap B) \\geq 0\\)\n\\[ P(A \\cup B) \\leq P(A) + P(B) \\]\nAnd from before, we also have \\(P(A \\cup B) \\leq 1\\)\n\\[ P(A \\cup B) \\leq \\min\\{1,\\, P(A) + P(B)\\} \\]"
+    "text": "Bounding the probability of a union\n\n\nHow about \\(P(A \\cup B)\\)?\nWe have a lower bound from earlier\n\\[ P(A \\cup B) \\geq \\max\\{P(A),\\, P(B)\\} \\]\nAnd an upper bound follows from the Union Rule + non-negativity: \\(P(A \\cap B) \\geq 0\\)\n\\[ P(A \\cup B) \\leq P(A) + P(B) \\]\nAnd from before, we also have \\(P(A \\cup B) \\leq 1\\)\n\\[ P(A \\cup B) \\leq \\min\\{1,\\, P(A) + P(B)\\} \\]"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#fréchet-inequalities-for-two-events",
     "href": "slides/week1/week1_intro_and_review.html#fréchet-inequalities-for-two-events",
     "title": "Week 1: Intro to Probability",
     "section": "Fréchet inequalities for two events",
-    "text": "Fréchet inequalities for two events\n\nFor any two events \\(A, B\\), their intersection is bounded by\n\\[\\max\\{0,\\, P(A) + P(B) - 1\\} \\;\\leq\\; P(A \\cap B) \\;\\leq\\; \\min\\{P(A),\\, P(B)\\}\\]\nFor any two events \\(A, B\\), their union is bounded by\n\\[\\max\\{P(A),\\, P(B)\\} \\;\\leq\\; P(A \\cup B) \\;\\leq\\; \\min\\{1,\\, P(A) + P(B)\\}\\]"
+    "text": "Fréchet inequalities for two events\n\n\nFor any two events \\(A, B\\), their intersection is bounded by\n\\[\\max\\{0,\\, P(A) + P(B) - 1\\} \\;\\leq\\; P(A \\cap B) \\;\\leq\\; \\min\\{P(A),\\, P(B)\\}\\]\nFor any two events \\(A, B\\), their union is bounded by\n\\[\\max\\{P(A),\\, P(B)\\} \\;\\leq\\; P(A \\cup B) \\;\\leq\\; \\min\\{1,\\, P(A) + P(B)\\}\\]"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#next-week",
     "href": "slides/week1/week1_intro_and_review.html#next-week",
     "title": "Week 1: Intro to Probability",
     "section": "Next week",
-    "text": "Next week\n\nConditional probabilities\n\nHow do the chances of one event change if I know another event has occurred?\nConditioning restricts the sample space\n\nIndependence\n\nWhat happens when knowing one event tells me nothing about the probability of another?\n\nBayes’ rule\n\nHow do we relate the probability of \\(A\\) given \\(B\\) to the probability of \\(B\\) given \\(A\\)?"
+    "text": "Next week\n\n\nConditional probabilities\n\nHow do the chances of one event change if I know another event has occurred?\nConditioning restricts the sample space\n\nIndependence\n\nWhat happens when knowing one event tells me nothing about the probability of another?\n\nBayes’ rule\n\nHow do we relate the probability of \\(A\\) given \\(B\\) to the probability of \\(B\\) given \\(A\\)?"
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#references",
