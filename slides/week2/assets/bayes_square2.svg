@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-label="The same square. Inside the left column a tall block of height P(B given A) is shaded, and inside the right column a short block of height P(B given A complement) is shaded. Together the two shaded blocks make up the event B." font-family="Red Hat Text, sans-serif">
+<title>Bayes' rule as area: the likelihoods cut each column</title>
+<rect x="250" y="55" width="108" height="360" fill="#0479A8" fill-opacity="0.13"/>
+<rect x="250" y="199" width="108" height="216" fill="#6A3D9A" fill-opacity="0.55"/>
+<rect x="358" y="343" width="252" height="72" fill="#c5050c" fill-opacity="0.50"/>
+<rect x="250" y="55" width="360" height="360" fill="none" stroke="#888888" stroke-width="1.5"/>
+<line x1="358" y1="55" x2="358" y2="415" stroke="#888888" stroke-width="1.5"/>
+<line x1="250" y1="199" x2="358" y2="199" stroke="#6A3D9A" stroke-width="1.5"/>
+<line x1="358" y1="343" x2="610" y2="343" stroke="#c5050c" stroke-width="1.5"/>
+<text x="264" y="80" font-size="19" fill="#888888">&#937;</text>
+<path d="M 250 46 V 36 H 354 V 46" fill="none" stroke="#0479A8" stroke-width="1.5"/>
+<path d="M 362 46 V 36 H 610 V 46" fill="none" stroke="#777777" stroke-width="1.5"/>
+<text x="302" y="24" text-anchor="middle" font-size="23" font-weight="700" fill="#0479A8">P(A)</text>
+<text x="486" y="24" text-anchor="middle" font-size="23" font-weight="700" fill="#777777">P(A<tspan font-size="15" dy="-8">c</tspan><tspan dy="8">)</tspan></text>
+<path d="M 240 199 H 232 V 415 H 240" fill="none" stroke="#6A3D9A" stroke-width="1.5"/>
+<text x="220" y="315" text-anchor="end" font-size="23" font-weight="700" fill="#6A3D9A">P(B | A)</text>
+<path d="M 620 343 H 628 V 415 H 620" fill="none" stroke="#c5050c" stroke-width="1.5"/>
+<text x="640" y="386" font-size="23" font-weight="700" fill="#c5050c">P(B | A<tspan font-size="15" dy="-8">c</tspan><tspan dy="8">)</tspan></text>
+</svg>

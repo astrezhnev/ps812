@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-label="Everything outside B is faded away, leaving only the two shaded blocks. Their areas are the product of a likelihood and a prior, and together they brace up to P(B)." font-family="Red Hat Text, sans-serif">
+<title>Bayes' rule as area: restricting to B</title>
+<rect x="250" y="55" width="360" height="360" fill="#000000" fill-opacity="0.03"/>
+<rect x="250" y="199" width="108" height="216" fill="#6A3D9A" fill-opacity="0.55"/>
+<rect x="358" y="343" width="252" height="72" fill="#c5050c" fill-opacity="0.50"/>
+<rect x="250" y="55" width="360" height="360" fill="none" stroke="#bbbbbb" stroke-width="1.5"/>
+<line x1="358" y1="55" x2="358" y2="415" stroke="#bbbbbb" stroke-width="1.5"/>
+<rect x="250" y="199" width="108" height="216" fill="none" stroke="#6A3D9A" stroke-width="2"/>
+<rect x="358" y="343" width="252" height="72" fill="none" stroke="#c5050c" stroke-width="2"/>
+<text x="264" y="80" font-size="19" fill="#bbbbbb">&#937;</text>
+<path d="M 250 46 V 36 H 354 V 46" fill="none" stroke="#bbbbbb" stroke-width="1.5"/>
+<path d="M 362 46 V 36 H 610 V 46" fill="none" stroke="#bbbbbb" stroke-width="1.5"/>
+<text x="302" y="24" text-anchor="middle" font-size="23" font-weight="700" fill="#aaaaaa">P(A)</text>
+<text x="486" y="24" text-anchor="middle" font-size="23" font-weight="700" fill="#aaaaaa">P(A<tspan font-size="15" dy="-8">c</tspan><tspan dy="8">)</tspan></text>
+<line x1="304" y1="415" x2="304" y2="431" stroke="#6A3D9A" stroke-width="1.5"/>
+<line x1="484" y1="415" x2="484" y2="431" stroke="#c5050c" stroke-width="1.5"/>
+<text x="304" y="452" text-anchor="middle" font-size="20" font-weight="700" fill="#6A3D9A">P(B | A) P(A)</text>
+<text x="484" y="452" text-anchor="middle" font-size="20" font-weight="700" fill="#c5050c">P(B | A<tspan font-size="14" dy="-7">c</tspan><tspan dy="7">)</tspan> P(A<tspan font-size="14" dy="-7">c</tspan><tspan dy="7">)</tspan></text>
+<path d="M 250 466 V 476 H 424 V 484 H 436 V 476 H 610 V 466" fill="none" stroke="#333333" stroke-width="1.5"/>
+<text x="430" y="508" text-anchor="middle" font-size="23" font-weight="700" fill="#333333">P(B)</text>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-label="The two blocks that make up B are divided by P(B) and laid out as a single bar of width one. The purple share of that bar is the posterior probability of A given B." font-family="Red Hat Text, sans-serif">
+<title>Bayes' rule as area: renormalizing inside B</title>
+<g transform="translate(-82.5,134.75) scale(0.55)">
+  <rect x="250" y="55" width="360" height="360" fill="#000000" fill-opacity="0.03"/>
+  <rect x="250" y="199" width="108" height="216" fill="#6A3D9A" fill-opacity="0.55" stroke="#6A3D9A" stroke-width="4"/>
+  <rect x="358" y="343" width="252" height="72" fill="#c5050c" fill-opacity="0.50" stroke="#c5050c" stroke-width="4"/>
+  <rect x="250" y="55" width="360" height="360" fill="none" stroke="#bbbbbb" stroke-width="3"/>
+  <line x1="358" y1="55" x2="358" y2="415" stroke="#bbbbbb" stroke-width="3"/>
+</g>
+<line x1="278" y1="265" x2="326" y2="265" stroke="#333333" stroke-width="2"/>
+<path d="M 342 265 L 324 257 L 324 273 Z" fill="#333333"/>
+<text x="310" y="243" text-anchor="middle" font-size="21" fill="#333333">&#247; P(B)</text>
+<rect x="355" y="225" width="276" height="80" fill="#6A3D9A" fill-opacity="0.55" stroke="#6A3D9A" stroke-width="2"/>
+<rect x="631" y="225" width="214" height="80" fill="#c5050c" fill-opacity="0.50" stroke="#c5050c" stroke-width="2"/>
+<text x="493" y="212" text-anchor="middle" font-size="19" font-weight="700" fill="#6A3D9A">P(B | A) P(A)</text>
+<text x="738" y="212" text-anchor="middle" font-size="19" font-weight="700" fill="#c5050c">P(B | A<tspan font-size="13" dy="-7">c</tspan><tspan dy="7">)</tspan> P(A<tspan font-size="13" dy="-7">c</tspan><tspan dy="7">)</tspan></text>
+<text x="493" y="337" text-anchor="middle" font-size="25" font-weight="700" fill="#6A3D9A">P(A | B)</text>
+<text x="738" y="337" text-anchor="middle" font-size="25" font-weight="700" fill="#c5050c">P(A<tspan font-size="16" dy="-9">c</tspan><tspan dy="9">&#160;| B)</tspan></text>
+<path d="M 355 356 V 366 H 594 V 374 H 606 V 366 H 845 V 356" fill="none" stroke="#999999" stroke-width="1.5"/>
+<text x="600" y="398" text-anchor="middle" font-size="21" fill="#999999">1</text>
+</svg>
