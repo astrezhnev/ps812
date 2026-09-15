@@ -151,8 +151,8 @@ $$
 - What is the probability that in a room of $k$ people, at least two people will be born on the same day.
   - Assume no leap years and equal probability of being born on any day.
 
-- $Pr(\text{Any two of } k \text{ people share a birthday})$ is hard to work with. 
-  - We'll instead calculate the **complement**: $Pr(\text{All } k \text{ people born on different days})$ and subtract from $1$.
+- $P(\text{Any two of } k \text{ people share a birthday})$ is hard to work with. 
+  - We'll instead calculate the **complement**: $P(\text{All } k \text{ people born on different days})$ and subtract from $1$.
 
 - **Denominator**: Sampling **with replacement** from the set of birthdays where **order matters**
 - **Numerator**: Sampling **without replacement** from the set of birthdays where **order matters**
@@ -163,7 +163,7 @@ $$
 
 - So we can calculate the probability as
 
-  $$ Pr(\text{Any two of } k \text{ people share a birthday}) = 1 - \frac{\frac{365!}{(365-k)!}}{365^k} $$
+  $$ P(\text{Any two of } k \text{ people share a birthday}) = 1 - \frac{\frac{365!}{(365-k)!}}{365^k} $$
 
 - How quickly does this hit $1$?
 

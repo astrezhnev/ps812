@@ -41,7 +41,7 @@ website:
       - text: "Slack"
         href: https://uw-mpolscimethods.slack.com/
       - text: "Gradescope"
-        href: https://www.gradescope.com/
+        href: https://www.gradescope.com/courses/1395673
     right:
       - icon: github
         href: https://github.com/astrezhnev/ps812
