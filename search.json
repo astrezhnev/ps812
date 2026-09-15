@@ -95,7 +95,7 @@
     "href": "slides/week2/week2_conditional_probability.html#probability-as-counting",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Probability as counting",
-    "text": "Probability as counting\n\nWhen all outcomes in the sample space \\(\\Omega\\) are equally likely and the sample space is finite…\n\n…the probability of some event \\(A\\) is just the share of outcomes in \\(\\Omega\\) that fall into \\(A\\)\nThis is the naive definition of probability Blitzstein and Hwang (2019)\n\n\n\\[ P(A) =  \\frac{\\text{number of outcomes contained in } A}{\\text{number of outcomes in } \\Omega} \\]\n\nThis turns calculating a probability into a combinatorics exercise\n\nWe just need to count!"
+    "text": "Probability as counting\n\nWhen all outcomes in the sample space \\(\\Omega\\) are equally likely and the sample space is finite…\n\n…the probability of some event \\(A\\) is just the share of outcomes in \\(\\Omega\\) that fall into \\(A\\)\nThis is the naive definition of probability (Blitzstein and Hwang 2019)\n\n\\[ P(A) =  \\frac{\\text{number of outcomes contained in } A}{\\text{number of outcomes in } \\Omega} \\]\nThis turns calculating a probability into a combinatorics exercise\n\nWe just need to count!"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#ways-of-counting",
@@ -123,7 +123,7 @@
     "href": "slides/week2/week2_conditional_probability.html#ways-of-counting-3",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Ways of counting",
-    "text": "Ways of counting\n\nSampling with replacement where order doesn’t matter\n\nThis is a harder problem (and less common)! We’ll try to define it in an equivalent way that lets us use what we already know.\nImagine instead we want to count how many ways to put \\(k\\) identical objects in \\(n\\) distinguishable boxes\n\n\n\nn = 4 boxes, k = 5 identical objectsn + k − 1 = 8 symbols: k = 5 dots and n − 1 = 3 dividers\n\n\nWe have \\(n + k - 1\\) “slots” in between the outer dividers\n\nWe just need to select the location of the \\(k\\) objects, then the dividers fill in the rest.\n\nSo the number of possibilities is\n\\[ {n + k - 1 \\choose k} = \\frac{(n + k - 1)!}{(n-1)!k!} \\]"
+    "text": "Ways of counting\n\nSampling with replacement where order doesn’t matter\n\nThis is a harder problem (and less common)! We’ll try to define it in an equivalent way that lets us use what we already know.\nImagine instead we want to count how many ways to put \\(k\\) identical objects in \\(n\\) distinguishable boxes\n\n\nn = 4 boxes, k = 5 identical objectsn + k − 1 = 8 symbols: k = 5 dots and n − 1 = 3 dividers\n\n\nWe have \\(n + k - 1\\) “slots” in between the outer dividers\n\nWe just need to select the location of the \\(k\\) objects, then the dividers fill in the rest.\n\nSo the number of possibilities is\n\\[ {n + k - 1 \\choose k} = \\frac{(n + k - 1)!}{(n-1)!k!} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#practice-the-birthday-problem",
@@ -137,7 +137,7 @@
     "href": "slides/week2/week2_conditional_probability.html#practice-the-birthday-problem-1",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Practice: The Birthday Problem",
-    "text": "Practice: The Birthday Problem\n\nSo we can calculate the probability as\n\n\\[ Pr(\\text{Any two of } k \\text{ people share a birthday}) = 1 - \\frac{\\frac{365!}{(365-k)!}}{365^k} \\]\n\nHow quickly does this hit \\(1\\)?\n\n\n\nThe probability of any one coincidence is low but the probability of some coincidence is high!"
+    "text": "Practice: The Birthday Problem\n\nSo we can calculate the probability as\n\\[ Pr(\\text{Any two of } k \\text{ people share a birthday}) = 1 - \\frac{\\frac{365!}{(365-k)!}}{365^k} \\]\nHow quickly does this hit \\(1\\)?\n\n\n\nThe probability of any one coincidence is low but the probability of some coincidence is high!"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#when-the-naive-definition-fails",
@@ -151,7 +151,7 @@
     "href": "slides/week2/week2_conditional_probability.html#conditional-probability",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Conditional probability",
-    "text": "Conditional probability\n\nSo far we’ve talked about the probability of single events\n\nWe’ve created new events by taking unions \\(\\cup\\) and intersections \\(\\cap\\)\n\nBut very often we want to know how the probability of one event changes if another event is known to have occurred\n\nThis is a conditional probability\n\n\n\\[ P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)} \\]\n\nWe assume \\(P(B) &gt; 0\\) - can’t condition on an event that can never occur!"
+    "text": "Conditional probability\n\nSo far we’ve talked about the probability of single events\n\nWe’ve created new events by taking unions \\(\\cup\\) and intersections \\(\\cap\\)\n\nBut very often we want to know how the probability of one event \\(A\\) changes if another event \\(B\\) is known to have occurred (assuming that event can occur: \\(P(B) &gt; 0\\))\n\nThis is a conditional probability\n\n\\[ P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#conditional-probability-and-party-id",
@@ -186,7 +186,7 @@
     "href": "slides/week2/week2_conditional_probability.html#bayes-rule",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Bayes’ rule",
-    "text": "Bayes’ rule\n\nGoing back to our two equivalent expressions for \\(P(A \\cap B)\\)\n\\[ P(A \\mid B) P(B) = P(B \\mid A) P(A) \\]\nDividing both sides by \\(P(B)\\) gives us a formula for relating one conditional probability to another: Bayes’ rule\n\\[ P(A \\mid B) = \\frac{P(B \\mid A) P(A)}{P(B)} \\]\nYou’ll sometimes see this written with LOTP applied to the denominator\n\\[ P(A \\mid B) = \\frac{P(B \\mid A) P(A)}{P(B \\mid A) P(A) + P(B \\mid A^c)P(A^c)} \\]"
+    "text": "Bayes’ rule\n\nGoing back to our two equivalent expressions for \\(P(A \\cap B)\\)\n\\[ P(A \\mid B) P(B) = P(B \\mid A) P(A) \\]\nDividing both sides by \\(P(B)\\) gives us a formula for relating one conditional probability to another: Bayes’ rule\n\\[ P(A \\mid B) = \\frac{P(B \\mid A) P(A)}{P(B)} \\]\nYou’ll sometimes see this written with law of total probability applied to the denominator\n\\[ P(A \\mid B) = \\frac{P(B \\mid A) P(A)}{P(B \\mid A) P(A) + P(B \\mid A^c)P(A^c)} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#bayes-rule-1",
@@ -235,21 +235,21 @@
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-1",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
-    "text": "The Monty Hall Problem\n\nYou picked the first door, the host revealed a goat behind the third door\nWe want to know the probability that you picked the car given that the game show host revealed a goat behind door number 3.\n\nWe can solve this with an application of Bayes’ rule\n\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{P(\\text{goat}_3 \\mid \\text{car}_1)}{P(\\text{goat}_3)}P(\\text{car}_1) \\] - Substituting in what we know\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{P(\\text{goat}_3)} \\cdot \\frac{1}{3} \\]"
+    "text": "The Monty Hall Problem\n\nYou picked the first door, the host revealed a goat behind the third door\nWe want to know the probability that you picked the car given that the game show host revealed a goat behind door number 3.\n\nWe can solve this with an application of Bayes’ rule\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{P(\\text{goat}_3 \\mid \\text{car}_1)}{P(\\text{goat}_3)}P(\\text{car}_1) \\]\nSubstituting in what we know\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{P(\\text{goat}_3)} \\cdot \\frac{1}{3} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-2",
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-2",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
-    "text": "The Monty Hall Problem\n\nFor the denominator, we’ll use the law of total probability and consider all possible locations of the car.\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{P(\\text{goat}_3 \\mid \\text{car}_1)P(\\text{car}_1) + P(\\text{goat}_3 \\mid \\text{car}_2)P(\\text{car}_2) + P(\\text{goat}_3 \\mid \\text{car}_3)P(\\text{car}_3)} \\cdot \\frac{1}{3} \\]\n\nThe host always opens 3 if the car is behind 2 and never opens 3 if the car is behind 3, so we have\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{\\frac{1}{2}\\cdot\\frac{1}{3} + 1\\cdot \\frac{1}{3} + 0 \\cdot \\frac{1}{3}} \\cdot \\frac{1}{3} \\]\n\nTherefore\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2} \\cdot \\frac{1}{3} }{\\frac{1}{2}} = \\frac{1}{3} \\]"
+    "text": "The Monty Hall Problem\n\nFor the denominator, we’ll use the law of total probability and consider all possible locations of the car.\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{P(\\text{goat}_3 \\mid \\text{car}_1)P(\\text{car}_1) + P(\\text{goat}_3 \\mid \\text{car}_2)P(\\text{car}_2) + P(\\text{goat}_3 \\mid \\text{car}_3)P(\\text{car}_3)} \\cdot \\frac{1}{3} \\]\nThe host always opens 3 if the car is behind 2 and never opens 3 if the car is behind 3, so we have\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{\\frac{1}{2}\\cdot\\frac{1}{3} + 1\\cdot \\frac{1}{3} + 0 \\cdot \\frac{1}{3}} \\cdot \\frac{1}{3} \\]\nTherefore\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2} \\cdot \\frac{1}{3} }{\\frac{1}{2}} = \\frac{1}{3} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-3",
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-3",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
-    "text": "The Monty Hall Problem\n\nStaying with door 1 still leaves you with \\(\\frac{1}{3}\\) probability of winning the car.\nThe three cases partition the sample space, so their conditional probabilities sum to \\(1\\)\n\n\\[ P(\\text{car}_2 \\mid \\text{goat}_3) = 1 - P(\\text{car}_1 \\mid \\text{goat}_3) - P(\\text{car}_3 \\mid \\text{goat}_3) = 1 - \\frac{1}{3} - 0 = \\frac{2}{3} \\]\n\nSwitching doubles your chances of winning!"
+    "text": "The Monty Hall Problem\n\nStaying with door 1 still leaves you with \\(\\frac{1}{3}\\) probability of winning the car.\nThe three cases partition the sample space, so their conditional probabilities sum to \\(1\\)\n\\[ P(\\text{car}_2 \\mid \\text{goat}_3) = 1 - P(\\text{car}_1 \\mid \\text{goat}_3) - P(\\text{car}_3 \\mid \\text{goat}_3) = 1 - \\frac{1}{3} - 0 = \\frac{2}{3} \\]\nSwitching doubles your chances of winning!"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-4",
@@ -298,7 +298,7 @@
     "href": "slides/week2/week2_conditional_probability.html#independence-does-not-imply-conditional-independence",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Independence does not imply conditional independence",
-    "text": "Independence does not imply conditional independence\n\nA very tricky feature of conditioning is that we can create dependence by conditioning on certain events\n\nA common setting is conditioning on common effects - this is known as collider bias in causal inference.\n\nExample: Let \\(R\\) be the event that it rained today. Let \\(S\\) be the event that the lawn sprinkler turned on today. Let \\(W\\) be the event that the grass is wet.\n\nAssume \\(P(R) = \\frac{1}{2}\\) and \\(P(S) = \\frac{1}{2}\\). \\(S \\indep R\\)\n\nSuppose I know that the grass is wet. Is \\(S \\indep R \\mid W\\)?"
+    "text": "Independence does not imply conditional independence\n\nA very tricky feature of conditioning is that we can create dependence by conditioning on certain events\n\nA common setting is conditioning on common effects - this is known as collider bias in causal inference.\n\nExample: How knowing the grass is wet creates a relationship between your sprinkler and the rain.\n\nLet \\(R\\) be the event that it rained today.\nLet \\(S\\) be the event that the lawn sprinkler turned on today.\nLet \\(W\\) be the event that the grass is wet.\nAssume \\(P(R) = \\frac{1}{2}\\) and \\(P(S) = \\frac{1}{2}\\). \\(S \\indep R\\)\n\nSuppose I know that the grass is wet. Is \\(S \\indep R \\mid W\\)?"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#independence-does-not-imply-conditional-independence-1",
@@ -312,28 +312,28 @@
     "href": "slides/week2/week2_conditional_probability.html#independence-does-not-imply-conditional-independence-2",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Independence does not imply conditional independence",
-    "text": "Independence does not imply conditional independence\n\nRain always makes the grass wet, so \\(P(R \\cap W) = P(R)\\).\n\n\\[ P(R \\mid W) = \\frac{P(R \\cap W)}{P(W)} = \\frac{\\frac{1}{2}}{\\frac{3}{4}} = \\frac{2}{3} \\]\n\nNow condition on the sprinkler as well - only one of the four rows has both \\(R\\) and \\(S\\)\n\n\\[ P(R \\mid S, W) = \\frac{P(R \\cap S \\cap W)}{P(S \\cap W)} = \\frac{\\frac{1}{4}}{\\frac{1}{2}} = \\frac{1}{2} \\]\n\nLearning that the sprinkler went on makes rain less likely - conditioning induces dependence!\n\n\\[ P(R \\mid S, W) = \\frac{1}{2} \\neq \\frac{2}{3} = P(R \\mid W) \\quad \\Longrightarrow \\quad R \\nindep S \\mid W \\]"
+    "text": "Independence does not imply conditional independence\n\nRain always makes the grass wet, so \\(P(R \\cap W) = P(R)\\).\n\\[ P(R \\mid W) = \\frac{P(R \\cap W)}{P(W)} = \\frac{\\frac{1}{2}}{\\frac{3}{4}} = \\frac{2}{3} \\]\nNow condition on the sprinkler as well - only one of the four rows has both \\(R\\) and \\(S\\)\n\\[ P(R \\mid S, W) = \\frac{P(R \\cap S \\cap W)}{P(S \\cap W)} = \\frac{\\frac{1}{4}}{\\frac{1}{2}} = \\frac{1}{2} \\]\nLearning that the sprinkler went on makes rain less likely - conditioning induces dependence!\n\\[ P(R \\mid S, W) = \\frac{1}{2} \\neq \\frac{2}{3} = P(R \\mid W) \\quad \\Longrightarrow \\quad R \\nindep S \\mid W \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#application-bisg",
     "href": "slides/week2/week2_conditional_probability.html#application-bisg",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Application: BISG",
-    "text": "Application: BISG\n\nAdministrative datasets often have data on individuals’ names and place of residence but don’t have data on race and ethnicity.\n\nWe may want to infer race/ethnicity in order to learn about disparities in turnout, representation and other outcomes of interest!\n\nBayesian Improved Surname Geocoding (BISG) (Elliott et al. 2009), with extensions to more covariates in Imai and Khanna (2016)\n\nLet \\(H\\) denote the event that an individual is Hispanic/Latino\nLet \\(S\\) denote that a particular surname is observed (e.g. “Hernandez” or “Smith”)\nLet \\(G\\) denote the location where that individual lives (e.g. Dane County or Cook County)\n\nBy Bayes’ rule\n\n\\[ P(H \\mid S, G) = \\frac{P(S, G \\mid H) P(H)}{P(S, G)} \\]"
+    "text": "Application: BISG\n\nAdministrative datasets often have data on individuals’ names and place of residence but don’t have data on race and ethnicity.\n\nWe may want to infer race/ethnicity in order to learn about disparities in turnout, representation and other outcomes of interest!\n\nBayesian Improved Surname Geocoding (BISG) (Elliott et al. 2009; Imai and Khanna 2016)\n\nLet \\(H\\) denote the event that an individual is Hispanic/Latino\nLet \\(S\\) denote that a particular surname is observed (e.g. “Hernandez” or “Smith”)\nLet \\(G\\) denote the location where that individual lives (e.g. Dane County or Cook County)\n\nBy Bayes’ rule\n\\[ P(H \\mid S, G) = \\frac{P(S, G \\mid H) P(H)}{P(S, G)} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#application-bisg-1",
     "href": "slides/week2/week2_conditional_probability.html#application-bisg-1",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Application: BISG",
-    "text": "Application: BISG\n\nOne challenge is that \\(P(S, G \\mid H)\\) is very hard to observe\n\nWe don’t have the distribution of name frequencies for each geography.\n\nBISG makes a key conditional independence assumption\n\\[ S \\indep G \\mid H \\]\nOnce we know race/ethnicity, the observed last name is independent of where a person resides.\n\nHow might this assumption be violated?"
+    "text": "Application: BISG\n\nOne challenge is that \\(P(S, G \\mid H)\\) is very hard to observe\n\nWe don’t have the distribution of name frequencies for each geography.\n\nBISG makes a key conditional independence assumption\n\\[ S \\indep G \\mid H \\]\nOnce we know race/ethnicity, the observed surname is independent of where a person resides.\n\nHow might this assumption be violated?"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#application-bisg-2",
     "href": "slides/week2/week2_conditional_probability.html#application-bisg-2",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "Application: BISG",
-    "text": "Application: BISG\n\nUnder the conditional independence assumption, we can factor the joint probability \\(P(S, G \\mid H)\\)\n\n\\[ P(H \\mid S, G) = \\frac{P(S \\mid H)P(G \\mid H) P(H)}{P(S, G)} \\]\n\nCensus data gives us \\(P(S \\mid H)\\)\nAnd we can use Bayes’ rule again to get \\(P(G \\mid H) = \\frac{P(H \\mid G)P(G)}{P(H)}\\)\n\nThe denominator \\(P(S, G)\\) is just the numerator summed over all of the race/ethnicity categories (law of total probability)\n\n\n\\[ P(H \\mid S, G) = \\frac{P(S \\mid H)P(H \\mid G)P(G)}{P(S, G)} \\]"
+    "text": "Application: BISG\n\nUnder the conditional independence assumption, we can factor the joint probability \\(P(S, G \\mid H)\\)\n\\[ P(H \\mid S, G) = \\frac{P(S \\mid H)P(G \\mid H) P(H)}{P(S, G)} \\]\nCensus data gives us \\(P(S \\mid H)\\)\nAnd we can use Bayes’ rule again to get \\(P(G \\mid H) = \\frac{P(H \\mid G)P(G)}{P(H)}\\)\n\nThe denominator \\(P(S, G)\\) is just the numerator summed over all of the race/ethnicity categories (law of total probability)\n\n\\[ P(H \\mid S, G) = \\frac{P(S \\mid H)P(H \\mid G)P(G)}{P(S, G)} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#bisg-example",
