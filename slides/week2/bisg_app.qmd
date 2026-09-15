@@ -95,6 +95,13 @@ html, body { height:100%; }
 body { font-family:'Red Hat Text',system-ui,sans-serif; background:#F7F7F7; color:#333;
        margin:0; padding:10px; font-size:14px; box-sizing:border-box; overflow:hidden; }
 h1,h2,h3,h4 { font-family:'Red Hat Display',system-ui,sans-serif; margin:0 0 6px 0; }
+/* fluidPage() wraps the UI in .container-fluid, which is auto-height. A
+   percentage height resolved against an auto-height parent computes to auto,
+   so .wrap never got a definite height: the cards grew to fit their content
+   and their overflow-y:auto stayed inert, leaving the overflow clipped by the
+   overflow:hidden below. Giving the wrapper a definite height is what makes
+   the panels size to the frame and scroll inside it. */
+body > .container-fluid { height:100%; padding:0; }
 .wrap { display:flex; gap:14px; align-items:stretch; height:100%; }
 .left { flex:0 0 290px; }
 .right { flex:1 1 auto; min-width:0; height:100%; }
