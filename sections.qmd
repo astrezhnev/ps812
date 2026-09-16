@@ -26,13 +26,13 @@ Links become active as the materials for each week are posted.
 
 *Friday, September 18*
 
-*To be posted*
+- [Week 2 GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/sections/week2/)
 
 ### Week 3: Random Variables and Distributions
 
 *Friday, September 25*
 
-- [Week 3 GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/sections/week3/) *(test upload -- not finalized)*
+*To be posted*
 
 ### Week 4: Joint Distributions and Expectation
 

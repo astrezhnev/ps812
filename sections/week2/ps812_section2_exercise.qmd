@@ -1,0 +1,126 @@
+---
+title: "PS 812: Section 2 Exercise"
+author: "YOUR NAME"
+date: "9-18-2026"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| eval: true
+library(tidyverse)
+library(haven)
+
+
+```
+
+## Task 1: Read and inspect
+
+Read in `CES25_Common.dta` with `haven` (already done above). Use `glimpse()` or `names()` to look at what's in it.
+
+```{r}
+
+```
+
+## Task 2: labelled data
+
+Check `class()` and `attributes()` on `pid3`. Convert it to a factor with `as_factor()`.
+
+```{r}
+
+```
+
+## Task 3: filter()
+
+Subset `ces` to Republicans only. How do you know which value represents Republicans?
+
+```{r}
+
+
+```
+
+## Task 4: select()
+
+Select `pid3`, `commonweight`, and every gun control item (`CC25_321a`–`CC25_321e`).
+
+```{r}
+
+```
+
+## Task 5: filter() + select() together
+
+Subset to Independents and select just the immigration items (`CC25_323a`–`CC25_323d`).
+
+```{r}
+
+```
+
+## Task 6: mean of an indicator
+
+Compute the share of respondents who support `CC25_323c` (build the border wall). Remember it's coded 1 = Support, 2 = Oppose.
+
+```{r}
+
+```
+
+## Task 7: mutate()
+
+Create a new column `supports_wall` that is `TRUE` when `CC25_323c == 1`. Then create another variable `supports_wall_cat` with categorical values instead of numeric. You can pick the values.
+
+```{r}
+
+```
+
+## Task 8: across()
+
+Use `across()` inside `summarise()` to compute the share supporting every "Trump 2nd term" item (`CC25_342a`–`CC25_342i`) at once.
+
+```{r}
+
+```
+
+## Task 9: group_by() + summarise()
+
+Compute the share supporting `CC25_326d` (increase fossil fuel production), broken out by `pid3`.
+
+```{r}
+
+```
+
+## Task 10: if_any() / if_all()
+
+How many respondents support **at least one** of the "Health & housing" items (`CC25_328a`–`CC25_328e`)? How many support **all** of them?
+
+```{r}
+
+```
+
+## Task 11: left_join()
+
+Build a small `tibble` that maps `pid3` codes (1, 2, 3) to labels ("Democrat", "Republican", "Independent"), then join it onto `ces`.
+
+```{r}
+
+```
+
+## Task 12: stringr
+
+Use `str_subset()` on `names(ces)` to find every variable belonging to the "Congress" block (`CC25_340*`).
+
+```{r}
+
+```
+
+## Task 13: poke around
+
+Pick one variable in `ces` we haven't used yet. Figure out what it means (`attributes()`, value labels) and compute something with it.
+
+```{r}
+
+```

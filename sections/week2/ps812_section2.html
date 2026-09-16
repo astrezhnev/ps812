@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="John Hicks">
+  <meta name="dcterms.date" content="2026-09-11">
+  <title>PoliSci 812 – PS 812</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">PS 812</h1>
+  <p class="subtitle">Section 2: Tidyverse/Data Management</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+John Hicks
+</div>
+        <p class="quarto-title-affiliation">
+            Dept. of Political Science, UW-Madison
+          </p>
+    </div>
+</div>
+
+  <p class="date">2026-09-11</p>
+</section>
+<section class="slide level2">
+
+<style>
+
+.reveal {
+  font-family: Arial, sans-serif;
+}
+
+/* ---------------------------------
+   Headings
+   --------------------------------- */
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #8B0000;
+}
+
+.reveal h2 {
+  background-color: #eeeeee;
+  padding: 10px 20px;
+}
+
+/* ---------------------------------
+   Slide numbers
+   --------------------------------- */
+
+.reveal .slide-number {
+  color: #666666;
+  font-size: 0.7em;
+}
+
+/* ---------------------------------
+   Code
+   --------------------------------- */
+
+.reveal pre {
+  font-size: 0.65em;
+}
+
+.reveal code {
+  font-family: "Fira Code", "Courier New", monospace;
+}
+
+/* ---------------------------------
+   Cascade / incremental reveals
+   --------------------------------- */
+
+.reveal .fragment {
+  transition: opacity 0.35s ease-in-out;
+}
+
+.reveal .fragment.visible {
+  opacity: 1;
+}
+
+/* ---------------------------------
+   Lists
+   --------------------------------- */
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.35em;
+}
+
+/* ---------------------------------
+   Images
+   --------------------------------- */
+
+.reveal img {
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+/* ---------------------------------
+   Git workflow
+   --------------------------------- */
+
+.git-command {
+  font-size: 1.15em;
+  margin: 0.5em 0;
+}
+
+</style>
+</section>
+<section>
+<section id="announcements" class="title-slide slide level1 center">
+<h1>Announcements</h1>
+
+</section>
+<section id="problem-set-1" class="slide level2">
+<h2>Problem Set 1</h2>
+<ol type="1">
+<li class="fragment"><strong>Problem Set 1 is due September 22, immediately before class (3:30pm).</strong></li>
+</ol>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="getting-started" class="title-slide slide level1 center">
+<h1>Getting Started</h1>
+
+</section>
+<section id="today" class="slide level2">
+<h2>Today</h2>
+<div class="fragment">
+<p><strong>1. Tidyverse</strong></p>
+<p>The pipe, <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, and <code>across()</code></p>
+</div>
+<div class="fragment">
+<p><strong>2. The CES Data</strong></p>
+<p>Download the Cooperative Election Study and read it in with <code>haven</code>.</p>
+</div>
+<div class="fragment">
+<p><strong>3. Manipulating Data</strong></p>
+<p>Clone, pull, commit, push.</p>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="tidyverse" class="title-slide slide level1 center">
+<h1>Tidyverse</h1>
+
+</section>
+<section id="tidyverse-1" class="slide level2">
+<h2>Tidyverse</h2>
+<p>Library of packages with many useful functions</p>
+<div class="fragment">
+<h3 id="dplyr">1. dplyr</h3>
+<p><strong>Manipulate and summarize data</strong></p>
+<ul>
+<li class="fragment"><code>filter()</code> — keep rows that meet a condition</li>
+<li class="fragment"><code>select()</code> — choose columns</li>
+<li class="fragment"><code>mutate()</code> — create or modify columns</li>
+<li class="fragment"><code>arrange()</code> — sort rows</li>
+<li class="fragment"><code>summarize()</code> — calculate summary statistics</li>
+<li class="fragment"><code>group_by()</code> — perform operations within groups</li>
+</ul>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<h3 id="ggplot2-later">2. ggplot2 <em>(later)</em></h3>
+<p><strong>Create visualizations</strong></p>
+<ul>
+<li class="fragment"><code>ggplot()</code> — start a plot</li>
+<li class="fragment"><code>geom_point()</code> — scatterplots</li>
+<li class="fragment"><code>geom_line()</code> — line graphs</li>
+<li class="fragment"><code>geom_bar()</code> / <code>geom_col()</code> — bar graphs</li>
+<li class="fragment"><code>geom_histogram()</code> — distributions</li>
+<li class="fragment"><code>facet_wrap()</code> — create separate panels</li>
+<li class="fragment"><code>labs()</code> — add titles and labels</li>
+</ul>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<h3 id="tidyr">3. tidyr</h3>
+<p><strong>Reshape and organize data</strong></p>
+<ul>
+<li class="fragment"><code>pivot_longer()</code> — convert wide data to long format</li>
+<li class="fragment"><code>pivot_wider()</code> — convert long data to wide format</li>
+<li class="fragment"><code>separate()</code> — split one column into multiple columns</li>
+<li class="fragment"><code>unite()</code> — combine multiple columns</li>
+<li class="fragment"><code>drop_na()</code> — remove missing observations</li>
+</ul>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<h3 id="stringr">4. stringr</h3>
+<p><strong>Work with text</strong></p>
+<ul>
+<li class="fragment"><code>str_detect()</code> — find whether text contains a pattern</li>
+<li class="fragment"><code>str_subset()</code> — keep only the matching elements of a vector</li>
+<li class="fragment"><code>str_replace()</code> — replace text</li>
+<li class="fragment"><code>str_to_lower()</code> / <code>str_to_upper()</code> — change capitalization</li>
+<li class="fragment"><code>str_length()</code> — count characters</li>
+</ul>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<h3 id="readr">5. readr</h3>
+<p><strong>Import and export data</strong></p>
+<ul>
+<li class="fragment"><code>read_csv()</code> — read a CSV file</li>
+<li class="fragment"><code>write_csv()</code> — save a data frame as a CSV</li>
+</ul>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<h3 id="forcats">6. forcats</h3>
+<p><strong>Work with categorical variables</strong></p>
+<ul>
+<li class="fragment"><code>fct_reorder()</code> — reorder factor levels</li>
+<li class="fragment"><code>fct_relevel()</code> — manually change the order</li>
+<li class="fragment"><code>fct_recode()</code> — rename categories</li>
+</ul>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<h3 id="lubridate">7. lubridate</h3>
+<p><strong>Work with dates and times</strong></p>
+<ul>
+<li class="fragment"><code>ymd()</code> — convert text to dates</li>
+<li class="fragment"><code>year()</code> — extract the year</li>
+<li class="fragment"><code>month()</code> — extract the month</li>
+<li class="fragment"><code>day()</code> — extract the day</li>
+</ul>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<h3 id="purrr-later">8. purrr <em>(later)</em></h3>
+<p><strong>Repeat operations across data</strong></p>
+<ul>
+<li class="fragment"><code>map()</code> — apply a function repeatedly</li>
+<li class="fragment">Useful when you need to perform the same operation on multiple objects</li>
+</ul>
+</div>
+</section>
+<section id="the-pipe" class="slide level2">
+<h2>The Pipe</h2>
+<p>Tidyverse-style code is built around <strong>piping</strong>: passing the result of one function straight into the next, instead of nesting functions inside each other.</p>
+<p>The base R <strong>native pipe</strong> (<code>|&gt;</code>) ships with R itself:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a aria-label="2"></a><span class="fu">sqrt</span>(<span class="dv">2</span><span class="sc">*</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a>(<span class="dv">2</span><span class="sc">+</span><span class="dv">2</span>) <span class="sc">|&gt;</span> <span class="fu">sqrt</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<p>You will also see the <strong>magrittr pipe</strong> (<code>%&gt;%</code>) in tidyverse. It works the same:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a>(<span class="dv">2</span><span class="sc">+</span><span class="dv">2</span>) <span class="sc">%&gt;%</span> <span class="fu">sqrt</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+</section>
+<section id="the-value-of-piping" class="slide level2">
+<h2>The value of piping</h2>
+<p>Piping becomes valuable when you chain several steps together. Compare:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-label="1"></a><span class="fu">table</span>(<span class="fu">ifelse</span>(<span class="fu">scale</span>(<span class="fu">log</span>(mtcars<span class="sc">$</span>mpg <span class="sc">+</span> <span class="dv">2</span>)) <span class="sc">&gt;</span> <span class="dv">0</span>, T, F))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+FALSE  TRUE 
+   17    15 </code></pre>
+</div>
+</div>
+<p>The same computation, piped step by step with the native pipe:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-label="1"></a>mtcars<span class="sc">$</span>mpg <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a aria-label="2"></a>  (\(x) x <span class="sc">+</span> <span class="dv">2</span>)() <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a aria-label="3"></a>  <span class="fu">log</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a aria-label="4"></a>  <span class="fu">scale</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a aria-label="5"></a>  (\(x) <span class="fu">ifelse</span>(x <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>))() <span class="sc">|&gt;</span></span>
+<span id="cb9-6"><a aria-label="6"></a>  <span class="fu">table</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+FALSE  TRUE 
+   17    15 </code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="the-ces-data" class="title-slide slide level1 center">
+<h1>The CES Data</h1>
+
+</section>
+<section id="downloading-the-ces" class="slide level2">
+<h2>Downloading the CES</h2>
+<div class="fragment">
+<p><strong>1.</strong> Go to the CES Dataverse page: <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DFUGJR">dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DFUGJR</a></p>
+</div>
+<div class="fragment">
+<p><strong>2.</strong> Download <strong><code>CES25_Common.dta</code></strong> — a Stata file, not a <code>.csv</code></p>
+</div>
+<div class="fragment">
+<p><strong>3.</strong> Save it into your project folder, next to your <code>.qmd</code> file</p>
+</div>
+</section>
+<section id="the-haven-package" class="slide level2">
+<h2>The <code>haven</code> package</h2>
+<p>PS data is often distributed as Stata (<code>.dta</code>), SPSS (<code>.sav</code>), or SAS files rather than <code>.csv</code>, which base R can’t read without packages like <code>haven</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-label="1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb11-2"><a aria-label="2"></a></span>
+<span id="cb11-3"><a aria-label="3"></a>ces_full <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"CES25_Common.dta"</span>)</span>
+<span id="cb11-4"><a aria-label="4"></a></span>
+<span id="cb11-5"><a aria-label="5"></a><span class="fu">head</span>(ces_full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="haven-and-labelled-data" class="slide level2">
+<h2><code>haven</code> and labelled data</h2>
+<p>Stata variables often carry value labels (e.g.&nbsp;<code>1 = "Democrat"</code>). <code>haven</code> preserves these as a special <code>labelled</code> class instead of silently turning them into plain numbers or text.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-label="1"></a><span class="fu">class</span>(ces_full<span class="sc">$</span>pid3)</span>
+<span id="cb12-2"><a aria-label="2"></a><span class="fu">attributes</span>(ces_full<span class="sc">$</span>pid3)</span>
+<span id="cb12-3"><a aria-label="3"></a></span>
+<span id="cb12-4"><a aria-label="4"></a><span class="co"># turn the value labels into a factor</span></span>
+<span id="cb12-5"><a aria-label="5"></a><span class="fu">as_factor</span>(ces_full<span class="sc">$</span>pid3) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>as_factor()</code> uses the stored labels; <code>zap_labels()</code> throws the labels away and keeps the raw numeric codes.</p>
+</section>
+<section id="reading-in-what-well-use-today" class="slide level2">
+<h2>Reading in what we’ll use today</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-label="1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb13-2"><a aria-label="2"></a></span>
+<span id="cb13-3"><a aria-label="3"></a>ces <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/CES25_Common.dta"</span>)</span>
+<span id="cb13-4"><a aria-label="4"></a></span>
+<span id="cb13-5"><a aria-label="5"></a><span class="fu">head</span>(ces)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 341
+     caseid commonweight CCEStake add_confirm inputzip birthyr gender4 gender4_t
+      &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl+lb&gt; &lt;dbl+lbl&gt;   &lt;dbl+lb&gt;   &lt;dbl&gt; &lt;dbl+l&gt; &lt;chr&gt;    
+1    2.55e9        0.374 1 [Yes]  1 [Yes]     NA          1960 1 [Man] __NA__   
+2    2.53e9        1.29  1 [Yes]  1 [Yes]     NA          1948 2 [Wom… __NA__   
+3    2.53e9        0.443 1 [Yes]  1 [Yes]     NA          1945 1 [Man] __NA__   
+4    2.55e9        0.614 1 [Yes]  1 [Yes]     NA          1958 1 [Man] __NA__   
+5    2.53e9        0.408 1 [Yes]  1 [Yes]     NA          1954 2 [Wom… __NA__   
+6    2.55e9        1.71  1 [Yes]  1 [Yes]     NA          1953 2 [Wom… __NA__   
+# ℹ 333 more variables: educ &lt;dbl+lbl&gt;, race &lt;dbl+lbl&gt;, race_other &lt;chr&gt;,
+#   hispanic &lt;dbl+lbl&gt;, comptype &lt;dbl+lbl&gt;, votereg &lt;dbl+lbl&gt;,
+#   votereg_f &lt;dbl+lbl&gt;, regzip &lt;dbl+lbl&gt;, pid3 &lt;dbl+lbl&gt;, pid3_t &lt;chr&gt;,
+#   pid7 &lt;dbl+lbl&gt;, inputstate &lt;dbl+lbl&gt;, region &lt;dbl+lbl&gt;,
+#   ccesmodule &lt;dbl+lbl&gt;, CC25_368 &lt;dbl+lbl&gt;, urbancity &lt;dbl+lbl&gt;,
+#   urbancity_t &lt;chr&gt;, CC25_hisp_1 &lt;dbl+lbl&gt;, CC25_hisp_2 &lt;dbl+lbl&gt;,
+#   CC25_hisp_3 &lt;dbl+lbl&gt;, CC25_hisp_4 &lt;dbl+lbl&gt;, CC25_hisp_5 &lt;dbl+lbl&gt;, …</code></pre>
+</div>
+</div>
+</section>
+<section id="dplyr-syntax" class="slide level2">
+<h2>dplyr Syntax</h2>
+<p>When you pipe a data frame into a dplyr function, you call variables directly without using the selector <code>$</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-label="1"></a>ces <span class="sc">|&gt;</span> <span class="fu">select</span>(pid3, commonweight, CC25_321a) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  pid3            commonweight CC25_321a  
+  &lt;dbl+lbl&gt;              &lt;dbl&gt; &lt;dbl+lbl&gt;  
+1 1 [Democrat]           0.374 1 [Support]
+2 1 [Democrat]           1.29  1 [Support]
+3 1 [Democrat]           0.443 1 [Support]
+4 2 [Republican]         0.614 2 [Oppose] 
+5 3 [Independent]        0.408 1 [Support]
+6 1 [Democrat]           1.71  1 [Support]</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-label="1"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a aria-label="2"></a>  <span class="fu">filter</span>(pid3 <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a aria-label="3"></a>  <span class="fu">select</span>(pid3, commonweight, CC25_321a) <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a aria-label="4"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  pid3         commonweight CC25_321a  
+  &lt;dbl+lbl&gt;           &lt;dbl&gt; &lt;dbl+lbl&gt;  
+1 1 [Democrat]        0.374 1 [Support]
+2 1 [Democrat]        1.29  1 [Support]
+3 1 [Democrat]        0.443 1 [Support]
+4 1 [Democrat]        1.71  1 [Support]
+5 1 [Democrat]        1.10  1 [Support]
+6 1 [Democrat]        0.329 1 [Support]</code></pre>
+</div>
+</div>
+</section>
+<section id="subsetting-filter-and-select" class="slide level2">
+<h2>Subsetting: filter() and select()</h2>
+<p><code>filter()</code> keeps <strong>rows</strong>; <code>select()</code> keeps <strong>columns</strong>. Selecting is useful for preserving memory</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-label="1"></a><span class="co"># rows: independents only</span></span>
+<span id="cb19-2"><a aria-label="2"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a aria-label="3"></a>  <span class="fu">filter</span>(pid3 <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-4"><a aria-label="4"></a>  <span class="fu">select</span>(pid3, <span class="fu">starts_with</span>(<span class="st">"CC25_321"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb19-5"><a aria-label="5"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  pid3            CC25_321a   CC25_321b   CC25_321c   CC25_321d   CC25_321e  
+  &lt;dbl+lbl&gt;       &lt;dbl+lbl&gt;   &lt;dbl+lbl&gt;   &lt;dbl+lbl&gt;   &lt;dbl+lbl&gt;   &lt;dbl+lbl&gt;  
+1 3 [Independent] 1 [Support] 2 [Oppose]  1 [Support] 1 [Support] 2 [Oppose] 
+2 3 [Independent] 1 [Support] 2 [Oppose]  1 [Support] 2 [Oppose]  1 [Support]
+3 3 [Independent] 2 [Oppose]  1 [Support] 1 [Support] 1 [Support] 2 [Oppose] 
+4 3 [Independent] 1 [Support] 2 [Oppose]  1 [Support] 1 [Support] 2 [Oppose] 
+5 3 [Independent] 2 [Oppose]  1 [Support] 1 [Support] 2 [Oppose]  2 [Oppose] 
+6 3 [Independent] 2 [Oppose]  1 [Support] 1 [Support] 2 [Oppose]  2 [Oppose] </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-label="1"></a><span class="co"># columns: drop everything from the "34" block of items</span></span>
+<span id="cb21-2"><a aria-label="2"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a aria-label="3"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">"CC25_34"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb21-4"><a aria-label="4"></a>  <span class="fu">names</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "caseid"                       "commonweight"                
+  [3] "CCEStake"                     "add_confirm"                 
+  [5] "inputzip"                     "birthyr"                     
+  [7] "gender4"                      "gender4_t"                   
+  [9] "educ"                         "race"                        
+ [11] "race_other"                   "hispanic"                    
+ [13] "comptype"                     "votereg"                     
+ [15] "votereg_f"                    "regzip"                      
+ [17] "pid3"                         "pid3_t"                      
+ [19] "pid7"                         "inputstate"                  
+ [21] "region"                       "ccesmodule"                  
+ [23] "CC25_368"                     "urbancity"                   
+ [25] "urbancity_t"                  "CC25_hisp_1"                 
+ [27] "CC25_hisp_2"                  "CC25_hisp_3"                 
+ [29] "CC25_hisp_4"                  "CC25_hisp_5"                 
+ [31] "CC25_hisp_6"                  "CC25_hisp_7"                 
+ [33] "CC25_hisp_8"                  "CC25_hisp_9"                 
+ [35] "CC25_hisp_10"                 "CC25_hisp_11"                
+ [37] "CC25_hisp_12"                 "CC25_hisp_t"                 
+ [39] "CC25_asian_1"                 "CC25_asian_2"                
+ [41] "CC25_asian_3"                 "CC25_asian_4"                
+ [43] "CC25_asian_5"                 "CC25_asian_6"                
+ [45] "CC25_asian_7"                 "CC25_asian_8"                
+ [47] "CC25_asian_9"                 "CC25_asian_10"               
+ [49] "CC25_asian_11"                "CC25_asian_12"               
+ [51] "CC25_asian_13"                "CC25_asian_14"               
+ [53] "CC25_asian_15"                "CC25_asian_t"                
+ [55] "CC25_native"                  "CC25_300_1"                  
+ [57] "CC25_300_2"                   "CC25_300_3"                  
+ [59] "CC25_300_4"                   "CC25_300_5"                  
+ [61] "CC25_300a"                    "CC25_300c"                   
+ [63] "CC25_300b_1"                  "CC25_300b_2"                 
+ [65] "CC25_300b_3"                  "CC25_300b_4"                 
+ [67] "CC25_300b_5"                  "CC25_300b_6"                 
+ [69] "CC25_300b_7"                  "CC25_300b_8"                 
+ [71] "CC25_300d_1"                  "CC25_300d_2"                 
+ [73] "CC25_300d_3"                  "CC25_300d_4"                 
+ [75] "CC25_300d_5"                  "CC25_300d_6"                 
+ [77] "CC25_301"                     "CC25_302"                    
+ [79] "CC25_303"                     "employ"                      
+ [81] "employ_t"                     "CC25_304"                    
+ [83] "student"                      "CC25_305_1"                  
+ [85] "CC25_305_2"                   "CC25_305_3"                  
+ [87] "CC25_305_4"                   "CC25_305_5"                  
+ [89] "CC25_305_6"                   "CC25_305_7"                  
+ [91] "CC25_305_9"                   "CC25_305_10"                 
+ [93] "CC25_305_11"                  "CC25_305_12"                 
+ [95] "CC25_305_13"                  "CC25_305_14"                 
+ [97] "CC25_307_1"                   "CC25_307_2"                  
+ [99] "CC25_307_3"                   "CC25_307_4"                  
+[101] "CC25_307_5"                   "CC25_307_6"                  
+[103] "CC25_307_7"                   "CC25_307_8"                  
+[105] "CC25_308b_1"                  "CC25_308b_2"                 
+[107] "CC25_308b_3"                  "CC25_308b_4"                 
+[109] "CC25_308b_5"                  "CC25_308b_6"                 
+[111] "CC25_308b_7"                  "CC25_308b_8"                 
+[113] "CC25_308b_9"                  "CC25_308b_10"                
+[115] "CC25_308b_t"                  "CC25_310a"                   
+[117] "CC25_310b"                    "CC25_310c"                   
+[119] "CC25_310d"                    "CC25_311a"                   
+[121] "CC25_311b"                    "CC25_311c"                   
+[123] "CC25_311d"                    "CC25_312a"                   
+[125] "CC25_312b"                    "CC25_312c"                   
+[127] "CC25_312d"                    "CC25_312e"                   
+[129] "CC25_312f"                    "CC25_312g"                   
+[131] "CC25_312h"                    "cit1"                        
+[133] "immstat"                      "CC25_321a"                   
+[135] "CC25_321b"                    "CC25_321c"                   
+[137] "CC25_321d"                    "CC25_321e"                   
+[139] "CC25_323a"                    "CC25_323b"                   
+[141] "CC25_323c"                    "CC25_323d"                   
+[143] "CC25_324"                     "CC25_325"                    
+[145] "CC25_325_dk_flag"             "CC25_326a"                   
+[147] "CC25_326b"                    "CC25_326c"                   
+[149] "CC25_326d"                    "CC25_326e"                   
+[151] "CC25_328a"                    "CC25_328b"                   
+[153] "CC25_328c"                    "CC25_328d"                   
+[155] "CC25_328e"                    "CC25_330a"                   
+[157] "CC25_330b"                    "CC25_330c"                   
+[159] "CC25_330d"                    "CC25_330e"                   
+[161] "CC25_330f"                    "CC25_330g"                   
+[163] "CC25_330h"                    "CC25_330i"                   
+[165] "CC25_360"                     "CC25_360_t"                  
+[167] "presvote20post"               "presvote20post_t"            
+[169] "presvote24post"               "presvote24post_t"            
+[171] "CC25_362a"                    "CC25_366_voted"              
+[173] "CC25_366_voted_t"             "CC25_363"                    
+[175] "ideo5"                        "maga"                        
+[177] "marstat"                      "parent_1"                    
+[179] "parent_2"                     "parent_97"                   
+[181] "child18"                      "mena"                        
+[183] "mena_origin_1"                "mena_origin_2"               
+[185] "mena_origin_3"                "mena_origin_4"               
+[187] "mena_origin_5"                "mena_origin_6"               
+[189] "mena_origin_7"                "mena_origin_8"               
+[191] "mena_origin_9"                "mena_origin_10"              
+[193] "mena_origin_11"               "mena_origin_12"              
+[195] "multrace_1"                   "multrace_2"                  
+[197] "multrace_3"                   "multrace_4"                  
+[199] "multrace_5"                   "multrace_8"                  
+[201] "multrace_97"                  "multrace_98"                 
+[203] "pew_bornagain"                "pew_religimp"                
+[205] "pew_churatd"                  "pew_prayer"                  
+[207] "religpew"                     "religpew_t"                  
+[209] "religpew_protestant"          "religpew_protestant_t"       
+[211] "religpew_baptist"             "religpew_baptist_t"          
+[213] "religpew_methodist"           "religpew_methodist_t"        
+[215] "religpew_nondenom"            "religpew_nondenom_t"         
+[217] "religpew_lutheran"            "religpew_lutheran_t"         
+[219] "religpew_presby"              "religpew_presby_t"           
+[221] "religpew_pentecost"           "religpew_pentecost_t"        
+[223] "religpew_episcop"             "religpew_episcop_t"          
+[225] "religpew_christian"           "religpew_christian_t"        
+[227] "religpew_congreg"             "religpew_congreg_t"          
+[229] "religpew_holiness"            "religpew_holiness_t"         
+[231] "religpew_reformed"            "religpew_reformed_t"         
+[233] "religpew_advent"              "religpew_advent_t"           
+[235] "religpew_catholic"            "religpew_catholic_t"         
+[237] "religpew_mormon"              "religpew_mormon_t"           
+[239] "religpew_orthodox"            "religpew_orthodox_t"         
+[241] "religpew_jewish"              "religpew_jewish_t"           
+[243] "religpew_muslim"              "religpew_muslim_t"           
+[245] "religpew_buddhist"            "religpew_buddhist_t"         
+[247] "religpew_hindu"               "religpew_hindu_t"            
+[249] "union"                        "union_coverage"              
+[251] "unionhh"                      "ownhome"                     
+[253] "ownhome_t"                    "newsint"                     
+[255] "faminc_new"                   "milstat_1"                   
+[257] "milstat_2"                    "milstat_3"                   
+[259] "milstat_4"                    "milstat_5"                   
+[261] "healthins_1"                  "healthins_2"                 
+[263] "healthins_3"                  "healthins_4"                 
+[265] "healthins_5"                  "healthins_6"                 
+[267] "healthins2"                   "phone"                       
+[269] "internethome"                 "internetwork"                
+[271] "sexuality"                    "transgender"                 
+[273] "lookupzip"                    "cdid119"                     
+[275] "countyfips"                   "countyname"                  
+[277] "LegName"                      "LowerChamberName"            
+[279] "UpperChamberName"             "CurrentGovName"              
+[281] "CurrentGovParty"              "CurrentHouseName"            
+[283] "CurrentHouseParty"            "CurrentSen1Name"             
+[285] "CurrentSen1Party"             "CurrentSen2Name"             
+[287] "CurrentSen2Party"             "GovCand1Name"                
+[289] "GovCand1Party"                "GovCand2Name"                
+[291] "GovCand2Party"                "page_CC25_368_timing"        
+[293] "page_CC25_300_timing"         "page_CC25_300b_timing"       
+[295] "page_CC25_300d_timing"        "page_CC25_301_timing"        
+[297] "page_CC25_302_timing"         "page_CC25_303_timing"        
+[299] "page_CC25_304_timing"         "page_CC25_305_timing"        
+[301] "page_CC25_307_timing"         "page_CC25_308b_timing"       
+[303] "page_CC25_310grid_timing"     "page_pageCC25_311grid_timing"
+[305] "page_CC25_312grid_timing"     "page_CC25_321grid_timing"    
+[307] "page_CC25_323grid_timing"     "page_CC25_324_timing"        
+[309] "page_CC25_325_timing"         "page_CC25_326grid_timing"    
+[311] "page_CC25_328grid_timing"     "page_CC25_330grid_timing"    
+[313] "page_CC25_340abgrid_timing"   "page_CC25_340cggrid_timing"  
+[315] "page_CC25_342grid_timing"     "page_CC25_343_timing"        
+[317] "page_CC25_360_timing"         "page_CC25_362a_timing"       
+[319] "page_CC25_366_voted_timing"   "page_CC25_363_timing"        
+[321] "starttime"                    "endtime"                     </code></pre>
+</div>
+</div>
+</section>
+<section id="mean-of-an-indicator" class="slide level2">
+<h2>Mean of an indicator</h2>
+<p>Every policy item here is already coded as an <strong>indicator</strong>: 1 = support, 0 = oppose, <code>NA</code> = no answer. The mean of a 0/1 variable is the proportion of 1s or the share who support.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-label="1"></a><span class="co"># share of respondents who support banning assault rifles</span></span>
+<span id="cb23-2"><a aria-label="2"></a><span class="fu">mean</span>(ces<span class="sc">$</span>CC25_321a <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6450968</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a aria-label="1"></a><span class="co"># same thing, dplyr style</span></span>
+<span id="cb25-2"><a aria-label="2"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a aria-label="3"></a>  <span class="fu">summarise</span>(<span class="at">support =</span> <span class="fu">mean</span>(CC25_321a <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  support
+    &lt;dbl&gt;
+1   0.645</code></pre>
+</div>
+</div>
+</section>
+<section id="mutate" class="slide level2">
+<h2>mutate()</h2>
+<p><code>mutate()</code> builds new variables. We can use this to create an indicator out of any logical condition. Remember to reassignthe new dataframe to have it stored.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-label="1"></a>ces <span class="ot">=</span> ces <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a aria-label="2"></a>  <span class="fu">mutate</span>(<span class="at">dem =</span> pid3 <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb27-3"><a aria-label="3"></a></span>
+<span id="cb27-4"><a aria-label="4"></a><span class="co"># or </span></span>
+<span id="cb27-5"><a aria-label="5"></a></span>
+<span id="cb27-6"><a aria-label="6"></a>ces <span class="ot">=</span> ces <span class="sc">|&gt;</span></span>
+<span id="cb27-7"><a aria-label="7"></a>  <span class="fu">mutate</span>(<span class="at">dem2 =</span> <span class="fu">if_else</span>(pid3 <span class="sc">==</span> <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb27-8"><a aria-label="8"></a></span>
+<span id="cb27-9"><a aria-label="9"></a></span>
+<span id="cb27-10"><a aria-label="10"></a><span class="fu">mean</span>(ces<span class="sc">$</span>dem, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3308235</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a aria-label="1"></a><span class="fu">mean</span>(ces<span class="sc">$</span>dem2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3308235</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a aria-label="1"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a aria-label="2"></a>  <span class="fu">summarise</span>(<span class="at">share_dem =</span> <span class="fu">mean</span>(dem, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  share_dem
+      &lt;dbl&gt;
+1     0.331</code></pre>
+</div>
+</div>
+</section>
+<section id="across-apply-one-function-to-many-columns" class="slide level2">
+<h2>across() — apply one function to many columns</h2>
+<p><code>across()</code> runs the same function over several columns inside <code>mutate()</code> or <code>summarise()</code>, instead of retyping it once per column.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a aria-label="1"></a><span class="co"># share supporting each gun control item</span></span>
+<span id="cb33-2"><a aria-label="2"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a aria-label="3"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"CC25_321"</span>), \(x) <span class="fu">mean</span>(x <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 5
+  CC25_321a CC25_321b CC25_321c CC25_321d CC25_321e
+      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1     0.645     0.363     0.931     0.554     0.311</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a aria-label="1"></a><span class="co"># same idea, but for every numeric column</span></span>
+<span id="cb35-2"><a aria-label="2"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a aria-label="3"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb35-4"><a aria-label="4"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 5
+       caseid commonweight CCEStake add_confirm inputzip
+        &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+1 2543515094.            1        1        1.13   49761.</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a aria-label="1"></a><span class="co"># custom names for each result</span></span>
+<span id="cb37-2"><a aria-label="2"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a aria-label="3"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"CC25_326"</span>),</span>
+<span id="cb37-4"><a aria-label="4"></a>                    \(x) <span class="fu">mean</span>(x <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb37-5"><a aria-label="5"></a>                    <span class="at">.names =</span> <span class="st">"support_{.col}"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 5
+  support_CC25_326a support_CC25_326b support_CC25_326c support_CC25_326d
+              &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;
+1             0.687             0.715             0.626             0.514
+# ℹ 1 more variable: support_CC25_326e &lt;dbl&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a aria-label="1"></a><span class="co"># across() inside mutate() instead of summarise()</span></span>
+<span id="cb39-2"><a aria-label="2"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a aria-label="3"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"CC25_343"</span>), <span class="sc">~</span> .x <span class="sc">==</span> <span class="dv">1</span>, <span class="at">.names =</span> <span class="st">"{.col}_yes"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a aria-label="4"></a>  <span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"_yes"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb39-5"><a aria-label="5"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  CC25_343a_yes CC25_343b_yes CC25_343c_yes
+  &lt;lgl&gt;         &lt;lgl&gt;         &lt;lgl&gt;        
+1 FALSE         FALSE         TRUE         
+2 FALSE         FALSE         FALSE        
+3 TRUE          TRUE          TRUE         
+4 TRUE          TRUE          FALSE        
+5 TRUE          FALSE         FALSE        
+6 FALSE         TRUE          TRUE         </code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a aria-label="1"></a><span class="co"># if_any(): TRUE if any selected variable meets the condition</span></span>
+<span id="cb41-2"><a aria-label="2"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a aria-label="3"></a>  <span class="fu">filter</span>(<span class="fu">if_any</span>(<span class="fu">starts_with</span>(<span class="st">"CC25_342"</span>), <span class="sc">~</span> . <span class="sc">==</span> <span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb41-4"><a aria-label="4"></a>  <span class="fu">nrow</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12482</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a aria-label="1"></a><span class="co"># if_all(): TRUE only if every selected variable meets the condition</span></span>
+<span id="cb43-2"><a aria-label="2"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb43-3"><a aria-label="3"></a>  <span class="fu">filter</span>(<span class="fu">if_all</span>(<span class="fu">starts_with</span>(<span class="st">"CC25_342"</span>), <span class="sc">~</span> . <span class="sc">==</span> <span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb43-4"><a aria-label="4"></a>  <span class="fu">nrow</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2130</code></pre>
+</div>
+</div>
+</section>
+<section id="group_bysummarise" class="slide level2">
+<h2>group_by()/summarise()</h2>
+<p>Two of the most useful functions in dplyr are group_by() and summarise(). You can use them to compare parts of the data. To demo this we’ll switch to a simpler dataset, <code>mtcars</code></p>
+<p>Suppose we want to find the average mpg by number of gears. Rather than calculate manually:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a aria-label="1"></a>df <span class="ot">=</span> mtcars</span>
+<span id="cb45-2"><a aria-label="2"></a></span>
+<span id="cb45-3"><a aria-label="3"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb45-4"><a aria-label="4"></a>  <span class="fu">group_by</span>(gear) <span class="sc">%&gt;%</span></span>
+<span id="cb45-5"><a aria-label="5"></a>  <span class="fu">summarise</span>(<span class="at">avg_mpg =</span> <span class="fu">mean</span>(mpg,<span class="at">na.rm =</span> T))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+   gear avg_mpg
+  &lt;dbl&gt;   &lt;dbl&gt;
+1     3    16.1
+2     4    24.5
+3     5    21.4</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<p>Many functions can be used in summarise, not just mean</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a aria-label="1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a aria-label="2"></a>  <span class="fu">group_by</span>(gear) <span class="sc">%&gt;%</span></span>
+<span id="cb47-3"><a aria-label="3"></a>  <span class="fu">summarise</span>(<span class="at">avg_mpg =</span> <span class="fu">sum</span>(mpg,<span class="at">na.rm =</span> T))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+   gear avg_mpg
+  &lt;dbl&gt;   &lt;dbl&gt;
+1     3    242.
+2     4    294.
+3     5    107.</code></pre>
+</div>
+</div>
+<p>And we can group by multiple variables</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a aria-label="1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a aria-label="2"></a>  <span class="fu">group_by</span>(gear,vs) <span class="sc">%&gt;%</span></span>
+<span id="cb49-3"><a aria-label="3"></a>  <span class="fu">summarise</span>(<span class="at">avg_mpg =</span> <span class="fu">mean</span>(mpg,<span class="at">na.rm =</span> T))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+# Groups:   gear [3]
+   gear    vs avg_mpg
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1     3     0    15.0
+2     3     1    20.3
+3     4     0    21  
+4     4     1    25.2
+5     5     0    19.1
+6     5     1    30.4</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<p>Note that the resulting object is now “grouped” output. If you want to ungroup it you can use the ungroup() function</p>
+<p>This becomes relevant if you want to group within a seqeunce of functions but not save the full df</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a aria-label="1"></a><span class="do">## Grouping and Ungrouping</span></span>
+<span id="cb51-2"><a aria-label="2"></a></span>
+<span id="cb51-3"><a aria-label="3"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb51-4"><a aria-label="4"></a>  <span class="fu">group_by</span>(gear, vs) <span class="sc">%&gt;%</span></span>
+<span id="cb51-5"><a aria-label="5"></a>  <span class="fu">mutate</span>(<span class="at">avg_mpg =</span> <span class="fu">mean</span>(mpg, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-6"><a aria-label="6"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb51-7"><a aria-label="7"></a>  <span class="fu">select</span>(mpg,gear,vs,avg_mpg) <span class="sc">%&gt;%</span></span>
+<span id="cb51-8"><a aria-label="8"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+    mpg  gear    vs avg_mpg
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1  21       4     0    21  
+2  21       4     0    21  
+3  22.8     4     1    25.2
+4  21.4     3     1    20.3
+5  18.7     3     0    15.0
+6  18.1     3     1    20.3</code></pre>
+</div>
+</div>
+</section>
+<section id="left_join" class="slide level2">
+<h2>left_join()</h2>
+<p><code>left_join()</code> is one of many functions that adds columns from one data frame onto another using some shared variable(s) as a key</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a aria-label="1"></a>party_labels <span class="ot">=</span> <span class="fu">tibble</span>(</span>
+<span id="cb53-2"><a aria-label="2"></a>  <span class="at">pid3 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb53-3"><a aria-label="3"></a>  <span class="at">party_name =</span> <span class="fu">c</span>(<span class="st">"Democrat"</span>, <span class="st">"Republican"</span>, <span class="st">"Independent"</span>)</span>
+<span id="cb53-4"><a aria-label="4"></a>)</span>
+<span id="cb53-5"><a aria-label="5"></a></span>
+<span id="cb53-6"><a aria-label="6"></a>ces <span class="sc">|&gt;</span></span>
+<span id="cb53-7"><a aria-label="7"></a>  <span class="fu">left_join</span>(party_labels, <span class="at">by =</span> <span class="st">"pid3"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb53-8"><a aria-label="8"></a>  <span class="fu">select</span>(pid3, party_name, commonweight) <span class="sc">|&gt;</span></span>
+<span id="cb53-9"><a aria-label="9"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  pid3            party_name  commonweight
+  &lt;dbl+lbl&gt;       &lt;chr&gt;              &lt;dbl&gt;
+1 1 [Democrat]    Democrat           0.374
+2 1 [Democrat]    Democrat           1.29 
+3 1 [Democrat]    Democrat           0.443
+4 2 [Republican]  Republican         0.614
+5 3 [Independent] Independent        0.408
+6 1 [Democrat]    Democrat           1.71 </code></pre>
+</div>
+</div>
+</section>
+<section id="stringr-1" class="slide level2">
+<h2>stringr</h2>
+<p>With 300+ variables in the full CES, you can use stringr to search for variables.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a aria-label="1"></a><span class="co"># every gun control item</span></span>
+<span id="cb55-2"><a aria-label="2"></a><span class="fu">names</span>(ces) <span class="sc">|&gt;</span> <span class="fu">str_subset</span>(<span class="st">"CC25_321"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "CC25_321a"                "CC25_321b"               
+[3] "CC25_321c"                "CC25_321d"               
+[5] "CC25_321e"                "page_CC25_321grid_timing"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a aria-label="1"></a><span class="co"># every column whose name contains "34"</span></span>
+<span id="cb57-2"><a aria-label="2"></a><span class="fu">names</span>(ces) <span class="sc">|&gt;</span> <span class="fu">str_subset</span>(<span class="st">"34"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "CC25_340a"                  "CC25_340b"                 
+ [3] "CC25_340c"                  "CC25_340d"                 
+ [5] "CC25_340e"                  "CC25_340f"                 
+ [7] "CC25_340g"                  "CC25_342a"                 
+ [9] "CC25_342b"                  "CC25_342c"                 
+[11] "CC25_342d"                  "CC25_342e"                 
+[13] "CC25_342f"                  "CC25_342g"                 
+[15] "CC25_342h"                  "CC25_342i"                 
+[17] "CC25_343a"                  "CC25_343b"                 
+[19] "CC25_343c"                  "page_CC25_340abgrid_timing"
+[21] "page_CC25_340cggrid_timing" "page_CC25_342grid_timing"  
+[23] "page_CC25_343_timing"      </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a aria-label="1"></a><span class="co"># regex alternation with |: gun control OR environment items</span></span>
+<span id="cb59-2"><a aria-label="2"></a><span class="fu">names</span>(ces) <span class="sc">|&gt;</span> <span class="fu">str_subset</span>(<span class="st">"CC25_321|CC25_326"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "CC25_321a"                "CC25_321b"               
+ [3] "CC25_321c"                "CC25_321d"               
+ [5] "CC25_321e"                "CC25_326a"               
+ [7] "CC25_326b"                "CC25_326c"               
+ [9] "CC25_326d"                "CC25_326e"               
+[11] "page_CC25_321grid_timing" "page_CC25_326grid_timing"</code></pre>
+</div>
+</div>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 900,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/astrezhnev\.github\.io\/ps812\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

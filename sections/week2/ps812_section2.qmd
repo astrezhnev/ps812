@@ -1,0 +1,570 @@
+---
+title: "PS 812"
+subtitle: "Section 2: Tidyverse/Data Management"
+author: "John Hicks"
+institute: "Dept. of Political Science, UW-Madison"
+date: "9-11-2026"
+
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    transition: none
+    code-fold: false
+    code-line-numbers: true
+    chalkboard: false
+    width: 1600
+    height: 900
+    incremental: true
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: false
+---
+
+<style>
+
+.reveal {
+  font-family: Arial, sans-serif;
+}
+
+/* ---------------------------------
+   Headings
+   --------------------------------- */
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #8B0000;
+}
+
+.reveal h2 {
+  background-color: #eeeeee;
+  padding: 10px 20px;
+}
+
+/* ---------------------------------
+   Slide numbers
+   --------------------------------- */
+
+.reveal .slide-number {
+  color: #666666;
+  font-size: 0.7em;
+}
+
+/* ---------------------------------
+   Code
+   --------------------------------- */
+
+.reveal pre {
+  font-size: 0.65em;
+}
+
+.reveal code {
+  font-family: "Fira Code", "Courier New", monospace;
+}
+
+/* ---------------------------------
+   Cascade / incremental reveals
+   --------------------------------- */
+
+.reveal .fragment {
+  transition: opacity 0.35s ease-in-out;
+}
+
+.reveal .fragment.visible {
+  opacity: 1;
+}
+
+/* ---------------------------------
+   Lists
+   --------------------------------- */
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.35em;
+}
+
+/* ---------------------------------
+   Images
+   --------------------------------- */
+
+.reveal img {
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+/* ---------------------------------
+   Git workflow
+   --------------------------------- */
+
+.git-command {
+  font-size: 1.15em;
+  margin: 0.5em 0;
+}
+
+</style>
+
+# Announcements
+
+## Problem Set 1
+
+1. **Problem Set 1 is due September 22, immediately before class (3:30pm).**
+
+---
+
+# Getting Started
+
+## Today
+
+::: {.fragment}
+**1. Tidyverse**
+
+The pipe, `filter()`, `select()`, `mutate()`, and `across()`
+:::
+
+::: {.fragment}
+**2. The CES Data**
+
+Download the Cooperative Election Study and read it in with `haven`.
+:::
+
+::: {.fragment}
+**3. Manipulating Data**
+
+Clone, pull, commit, push.
+:::
+
+
+---
+
+# Tidyverse
+
+## Tidyverse
+
+Library of packages with many useful functions
+
+::: {.fragment}
+### 1. dplyr
+
+**Manipulate and summarize data**
+
+- `filter()` — keep rows that meet a condition
+- `select()` — choose columns
+- `mutate()` — create or modify columns
+- `arrange()` — sort rows
+- `summarize()` — calculate summary statistics
+- `group_by()` — perform operations within groups
+:::
+
+---
+
+::: {.fragment}
+
+
+### 2. ggplot2 *(later)*
+
+**Create visualizations**
+
+- `ggplot()` — start a plot
+- `geom_point()` — scatterplots
+- `geom_line()` — line graphs
+- `geom_bar()` / `geom_col()` — bar graphs
+- `geom_histogram()` — distributions
+- `facet_wrap()` — create separate panels
+- `labs()` — add titles and labels
+:::
+
+---
+
+::: {.fragment}
+### 3. tidyr
+
+**Reshape and organize data**
+
+- `pivot_longer()` — convert wide data to long format
+- `pivot_wider()` — convert long data to wide format
+- `separate()` — split one column into multiple columns
+- `unite()` — combine multiple columns
+- `drop_na()` — remove missing observations
+:::
+
+---
+
+::: {.fragment}
+### 4. stringr
+
+**Work with text**
+
+- `str_detect()` — find whether text contains a pattern
+- `str_subset()` — keep only the matching elements of a vector
+- `str_replace()` — replace text
+- `str_to_lower()` / `str_to_upper()` — change capitalization
+- `str_length()` — count characters
+:::
+
+---
+
+::: {.fragment}
+### 5. readr
+
+**Import and export data**
+
+- `read_csv()` — read a CSV file
+- `write_csv()` — save a data frame as a CSV
+:::
+
+---
+
+::: {.fragment}
+### 6. forcats
+
+**Work with categorical variables**
+
+- `fct_reorder()` — reorder factor levels
+- `fct_relevel()` — manually change the order
+- `fct_recode()` — rename categories
+:::
+
+---
+
+::: {.fragment}
+### 7. lubridate
+
+**Work with dates and times**
+
+- `ymd()` — convert text to dates
+- `year()` — extract the year
+- `month()` — extract the month
+- `day()` — extract the day
+:::
+
+---
+
+::: {.fragment}
+### 8. purrr *(later)*
+
+**Repeat operations across data**
+
+- `map()` — apply a function repeatedly
+- Useful when you need to perform the same operation on multiple objects
+:::
+
+---
+
+## The Pipe
+
+Tidyverse-style code is built around **piping**: passing the result of one function straight into the next, instead of nesting functions inside each other.
+
+The base R **native pipe** (`|>`) ships with R itself:
+
+```{r}
+library(tidyverse)
+sqrt(2*2)
+(2+2) |> sqrt()
+```
+
+You will also see the **magrittr pipe** (`%>%`) in tidyverse. It works the same:
+
+```{r}
+(2+2) %>% sqrt()
+```
+
+---
+
+## The value of piping
+
+Piping becomes valuable when you chain several steps together. Compare:
+
+```{r}
+table(ifelse(scale(log(mtcars$mpg + 2)) > 0, T, F))
+```
+
+The same computation, piped step by step with the native pipe:
+
+```{r}
+mtcars$mpg |>
+  (\(x) x + 2)() |>
+  log() |>
+  scale() |>
+  (\(x) ifelse(x > 0, TRUE, FALSE))() |>
+  table()
+```
+
+---
+
+# The CES Data
+
+## Downloading the CES
+
+::: {.fragment}
+**1.** Go to the CES Dataverse page:
+[dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DFUGJR](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DFUGJR)
+:::
+
+::: {.fragment}
+**2.** Download **`CES25_Common.dta`** — a Stata file, not a `.csv`
+:::
+
+::: {.fragment}
+**3.** Save it into your project folder, next to your `.qmd` file
+:::
+
+---
+
+## The `haven` package
+
+PS data is often distributed as Stata (`.dta`), SPSS (`.sav`), or SAS files rather than `.csv`, which base R can't read without packages like `haven`
+
+```{r}
+#| eval: false
+library(haven)
+
+ces_full <- read_dta("CES25_Common.dta")
+
+head(ces_full)
+```
+
+---
+
+## `haven` and labelled data
+
+Stata variables often carry value labels (e.g. `1 = "Democrat"`). `haven` preserves these as a special `labelled` class instead of silently turning them into plain numbers or text.
+
+```{r}
+#| eval: false
+class(ces_full$pid3)
+attributes(ces_full$pid3)
+
+# turn the value labels into a factor
+as_factor(ces_full$pid3) |> head()
+```
+
+`as_factor()` uses the stored labels; `zap_labels()` throws the labels away and keeps the raw numeric codes.
+
+---
+
+## Reading in what we'll use today
+
+```{r}
+library(haven)
+
+ces <- read_dta("data/CES25_Common.dta")
+
+head(ces)
+```
+
+---
+
+## dplyr Syntax
+
+When you pipe a data frame into a dplyr function, you call variables directly without using the selector `$`
+
+```{r}
+ces |> select(pid3, commonweight, CC25_321a) |> head()
+
+ces |>
+  filter(pid3 == 1) |>
+  select(pid3, commonweight, CC25_321a) |>
+  head()
+```
+
+---
+
+## Subsetting: filter() and select()
+
+`filter()` keeps **rows**; `select()` keeps **columns**. Selecting is useful for preserving memory
+
+```{r}
+# rows: independents only
+ces |>
+  filter(pid3 == 3) |>
+  select(pid3, starts_with("CC25_321")) |>
+  head()
+
+# columns: drop everything from the "34" block of items
+ces |>
+  select(-starts_with("CC25_34")) |>
+  names()
+```
+
+---
+
+## Mean of an indicator
+
+Every policy item here is already coded as an **indicator**: 1 = support, 0 = oppose, `NA` = no answer. The mean of a 0/1 variable is the proportion of 1s or the share who support.
+
+```{r}
+# share of respondents who support banning assault rifles
+mean(ces$CC25_321a == 1, na.rm = TRUE)
+
+# same thing, dplyr style
+ces |>
+  summarise(support = mean(CC25_321a == 1, na.rm = TRUE))
+```
+
+---
+
+## mutate()
+
+`mutate()` builds new variables. We can use this to create an indicator out of any logical condition. Remember to reassignthe new dataframe to have it stored.
+
+```{r}
+ces = ces |>
+  mutate(dem = pid3 == 1)
+
+# or 
+
+ces = ces |>
+  mutate(dem2 = if_else(pid3 == 1,1,0))
+
+
+mean(ces$dem, na.rm = TRUE)
+mean(ces$dem2, na.rm = TRUE)
+
+ces |>
+  summarise(share_dem = mean(dem, na.rm = TRUE))
+
+```
+
+---
+
+## across() — apply one function to many columns
+
+`across()` runs the same function over several columns inside `mutate()` or `summarise()`, instead of retyping it once per column.
+
+```{r}
+# share supporting each gun control item
+ces |>
+  summarise(across(starts_with("CC25_321"), \(x) mean(x == 1, na.rm = TRUE)))
+
+# same idea, but for every numeric column
+ces |>
+  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE))) |>
+  select(1:5)
+```
+
+---
+
+```{r}
+# custom names for each result
+ces |>
+  summarise(across(starts_with("CC25_326"),
+                    \(x) mean(x == 1, na.rm = TRUE),
+                    .names = "support_{.col}"))
+
+# across() inside mutate() instead of summarise()
+ces |>
+  mutate(across(starts_with("CC25_343"), ~ .x == 1, .names = "{.col}_yes")) |>
+  select(ends_with("_yes")) |>
+  head()
+```
+
+---
+
+```{r}
+# if_any(): TRUE if any selected variable meets the condition
+ces |>
+  filter(if_any(starts_with("CC25_342"), ~ . == 1)) |>
+  nrow()
+
+# if_all(): TRUE only if every selected variable meets the condition
+ces |>
+  filter(if_all(starts_with("CC25_342"), ~ . == 1)) |>
+  nrow()
+```
+
+---
+
+## group_by()/summarise()
+
+Two of the most useful functions in dplyr are group_by() and summarise(). You can use them to compare parts of the data. To demo this we'll switch to a simpler dataset, `mtcars`
+
+Suppose we want to find the average mpg by number of gears. Rather than calculate manually:
+
+```{r}
+df = mtcars
+
+df %>%
+  group_by(gear) %>%
+  summarise(avg_mpg = mean(mpg,na.rm = T))
+
+```
+
+---
+
+Many functions can be used in summarise, not just mean
+
+```{r}
+
+df %>%
+  group_by(gear) %>%
+  summarise(avg_mpg = sum(mpg,na.rm = T))
+
+```
+
+
+And we can group by multiple variables
+
+```{r}
+
+df %>%
+  group_by(gear,vs) %>%
+  summarise(avg_mpg = mean(mpg,na.rm = T))
+
+```
+
+---
+
+Note that the resulting object is now "grouped" output. If you want to ungroup it you can use the ungroup() function
+
+This becomes relevant if you want to group within a seqeunce of functions but not save the full df
+
+```{r}
+## Grouping and Ungrouping
+
+df %>%
+  group_by(gear, vs) %>%
+  mutate(avg_mpg = mean(mpg, na.rm = TRUE)) %>%
+  ungroup() %>%
+  select(mpg,gear,vs,avg_mpg) %>%
+  head()
+```
+
+---
+
+## left_join()
+
+`left_join()` is one of many functions that adds columns from one data frame onto another using some shared variable(s) as a key
+
+```{r}
+party_labels = tibble(
+  pid3 = c(1, 2, 3),
+  party_name = c("Democrat", "Republican", "Independent")
+)
+
+ces |>
+  left_join(party_labels, by = "pid3") |>
+  select(pid3, party_name, commonweight) |>
+  head()
+```
+
+---
+
+## stringr
+
+With 300+ variables in the full CES, you can use stringr to search for variables.
+
+```{r}
+# every gun control item
+names(ces) |> str_subset("CC25_321")
+
+# every column whose name contains "34"
+names(ces) |> str_subset("34")
+
+# regex alternation with |: gun control OR environment items
+names(ces) |> str_subset("CC25_321|CC25_326")
+```
+
