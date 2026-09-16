@@ -34,6 +34,23 @@ ABORTION <- list(
   )
 )
 
+# Party ID is nominal -- the three categories have no meaningful order, and in
+# particular the middle one lumps together Independent, Other and Not sure. So
+# the ground metric is the discrete one: every distinct category sits at
+# distance 1 from every other. Under that metric the 1-Wasserstein distance is
+# exactly the total variation distance, half the summed absolute difference in
+# category probabilities, running from 0 (identical) to 1 (disjoint support).
+PID_CATS <- c("D", "I", "R")
+
+w1 <- function(p, q) 0.5 * sum(abs(p - q))
+
+pid_dist <- function(w, p) {
+  vapply(PID_CATS, function(k) sum(w[p == k]), numeric(1)) / sum(w)
+}
+
+# The unconditional distribution every conditional one is compared against.
+P_UNCOND <- pid_dist(dat$w, dat$pid)
+
 PARTY <- list(
   R = list(label = "Republican",          col = "#c5050c"),
   D = list(label = "Democrat",            col = "#0479A8"),
@@ -51,6 +68,13 @@ html, body { height:100%; }
 body { font-family:'Red Hat Text',system-ui,sans-serif; background:#F7F7F7; color:#333;
        margin:0; padding:10px; font-size:14px; box-sizing:border-box; overflow:hidden; }
 h1,h2,h3,h4 { font-family:'Red Hat Display',system-ui,sans-serif; margin:0 0 6px 0; }
+/* fluidPage() wraps the UI in .container-fluid, which is auto-height. A
+   percentage height resolved against an auto-height parent computes to auto,
+   so .wrap never got a definite height: the cards grew to fit their content
+   and their overflow-y:auto stayed inert, leaving the overflow clipped by the
+   overflow:hidden below. Giving the wrapper a definite height is what makes
+   the panels size to the frame and scroll inside it. */
+body > .container-fluid { height:100%; padding:0; }
 /* The panels fill whatever height the slide gives the iframe; the button list
    scrolls inside its own card rather than scrolling the whole page. */
 .wrap { display:flex; gap:14px; align-items:stretch; height:100%; }
@@ -66,7 +90,15 @@ h1,h2,h3,h4 { font-family:'Red Hat Display',system-ui,sans-serif; margin:0 0 6px
 .res-val { font-family:'Red Hat Display',sans-serif; font-weight:700; font-size:20px; }
 .bar-bg { background:#eee; border-radius:3px; height:8px; margin-top:3px; overflow:hidden; }
 .bar-fg { height:8px; border-radius:3px; }
-.nbox { margin-top:10px; padding-top:8px; border-top:1px solid #eee; font-size:12px; color:#666; line-height:1.5; }
+.wass { margin-top:9px; padding-top:8px; border-top:1px solid #eee; }
+.wass-top { display:flex; justify-content:space-between; align-items:baseline; }
+.wass-lab { font-weight:700; font-size:12px; color:#444; }
+.wass-val { font-family:'Red Hat Display',sans-serif; font-weight:700; font-size:17px;
+            color:#5a3d8a; }
+.wass-bar { background:#eee; border-radius:3px; height:5px; margin-top:3px; overflow:hidden; }
+.wass-fg { height:5px; border-radius:3px; background:#5a3d8a; }
+.wass-sub { font-size:10.5px; color:#999; margin-top:3px; line-height:1.35; }
+.nbox { margin-top:9px; padding-top:8px; border-top:1px solid #eee; font-size:12px; color:#666; line-height:1.5; }
 .undef { color:#c5050c; font-weight:700; font-family:'Red Hat Display',sans-serif;
          font-size:17px; line-height:1.3; }
 .topic { font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.05em;
@@ -160,9 +192,7 @@ server <- function(input, output, session) {
     if (n == 0L) {
       return(tagList(
         div(class = "undef", "Undefined"),
-        div(class = "nbox",
-            "No respondents satisfy these conditions, so the conditional ",
-            "probability is not defined — we would be dividing by zero.")
+        div(class = "nbox", "No respondents satisfy these conditions")
       ))
     }
 
@@ -185,13 +215,27 @@ server <- function(input, output, session) {
       )
     })
 
+    dist_val <- w1(pid_dist(w, p), P_UNCOND)
+
     n_cond <- sum(st$item != 0L) + (length(st$ab) > 0)
 
     tagList(
       rows,
+      div(class = "wass",
+        div(class = "wass-top",
+          span(class = "wass-lab", "Wasserstein distance"),
+          span(class = "wass-val", sprintf("%.3f", dist_val))
+        ),
+        div(class = "wass-bar",
+          div(class = "wass-fg",
+              style = paste0("width:", sprintf("%.1f", 100 * dist_val), "%"))
+        ),
+        div(class = "wass-sub",
+            "from the unconditional distribution (0 to 1)")
+      ),
       div(class = "nbox",
-        sprintf("%s respondents (%.1f%% of sample)", format(n, big.mark = ","),
-                100 * n / nrow(dat)), br(),
+        sprintf("%s respondent%s (%.1f%% of sample)", format(n, big.mark = ","),
+                if (n == 1L) "" else "s", 100 * n / nrow(dat)), br(),
         sprintf("%s condition%s applied", n_cond, if (n_cond == 1) "" else "s"), br(),
         "Weighted by commonweight."
       )

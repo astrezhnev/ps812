@@ -1,24 +1,22 @@
 # ---------------------------------------------------------------------------
-# Generate ../ces_conditioning_app.qmd from the app sources in this folder.
+# Generate ../bisg_app.qmd from the app sources in this folder.
 #
-# shinylive runs the app in the browser through WebAssembly, which means every
-# file the app opens has to be inlined into the page as a `## file:` block --
-# there is no server to read from disk. Keeping app.R, items.csv and the data
-# as normal files here and generating the wrapper keeps the inlined copy from
-# drifting out of sync with the sources.
+# shinylive runs the app in the browser through WebAssembly, so every file the
+# app opens has to be inlined into the page as a `## file:` block -- there is
+# no server to read from disk.
 #
 # Run after editing app.R or regenerating the data:  Rscript build_app_qmd.R
 # ---------------------------------------------------------------------------
 
 app_dir <- "."
-out     <- "../ces_conditioning_app.qmd"
+out     <- "../bisg_app.qmd"
 
-files <- c("app.R", "items.csv", "ces25_pid_policy.csv")
+files <- c("app.R", "bisg_names.csv", "bisg_geos.csv")
 for (f in files) stopifnot(file.exists(file.path(app_dir, f)))
 
 header <- c(
   "---",
-  'title: "Conditioning on policy preferences"',
+  'title: "BISG: predicting race from surname and county"',
   "format:",
   "  html:",
   "    page-layout: custom",
@@ -54,7 +52,7 @@ header <- c(
   "---",
   "",
   "<!-- GENERATED FILE -- do not edit by hand.",
-  "     Edit ces-app/app.R (or the data) and run:  Rscript ces-app/build_app_qmd.R -->",
+  "     Edit bisg-app/app.R (or the data) and run:  Rscript bisg-app/build_app_qmd.R -->",
   "",
   "```{shinylive-r}",
   "#| standalone: true",
@@ -69,4 +67,4 @@ body <- unlist(lapply(files, function(f) {
 writeLines(c(header, "", body, "```"), out)
 
 cat("wrote", normalizePath(out), "\n")
-cat("size:", round(file.size(out) / 1e6, 2), "MB\n")
+cat("size:", round(file.size(out) / 1e3, 1), "KB\n")
