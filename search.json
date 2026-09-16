@@ -235,21 +235,21 @@
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-1",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
-    "text": "The Monty Hall Problem\n\nYou picked the first door, the host revealed a goat behind the third door\nWe want to know the probability that you picked the car given that the game show host revealed a goat behind door number 3.\n\nWe can solve this with an application of Bayes’ rule\n\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{P(\\text{goat}_3 \\mid \\text{car}_1)}{P(\\text{goat}_3)}P(\\text{car}_1) \\]\nSubstituting in what we know\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{P(\\text{goat}_3)} \\cdot \\frac{1}{3} \\]"
+    "text": "The Monty Hall Problem\n\nYou picked the first door, the host revealed a goat behind the third door\nWe want to know the probability that you picked the car given that the game show host revealed a goat behind door number 3.\n\nWe can solve this with an application of Bayes’ rule\n\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{P(\\text{door}_3 \\mid \\text{car}_1)}{P(\\text{door}_3)}P(\\text{car}_1) \\]\nSubstituting in what we know\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2}}{P(\\text{door}_3)} \\cdot \\frac{1}{3} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-2",
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-2",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
-    "text": "The Monty Hall Problem\n\nFor the denominator, we’ll use the law of total probability and consider all possible locations of the car.\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{P(\\text{goat}_3 \\mid \\text{car}_1)P(\\text{car}_1) + P(\\text{goat}_3 \\mid \\text{car}_2)P(\\text{car}_2) + P(\\text{goat}_3 \\mid \\text{car}_3)P(\\text{car}_3)} \\cdot \\frac{1}{3} \\]\nThe host always opens 3 if the car is behind 2 and never opens 3 if the car is behind 3, so we have\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2}}{\\frac{1}{2}\\cdot\\frac{1}{3} + 1\\cdot \\frac{1}{3} + 0 \\cdot \\frac{1}{3}} \\cdot \\frac{1}{3} \\]\nTherefore\n\\[ P(\\text{car}_1 \\mid \\text{goat}_3) = \\frac{\\frac{1}{2} \\cdot \\frac{1}{3} }{\\frac{1}{2}} = \\frac{1}{3} \\]"
+    "text": "The Monty Hall Problem\n\nFor the denominator, we’ll use the law of total probability and consider all possible locations of the car.\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2}}{P(\\text{door}_3 \\mid \\text{car}_1)P(\\text{car}_1) + P(\\text{door}_3 \\mid \\text{car}_2)P(\\text{car}_2) + P(\\text{door}_3 \\mid \\text{car}_3)P(\\text{car}_3)} \\cdot \\frac{1}{3} \\]\nThe host always opens 3 if the car is behind 2 and never opens 3 if the car is behind 3, so we have\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2}}{\\frac{1}{2}\\cdot\\frac{1}{3} + 1\\cdot \\frac{1}{3} + 0 \\cdot \\frac{1}{3}} \\cdot \\frac{1}{3} \\]\nTherefore\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2} \\cdot \\frac{1}{3} }{\\frac{1}{2}} = \\frac{1}{3} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-3",
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-3",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
-    "text": "The Monty Hall Problem\n\nStaying with door 1 still leaves you with \\(\\frac{1}{3}\\) probability of winning the car.\nThe three cases partition the sample space, so their conditional probabilities sum to \\(1\\)\n\\[ P(\\text{car}_2 \\mid \\text{goat}_3) = 1 - P(\\text{car}_1 \\mid \\text{goat}_3) - P(\\text{car}_3 \\mid \\text{goat}_3) = 1 - \\frac{1}{3} - 0 = \\frac{2}{3} \\]\nSwitching doubles your chances of winning!"
+    "text": "The Monty Hall Problem\n\nStaying with door 1 still leaves you with \\(\\frac{1}{3}\\) probability of winning the car.\nThe three cases partition the sample space, so their conditional probabilities sum to \\(1\\)\n\\[ P(\\text{car}_2 \\mid \\text{door}_3) = 1 - P(\\text{car}_1 \\mid \\text{door}_3) - P(\\text{car}_3 \\mid \\text{door}_3) = 1 - \\frac{1}{3} - 0 = \\frac{2}{3} \\]\nSwitching doubles your chances of winning!"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-4",
@@ -354,7 +354,7 @@
     "href": "slides/week2/week2_conditional_probability.html#references",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "References",
-    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nElliott, Marc N., Peter A. Morrison, Allen Fremont, Daniel F. McCaffrey, Philip Pantoja, and Nicole Lurie. 2009. “Using the Census Bureau’s Surname List to Improve Estimates of Race/Ethnicity and Associated Disparities.” Health Services and Outcomes Research Methodology 9 (2): 69–83. https://doi.org/10.1007/s10742-009-0047-1.\n\n\nFearon, James D., and David D. Laitin. 2003. “Ethnicity, Insurgency, and Civil War.” American Political Science Review 97 (1): 75–90. https://doi.org/10.1017/S0003055403000534.\n\n\nImai, Kosuke, and Kabir Khanna. 2016. “Improving Ecological Inference by Predicting Individual Ethnicity from Voter Registration Records.” Political Analysis 24 (2): 263–72. https://doi.org/10.1093/pan/mpw001."
+    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nElliott, Marc N., Peter A. Morrison, Allen Fremont, Daniel F. McCaffrey, Philip Pantoja, and Nicole Lurie. 2009. “Using the Census Bureau’s Surname List to Improve Estimates of Race/Ethnicity and Associated Disparities.” Health Services and Outcomes Research Methodology 9 (2): 69–83. https://doi.org/10.1007/s10742-009-0047-1.\n\n\nFearon, James D., and David D. Laitin. 2003. “Ethnicity, Insurgency, and Civil War.” American Political Science Review 97 (1): 75–90. https://doi.org/10.1017/S0003055403000534.\n\n\nImai, Kosuke, and Kabir Khanna. 2016. “Improving Ecological Inference by Predicting Individual Ethnicity from Voter Registration Records.” Political Analysis 24 (2): 263–72. https://doi.org/10.1093/pan/mpw001."
   },
   {
     "objectID": "sections.html",
@@ -809,7 +809,7 @@
     "href": "slides/week1/week1_intro_and_review.html#references",
     "title": "Week 1: Intro to Probability",
     "section": "References",
-    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. “Modern Plain Text Computing.” Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
+    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. Modern Plain Text Computing. Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
   },
   {
     "objectID": "staff.html",
