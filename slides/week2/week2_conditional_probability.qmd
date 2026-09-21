@@ -382,6 +382,24 @@ $$ P(A \mid B) = \frac{P(B \mid A) P(A)}{P(B)} $$
 
   $$ P(\text{car}_1 \mid \text{door}_3) = \frac{\frac{1}{2}}{P(\text{door}_3 \mid \text{car}_1)P(\text{car}_1) + P(\text{door}_3 \mid \text{car}_2)P(\text{car}_2) + P(\text{door}_3 \mid \text{car}_3)P(\text{car}_3)} \cdot \frac{1}{3} $$
 
+:::
+
+## The Monty Hall Problem
+
+![](assets/monty_case1.svg){fig-align="center" width="90%"}
+
+## The Monty Hall Problem
+
+![](assets/monty_case2.svg){fig-align="center" width="90%"}
+
+## The Monty Hall Problem
+
+![](assets/monty_case3.svg){fig-align="center" width="90%"}
+
+## The Monty Hall Problem
+
+::: {.incremental}
+
 - The host **always** opens 3 if the car is behind 2 and **never** opens 3 if the car is behind 3, so we have
 
   $$ P(\text{car}_1 \mid \text{door}_3) = \frac{\frac{1}{2}}{\frac{1}{2}\cdot\frac{1}{3} + 1\cdot \frac{1}{3} + 0 \cdot \frac{1}{3}} \cdot \frac{1}{3} $$
@@ -407,19 +425,7 @@ $$ P(A \mid B) = \frac{P(B \mid A) P(A)}{P(B)} $$
 
 ## The Monty Hall Problem
 
-![](assets/monty_case1.svg){fig-align="center" width="90%"}
-
-## The Monty Hall Problem
-
-![](assets/monty_case2.svg){fig-align="center" width="90%"}
-
-## The Monty Hall Problem
-
-![](assets/monty_case3.svg){fig-align="center" width="90%"}
-
-## The Monty Hall Problem
-
-![](assets/monty_summary.svg){fig-align="center" width="68%"}
+![](assets/monty_summary.svg){fig-align="center" width="72%"}
 
 ## Independence
 
