@@ -1,0 +1,164 @@
+# ---------------------------------------------------------------------------
+# List experiment counts against a Binomial(J, pi).
+#
+# 2012 Mexico Panel Study, Wave 2: the number of list items each respondent
+# said "yes" to, for the 3-item control list and the 4-item treated list. The
+# sliders set pi for each list; the Binomial PMF and CDF are drawn over the
+# empirical ones. Data prepared by ../data/prepare_data.R.
+#
+# Two measures of fit, one per plot:
+#   overlap  = sum_k min(p_hat(k), p(k))   -- the shared area of the two PMFs
+#   max gap  = max_k |F_hat(k) - F(k)|     -- the largest vertical CDF distance
+#
+# Deliberately base R + shiny only. Every extra package is another wasm
+# download when this runs in the browser through shinylive.
+# ---------------------------------------------------------------------------
+
+library(shiny)
+
+dat <- read.csv("mexico_list.csv")
+
+GROUPS <- list(
+  control = list(label = "Control list", J = 3, treat = 0, col = "#0479A8", tint = "#CDE4EE"),
+  treated = list(label = "Treated list", J = 4, treat = 1, col = "#c5050c", tint = "#F3CDCE")
+)
+GAP_COL <- "#C77400"
+INK     <- "#333333"
+
+# Empirical PMF and CDF on the support 0..J
+for (g in names(GROUPS)) {
+  y <- dat$y[dat$treat == GROUPS[[g]]$treat]
+  k <- 0:GROUPS[[g]]$J
+  GROUPS[[g]]$n    <- length(y)
+  GROUPS[[g]]$pmf  <- as.numeric(table(factor(y, levels = k))) / length(y)
+  GROUPS[[g]]$cdf  <- cumsum(GROUPS[[g]]$pmf)
+}
+
+css <- "
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700&family=Red+Hat+Text:wght@400;500;700&display=swap');
+html, body { height:100%; }
+body { font-family:'Red Hat Text',system-ui,sans-serif; background:#F7F7F7; color:#333;
+       margin:0; padding:10px; font-size:14px; box-sizing:border-box; overflow:hidden; }
+h4 { font-family:'Red Hat Display',system-ui,sans-serif; margin:0; font-size:17px; }
+/* fluidPage() wraps the UI in an auto-height .container-fluid; it needs a
+   definite height for the plots below to size to the frame. */
+body > .container-fluid { height:100%; padding:0; }
+.wrap { display:flex; gap:14px; height:100%; }
+.card { flex:1 1 0; min-width:0; display:flex; flex-direction:column;
+        background:#fff; border:1px solid #e2e2e2; border-radius:8px; padding:10px 12px;
+        box-sizing:border-box; }
+.hdr { display:flex; justify-content:space-between; align-items:baseline; }
+.model { font-size:13px; color:#666; }
+.form-group { margin-bottom:0; }
+.irs--shiny .irs-bar { border-color:var(--gc); background:var(--gc); }
+.irs--shiny .irs-single { background:var(--gc); }
+.irs--shiny .irs-handle { border-color:var(--gc); }
+.irs--shiny .irs-min, .irs--shiny .irs-max { display:none !important; }
+/* Everything above the plots has a fixed height. The plots take their size
+   from the space left over when they first render, which is before the
+   slider is built and the fit line is filled in. */
+.card > .form-group { height:78px; flex:none; overflow:hidden; }
+.hdr { height:24px; flex:none; }
+.key { height:18px; flex:none; }
+.fit { display:flex; gap:18px; font-size:12px; color:#777; margin:2px 0 4px 0; }
+#fit_control, #fit_treated { height:28px; flex:none; }
+.fit b { font-family:'Red Hat Display',sans-serif; font-size:16px; color:#333; }
+.meter { display:inline-block; width:70px; height:8px; background:#eee; border-radius:3px;
+         overflow:hidden; vertical-align:middle; margin-left:4px; }
+.meter div { height:8px; }
+.plots { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+.plots > div { flex:1 1 0; min-height:0; }
+.key { font-size:11.5px; color:#777; text-align:center; }
+.key span { display:inline-block; margin:0 6px; }
+.sw { display:inline-block; width:10px; height:10px; vertical-align:-1px; margin-right:3px; }
+"
+
+group_card <- function(g) {
+  G <- GROUPS[[g]]
+  div(class = "card", style = paste0("--gc:", G$col, ";"),
+    div(class = "hdr",
+      h4(style = paste0("color:", G$col), G$label),
+      span(class = "model", sprintf("Y ~ Binomial(%d, π)   n = %d", G$J, G$n))
+    ),
+    sliderInput(paste0("pi_", g), "π", min = 0, max = 1, value = 0.5,
+                step = 0.01, width = "100%"),
+    uiOutput(paste0("fit_", g)),
+    div(class = "plots",
+      plotOutput(paste0("pmf_", g), height = "100%"),
+      plotOutput(paste0("cdf_", g), height = "100%")
+    ),
+    div(class = "key",
+      span(span(class = "sw", style = paste0("background:", G$col)), "Data"),
+      span("\u25CB \u2013 \u2013 Binomial"),
+      span(span(class = "sw", style = "background:#EEC48F"), "Gap"))
+  )
+}
+
+ui <- fluidPage(
+  tags$head(tags$style(HTML(css))),
+  div(class = "wrap", group_card("control"), group_card("treated"))
+)
+
+draw_pmf <- function(G, p) {
+  k <- 0:G$J
+  par(mar = c(1.9, 3.4, 1.5, 0.6), mgp = c(1.9, 0.5, 0), tcl = -0.25, las = 1,
+      col.axis = "#555", family = "sans")
+  plot(NA, xlim = c(-0.6, G$J + 0.6), ylim = c(0, max(0.75, 1.06 * p)), xaxt = "n", yaxs = "i",
+       xlab = "", ylab = "P(Y = y)", bty = "l", fg = "#999")
+  axis(1, at = k, fg = "#999")
+  title(main = "PMF", adj = 0, font.main = 2, cex.main = 1, col.main = "#777", line = 0.4)
+  w <- 0.32
+  # The data bar is tinted; the part it shares with the Binomial is solid, so
+  # the solid area is the overlap reported above the plot.
+  # The y-axis stays fixed unless the Binomial outgrows it at extreme pi.
+  rect(k - w, 0, k + w, G$pmf, col = G$tint, border = NA)
+  rect(k - w, 0, k + w, pmin(G$pmf, p), col = G$col, border = NA)
+  segments(k, 0, k, p, col = INK, lwd = 1.3)
+  points(k, p, pch = 21, bg = "#fff", col = INK, cex = 1.3, lwd = 1.6)
+}
+
+draw_cdf <- function(G, P) {
+  k <- 0:G$J
+  x0 <- c(-0.6, k); x1 <- c(k, G$J + 0.6)
+  Fh <- c(0, G$cdf); Ft <- c(0, P)
+  par(mar = c(1.9, 3.4, 1.5, 0.6), mgp = c(1.9, 0.5, 0), tcl = -0.25, las = 1,
+      col.axis = "#555", family = "sans")
+  plot(NA, xlim = range(x0, x1), ylim = c(0, 1.02), xaxt = "n", yaxs = "i",
+       xlab = "", ylab = "P(Y ≤ y)", bty = "l", fg = "#999")
+  axis(1, at = k, fg = "#999")
+  title(main = "CDF", adj = 0, font.main = 2, cex.main = 1, col.main = "#777", line = 0.4)
+  # Shade the gap between the two step functions; the largest gap is darker.
+  gap <- abs(Fh - Ft)
+  big <- which.max(gap)
+  rect(x0, pmin(Fh, Ft), x1, pmax(Fh, Ft), border = NA,
+       col = ifelse(seq_along(x0) == big, adjustcolor(GAP_COL, 0.55),
+                    adjustcolor(GAP_COL, 0.18)))
+  segments(x0, Ft, x1, Ft, col = INK, lwd = 1.6, lty = 2)
+  segments(x0, Fh, x1, Fh, col = G$col, lwd = 3)
+  points(k, G$cdf, pch = 19, col = G$col, cex = 1.1)
+}
+
+server <- function(input, output, session) {
+  lapply(names(GROUPS), function(g) {
+    G <- GROUPS[[g]]
+    p <- reactive(dbinom(0:G$J, G$J, input[[paste0("pi_", g)]]))
+    P <- reactive(pbinom(0:G$J, G$J, input[[paste0("pi_", g)]]))
+
+    output[[paste0("fit_", g)]] <- renderUI({
+      ov  <- sum(pmin(G$pmf, p()))
+      gap <- max(abs(G$cdf - P()))
+      div(class = "fit",
+        span("PMF overlap ", tags$b(sprintf("%.0f%%", 100 * ov)),
+             span(class = "meter",
+                  div(style = sprintf("width:%.1f%%;background:%s", 100 * ov, G$col)))),
+        span("Largest CDF gap ", tags$b(sprintf("%.2f", gap)),
+             span(class = "meter",
+                  div(style = sprintf("width:%.1f%%;background:%s", 100 * gap, GAP_COL))))
+      )
+    })
+    output[[paste0("pmf_", g)]] <- renderPlot(draw_pmf(G, p()), res = 96)
+    output[[paste0("cdf_", g)]] <- renderPlot(draw_cdf(G, P()), res = 96)
+  })
+}
+
+shinyApp(ui, server)

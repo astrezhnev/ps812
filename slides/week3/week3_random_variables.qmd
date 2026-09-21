@@ -1,0 +1,221 @@
+---
+title: "Week 3: Random Variables and Distributions"
+subtitle: "PS 812 - Introduction to Statistical Methods in Political Science"
+author:
+  - name: "Anton Strezhnev"
+    affiliation: "University of Wisconsin-Madison"
+    email: strezhnev@wisc.edu
+date: "September 22, 2026"
+date-format: "MMMM D, YYYY"
+editor: 
+  render-on-save: true
+format: 
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    overview: true
+    navigation-mode: vertical
+    progress: false
+    controls: true
+    link-external-newwindow: true
+    footer: "PS 812 - University of Wisconsin-Madison"
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+execute: 
+  cache: false
+code:
+  execute: 
+    - r
+    - python
+embed-resources: true
+bibliography: ../ps812.bib
+link-citations: true
+
+---
+
+## Welcome back! {.title-slide}
+
+<!-- MathJax macros for the whole deck. The reveal math plugin overwrites
+     window.MathJax, so a header config would be clobbered; defining them in
+     the first slide registers them before any later slide is typeset. The
+     wrapper takes up no space and renders nothing. -->
+::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
+$$
+\newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
+\newcommand{\nindep}{\mathrel{\rlap{\hspace{0.30em}/}{\perp\mkern-10mu\perp}}}
+$$
+:::
+
+
+## Week overview
+
+::: {.incremental}
+
+- Last week
+  - Conditional probability
+  - Independence and conditional independence
+  - Bayes' rule
+- This week
+  - **Random variables**
+  - **Distributions**
+  - **Properties of random variables**
+
+:::
+
+## Where we're going
+
+::: {.incremental}
+
+- This week, we'll go beyond **events** and illustrate a way of talking about random processes that map on to the **real numbers** $\mathbb{R}$
+  - These are what we'll call **random variables**
+- Random variables are defined by their **distributions**
+  - We'll summarize features of these distributions with quantities like the **expectation** and the **variance**
+- These will eventually be our empirical **estimands**
+  - The share of residents of Wisconsin who turn out in the 2026 midterm election.
+  - The share of residents of a given Wisconsin precinct who turn out in the 2026 midterm election **given** that precinct's 2024 Harris vote share.
+- We will use our observed data to provide **estimates** of these quantities
+  - Assume our observations came from the distribution of interest...how "close" is our estimate from the truth.
+  - How can we talk about this when we **don't know** the truth!?
+
+:::
+
+## Random variables
+
+::: {.incremental}
+
+- There are clear limitations in using the language of **events** alone in talking about probabilities
+- **Example:** Suppose we're trying to measure **income** using a random **survey**
+  - Let $A_{ik}$ be the event that the respondent $i$ has an income of exactly $k$ dollars.
+  - How would we represent the probability that a randomly selected respondent has an income between \$50,000 and \$100,000?
+
+    $$
+    \begin{aligned}
+    P\left(\bigcup_{k = 50{,}000}^{100{,}000} A_{ik}\right) &= \sum_{k = 50{,}000}^{100{,}000} P(A_{ik}) \\
+    &= P(A_{i,50000}) + P(A_{i,50001}) + \cdots + P(A_{i,99999}) + P(A_{i,100000})
+    \end{aligned}
+    $$
+
+- Suppose we measure in **dollars** but want to calculate the probability that the respondent has an income between **£50,000 and £100,000**?
+  - Suppose the exchange rate is itself **random**?
+
+- There has to be a better way!
+
+:::
+
+## Random variables
+
+- A **random variable** is a function that maps from the *sample space* $\Omega$ to the *real numbers* $\mathbb{R}$
+  - Returning to our income example, we can now say that $X_i$ is a random variable denoting respondent $i$'s income in dollars
+  - Now we can write the probability of our earlier event as $P(50{,}000 \le X_i \le 100{,}000)$
+
+  ![](assets/rv_mapping.svg){fig-align="center" width="85%"}
+
+
+## Random variables
+
+-  We can construct random variables as functions other random variables!
+  - Let $R$ be a random variable denoting the GBP-USD exchange rate on a given day.
+  - The probability that the respondent has an income between **£50,000 and £100,000** is just 
+
+    $$P(50{,}000 \le R \cdot X_i \le 100{,}000)$$
+
+  - $R \cdot X_i$ is itself another random variable!
+
+  ![](assets/rv_mapping.svg){fig-align="center" width="85%"}
+
+## Random variables: Notation
+
+- We typically refer to **random variables** using capital roman letters
+  - (e.g. $X$, $Y$, $D$)
+  - Sometimes subscripted when we have repetitions across some margin ($i$ for units or $t$ for time)
+
+## Example: Vote buying in Mexico
+
+- The **2012 Mexico Panel Study** used a **list experiment** to measure vote buying in the 2012 presidential election
+  - Exchanging a vote for a gift is illegal, so respondents may not admit to it when asked directly
+- Respondents are asked **how many** items on a list they did in recent weeks (not **which** ones)
+  - See a television newscast that mentions a candidate
+  - Attend a campaign event
+  - Talk about politics with other people
+  - *Treated group only:* Exchange your vote for a gift, favor, or access to a service
+- Respondents are randomly assigned to the 3-item (**control**) or 4-item (**treated**) list
+- Every respondent is also asked the vote-buying question **directly**
+
+## Example: Vote buying in Mexico
+
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+# y: number of items; treat: 1 = 4-item list; direct: admitted vote buying when asked directly
+mexico <- read_csv("data/mexico_list.csv")
+```
+
+## Fitting a Binomial {.app-slide}
+
+::: {.app-frame data-app="binomial_app.html" data-title="Fitting a Binomial to the list experiment"}
+:::
+
+::: {.attribution}
+2012 Mexico Panel Study, Wave 2
+:::
+
+```{=html}
+<script>
+// The widget is a separate page framed here. Its <iframe> is built at runtime
+// rather than written into the markdown because `embed-resources: true` would
+// otherwise inline the target into a data: URI, breaking the app's relative
+// asset paths and its service worker. Mounting on first visit to the slide
+// also keeps the webR runtime from downloading until it is actually needed.
+(function () {
+  function mount(el) {
+    if (el.dataset.mounted) return;
+    el.dataset.mounted = "1";
+    var f = document.createElement("iframe");
+    f.src = el.dataset.app;
+    f.title = el.dataset.title || "Interactive widget";
+    f.setAttribute("allow", el.dataset.allow || "clipboard-write");
+    if (el.dataset.fullscreen) f.setAttribute("allowfullscreen", "");
+    el.appendChild(f);
+  }
+  function check() {
+    document.querySelectorAll(".app-frame[data-app]").forEach(function (el) {
+      if (el.closest("section.present")) mount(el);
+    });
+  }
+  function wire() {
+    if (!window.Reveal) { check(); return; }
+    if (typeof Reveal.on === "function") Reveal.on("slidechanged", check);
+    check();
+  }
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(wire, 0);
+  } else {
+    document.addEventListener("DOMContentLoaded", wire);
+  }
+  window.addEventListener("load", check);
+})();
+</script>
+```
+
+
+## Next week
+
+::: {.incremental}
+
+- Joint distributions
+  - Definining the distribution of $X$ and $Y$ (and $Z$, and...) together!
+- Conditional distributions
+  - **Slicing** the joint distribution at a particular point
+- Conditional expectations and the best linear predictor
+- Covariances and correlations
+
+:::
+
+## References {.refs-slide}
+
+::: {#refs}
+:::
