@@ -4,19 +4,29 @@
 # 2012 Mexico Panel Study, Wave 2: the number of list items each respondent
 # said "yes" to, for the 3-item control list and the 4-item treated list. The
 # sliders set pi for each list; the Binomial PMF and CDF are drawn over the
-# empirical ones. Data prepared by ../data/prepare_data.R.
+# empirical ones.
 #
 # Two measures of fit, one per plot:
 #   overlap  = sum_k min(p_hat(k), p(k))   -- the shared area of the two PMFs
 #   max gap  = max_k |F_hat(k) - F(k)|     -- the largest vertical CDF distance
 #
-# Deliberately base R + shiny only. Every extra package is another wasm
-# download when this runs in the browser through shinylive.
+# Base R + shiny, plus haven to read the Stata file. Every extra package is
+# another wasm download when this runs in the browser through shinylive.
 # ---------------------------------------------------------------------------
 
 library(shiny)
+library(haven)
 
-dat <- read.csv("mexico_list.csv")
+# w2_P35C is the list assignment: 1 = control (3 items), 2 = treated (4 items).
+# The count is in w2_P35A for control and w2_P35B for treated; 9 (don't know)
+# and -1 (not asked) are missing. Respondents with no answer to the direct
+# vote-buying question (w2_P41) are dropped too, so the sample matches the slides.
+mex <- read_dta("2012_stata.dta", col_select = c("w2_P35A", "w2_P35B", "w2_P35C", "w2_P41"))
+treat <- ifelse(mex$w2_P35C == 1, 0, ifelse(mex$w2_P35C == 2, 1, NA))
+y <- as.numeric(ifelse(treat == 0, mex$w2_P35A, mex$w2_P35B))
+y[y %in% c(9, -1)] <- NA
+dat <- data.frame(y = y, treat = treat)
+dat <- dat[!is.na(dat$y) & !is.na(dat$treat) & mex$w2_P41 %in% c(0, 1, 3, 9), ]
 
 GROUPS <- list(
   control = list(label = "Control list", J = 3, treat = 0, col = "#0479A8", tint = "#CDE4EE"),

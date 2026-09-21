@@ -149,9 +149,16 @@ $$
 #| message: false
 
 library(tidyverse)
+library(haven)
 
 # y: number of items; treat: 1 = 4-item list; direct: admitted vote buying when asked directly
-mexico <- read_csv("data/mexico_list.csv")
+mexico <- read_dta("data/2012_stata.dta") |>
+  mutate(treat  = case_when(w2_P35C == 1 ~ 0, w2_P35C == 2 ~ 1),
+         y      = as.numeric(if_else(treat == 0, w2_P35A, w2_P35B)),
+         y      = if_else(y %in% c(9, -1), NA_real_, y),
+         direct = case_when(w2_P41 %in% c(0, 3, 9) ~ 0, w2_P41 == 1 ~ 1)) |>
+  filter(!is.na(y), !is.na(treat), !is.na(direct)) |>
+  select(y, treat, direct)
 ```
 
 ## Fitting a Binomial {.app-slide}
