@@ -242,14 +242,14 @@
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-2",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
-    "text": "The Monty Hall Problem\n\nFor the denominator, we’ll use the law of total probability and consider all possible locations of the car.\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2}}{P(\\text{door}_3 \\mid \\text{car}_1)P(\\text{car}_1) + P(\\text{door}_3 \\mid \\text{car}_2)P(\\text{car}_2) + P(\\text{door}_3 \\mid \\text{car}_3)P(\\text{car}_3)} \\cdot \\frac{1}{3} \\]\nThe host always opens 3 if the car is behind 2 and never opens 3 if the car is behind 3, so we have\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2}}{\\frac{1}{2}\\cdot\\frac{1}{3} + 1\\cdot \\frac{1}{3} + 0 \\cdot \\frac{1}{3}} \\cdot \\frac{1}{3} \\]\nTherefore\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2} \\cdot \\frac{1}{3} }{\\frac{1}{2}} = \\frac{1}{3} \\]"
+    "text": "The Monty Hall Problem\n\nFor the denominator, we’ll use the law of total probability and consider all possible locations of the car.\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2}}{P(\\text{door}_3 \\mid \\text{car}_1)P(\\text{car}_1) + P(\\text{door}_3 \\mid \\text{car}_2)P(\\text{car}_2) + P(\\text{door}_3 \\mid \\text{car}_3)P(\\text{car}_3)} \\cdot \\frac{1}{3} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-3",
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-3",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
-    "text": "The Monty Hall Problem\n\nStaying with door 1 still leaves you with \\(\\frac{1}{3}\\) probability of winning the car.\nThe three cases partition the sample space, so their conditional probabilities sum to \\(1\\)\n\\[ P(\\text{car}_2 \\mid \\text{door}_3) = 1 - P(\\text{car}_1 \\mid \\text{door}_3) - P(\\text{car}_3 \\mid \\text{door}_3) = 1 - \\frac{1}{3} - 0 = \\frac{2}{3} \\]\nSwitching doubles your chances of winning!"
+    "text": "The Monty Hall Problem"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-4",
@@ -270,11 +270,18 @@
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-6",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
-    "text": "The Monty Hall Problem"
+    "text": "The Monty Hall Problem\n\nThe host always opens 3 if the car is behind 2 and never opens 3 if the car is behind 3, so we have\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2}}{\\frac{1}{2}\\cdot\\frac{1}{3} + 1\\cdot \\frac{1}{3} + 0 \\cdot \\frac{1}{3}} \\cdot \\frac{1}{3} \\]\nTherefore\n\\[ P(\\text{car}_1 \\mid \\text{door}_3) = \\frac{\\frac{1}{2} \\cdot \\frac{1}{3} }{\\frac{1}{2}} = \\frac{1}{3} \\]"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-7",
     "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-7",
+    "title": "Week 2: Conditional Probability and Independence",
+    "section": "The Monty Hall Problem",
+    "text": "The Monty Hall Problem\n\nStaying with door 1 still leaves you with \\(\\frac{1}{3}\\) probability of winning the car.\nThe three cases partition the sample space, so their conditional probabilities sum to \\(1\\)\n\\[ P(\\text{car}_2 \\mid \\text{door}_3) = 1 - P(\\text{car}_1 \\mid \\text{door}_3) - P(\\text{car}_3 \\mid \\text{door}_3) = 1 - \\frac{1}{3} - 0 = \\frac{2}{3} \\]\nSwitching doubles your chances of winning!"
+  },
+  {
+    "objectID": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-8",
+    "href": "slides/week2/week2_conditional_probability.html#the-monty-hall-problem-8",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "The Monty Hall Problem",
     "text": "The Monty Hall Problem"
