@@ -36,6 +36,16 @@ link-citations: true
 
 ## Welcome back! {.title-slide}
 
+<!-- MathJax macros for the whole deck. The reveal math plugin overwrites
+     window.MathJax, so a header config would be clobbered; defining them in
+     the first slide registers them before any later slide is typeset. The
+     wrapper takes up no space and renders nothing. -->
+::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
+$$
+\newcommand{\Var}{\text{Var}}
+$$
+:::
+
 ## Week overview
 
 ::: {.incremental}
@@ -47,7 +57,7 @@ link-citations: true
 - This week
   - **Random variables**
   - **Distributions**
-  - **Properties of random variables**
+  - **Expectations and variances**
 
 :::
 
@@ -104,8 +114,8 @@ link-citations: true
 
 ::: {.incremental}
 
--  We can construct random variables as functions other random variables!
-  - Let $R$ be a random variable denoting the GBP-USD exchange rate on a given day.
+-  We can construct random variables as functions of other random variables!
+  - Let $R$ be a random variable denoting the USD-GBP (pounds per dollar) exchange rate on a given day.
   - Let $Y_i = R \times X_i$
   - The probability that the respondent has an income between **£50,000 and £100,000** is just 
     $$P (50{,}000 \le Y_i \le 100{,}000) $$
@@ -194,7 +204,7 @@ p_pois + p_exp +
 ::: {.incremental}
 
 - The **range** of a CDF is between $0$ and $1$
-  - It's output is a **probability** - probabilities can't be negative or greater than $1$
+  - Its output is a **probability** - probabilities can't be negative or greater than $1$
 - The CDF is **non-decreasing**
   - Remember the conjunction fallacy!
   - Can't make a probability of an event **smaller** by having it encompass more outcomes!
@@ -217,9 +227,10 @@ p_pois + p_exp +
 
   $$
   \begin{aligned}
-  P(a < X \le b) &= P([X \le a] \cup [a < X \le b]) - P(X \le a) \\
+  F_X(b) - F_X(a) &= P(X \le b) - P(X \le a) \\
+  &= P([X \le a] \cup [a < X \le b]) - P(X \le a) \\
   &= P([X \le a]) + P([a < X \le b]) - P(X \le a) \\
-  &= P([a < X \le b]) 
+  &= P(a < X \le b)
   \end{aligned}
   $$
 
@@ -320,11 +331,11 @@ $$ \mathbf{1}(A) \sim \text{Bernoulli}(p) \quad p = P(A) $$
 ::: {.incremental}
 
 - Getting people to be honest on surveys can be difficult for some types of questions.
-  - **Social desirability bias** may make some respondent reticent to give truthful answers
+  - **Social desirability bias** may make some respondents reticent to give truthful answers
 - The **2012 Mexico Panel Study** [@greene2016mexico] wanted to study the prevalence of **vote buying** in the 2012 Mexican presidential election
   - Exchanging a vote for a gift is illegal - survey respondents may not want to admit to a crime!
 - **Solution**: A **list experiment** - Respondents are randomly assigned to a "treated" or a "control" group
-- Respondents see a list of itemas and are asked **how many** items on that list they did in recent weeks (not **which ones**)
+- Respondents see a list of items and are asked **how many** items on that list they did in recent weeks (not **which ones**)
   1. See a television newscast that mentions a candidate
   2. Attend a campaign event
   3. Talk about politics with other people
@@ -522,7 +533,7 @@ die_pmf(rep(1, 6), "#0479A8", "Fair die") +
 
 - You'll see this most often with sums over random variables indexed along some dimension
 
-  $$\mathbb{E}\bigg[\sum_{i=1}^n c X_i\bigg] = \sum_{i=1}^n\mathbb{E}[a X_i] = \sum_{i=1}^n a\mathbb{E}[X_i] = a\sum_{i=1}^n \mathbb{E}[X_i]$$
+  $$\mathbb{E}\bigg[\sum_{i=1}^n a X_i\bigg] = \sum_{i=1}^n\mathbb{E}[a X_i] = \sum_{i=1}^n a\mathbb{E}[X_i] = a\sum_{i=1}^n \mathbb{E}[X_i]$$
 
 :::
 
@@ -543,7 +554,7 @@ die_pmf(rep(1, 6), "#0479A8", "Fair die") +
 - The **expected value** of a Bernoulli/indicator random variable is just the **probability** that it takes on a value of $1$
   - This is the **fundamental bridge** between expectations and probability [@blitzstein2019introduction]
 
-## Expectation of the Bernoulli
+## Expectation of the Binomial
 
 - Now let $X \sim \text{Binomial}(N, p)$
 - We could write this out and use properties of sums of factorials
@@ -553,11 +564,11 @@ die_pmf(rep(1, 6), "#0479A8", "Fair die") +
 - Or we could use **linearity** of expectations - much easier!
 
 
-## Expectation of the Bernoulli
+## Expectation of the Binomial
 
 ::: {.incremental}
 
-- Recall that the **Bernoulli** is the sum of $N$ independent and identically distributed **Bernoulli** random variables with success probability $p$
+- Recall that the **Binomial** is the sum of $N$ independent and identically distributed **Bernoulli** random variables with success probability $p$
 
   $$X = \sum_{i=1}^N X_i \quad\quad\quad X_i \sim \text{Bernoulli}(p) $$
 
@@ -639,7 +650,46 @@ mexico |>
 
 ## Variance
 
+::: {.incremental}
+
+- Beyond the expectation, there are other summaries of a distribution that capture other relevant features.
+  - We may want to know how **spread out** realizations of the random variable are around the mean.
+- The **variance** of a random variable $\Var(X)$ is defined as the expected **squared** deviation from $\mathbb{E}[X]$
+
+  $$\Var(X) = \mathbb{E}\bigg[(X - \mathbb{E}[X])^2\bigg] $$
+- Expanding the square and applying linearity of expectation
+
+  $$\Var(X) = \mathbb{E}[X^2] - \mathbb{E}[2X\mathbb{E}[X]] + \mathbb{E}[\mathbb{E}[X]^2]$$
+- Pulling out the constant $2\mathbb{E}[X]$ and $\mathbb{E}[X]^2$
+
+  $$
+  \begin{aligned}
+  \Var(X) &= \mathbb{E}[X^2] - 2\mathbb{E}[X]\mathbb{E}[X] + \mathbb{E}[X]^2 \\
+  &= \mathbb{E}[X^2] - \mathbb{E}[X]^2
+  \end{aligned}
+  $$
+
+:::
+
 ## Properties of variance
+
+::: {.incremental}
+
+- The variance is **non-negative**
+  - By **Jensen's inequality** for a convex function: $\mathbb{E}[X^2] \ge \mathbb{E}[X]^2$
+
+- For a random variable $X$ and a constant $a$
+
+  $$ \Var(aX) = a^2\Var(X) $$
+
+- But be careful, the variance of the sum of two random variables $X$ and $Y$ is **not** the sum of the variances except in a special case we'll talk about next week (independence)
+
+  $$ \Var(X + Y) \neq \Var(X) + \Var(Y) $$
+
+- Also, the variance of the **difference** is not the difference in the variances...even for independent random variables, it's still the sum of the variances ($-1$ gets squared!)
+  - We'll talk about this more next week when we define **covariance**
+
+:::
 
 ## Continuous random variables
 
@@ -657,14 +707,14 @@ p_pois + p_exp +
 ```
 
 
-- The **discrete** variable's CDF has **discontinuities**, the **continuous** variable's CDF is **continuous** (and **differentiable**)
+- The **discrete** variable's CDF has **discontinuities**, the **continuous** variable's CDF is **continuous** (and **differentiable** almost everywhere)
 
 ## Probability density functions (PDFs)
 
 ::: {.incremental}
 
-- A **continuous** random variable is a random variable whose CDF is **continuous everywhere** and differentiable everywhere except for a possibly finite number of points
-  - The support of a continuous random variable is the set of real numbers $\mathbf{R}$ or an interval (or union of intervals) of the reals.
+- A **continuous** random variable is a random variable whose CDF is **continuous everywhere** and **differentiable** everywhere except possibly at a finite number of points [@blitzstein2019introduction]
+  - The support of a continuous random variable is typically the set of real numbers $\mathbb{R}$ or an interval (or union of intervals) of the reals.
 
 - The challenge with talking about a distribution defined on the **uncountably infinite** reals is that the probability of realizing any particular value $x$ is always **zero**
 
@@ -682,9 +732,9 @@ p_pois + p_exp +
 - It's not a probability, but it **integrates** to a probability.
   - From the **fundamental theorem of calculus**
 
-  $$ F_X(x) = \int_{\infty}^t f_x(t) dt $$
+  $$ F_X(x) = \int_{-\infty}^{x} f_X(t) dt $$
 
-- This is similar to how we **summed** the PMF to get the PDF
+- This is similar to how we **summed** the PMF to get the CDF
 - PDFs **integrate** to $1$ (just like how PMFs sum to $1$)
 
   $$ \int_{-\infty}^{\infty} f_X(x)dx = 1 $$ 
@@ -725,7 +775,7 @@ p_pois + p_exp +
 
 - Two parameters, $\mu$ and $\sigma^2$
   - These parameters happen to be the expectation and variance!
-  - $\mu = \mathbb{E}[X]$, $\sigma^2 = Var(X)$
+  - $\mu = \mathbb{E}[X]$, $\sigma^2 = \Var(X)$
 
 :::
 
@@ -805,7 +855,7 @@ p_par_pdf + p_par_cdf + plot_layout(guides = "collect") +
 - $\mathcal{N}(0, 1)$ is referred to as the **standard normal**
   - PDF and CDF typically written as: $\phi(z)$ and $\Phi(z)$
 
-  $$ \phi(z) = \frac{1}{\sqrt{2\pi}} e^{-z^2/2}, $$
+  $$ \phi(z) = \frac{1}{\sqrt{2\pi}} e^{-z^2/2} $$
 
 - Any normal can be **standardized**. If $X \sim \mathcal{N}(\mu, \sigma^2)$, then
 
@@ -860,10 +910,11 @@ sd_panel(1, "\u2248 68%") + sd_panel(2, "\u2248 95%") + sd_panel(3, "\u2248 99.7
 ::: {.incremental}
 
 - Joint distributions
-  - Definining the distribution of $X$ and $Y$ (and $Z$, and...) together!
+  - Defining the distribution of $X$ and $Y$ (and $Z$, and...) together!
 - Conditional distributions
   - **Slicing** the joint distribution at a particular point
 - Conditional expectations and the best linear predictor
+  - Law of total expectation
 - Covariances and correlations
 
 :::
