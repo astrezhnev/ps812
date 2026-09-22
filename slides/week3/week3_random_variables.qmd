@@ -36,18 +36,6 @@ link-citations: true
 
 ## Welcome back! {.title-slide}
 
-<!-- MathJax macros for the whole deck. The reveal math plugin overwrites
-     window.MathJax, so a header config would be clobbered; defining them in
-     the first slide registers them before any later slide is typeset. The
-     wrapper takes up no space and renders nothing. -->
-::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
-$$
-\newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
-\newcommand{\nindep}{\mathrel{\rlap{\hspace{0.30em}/}{\perp\mkern-10mu\perp}}}
-$$
-:::
-
-
 ## Week overview
 
 ::: {.incremental}
@@ -114,25 +102,45 @@ $$
 
 ## Random variables
 
+::: {.incremental}
+
 -  We can construct random variables as functions other random variables!
   - Let $R$ be a random variable denoting the GBP-USD exchange rate on a given day.
+  - Let $Y_i = R \times X_i$
   - The probability that the respondent has an income between **£50,000 and £100,000** is just 
+    $$P (50{,}000 \le Y_i \le 100{,}000) $$
 
-    $$P(50{,}000 \le R \cdot X_i \le 100{,}000)$$
+  - $Y_i$ is itself another random variable!
 
-  - $R \cdot X_i$ is itself another random variable!
-
-  ![](assets/rv_mapping.svg){fig-align="center" width="85%"}
+:::
 
 ## Random variables: Notation
+
+::: {.incremental}
 
 - We typically refer to **random variables** using capital roman letters
   - (e.g. $X$, $Y$, $D$)
   - Sometimes subscripted when we have repetitions across some margin ($i$ for units or $t$ for time)
+- We'll refer to a **realization** of a random variable using lower-case roman letters
+  - e.g. $P(X = x)$ refers to the probability that a random variable $X$ takes on a specific value $x$.
 
-## Example: Vote buying in Mexico
+:::
 
-- The **2012 Mexico Panel Study** used a **list experiment** to measure vote buying in the 2012 presidential election
+## Distribution functions
+
+
+## Discrete random variables
+
+## Probability mass functions (PMF)
+
+
+## Bernoulli distribution
+
+## Binomial distribution
+
+## Binomial example: Vote buying in Mexico
+
+- The **2012 Mexico Panel Study** [@greene2016mexico] used a **list experiment** to measure vote buying in the 2012 presidential election
   - Exchanging a vote for a gift is illegal, so respondents may not admit to it when asked directly
 - Respondents are asked **how many** items on a list they did in recent weeks (not **which** ones)
   - See a television newscast that mentions a candidate
@@ -149,16 +157,9 @@ $$
 #| message: false
 
 library(tidyverse)
-library(haven)
 
 # y: number of items; treat: 1 = 4-item list; direct: admitted vote buying when asked directly
-mexico <- read_dta("data/2012_stata.dta") |>
-  mutate(treat  = case_when(w2_P35C == 1 ~ 0, w2_P35C == 2 ~ 1),
-         y      = as.numeric(if_else(treat == 0, w2_P35A, w2_P35B)),
-         y      = if_else(y %in% c(9, -1), NA_real_, y),
-         direct = case_when(w2_P41 %in% c(0, 3, 9) ~ 0, w2_P41 == 1 ~ 1)) |>
-  filter(!is.na(y), !is.na(treat), !is.na(direct)) |>
-  select(y, treat, direct)
+mexico <- read_csv("data/mexico_list.csv")
 ```
 
 ## Fitting a Binomial {.app-slide}
@@ -167,47 +168,83 @@ mexico <- read_dta("data/2012_stata.dta") |>
 :::
 
 ::: {.attribution}
-2012 Mexico Panel Study, Wave 2
+2012 Mexico Panel Study, Wave 2 [@greene2016mexico]
 :::
 
 ```{=html}
 <script>
-// The widget is a separate page framed here. Its <iframe> is built at runtime
-// rather than written into the markdown because `embed-resources: true` would
-// otherwise inline the target into a data: URI, breaking the app's relative
-// asset paths and its service worker. Mounting on first visit to the slide
-// also keeps the webR runtime from downloading until it is actually needed.
+// The widget is a separate page framed here. The <iframe> is built at runtime
+// because `embed-resources: true` would otherwise inline the target into a
+// data: URI, breaking the app's relative asset paths and its service worker.
+// Mounting only once the slide is reached also delays the webR download.
 (function () {
-  function mount(el) {
-    if (el.dataset.mounted) return;
-    el.dataset.mounted = "1";
-    var f = document.createElement("iframe");
-    f.src = el.dataset.app;
-    f.title = el.dataset.title || "Interactive widget";
-    f.setAttribute("allow", el.dataset.allow || "clipboard-write");
-    if (el.dataset.fullscreen) f.setAttribute("allowfullscreen", "");
-    el.appendChild(f);
-  }
-  function check() {
-    document.querySelectorAll(".app-frame[data-app]").forEach(function (el) {
-      if (el.closest("section.present")) mount(el);
+  function mount() {
+    document.querySelectorAll("section.present .app-frame[data-app]").forEach(function (el) {
+      if (el.dataset.mounted) return;
+      el.dataset.mounted = "1";
+      var f = document.createElement("iframe");
+      f.src = el.dataset.app;
+      f.title = el.dataset.title || "Interactive widget";
+      f.setAttribute("allow", "clipboard-write");
+      el.appendChild(f);
     });
   }
-  function wire() {
-    if (!window.Reveal) { check(); return; }
-    if (typeof Reveal.on === "function") Reveal.on("slidechanged", check);
-    check();
-  }
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-    setTimeout(wire, 0);
-  } else {
-    document.addEventListener("DOMContentLoaded", wire);
-  }
-  window.addEventListener("load", check);
+  // Reveal is not defined while this script is parsed, so wire up after load.
+  window.addEventListener("load", function () {
+    if (window.Reveal && typeof Reveal.on === "function") Reveal.on("slidechanged", mount);
+    mount();
+  });
 })();
 </script>
 ```
+## Estimating the sensitive-item probability
 
+::: {.incremental}
+
+- The two lists share the same three non-sensitive items, so their means differ by only the sensitive item:
+
+  $$
+  \begin{aligned}
+  E[Y_i \mid D_i = 1] - E[Y_i \mid D_i = 0] &= (3p + \theta) - 3p \\
+  &= \theta
+  \end{aligned}
+  $$
+
+- So the **difference in means** between the treated and control lists estimates $\theta$
+
+```{r}
+#| echo: true
+
+mexico |>
+  group_by(treat) |>
+  summarise(mean_y = mean(y), n = n())
+
+# theta-hat: the treated list carries one extra (sensitive) item
+with(mexico, mean(y[treat == 1]) - mean(y[treat == 0]))
+
+# what the direct question picks up
+mean(mexico$direct)
+```
+
+- The list experiment recovers **much more** vote buying than asking directly
+
+:::
+
+## Continuous random variables
+
+## Probability density functions (PDFs)
+
+## Normal distribution
+
+## Exponential distribution
+
+## Expectation
+
+## Properties of expectations
+
+## Variance
+
+## Properties of variance
 
 ## Next week
 

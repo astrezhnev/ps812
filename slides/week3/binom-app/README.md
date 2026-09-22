@@ -14,11 +14,9 @@ compiled to WebAssembly, so it works on the static course site.
 | File | Role |
 | --- | --- |
 | `app.R` | The app itself. **Edit this.** |
-| `build_app_qmd.R` | Regenerates `../binomial_app.qmd` from `app.R` and `../data/2012_stata.dta`. |
+| `build_app_qmd.R` | Regenerates `../binomial_app.qmd` from `app.R` and `../data/mexico_list.csv`. |
 
-The app reads the same Stata file as the slides, with the same cleaning, and
-loads `haven` in the browser to do it. The file is inlined as base64, so the
-generated page is about 8 MB.
+The data is the same extract the slides load, built by `../data/prepare_data.R`.
 
 ## Workflow
 

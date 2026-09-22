@@ -1,36 +1,33 @@
 # ---------------------------------------------------------------------------
-# List experiment counts against a Binomial(J, pi).
+# List experiment counts against a model for each list.
 #
 # 2012 Mexico Panel Study, Wave 2: the number of list items each respondent
-# said "yes" to, for the 3-item control list and the 4-item treated list. The
-# sliders set pi for each list; the Binomial PMF and CDF are drawn over the
-# empirical ones.
+# said "yes" to, for the 3-item control list and the 4-item treated list.
+# Data prepared by ../data/prepare_data.R.
+#
+# The control list is Binomial(3, p). The treated list adds the sensitive
+# item, so it is that same Binomial(3, p) plus an independent
+# Binomial(1, theta) -- the convolution of the two. The three non-sensitive
+# items are common to both lists, so p is set by a single slider that drives
+# both cards; only theta is specific to the treated list.
 #
 # Two measures of fit, one per plot:
 #   overlap  = sum_k min(p_hat(k), p(k))   -- the shared area of the two PMFs
 #   max gap  = max_k |F_hat(k) - F(k)|     -- the largest vertical CDF distance
 #
-# Base R + shiny, plus haven to read the Stata file. Every extra package is
-# another wasm download when this runs in the browser through shinylive.
+# Deliberately base R + shiny only. Every extra package is another wasm
+# download when this runs in the browser through shinylive.
 # ---------------------------------------------------------------------------
 
 library(shiny)
-library(haven)
 
-# w2_P35C is the list assignment: 1 = control (3 items), 2 = treated (4 items).
-# The count is in w2_P35A for control and w2_P35B for treated; 9 (don't know)
-# and -1 (not asked) are missing. Respondents with no answer to the direct
-# vote-buying question (w2_P41) are dropped too, so the sample matches the slides.
-mex <- read_dta("2012_stata.dta", col_select = c("w2_P35A", "w2_P35B", "w2_P35C", "w2_P41"))
-treat <- ifelse(mex$w2_P35C == 1, 0, ifelse(mex$w2_P35C == 2, 1, NA))
-y <- as.numeric(ifelse(treat == 0, mex$w2_P35A, mex$w2_P35B))
-y[y %in% c(9, -1)] <- NA
-dat <- data.frame(y = y, treat = treat)
-dat <- dat[!is.na(dat$y) & !is.na(dat$treat) & mex$w2_P41 %in% c(0, 1, 3, 9), ]
+dat <- read.csv("mexico_list.csv")
 
 GROUPS <- list(
-  control = list(label = "Control list", J = 3, treat = 0, col = "#0479A8", tint = "#CDE4EE"),
-  treated = list(label = "Treated list", J = 4, treat = 1, col = "#c5050c", tint = "#F3CDCE")
+  control = list(label = "Control list", J = 3, treat = 0, col = "#0479A8",
+                 model = "Y ~ Binomial(3, p)"),
+  treated = list(label = "Treated list", J = 4, treat = 1, col = "#c5050c",
+                 model = "Y ~ Binomial(3, p) + Binomial(1, θ)")
 )
 GAP_COL <- "#C77400"
 INK     <- "#333333"
@@ -60,6 +57,7 @@ body > .container-fluid { height:100%; padding:0; }
 .hdr { display:flex; justify-content:space-between; align-items:baseline; }
 .model { font-size:13px; color:#666; }
 .form-group { margin-bottom:0; }
+.control-label { font-weight:500; white-space:nowrap; }
 .irs--shiny .irs-bar { border-color:var(--gc); background:var(--gc); }
 .irs--shiny .irs-single { background:var(--gc); }
 .irs--shiny .irs-handle { border-color:var(--gc); }
@@ -83,15 +81,23 @@ body > .container-fluid { height:100%; padding:0; }
 .sw { display:inline-block; width:10px; height:10px; vertical-align:-1px; margin-right:3px; }
 "
 
+# The control card carries the shared p slider (it is the whole model for
+# that list); the treated card carries theta, which only it uses.
+SLIDERS <- list(
+  control = sliderInput("p_base", "p – each non-sensitive item (both lists)",
+                        min = 0, max = 1, value = 0.5, step = 0.01, width = "100%"),
+  treated = sliderInput("theta", "θ – sensitive item (vote buying)",
+                        min = 0, max = 1, value = 0.1, step = 0.01, width = "100%")
+)
+
 group_card <- function(g) {
   G <- GROUPS[[g]]
   div(class = "card", style = paste0("--gc:", G$col, ";"),
     div(class = "hdr",
       h4(style = paste0("color:", G$col), G$label),
-      span(class = "model", sprintf("Y ~ Binomial(%d, π)   n = %d", G$J, G$n))
+      span(class = "model", sprintf("%s   n = %d", G$model, G$n))
     ),
-    sliderInput(paste0("pi_", g), "π", min = 0, max = 1, value = 0.5,
-                step = 0.01, width = "100%"),
+    SLIDERS[[g]],
     uiOutput(paste0("fit_", g)),
     div(class = "plots",
       plotOutput(paste0("pmf_", g), height = "100%"),
@@ -99,7 +105,7 @@ group_card <- function(g) {
     ),
     div(class = "key",
       span(span(class = "sw", style = paste0("background:", G$col)), "Data"),
-      span("\u25CB \u2013 \u2013 Binomial"),
+      span("○ – – Model"),
       span(span(class = "sw", style = "background:#EEC48F"), "Gap"))
   )
 }
@@ -118,11 +124,10 @@ draw_pmf <- function(G, p) {
   axis(1, at = k, fg = "#999")
   title(main = "PMF", adj = 0, font.main = 2, cex.main = 1, col.main = "#777", line = 0.4)
   w <- 0.32
-  # The data bar is tinted; the part it shares with the Binomial is solid, so
-  # the solid area is the overlap reported above the plot.
-  # The y-axis stays fixed unless the Binomial outgrows it at extreme pi.
-  rect(k - w, 0, k + w, G$pmf, col = G$tint, border = NA)
-  rect(k - w, 0, k + w, pmin(G$pmf, p), col = G$col, border = NA)
+  # The data is drawn as plain solid bars; the model sits on top of them as
+  # stems and open points. The y-axis stays fixed unless the model outgrows
+  # it at extreme p.
+  rect(k - w, 0, k + w, G$pmf, col = G$col, border = NA)
   segments(k, 0, k, p, col = INK, lwd = 1.3)
   points(k, p, pch = 21, bg = "#fff", col = INK, cex = 1.3, lwd = 1.6)
 }
@@ -149,10 +154,22 @@ draw_cdf <- function(G, P) {
 }
 
 server <- function(input, output, session) {
+  # Control: the 3 non-sensitive items. Treated: those same 3 items plus an
+  # independent Binomial(1, theta) for the sensitive one, so the PMF is the
+  # convolution -- P(Y=k) = (1-theta) P(B=k) + theta P(B=k-1), B ~ Bin(3, p).
+  base <- reactive(dbinom(0:3, 3, input$p_base))
+  pmfs <- list(
+    control = base,
+    treated = reactive({
+      b <- base()
+      c(b, 0) * (1 - input$theta) + c(0, b) * input$theta
+    })
+  )
+
   lapply(names(GROUPS), function(g) {
     G <- GROUPS[[g]]
-    p <- reactive(dbinom(0:G$J, G$J, input[[paste0("pi_", g)]]))
-    P <- reactive(pbinom(0:G$J, G$J, input[[paste0("pi_", g)]]))
+    p <- pmfs[[g]]
+    P <- reactive(cumsum(p()))
 
     output[[paste0("fit_", g)]] <- renderUI({
       ov  <- sum(pmin(G$pmf, p()))

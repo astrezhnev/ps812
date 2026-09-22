@@ -11,9 +11,9 @@
 app_dir <- "."
 out     <- "../binomial_app.qmd"
 
-# Inlined name -> source path. The Stata file is read straight from the week 3
-# data folder so the slides and the app share one copy of it.
-files <- c("app.R" = "app.R", "2012_stata.dta" = "../data/2012_stata.dta")
+# Inlined name -> source path. The data is read straight from the week 3 data
+# folder so the slides and the app share one copy of the extract.
+files <- c("app.R" = "app.R", "mexico_list.csv" = "../data/mexico_list.csv")
 for (f in files) stopifnot(file.exists(file.path(app_dir, f)))
 
 header <- c(
@@ -62,14 +62,8 @@ header <- c(
   "#| components: [viewer]"
 )
 
-# Binary files are inlined as base64 under a `## type: binary` line.
 body <- unlist(lapply(names(files), function(f) {
-  src <- file.path(app_dir, files[[f]])
-  if (grepl("\\.dta$", f)) {
-    c(paste0("## file: ", f), "## type: binary", base64enc::base64encode(src), "")
-  } else {
-    c(paste0("## file: ", f), readLines(src, warn = FALSE), "")
-  }
+  c(paste0("## file: ", f), readLines(file.path(app_dir, files[[f]]), warn = FALSE), "")
 }))
 
 writeLines(c(header, "", body, "```"), out)

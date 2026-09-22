@@ -41,3 +41,7 @@ syllabus.tex
 # CES source data for the week 2 widget: 59 MB Stata file downloaded from
 # Dataverse. prepare_data.R turns it into the small committed CSV extract.
 slides/week2/ces-app/CES25_Common.dta
+
+# Mexico 2012 Panel Study source file for week 3 (~6 MB). prepare_data.R
+# turns it into the small committed CSV extract.
+slides/week3/data/2012_stata.dta
