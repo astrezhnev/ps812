@@ -307,6 +307,8 @@ p_pmf + (p_pois + labs(title = "Poisson(2) CDF")) +
 
 ## Bernoulli distribution
 
+::: {.incremental}
+
 - The simplest discrete probability distribution is the **Bernoulli** distribution
   - This is the distribution of a **weighted coin flip** with "success" probability $p$
 
@@ -325,6 +327,8 @@ $$ X \sim \text{Bernoulli}(p) $$
 - Bernoulli random variables often arise from **indicator** functions $\mathbf{1}(\cdot)$ applied to events $A$
 
 $$ \mathbf{1}(A) \sim \text{Bernoulli}(p) \quad p = P(A) $$
+
+:::
 
 ## Example: List experiments
 
@@ -472,6 +476,8 @@ list_hist(subset(mexico, treat == 0), 3, "#0479A8", "Control list") +
 
 ## Expected value
 
+::: {.incremental}
+
 - One very important property of a random variable is its **expectation** $\mathbb{E}[X]$
   - Can think of this as a **summary** of that random variable's "long-run" behavior.
 
@@ -489,7 +495,7 @@ list_hist(subset(mexico, treat == 0), 3, "#0479A8", "Control list") +
 # and the triangle is the fulcrum at E[X]. Weights are chosen so every E[X] is a
 # half: the fair die balances at 7/2, the symmetric (3:2:1:1:2:3)/12 die also
 # at 7/2 despite its different shape, the loaded die (1:2:3:4:6:8)/24 at 9/2.
-die_pmf <- function(w, colour, title) {
+die_pmf <- function(w, colour) {
   d <- data.frame(x = 1:6, p = w / sum(w))
   ev <- sum(d$x * d$p)
   ggplot(d, aes(x, p)) +
@@ -505,16 +511,18 @@ die_pmf <- function(w, colour, title) {
              label = paste0("E[X] = ", ev * 2, "/2")) +
     scale_x_continuous(breaks = NULL) +
     scale_y_continuous(breaks = NULL, limits = c(-0.14, 0.38), expand = c(0, 0)) +
-    labs(title = title, x = NULL, y = NULL) +
+    labs(x = NULL, y = NULL) +
     cdf_theme +
     theme(panel.grid = element_blank())
 }
 
-die_pmf(rep(1, 6), "#0479A8", "Fair die") +
-  die_pmf(c(3, 2, 1, 1, 2, 3), "#C77400", "Weighted to the ends") +
-  die_pmf(c(1, 2, 3, 4, 6, 8), "#c5050c", "Loaded die") +
+die_pmf(rep(1, 6), "#0479A8") +
+  die_pmf(c(3, 2, 1, 1, 2, 3), "#C77400") +
+  die_pmf(c(1, 2, 3, 4, 6, 8), "#c5050c") +
   plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
 ```
+
+:::
 
 ## Expectations of functions
 
@@ -555,6 +563,8 @@ die_pmf(rep(1, 6), "#0479A8", "Fair die") +
 
 ## Expectation of the Bernoulli
 
+::: {.incremental}
+
 - Let $X \sim \text{Bernoulli}(p)$
 - There are two possible values, let's calculate the expectation!
 
@@ -570,7 +580,11 @@ die_pmf(rep(1, 6), "#0479A8", "Fair die") +
 - The **expected value** of a Bernoulli/indicator random variable is just the **probability** that it takes on a value of $1$
   - This is the **fundamental bridge** between expectations and probability [@blitzstein2019introduction]
 
+:::
+
 ## Expectation of the Binomial
+
+::: {.incremental}
 
 - Now let $X \sim \text{Binomial}(N, p)$
 - We could write this out and use properties of sums of factorials
@@ -579,6 +593,7 @@ die_pmf(rep(1, 6), "#0479A8", "Fair die") +
 
 - Or we could use **linearity** of expectations - much easier!
 
+:::
 
 ## Expectation of the Binomial
 
@@ -634,11 +649,12 @@ die_pmf(rep(1, 6), "#0479A8", "Fair die") +
   \end{aligned}
   $$
 
-- Later on, we'll show that under some assumptions about **how** we got our sample (i.i.d. random variables)...
-  - ...these **sample** averages converge to the population **expected values** ("law of large numbers")
+- Later, we'll show that under assumptions about **how** we got our sample (i.i.d. random smapling)...
+  - ...these **sample** averages converge to the population **expected values** 
+  - "law of large numbers"
 
 - Note that we don't actually need the assumption that $C_i \sim \text{Binomial}(3, p)$ to estimate $\theta$
-  - Just the assumption that exposure to the sensitive item doesn't alter responses on the baseline list
+  - Just that exposure to the sensitive item doesn't alter responses to the baseline list
 
 :::
 
@@ -668,9 +684,9 @@ mexico |>
 
 ::: {.incremental}
 
-- Beyond the expectation, there are other summaries of a distribution that capture other relevant features.
-  - We may want to know how **spread out** realizations of the random variable are around the mean.
-- The **variance** of a random variable $\Var(X)$ is defined as the expected **squared** deviation from $\mathbb{E}[X]$
+- Beyond the expectation, there are other summaries that capture other relevant features.
+  - We may want to know how **spread out** realizations of the random variable are.
+- The **variance** of a random variable $\Var(X)$ is the expected **squared** deviation from $\mathbb{E}[X]$
 
   $$\Var(X) = \mathbb{E}\bigg[(X - \mathbb{E}[X])^2\bigg] $$
 - Expanding the square and applying linearity of expectation
@@ -842,7 +858,7 @@ p_pois + p_exp +
 ```{r}
 #| echo: false
 #| fig-width: 9
-#| fig-height: 3.5
+#| fig-height: 4.7
 #| fig-align: center
 
 # Reuses cdf_theme from the CDF slide
@@ -873,7 +889,7 @@ p_norm_pdf + p_norm_cdf +
 ```{r}
 #| echo: false
 #| fig-width: 9
-#| fig-height: 3.2
+#| fig-height: 4.5
 #| fig-align: center
 
 norm_pars <- expand.grid(x = seq(-6, 6, length.out = 600),
@@ -913,13 +929,15 @@ p_par_pdf + p_par_cdf + plot_layout(guides = "collect") +
 - $\mathcal{N}(0, 1)$ is referred to as the **standard normal**
   - PDF and CDF typically written as: $\phi(z)$ and $\Phi(z)$
 
-  $$ \phi(z) = \frac{1}{\sqrt{2\pi}} e^{-z^2/2} $$
+    $$ \phi(z) = \frac{1}{\sqrt{2\pi}} e^{-z^2/2} $$
 
 - Any normal can be **standardized**. If $X \sim \mathcal{N}(\mu, \sigma^2)$, then
 
   $$ Z = \frac{X - \mu}{\sigma} \sim \mathcal{N}(0, 1) $$
 
 - $\Phi$ has **no closed form**
+  - This is why old stats books had tables of pre-computed quantiles of the normal distribution!
+  - And why we'll rely on our computer + various approximations to evaluate the CDF (`pnorm()`)
 
 :::
 
@@ -928,7 +946,7 @@ p_par_pdf + p_par_cdf + plot_layout(guides = "collect") +
 ```{r}
 #| echo: false
 #| fig-width: 10
-#| fig-height: 2.9
+#| fig-height: 4.3
 #| fig-align: center
 
 # `rule` is the rounded number students should memorize; the exact integral sits below it
@@ -962,6 +980,7 @@ sd_panel <- function(k, rule) {
 sd_panel(1, "\u2248 68%") + sd_panel(2, "\u2248 95%") + sd_panel(3, "\u2248 99.7%") +
   plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
 ```
+
 
 ## Next week
 
