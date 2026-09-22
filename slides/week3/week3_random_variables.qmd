@@ -123,44 +123,305 @@ link-citations: true
   - Sometimes subscripted when we have repetitions across some margin ($i$ for units or $t$ for time)
 - We'll refer to a **realization** of a random variable using lower-case roman letters
   - e.g. $P(X = x)$ refers to the probability that a random variable $X$ takes on a specific value $x$.
+- We'll refer to the **support** of a random variable with a calligraphic capital letter $\mathcal{X}$
+  - The **support** of a random variable $X$ is the **set** of all values where $X$ has non-zero probability (or density for continuous r.v.) 
 
 :::
 
 ## Distribution functions
 
+::: {.incremental}
+
+- Random variables can be defined by their **distribution** function
+  - Typically denoted with a capital $F(\cdot)$
+  - Sometimes subscripted to specify the particular random variable: $F_X(\cdot)$
+- The **cumulative distribution function** (CDF) gives the **probability** that a particular random variable $X$ takes on a value **less than or equal to** $x$
+
+  $$ F_X(x) = P(X \le x) $$
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 2.7
+#| fig-align: center
+
+library(ggplot2)
+library(patchwork)
+
+cdf_theme <- theme_minimal(base_size = 13) +
+  theme(panel.grid.minor = element_blank(),
+        plot.title = element_text(size = 13, face = "bold"),
+        plot.background = element_rect(fill = "#F7F7F7", colour = NA),
+        panel.background = element_rect(fill = "#F7F7F7", colour = NA))
+
+# Poisson CDF is a step function: flat on [k, k + 1), closed at the left end
+k <- 0:8
+pois <- data.frame(k = k, F = ppois(k, lambda = 2))
+
+p_pois <- ggplot(pois) +
+  geom_segment(aes(x = k, xend = k + 1, y = F, yend = F),
+               linewidth = 1.1, colour = "#c5050c") +
+  annotate("segment", x = -1, xend = 0, y = 0, yend = 0,
+           linewidth = 1.1, colour = "#c5050c") +
+  geom_point(aes(k, F), size = 2.2, colour = "#c5050c") +
+  scale_x_continuous(breaks = 0:8, limits = c(-1, 9), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, 1), expand = c(0.02, 0)) +
+  labs(title = "Poisson(2)", x = "x", y = "F(x)") +
+  cdf_theme
+
+# Exponential with rate 2: the waiting time between events of a rate-2 Poisson process
+x <- seq(-0.5, 3, length.out = 400)
+p_exp <- ggplot(data.frame(x = x, F = pexp(x, rate = 2)), aes(x, F)) +
+  geom_line(linewidth = 1.1, colour = "#c5050c") +
+  scale_x_continuous(limits = c(-0.5, 3), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, 1), expand = c(0.02, 0)) +
+  labs(title = "Exponential(2)", x = "x", y = "F(x)") +
+  cdf_theme
+
+# patchwork draws its own (white) background around the two panels
+p_pois + p_exp +
+  plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
+```
+
+:::
+
+:::
+
+## Distribution functions
+
+::: {.incremental}
+
+- The **range** of a CDF is between $0$ and $1$
+  - It's output is a **probability** - probabilities can't be negative or greater than $1$
+- The CDF is **non-decreasing**
+  - Remember the conjunction fallacy!
+  - Can't make a probability of an event **smaller** by having it encompass more outcomes!
+- Limits
+  - As $x \to \infty$, $F_X(x) \to 1$
+  - As $x \to -\infty$, $F_X(x) \to 0$
+
+:::
+
+## Distribution functions
+
+::: {.incremental}
+
+- The probability that $X$ lies between two values is just the difference between two evaluations of the CDF.
+
+  $$P(a < X \le b) = F_X(b) - F_X(a) $$
+
+- Why? Consider that $X \le b$ is the union of two disjoint events: $X \le a$ and $a < X \le b$
+- The probability of the union of two disjoint events is the sum of their probabilities.
+
+  $$
+  \begin{aligned}
+  P(a < X \le b) &= P([X \le a] \cup [a < X \le b]) - P(X \le a) \\
+  &= P([X \le a]) + P([a < X \le b]) - P(X \le a) \\
+  &= P([a < X \le b]) 
+  \end{aligned}
+  $$
+
+  
+:::
 
 ## Discrete random variables
 
+::: {.incremental}
+
+- We typically discuss two types of random variables: **discrete** and *continuous*
+  - Discrete random variables take on a *finite* or *countably infinite* number of values.
+  - As a result, we can talk about its **support** as the set where $P(X = x) > 0$
+  - In fact, $P(X = x)$ is a coherent idea!
+- In the social sciences, essentially everything is *discrete*
+  - Our samples are from **large** but **finite** populations (e.g. $262{,}083{,}034$ voting age U.S. residents as of 2023).
+  - Our outcomes are discretized (finite number of response options: support/oppose, 5-point Likert).
+  - Even something like **income** is technically discrete
+- Continuous random variables typically arise as **limits** and/or **approximations**
+
+:::
+
 ## Probability mass functions (PMF)
 
+::: {.incremental}
+
+- A **discrete random variable** has a **probability mass function** (PMF)
+  - Typically written as lower-case $p(\cdot)$
+
+- The PMF gives the **probability** that a particular random variable $X$ takes on a value **equal to** $x$
+
+  $$p_X(x) = P(X = x) $$
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 2.7
+#| fig-align: center
+
+# Reuses p_pois and cdf_theme from the CDF slide
+p_pmf <- ggplot(data.frame(k = k, p = dpois(k, lambda = 2)), aes(k, p)) +
+  geom_segment(aes(xend = k, y = 0, yend = p), linewidth = 1.1, colour = "#c5050c") +
+  geom_point(size = 2.2, colour = "#c5050c") +
+  scale_x_continuous(breaks = 0:8, limits = c(-1, 9), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, 0.3), expand = c(0.02, 0)) +
+  labs(title = "Poisson(2) PMF", x = "x", y = "p(x)") +
+  cdf_theme
+
+p_pmf + (p_pois + labs(title = "Poisson(2) CDF")) +
+  plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
+```
+
+:::
+
+:::
+
+## Probability mass functions (PMF)
+
+::: {.incremental}
+
+- PMFs are **non-negative**: $p_X(x) > 0$ for $x$ in the support and $0$ otherwise
+  - Again, PMFs return **probabilities**
+- PMFs sum to $1$ over the support of $X$
+
+  $$ \sum_{x \in \mathcal{X}} p_X(x) = 1 $$
+
+- One can get the **CDF** by summing the PMF over all values *less than or equal to* $x$.
+
+  $$ F_X(x) = \sum_{t \in \mathcal{X} : t \le x} p_X(t) $$
+
+:::
 
 ## Bernoulli distribution
 
-## Binomial distribution
+- The simplest discrete probability distribution is the **Bernoulli** distribution
+  - This is the distribution of a **weighted coin flip** with "success" probability $p$
 
-## Binomial example: Vote buying in Mexico
+$$
+P(X = x) = \begin{cases}
+p & \text{if } x = 1 \\
+1 - p & \text{if } x = 0 \\
+0 & \text{otherwise}
+\end{cases}
+$$
 
-- The **2012 Mexico Panel Study** [@greene2016mexico] used a **list experiment** to measure vote buying in the 2012 presidential election
-  - Exchanging a vote for a gift is illegal, so respondents may not admit to it when asked directly
-- Respondents are asked **how many** items on a list they did in recent weeks (not **which** ones)
-  - See a television newscast that mentions a candidate
-  - Attend a campaign event
-  - Talk about politics with other people
-  - *Treated group only:* Exchange your vote for a gift, favor, or access to a service
-- Respondents are randomly assigned to the 3-item (**control**) or 4-item (**treated**) list
-- Every respondent is also asked the vote-buying question **directly**
+- We'll use the $\sim$ syntax to denote that a variable has a particular distribution with particular parameters
 
-## Example: Vote buying in Mexico
+$$ X \sim \text{Bernoulli}(p) $$
+
+- Bernoulli random variables often arise from **indicator** functions $\mathbf{1}(\cdot)$ applied to events $A$
+
+$$ \mathbf{1}(A) \sim \text{Bernoulli}(p) \quad p = P(A) $$
+
+## Example: List experiments
+
+::: {.incremental}
+
+- Getting people to be honest on surveys can be difficult for some types of questions.
+  - **Social desirability bias** may make some respondent reticent to give truthful answers
+- The **2012 Mexico Panel Study** [@greene2016mexico] wanted to study the prevalence of **vote buying** in the 2012 Mexican presidential election
+  - Exchanging a vote for a gift is illegal - survey respondents may not want to admit to a crime!
+- **Solution**: A **list experiment** - Respondents are randomly assigned to a "treated" or a "control" group
+- Respondents see a list of itemas and are asked **how many** items on that list they did in recent weeks (not **which ones**)
+  1. See a television newscast that mentions a candidate
+  2. Attend a campaign event
+  3. Talk about politics with other people
+  4. **Treated group only:** Exchange your vote for a gift, favor, or access to a service
+
+- Respondents who admit to vote buying are not identifiable (except in one edge case!)
+  - But with some assumptions, we can learn the **share** of respondents who experienced vote buying.
+
+:::
+
+## Example: List experiments
+
+::: {.incremental}
+
+- Let $C_i$ be the **number** of items that respondent $i$ would say they did if **assigned to control**
+  - $C_i$ is a **random variable** (randomness from both sampling and treatment assignment)
+  - It is a discrete random variable that takes on *integers* from $0$ to $3$
+- Let $T_i$ be the **number** of items that respondent $i$ would say they did if **assigned to treatment**
+  - Here the random variable ranges from integers $0$ to $4$.
+
+- The simplest way to define these distributions is to assign a unique parameter to each possible value
+
+  $$
+  P(C_i = c) = \begin{cases}
+  p_0 & \text{if } c = 0 \\
+  p_1 & \text{if } c = 1 \\
+  p_2 & \text{if } c = 2 \\
+  p_3 & \text{if } c = 3 \\
+  0 & \text{otherwise}
+  \end{cases}
+  \qquad p_c \ge 0, \quad \sum_{c=0}^{3} p_c = 1
+  $$
+
+:::
+
+## Example: List experiments
 
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
+#| fig-width: 9
+#| fig-height: 3.2
+#| fig-align: center
 
-library(tidyverse)
+# Empirical PMFs of the item counts, one panel per list
+mexico <- read.csv("data/mexico_list.csv")
 
-# y: number of items; treat: 1 = 4-item list; direct: admitted vote buying when asked directly
-mexico <- read_csv("data/mexico_list.csv")
+list_hist <- function(d, J, colour, title) {
+  props <- data.frame(y = 0:J, p = as.numeric(table(factor(d$y, levels = 0:J))) / nrow(d))
+  ggplot(props, aes(y, p)) +
+    geom_col(width = 0.65, fill = colour) +
+    scale_x_continuous(breaks = 0:J) +
+    scale_y_continuous(limits = c(0, 0.5), expand = c(0, 0)) +
+    labs(title = title, x = "Number of items", y = "Proportion") +
+    cdf_theme
+}
+
+list_hist(subset(mexico, treat == 0), 3, "#0479A8", "Control list") +
+  list_hist(subset(mexico, treat == 1), 4, "#c5050c", "Treated list") +
+  plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
 ```
+
+## Example: List experiments
+
+::: {.incremental}
+
+- We want to try to learn about the probability of responding to the sensitive item.
+  - Let $Z_i \sim \text{Bernoulli}(\theta)$ be the random variable denoting whether respondent $i$ engaged in **vote buying**
+
+- Now we'll make some assumptions about how $Z_i$ relates to the other two variables
+
+  $$ \underbrace{T_i}_{\text{treated count}} = \underbrace{C_i}_{\text{control count}} + \underbrace{Z_i}_{\text{sensitive item}} $$
+
+- We've defined the **data generating process** for the list experiment!
+  - What's the key behavioral assumption hidden here?
+  - Respondents' reaction to the baseline items **doesn't change** if they're exposed to the sensitive item.
+
+:::
+
+## Binomial distribution
+
+::: {.incremental}
+
+- We saw how the most flexible way to represent any discrete random variable defined on a **finite** support is to just assign a unique parameter to each unique value.
+  - But this can get unwieldy for a lot of statistical tasks - can we be more **parsimonious**?
+  - What if we assumed that respondents had a **common** probability $p$ of responding yes to each component of the list and that items were **independent**
+- Then we would get the **Binomial** distribution: the distribution of the **sum** of *independent* and *identical* *weighted* coin flips
+  - Two parameters: $N$: Number of trials, $p$: Success probability
+
+  $$
+  P(X = x) = \begin{cases}
+  \binom{N}{x} p^x (1 - p)^{N - x} & \text{if } x \in \{0, 1, \dots, N\} \\
+  0 & \text{otherwise}
+  \end{cases}
+  $$
+
+:::
 
 ## Fitting a Binomial {.app-slide}
 
@@ -197,50 +458,211 @@ mexico <- read_csv("data/mexico_list.csv")
 })();
 </script>
 ```
-## Estimating the sensitive-item probability
+
+## Expected value
+
+- One very important property of a random variable is its **expectation** $\mathbb{E}[X]$
+  - Can think of this as a **summary** of that random variable's "long-run" behavior.
+
+- For a **discrete** random variable, the expectation is a **weighted average** of that variable's possible outcomes with the weights given by the **probability** of each outcome
+
+  $$ \mathbb{E}[X] =  \sum_{x \in \mathcal{X}} x \cdot P(X = x) $$
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2.4
+#| fig-align: center
+
+# Expectation as the balancing point: the PMF's bars sit on a beam (the x-axis)
+# and the triangle is the fulcrum at E[X]. Weights are chosen so every E[X] is a
+# half: the fair die balances at 7/2, the symmetric (3:2:1:1:2:3)/12 die also
+# at 7/2 despite its different shape, the loaded die (1:2:3:4:6:8)/24 at 9/2.
+die_pmf <- function(w, colour, title) {
+  d <- data.frame(x = 1:6, p = w / sum(w))
+  ev <- sum(d$x * d$p)
+  ggplot(d, aes(x, p)) +
+    geom_col(width = 0.6, fill = colour) +
+    annotate("segment", x = 0.5, xend = 6.5, y = 0, yend = 0,
+             linewidth = 1.6, colour = "#333333") +
+    annotate("polygon", x = ev + c(-0.26, 0.26, 0), y = c(-0.075, -0.075, -0.004),
+             fill = "#333333") +
+    # Outcomes sit just under the beam; E[X] is a half, so the fulcrum falls
+    # between two of them rather than on top of one
+    annotate("text", x = 1:6, y = -0.035, label = 1:6, size = 3.8, colour = "#555555") +
+    annotate("text", x = ev, y = -0.115, size = 3.8, colour = "#333333",
+             label = paste0("E[X] = ", ev * 2, "/2")) +
+    scale_x_continuous(breaks = NULL) +
+    scale_y_continuous(breaks = NULL, limits = c(-0.14, 0.38), expand = c(0, 0)) +
+    labs(title = title, x = NULL, y = NULL) +
+    cdf_theme +
+    theme(panel.grid = element_blank())
+}
+
+die_pmf(rep(1, 6), "#0479A8", "Fair die") +
+  die_pmf(c(3, 2, 1, 1, 2, 3), "#C77400", "Weighted to the ends") +
+  die_pmf(c(1, 2, 3, 4, 6, 8), "#c5050c", "Loaded die") +
+  plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
+```
+
+## Linearity of expectations
 
 ::: {.incremental}
 
-- The two lists share the same three non-sensitive items, so their means differ by only the sensitive item:
+- An essential property of expectations is **linearity**
+  - The **expectation of the sum** is the **sum of the expectations**
 
-  $$
-  \begin{aligned}
-  E[Y_i \mid D_i = 1] - E[Y_i \mid D_i = 0] &= (3p + \theta) - 3p \\
-  &= \theta
-  \end{aligned}
-  $$
+- Let $X$ and $Y$ be two random variables
 
-- So the **difference in means** between the treated and control lists estimates $\theta$
+  $$\mathbb{E}[X + Y] =  \mathbb{E}[X] + \mathbb{E}[Y] $$
 
-```{r}
-#| echo: true
+- Let $a$ and $b$ be constants: we can pull the constants out of the expectation
 
-mexico |>
-  group_by(treat) |>
-  summarise(mean_y = mean(y), n = n())
+  $$\mathbb{E}[aX + bY] =  a\mathbb{E}[X] + b\mathbb{E}[Y] $$
 
-# theta-hat: the treated list carries one extra (sensitive) item
-with(mexico, mean(y[treat == 1]) - mean(y[treat == 0]))
+- You'll see this most often with sums over random variables indexed along some dimension
 
-# what the direct question picks up
-mean(mexico$direct)
-```
-
-- The list experiment recovers **much more** vote buying than asking directly
+  $$\mathbb{E}\bigg[\sum_{i=1}^n c X_i\bigg] = \sum_{i=1}^n\mathbb{E}[a X_i] = \sum_{i=1}^n a\mathbb{E}[X_i] = a\sum_{i=1}^n \mathbb{E}[X_i]$$
 
 :::
 
+## Expectation of the Bernoulli
+
+- Let $X \sim \text{Bernoulli}(p)$
+- There are two possible values, let's calculate the expectation!
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[X] &= \sum_{x \in \{0, 1\}} x \cdot P(X = x) \\
+  &= 0 \cdot P(X = 0) + 1 \cdot P(X = 1) \\
+  &= 0 \cdot (1 - p) + 1 \cdot p \\
+  &= p
+  \end{aligned}
+  $$
+
+- The **expected value** of a Bernoulli/indicator random variable is just the **probability** that it takes on a value of $1$
+  - This is the **fundamental bridge** between expectations and probability [@blitzstein2019introduction]
+
+## Expectation of the Bernoulli
+
+- Now let $X \sim \text{Binomial}(N, p)$
+- We could write this out and use properties of sums of factorials
+
+  $$ \mathbb{E}[X] = \sum_{x=0}^{N} x \cdot \binom{N}{x} p^x (1 - p)^{N - x} $$
+
+- Or we could use **linearity** of expectations - much easier!
+
+
+## Expectation of the Bernoulli
+
+::: {.incremental}
+
+- Recall that the **Bernoulli** is the sum of $N$ independent and identically distributed **Bernoulli** random variables with success probability $p$
+
+  $$X = \sum_{i=1}^N X_i \quad\quad\quad X_i \sim \text{Bernoulli}(p) $$
+
+- Applying linearity of expectations
+
+  $$\mathbb{E}[X] = \mathbb{E}\bigg[\sum_{i=1}^N X_i\bigg] = \sum_{i=1}^N \mathbb{E}[X_i]$$
+
+- Plugging in our expectation of the Bernoulli and summing
+
+  $$ \mathbb{E}[X] = Np $$
+
+:::
+
+## Example: List experiment
+
+::: {.incremental}
+
+- Let's return to our list experiment example. Remember, we have 
+
+  $$ \underbrace{T_i}_{\text{treated count}} = \underbrace{C_i}_{\text{control count}} + \underbrace{Z_i}_{\text{sensitive item}} $$
+
+- We want to know $P(Z_i = 1) = \theta$ - the share of respondents who participated in **vote buying**
+- Taking expectations of both sides and using linearity
+
+  $$ \mathbb{E}[T_i] = \mathbb{E}[C_i] + \theta $$
+
+- Solving for $\theta$
+
+  $$\theta  = \mathbb{E}[T_i] - \mathbb{E}[C_i] $$
+
+:::
+
+## Preview: Estimation
+
+::: {.incremental}
+
+- In our **sample**, we assume that we observe realizations of these two random variables
+  - In the treated group we have $N_{T}$ draws of $T_i$
+  - In the control group we have $N_{C}$ draws of $C_i$
+
+- We'll plug-in an **estimate** of each expectation using its sample analogue: the average
+
+  $$
+  \begin{aligned}
+  \hat{\theta} &= \widehat{\mathbb{E}}[T_i] - \widehat{\mathbb{E}}[C_i] \\
+  &= \frac{1}{N_T} \sum_{i=1}^{N_T} T_i - \frac{1}{N_C} \sum_{i=1}^{N_C} C_i
+  \end{aligned}
+  $$
+
+- Later on, we'll show that under some assumptions about **how** we got our sample (i.i.d. random variables)...
+  - ...these **sample** averages converge to the population **expected values** ("law of large numbers")
+
+- Note that we don't actually need the assumption that $C_i \sim \text{Binomial}(3, p)$ to estimate $\theta$
+  - Just the assumption that exposure to the sensitive item doesn't alter responses on the baseline list
+
+:::
+
+## Preview: Estimation
+
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+library(knitr)
+
+# Sample means of the item count in each group
+mexico |>
+  group_by(Group = if_else(treat == 1, "Treated", "Control")) |>
+  summarize(`Mean count` = mean(y), N = n()) |>
+  kable(digits = 3)
+
+# List experiment estimate of theta vs. share admitting vote buying when asked directly
+mexico |>
+  summarize(`List experiment` = mean(y[treat == 1]) - mean(y[treat == 0]),
+            `Direct question` = mean(direct)) |>
+  kable(digits = 3)
+```
+
 ## Continuous random variables
 
+- Recall the difference between the CDF of a **discrete** versus a **continuous** random variable.
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 2.7
+#| fig-align: center
+
+# Same figure as the CDF slide: reuses p_pois and p_exp from that chunk
+p_pois + p_exp +
+  plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
+```
+
+
+- The **discrete** variable's CDF has **discontinuities**, the **continuous** variable's CDF is **continuous** (and **differentiable**)
+
 ## Probability density functions (PDFs)
+
+- A **continuous** random variable is a random variable whose CDF is **continuous everywhere** and differentiable everywhere except for a possibly finite number of points
+  - The support of a continuous random variable is the set of real numbers $\mathbf{R}$ or an interval (or union of intervals) of the reals.
 
 ## Normal distribution
 
 ## Exponential distribution
-
-## Expectation
-
-## Properties of expectations
 
 ## Variance
 
