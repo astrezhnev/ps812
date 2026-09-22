@@ -516,11 +516,27 @@ die_pmf(rep(1, 6), "#0479A8", "Fair die") +
   plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
 ```
 
+## Expectations of functions
+
+::: {.incremental}
+
+- An interesting property of the expected value is what is sometimes called the **Law of the Unconscious Statistician** (LOTUS)
+- Suppose I want to calculate the expectation of some **function** of $X$, denoted $g(X)$.
+
+- If I just looked at the definition of expectation, I'd think:
+  - "What if I just plugged in $g(x)$ instead of $x$ and took the average over the same weights"
+
+- It turns out that works!
+
+  $$\mathbb{E}[g(X)] = \sum_{x \in \mathcal{X}} g(x) \cdot P(X = x) $$
+
+:::
+
 ## Linearity of expectations
 
 ::: {.incremental}
 
-- An essential property of expectations is **linearity**
+- Another essential property of expectations is **linearity**
   - The **expectation of the sum** is the **sum of the expectations**
 
 - Let $X$ and $Y$ be two random variables
@@ -758,6 +774,27 @@ p_pois + p_exp +
   &= \int_{a}^{b} f_X(x)dx
   \end{aligned}
   $$
+
+:::
+
+## Expectations of continuous random variables
+
+::: {.incremental}
+
+- We defined the expected value for a discrete random variable as a **sum**
+  - We'll do the same for a continuous random variable using an **integral**
+
+- For continuous $X$
+
+  $$\mathbb{E}[X] = \int_{\mathcal{X}} x f(x) dx $$
+
+- More generally, the distinction between discrete and continuous vanishes when we define integrals with respect to the distribution (Lebesgue integration)
+
+  $$\mathbb{E}[X] = \int_{\mathcal{X}} x \, dF_X(x) $$
+
+  - Rather than slicing up the **$x$-axis** into small intervals, we slice up the **probability** and ask how much of it sits at each value of $X$
+
+- But we won't spend time on that in this class...your Riemann integral intuition (sum of the areas of tinier and tinier rectangles) is enough!
 
 :::
 
