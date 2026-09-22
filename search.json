@@ -270,7 +270,7 @@
     "href": "slides/week3/week3_random_variables.html#preview-estimation",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Preview: Estimation",
-    "text": "Preview: Estimation\n\nIn our sample, we assume that we observe realizations of these two random variables\n\nIn the treated group we have \\(N_{T}\\) draws of \\(T_i\\)\nIn the control group we have \\(N_{C}\\) draws of \\(C_i\\)\n\nWe’ll plug-in an estimate of each expectation using its sample analogue: the average\n\\[\n\\begin{aligned}\n\\hat{\\theta} &= \\widehat{\\mathbb{E}}[T_i] - \\widehat{\\mathbb{E}}[C_i] \\\\\n&= \\frac{1}{N_T} \\sum_{i=1}^{N_T} T_i - \\frac{1}{N_C} \\sum_{i=1}^{N_C} C_i\n\\end{aligned}\n\\]\nLater on, we’ll show that under some assumptions about how we got our sample (i.i.d. random variables)…\n\n…these sample averages converge to the population expected values (“law of large numbers”)\n\nNote that we don’t actually need the assumption that \\(C_i \\sim \\text{Binomial}(3, p)\\) to estimate \\(\\theta\\)\n\nJust the assumption that exposure to the sensitive item doesn’t alter responses on the baseline list"
+    "text": "Preview: Estimation\n\nIn our sample, we assume that we observe realizations of these two random variables\n\nIn the treated group we have \\(N_{T}\\) draws of \\(T_i\\)\nIn the control group we have \\(N_{C}\\) draws of \\(C_i\\)\n\nWe’ll plug-in an estimate of each expectation using its sample analogue: the average\n\\[\n\\begin{aligned}\n\\hat{\\theta} &= \\widehat{\\mathbb{E}}[T_i] - \\widehat{\\mathbb{E}}[C_i] \\\\\n&= \\frac{1}{N_T} \\sum_{i=1}^{N_T} T_i - \\frac{1}{N_C} \\sum_{i=1}^{N_C} C_i\n\\end{aligned}\n\\]\nLater, we’ll show that under assumptions about how we got our sample (i.i.d. random smapling)…\n\n…these sample averages converge to the population expected values\n“law of large numbers”\n\nNote that we don’t actually need the assumption that \\(C_i \\sim \\text{Binomial}(3, p)\\) to estimate \\(\\theta\\)\n\nJust that exposure to the sensitive item doesn’t alter responses to the baseline list"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#preview-estimation-1",
@@ -284,7 +284,7 @@
     "href": "slides/week3/week3_random_variables.html#variance",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Variance",
-    "text": "Variance\n\nBeyond the expectation, there are other summaries of a distribution that capture other relevant features.\n\nWe may want to know how spread out realizations of the random variable are around the mean.\n\nThe variance of a random variable \\(\\Var(X)\\) is defined as the expected squared deviation from \\(\\mathbb{E}[X]\\)\n\\[\\Var(X) = \\mathbb{E}\\bigg[(X - \\mathbb{E}[X])^2\\bigg] \\]\nExpanding the square and applying linearity of expectation\n\\[\\Var(X) = \\mathbb{E}[X^2] - \\mathbb{E}[2X\\mathbb{E}[X]] + \\mathbb{E}[\\mathbb{E}[X]^2]\\]\nPulling out the constant \\(2\\mathbb{E}[X]\\) and \\(\\mathbb{E}[X]^2\\)\n\\[\n\\begin{aligned}\n\\Var(X) &= \\mathbb{E}[X^2] - 2\\mathbb{E}[X]\\mathbb{E}[X] + \\mathbb{E}[X]^2 \\\\\n&= \\mathbb{E}[X^2] - \\mathbb{E}[X]^2\n\\end{aligned}\n\\]"
+    "text": "Variance\n\nBeyond the expectation, there are other summaries that capture other relevant features.\n\nWe may want to know how spread out realizations of the random variable are.\n\nThe variance of a random variable \\(\\Var(X)\\) is the expected squared deviation from \\(\\mathbb{E}[X]\\)\n\\[\\Var(X) = \\mathbb{E}\\bigg[(X - \\mathbb{E}[X])^2\\bigg] \\]\nExpanding the square and applying linearity of expectation\n\\[\\Var(X) = \\mathbb{E}[X^2] - \\mathbb{E}[2X\\mathbb{E}[X]] + \\mathbb{E}[\\mathbb{E}[X]^2]\\]\nPulling out the constant \\(2\\mathbb{E}[X]\\) and \\(\\mathbb{E}[X]^2\\)\n\\[\n\\begin{aligned}\n\\Var(X) &= \\mathbb{E}[X^2] - 2\\mathbb{E}[X]\\mathbb{E}[X] + \\mathbb{E}[X]^2 \\\\\n&= \\mathbb{E}[X^2] - \\mathbb{E}[X]^2\n\\end{aligned}\n\\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#properties-of-variance",
@@ -361,7 +361,7 @@
     "href": "slides/week3/week3_random_variables.html#the-standard-normal",
     "title": "Week 3: Random Variables and Distributions",
     "section": "The standard normal",
-    "text": "The standard normal\n\n\\(\\mathcal{N}(0, 1)\\) is referred to as the standard normal\n\nPDF and CDF typically written as: \\(\\phi(z)\\) and \\(\\Phi(z)\\)\n\n\\[ \\phi(z) = \\frac{1}{\\sqrt{2\\pi}} e^{-z^2/2} \\]\nAny normal can be standardized. If \\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\), then\n\\[ Z = \\frac{X - \\mu}{\\sigma} \\sim \\mathcal{N}(0, 1) \\]\n\\(\\Phi\\) has no closed form"
+    "text": "The standard normal\n\n\\(\\mathcal{N}(0, 1)\\) is referred to as the standard normal\n\nPDF and CDF typically written as: \\(\\phi(z)\\) and \\(\\Phi(z)\\)\n\\[ \\phi(z) = \\frac{1}{\\sqrt{2\\pi}} e^{-z^2/2} \\]\n\nAny normal can be standardized. If \\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\), then\n\\[ Z = \\frac{X - \\mu}{\\sigma} \\sim \\mathcal{N}(0, 1) \\]\n\\(\\Phi\\) has no closed form\n\nThis is why old stats books had tables of pre-computed quantiles of the normal distribution!\nAnd why we’ll rely on our computer + various approximations to evaluate the CDF (pnorm())"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#areas-under-the-normal-curve",
