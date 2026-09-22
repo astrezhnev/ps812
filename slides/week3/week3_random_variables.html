@@ -1142,7 +1142,7 @@ Anton Strezhnev
 </ul></li>
 <li class="fragment">We will use our observed data to provide <strong>estimates</strong> of these quantities
 <ul>
-<li class="fragment">Assume our observations came from the distribution of interest…how “close” is our estimate from the truth.</li>
+<li class="fragment">Assume our observations came from the distribution of interest…how “close” is our estimate to the truth?</li>
 <li class="fragment">How can we talk about this when we <strong>don’t know</strong> the truth!?</li>
 </ul></li>
 </ul>
@@ -1486,7 +1486,7 @@ P(X = x) = \begin{cases}
 <li class="fragment"><p>Suppose I want to calculate the expectation of some <strong>function</strong> of <span class="math inline">\(X\)</span>, denoted <span class="math inline">\(g(X)\)</span>.</p></li>
 <li class="fragment"><p>If I just looked at the definition of expectation, I’d think:</p>
 <ul>
-<li class="fragment">“What if I just plugged in <span class="math inline">\(g(x)\)</span> instead of <span class="math inline">\(x\)</span> and took the average over the same weights”</li>
+<li class="fragment">“What if I just plugged in <span class="math inline">\(g(x)\)</span> instead of <span class="math inline">\(x\)</span> and took the average over the same weights?”</li>
 </ul></li>
 <li class="fragment"><p>It turns out that works!</p>
 <p><span class="math display">\[\mathbb{E}[g(X)] = \sum_{x \in \mathcal{X}} g(x) \cdot P(X = x) \]</span></p></li>
@@ -1675,6 +1675,22 @@ P(X = x) = \begin{cases}
 <ul>
 <li class="fragment">We’ll talk about this more next week when we define <strong>covariance</strong></li>
 </ul></li>
+</ul>
+</section>
+<section id="variance-of-a-bernoulli" class="slide level2">
+<h2>Variance of a Bernoulli</h2>
+<ul>
+<li class="fragment"><p>Let’s derive the variance of the Bernoulli. Let <span class="math inline">\(X \sim \text{Bernoulli}(p)\)</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\Var(X) &amp;= \mathbb{E}[X^2] - \mathbb{E}[X]^2 \\
+&amp;= \mathbb{E}[X] - \mathbb{E}[X]^2 \\
+&amp;= p - p^2 \\
+&amp;= p(1 - p)
+\end{aligned}
+\]</span></p></li>
+<li class="fragment"><p>The second line uses the fact that <span class="math inline">\(X\)</span> only takes on the values <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>. <span class="math inline">\(0^2 = 0\)</span> and <span class="math inline">\(1^2 = 1\)</span>.</p></li>
+<li class="fragment"><p><strong>Intuition</strong>: The uncertainty around a coin-flip is <strong>maximized</strong> when it’s fair!</p></li>
 </ul>
 </section>
 <section id="continuous-random-variables" class="slide level2">

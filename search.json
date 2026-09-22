@@ -95,7 +95,7 @@
     "href": "slides/week3/week3_random_variables.html#where-were-going",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Where we’re going",
-    "text": "Where we’re going\n\nThis week, we’ll go beyond events and illustrate a way of talking about random processes that map on to the real numbers \\(\\mathbb{R}\\)\n\nThese are what we’ll call random variables\n\nRandom variables are defined by their distributions\n\nWe’ll summarize features of these distributions with quantities like the expectation and the variance\n\nThese will eventually be our empirical estimands\n\nThe share of residents of Wisconsin who turn out in the 2026 midterm election.\nThe share of residents of a given Wisconsin precinct who turn out in the 2026 midterm election given that precinct’s 2024 Harris vote share.\n\nWe will use our observed data to provide estimates of these quantities\n\nAssume our observations came from the distribution of interest…how “close” is our estimate from the truth.\nHow can we talk about this when we don’t know the truth!?"
+    "text": "Where we’re going\n\nThis week, we’ll go beyond events and illustrate a way of talking about random processes that map on to the real numbers \\(\\mathbb{R}\\)\n\nThese are what we’ll call random variables\n\nRandom variables are defined by their distributions\n\nWe’ll summarize features of these distributions with quantities like the expectation and the variance\n\nThese will eventually be our empirical estimands\n\nThe share of residents of Wisconsin who turn out in the 2026 midterm election.\nThe share of residents of a given Wisconsin precinct who turn out in the 2026 midterm election given that precinct’s 2024 Harris vote share.\n\nWe will use our observed data to provide estimates of these quantities\n\nAssume our observations came from the distribution of interest…how “close” is our estimate to the truth?\nHow can we talk about this when we don’t know the truth!?"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#random-variables",
@@ -228,7 +228,7 @@
     "href": "slides/week3/week3_random_variables.html#expectations-of-functions",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Expectations of functions",
-    "text": "Expectations of functions\n\nAn interesting property of the expected value is what is sometimes called the Law of the Unconscious Statistician (LOTUS)\nSuppose I want to calculate the expectation of some function of \\(X\\), denoted \\(g(X)\\).\nIf I just looked at the definition of expectation, I’d think:\n\n“What if I just plugged in \\(g(x)\\) instead of \\(x\\) and took the average over the same weights”\n\nIt turns out that works!\n\\[\\mathbb{E}[g(X)] = \\sum_{x \\in \\mathcal{X}} g(x) \\cdot P(X = x) \\]"
+    "text": "Expectations of functions\n\nAn interesting property of the expected value is what is sometimes called the Law of the Unconscious Statistician (LOTUS)\nSuppose I want to calculate the expectation of some function of \\(X\\), denoted \\(g(X)\\).\nIf I just looked at the definition of expectation, I’d think:\n\n“What if I just plugged in \\(g(x)\\) instead of \\(x\\) and took the average over the same weights?”\n\nIt turns out that works!\n\\[\\mathbb{E}[g(X)] = \\sum_{x \\in \\mathcal{X}} g(x) \\cdot P(X = x) \\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#linearity-of-expectations",
@@ -292,6 +292,13 @@
     "title": "Week 3: Random Variables and Distributions",
     "section": "Properties of variance",
     "text": "Properties of variance\n\nThe variance is non-negative\n\nBy Jensen’s inequality for a convex function: \\(\\mathbb{E}[X^2] \\ge \\mathbb{E}[X]^2\\)\n\nFor a random variable \\(X\\) and a constant \\(a\\)\n\\[ \\Var(aX) = a^2\\Var(X) \\]\nBut be careful, the variance of the sum of two random variables \\(X\\) and \\(Y\\) is not the sum of the variances except in a special case we’ll talk about next week (independence)\n\\[ \\Var(X + Y) \\neq \\Var(X) + \\Var(Y) \\]\nAlso, the variance of the difference is not the difference in the variances…even for independent random variables, it’s still the sum of the variances (\\(-1\\) gets squared!)\n\nWe’ll talk about this more next week when we define covariance"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#variance-of-a-bernoulli",
+    "href": "slides/week3/week3_random_variables.html#variance-of-a-bernoulli",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Variance of a Bernoulli",
+    "text": "Variance of a Bernoulli\n\nLet’s derive the variance of the Bernoulli. Let \\(X \\sim \\text{Bernoulli}(p)\\)\n\\[\n\\begin{aligned}\n\\Var(X) &= \\mathbb{E}[X^2] - \\mathbb{E}[X]^2 \\\\\n&= \\mathbb{E}[X] - \\mathbb{E}[X]^2 \\\\\n&= p - p^2 \\\\\n&= p(1 - p)\n\\end{aligned}\n\\]\nThe second line uses the fact that \\(X\\) only takes on the values \\(0\\) and \\(1\\). \\(0^2 = 0\\) and \\(1^2 = 1\\).\nIntuition: The uncertainty around a coin-flip is maximized when it’s fair!"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#continuous-random-variables",
