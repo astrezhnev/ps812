@@ -224,11 +224,18 @@
     "text": "Expected value\n\nOne very important property of a random variable is its expectation \\(\\mathbb{E}[X]\\)\n\nCan think of this as a summary of that random variable’s “long-run” behavior.\n\nFor a discrete random variable, the expectation is a weighted average of that variable’s possible outcomes with the weights given by the probability of each outcome\n\\[ \\mathbb{E}[X] =  \\sum_{x \\in \\mathcal{X}} x \\cdot P(X = x) \\]"
   },
   {
+    "objectID": "slides/week3/week3_random_variables.html#expectations-of-functions",
+    "href": "slides/week3/week3_random_variables.html#expectations-of-functions",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Expectations of functions",
+    "text": "Expectations of functions\n\nAn interesting property of the expected value is what is sometimes called the Law of the Unconscious Statistician (LOTUS)\nSuppose I want to calculate the expectation of some function of \\(X\\), denoted \\(g(X)\\).\nIf I just looked at the definition of expectation, I’d think:\n\n“What if I just plugged in \\(g(x)\\) instead of \\(x\\) and took the average over the same weights”\n\nIt turns out that works!\n\\[\\mathbb{E}[g(X)] = \\sum_{x \\in \\mathcal{X}} g(x) \\cdot P(X = x) \\]"
+  },
+  {
     "objectID": "slides/week3/week3_random_variables.html#linearity-of-expectations",
     "href": "slides/week3/week3_random_variables.html#linearity-of-expectations",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Linearity of expectations",
-    "text": "Linearity of expectations\n\nAn essential property of expectations is linearity\n\nThe expectation of the sum is the sum of the expectations\n\nLet \\(X\\) and \\(Y\\) be two random variables\n\\[\\mathbb{E}[X + Y] =  \\mathbb{E}[X] + \\mathbb{E}[Y] \\]\nLet \\(a\\) and \\(b\\) be constants: we can pull the constants out of the expectation\n\\[\\mathbb{E}[aX + bY] =  a\\mathbb{E}[X] + b\\mathbb{E}[Y] \\]\nYou’ll see this most often with sums over random variables indexed along some dimension\n\\[\\mathbb{E}\\bigg[\\sum_{i=1}^n a X_i\\bigg] = \\sum_{i=1}^n\\mathbb{E}[a X_i] = \\sum_{i=1}^n a\\mathbb{E}[X_i] = a\\sum_{i=1}^n \\mathbb{E}[X_i]\\]"
+    "text": "Linearity of expectations\n\nAnother essential property of expectations is linearity\n\nThe expectation of the sum is the sum of the expectations\n\nLet \\(X\\) and \\(Y\\) be two random variables\n\\[\\mathbb{E}[X + Y] =  \\mathbb{E}[X] + \\mathbb{E}[Y] \\]\nLet \\(a\\) and \\(b\\) be constants: we can pull the constants out of the expectation\n\\[\\mathbb{E}[aX + bY] =  a\\mathbb{E}[X] + b\\mathbb{E}[Y] \\]\nYou’ll see this most often with sums over random variables indexed along some dimension\n\\[\\mathbb{E}\\bigg[\\sum_{i=1}^n a X_i\\bigg] = \\sum_{i=1}^n\\mathbb{E}[a X_i] = \\sum_{i=1}^n a\\mathbb{E}[X_i] = a\\sum_{i=1}^n \\mathbb{E}[X_i]\\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli",
@@ -313,6 +320,13 @@
     "title": "Week 3: Random Variables and Distributions",
     "section": "Probability density functions (PDFs)",
     "text": "Probability density functions (PDFs)\n\nAnd we can integrate the PDF over any interval to get the probability of \\(X\\) falling in that interval.\n\\[P(a &lt; X \\le b) =  \\int_{a}^{b} f_X(x)dx \\]\nIntuitively, this follows from our earlier definition using CDFs\n\\[\n\\begin{aligned}\nP(a &lt; X \\le b) &= F_X(b) - F_X(a) \\\\\n&= \\int_{-\\infty}^{b} f_X(x)dx - \\int_{-\\infty}^{a} f_X(x)dx \\\\\n&= \\int_{a}^{b} f_X(x)dx\n\\end{aligned}\n\\]"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#expectations-of-continuous-random-variables",
+    "href": "slides/week3/week3_random_variables.html#expectations-of-continuous-random-variables",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Expectations of continuous random variables",
+    "text": "Expectations of continuous random variables\n\nWe defined the expected value for a discrete random variable as a sum\n\nWe’ll do the same for a continuous random variable using an integral\n\nFor continuous \\(X\\)\n\\[\\mathbb{E}[X] = \\int_{\\mathcal{X}} x f(x) dx \\]\nMore generally, the distinction between discrete and continuous vanishes when we define integrals with respect to the distribution (Lebesgue integration)\n\\[\\mathbb{E}[X] = \\int_{\\mathcal{X}} x \\, dF_X(x) \\]\n\nRather than slicing up the \\(x\\)-axis into small intervals, we slice up the probability and ask how much of it sits at each value of \\(X\\)\n\nBut we won’t spend time on that in this class…your Riemann integral intuition (sum of the areas of tinier and tinier rectangles) is enough!"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#normal-distribution",
