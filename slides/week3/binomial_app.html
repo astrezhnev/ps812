@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lectures – PoliSci 812</title>
+<title>Fitting a Binomial to the list experiment – PoliSci 812</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -29,25 +29,30 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-59285f19cc93ba41e7772f6fd9b25434.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
-<link href="site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-59285f19cc93ba41e7772f6fd9b25434.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content="../..">
+<script src="../../site_libs/quarto-contrib/shinylive-0.10.12/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="../../site_libs/quarto-contrib/shinylive-0.10.12/shinylive/run-python-blocks.js" type="module"></script>
+<link href="../../site_libs/quarto-contrib/shinylive-0.10.12/shinylive/shinylive.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -75,19 +80,42 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>
+  /* This page exists to be framed inside the week 3 slides, so the
+     site navbar, footer and title block are hidden. */
+  .navbar, .nav-footer, #title-block-header, header#title-block-header
+    { display:none !important; }
+  body { padding:0 !important; margin:0 !important; background:#F7F7F7; }
+  main, .page-columns, .content { padding:0 !important; margin:0 !important;
+    max-width:none !important; }
+  /* shinylive sizes its viewer to a fixed `viewerHeight`, which overflows
+     the frame whenever the slide gives this page less room than that. The
+     overflow is unreachable: a wheel over the app scrolls the app's own
+     panels, and scroll chaining stops at the iframe boundary. So pin the
+     widget to whatever viewport it lands in and let the app scroll its
+     panels inside, which is what its own layout is built to do. */
+  html, body { height:100%; overflow:hidden; }
+  .shinylive-wrapper, .shinylive-container {
+    height:100vh !important; height:100dvh !important; min-height:0 !important;
+    margin:0 !important; padding:0 !important; border:0 !important;
+    border-radius:0 !important; box-shadow:none !important; }
+  .shinylive-container > div { height:100% !important; min-height:0 !important; }
+  iframe.app-frame { display:block; border:0 !important;
+    height:100vh !important; height:100dvh !important; }
+</style>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">PoliSci 812</span>
     </a>
   </div>
@@ -98,31 +126,31 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./syllabus.html"> 
+    <a class="nav-link" href="../../syllabus.html"> 
 <span class="menu-text">Syllabus</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./schedule.html"> 
+    <a class="nav-link" href="../../schedule.html"> 
 <span class="menu-text">Schedule</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./staff.html"> 
+    <a class="nav-link" href="../../staff.html"> 
 <span class="menu-text">Staff</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./lectures.html" aria-current="page"> 
+    <a class="nav-link" href="../../lectures.html"> 
 <span class="menu-text">Lectures</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./sections.html"> 
+    <a class="nav-link" href="../../sections.html"> 
 <span class="menu-text">Sections</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./assignments.html"> 
+    <a class="nav-link" href="../../assignments.html"> 
 <span class="menu-text">Assignments</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./resources.html"> 
+    <a class="nav-link" href="../../resources.html"> 
 <span class="menu-text">Resources</span></a>
   </li>  
   <li class="nav-item">
@@ -148,40 +176,14 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-layout-custom page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link active" data-scroll-target="#lecture-slides">Lecture Slides</a>
-  <ul class="collapse">
-  <li><a href="#week-1-introduction-and-foundations-of-probability" id="toc-week-1-introduction-and-foundations-of-probability" class="nav-link" data-scroll-target="#week-1-introduction-and-foundations-of-probability">Week 1: Introduction and Foundations of Probability</a></li>
-  <li><a href="#week-2-conditional-probability-and-independence" id="toc-week-2-conditional-probability-and-independence" class="nav-link" data-scroll-target="#week-2-conditional-probability-and-independence">Week 2: Conditional Probability and Independence</a></li>
-  <li><a href="#week-3-random-variables-and-distributions" id="toc-week-3-random-variables-and-distributions" class="nav-link" data-scroll-target="#week-3-random-variables-and-distributions">Week 3: Random Variables and Distributions</a></li>
-  <li><a href="#week-4-joint-distributions-and-expectation" id="toc-week-4-joint-distributions-and-expectation" class="nav-link" data-scroll-target="#week-4-joint-distributions-and-expectation">Week 4: Joint Distributions and Expectation</a></li>
-  <li><a href="#week-5-variance-covariance-and-conditional-expectation" id="toc-week-5-variance-covariance-and-conditional-expectation" class="nav-link" data-scroll-target="#week-5-variance-covariance-and-conditional-expectation">Week 5: Variance, Covariance, and Conditional Expectation</a></li>
-  <li><a href="#week-6-estimation-part-1" id="toc-week-6-estimation-part-1" class="nav-link" data-scroll-target="#week-6-estimation-part-1">Week 6: Estimation: Part 1</a></li>
-  <li><a href="#week-7-estimation-part-2" id="toc-week-7-estimation-part-2" class="nav-link" data-scroll-target="#week-7-estimation-part-2">Week 7: Estimation: Part 2</a></li>
-  <li><a href="#week-8-confidence-intervals-and-hypothesis-testing" id="toc-week-8-confidence-intervals-and-hypothesis-testing" class="nav-link" data-scroll-target="#week-8-confidence-intervals-and-hypothesis-testing">Week 8: Confidence Intervals and Hypothesis Testing</a></li>
-  <li><a href="#week-9-introduction-to-regression" id="toc-week-9-introduction-to-regression" class="nav-link" data-scroll-target="#week-9-introduction-to-regression">Week 9: Introduction to Regression</a></li>
-  <li><a href="#week-10-inference-for-regression" id="toc-week-10-inference-for-regression" class="nav-link" data-scroll-target="#week-10-inference-for-regression">Week 10: Inference for Regression</a></li>
-  <li><a href="#week-11-interpreting-regressions" id="toc-week-11-interpreting-regressions" class="nav-link" data-scroll-target="#week-11-interpreting-regressions">Week 11: Interpreting Regressions</a></li>
-  <li><a href="#week-12-regression-wrap-up" id="toc-week-12-regression-wrap-up" class="nav-link" data-scroll-target="#week-12-regression-wrap-up">Week 12: Regression Wrap-up</a></li>
-  <li><a href="#week-13-weighting-estimators" id="toc-week-13-weighting-estimators" class="nav-link" data-scroll-target="#week-13-weighting-estimators">Week 13: Weighting Estimators</a></li>
-  <li><a href="#week-14-preview-causal-inference" id="toc-week-14-preview-causal-inference" class="nav-link" data-scroll-target="#week-14-preview-causal-inference">Week 14: Preview: Causal inference</a></li>
-  </ul></li>
-  </ul>
-</nav>
-    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lectures</h1>
+<h1 class="title">Fitting a Binomial to the list experiment</h1>
 </div>
 
 
@@ -198,88 +200,1335 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="lecture-slides" class="level2">
-<h2 class="anchored" data-anchor-id="lecture-slides">Lecture Slides</h2>
-<p>Lecture slides are available as self-contained <code>.html</code> files made with RevealJS from a Quarto <code>.qmd</code> file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the <code>.qmd</code> file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.</p>
-<p>Links become active as the materials for each week are posted.</p>
-<!-- Template for each week once slides are posted:
+<!-- GENERATED FILE -- do not edit by hand.
+     Edit binom-app/app.R (or the data) and run:  Rscript binom-app/build_app_qmd.R -->
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 700
+#| components: [viewer]
 
-- [Week N GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/slides/weekN/)
-- [Week N `.html` slides](https://www.antonstrezhnev.com/ps812/slides/weekN/weekN_topic.html)
+## file: app.R
+# ---------------------------------------------------------------------------
+# List experiment counts against a model for each list.
+#
+# 2012 Mexico Panel Study, Wave 2: the number of list items each respondent
+# said "yes" to, for the 3-item control list and the 4-item treated list.
+# Data prepared by ../data/prepare_data.R.
+#
+# The control list is Binomial(3, p). The treated list adds the sensitive
+# item, so it is that same Binomial(3, p) plus an independent
+# Binomial(1, theta) -- the convolution of the two. The three non-sensitive
+# items are common to both lists, so p is set by a single slider that drives
+# both cards; only theta is specific to the treated list.
+#
+# Two measures of fit, one per plot:
+#   overlap  = sum_k min(p_hat(k), p(k))   -- the shared area of the two PMFs
+#   max gap  = max_k |F_hat(k) - F(k)|     -- the largest vertical CDF distance
+#
+# Deliberately base R + shiny only. Every extra package is another wasm
+# download when this runs in the browser through shinylive.
+# ---------------------------------------------------------------------------
 
--->
-<section id="week-1-introduction-and-foundations-of-probability" class="level3">
-<h3 class="anchored" data-anchor-id="week-1-introduction-and-foundations-of-probability">Week 1: Introduction and Foundations of Probability</h3>
-<ul>
-<li><a href="https://github.com/astrezhnev/ps812/tree/main/slides/week1/">Week 1 Github Repository</a></li>
-<li><a href="https://www.antonstrezhnev.com/ps812/slides/week1/week1_intro_and_review.html">Week 1 <code>.html</code> slides</a></li>
-</ul>
-</section>
-<section id="week-2-conditional-probability-and-independence" class="level3">
-<h3 class="anchored" data-anchor-id="week-2-conditional-probability-and-independence">Week 2: Conditional Probability and Independence</h3>
-<ul>
-<li><a href="https://github.com/astrezhnev/ps812/tree/main/slides/week2/">Week 2 Github Repository</a></li>
-<li><a href="https://www.antonstrezhnev.com/ps812/slides/week2/week2_conditional_probability.html">Week 2 <code>.html</code> slides</a></li>
-<li><a href="https://www.antonstrezhnev.com/ps812/slides/week2/ces_conditioning_app.html">Illustrating conditional probability</a> - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)</li>
-<li><a href="https://www.antonstrezhnev.com/ps812/slides/week2/bisg_app.html">Illustrating Bayes’ rule with BISG</a> - Can we predict an individual’s race/ethnicity from geolocation and surname frequency data (RShiny app using the Census Bureau surname list and the 2020 Census)</li>
-</ul>
-</section>
-<section id="week-3-random-variables-and-distributions" class="level3">
-<h3 class="anchored" data-anchor-id="week-3-random-variables-and-distributions">Week 3: Random Variables and Distributions</h3>
-<ul>
-<li><a href="https://github.com/astrezhnev/ps812/tree/main/slides/week3/">Week 3 Github Repository</a></li>
-<li><a href="https://www.antonstrezhnev.com/ps812/slides/week3/week3_random_variables.html">Week 3 <code>.html</code> slides</a></li>
-</ul>
-</section>
-<section id="week-4-joint-distributions-and-expectation" class="level3">
-<h3 class="anchored" data-anchor-id="week-4-joint-distributions-and-expectation">Week 4: Joint Distributions and Expectation</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-5-variance-covariance-and-conditional-expectation" class="level3">
-<h3 class="anchored" data-anchor-id="week-5-variance-covariance-and-conditional-expectation">Week 5: Variance, Covariance, and Conditional Expectation</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-6-estimation-part-1" class="level3">
-<h3 class="anchored" data-anchor-id="week-6-estimation-part-1">Week 6: Estimation: Part 1</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-7-estimation-part-2" class="level3">
-<h3 class="anchored" data-anchor-id="week-7-estimation-part-2">Week 7: Estimation: Part 2</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-8-confidence-intervals-and-hypothesis-testing" class="level3">
-<h3 class="anchored" data-anchor-id="week-8-confidence-intervals-and-hypothesis-testing">Week 8: Confidence Intervals and Hypothesis Testing</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-9-introduction-to-regression" class="level3">
-<h3 class="anchored" data-anchor-id="week-9-introduction-to-regression">Week 9: Introduction to Regression</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-10-inference-for-regression" class="level3">
-<h3 class="anchored" data-anchor-id="week-10-inference-for-regression">Week 10: Inference for Regression</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-11-interpreting-regressions" class="level3">
-<h3 class="anchored" data-anchor-id="week-11-interpreting-regressions">Week 11: Interpreting Regressions</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-12-regression-wrap-up" class="level3">
-<h3 class="anchored" data-anchor-id="week-12-regression-wrap-up">Week 12: Regression Wrap-up</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-13-weighting-estimators" class="level3">
-<h3 class="anchored" data-anchor-id="week-13-weighting-estimators">Week 13: Weighting Estimators</h3>
-<p><em>To be posted</em></p>
-</section>
-<section id="week-14-preview-causal-inference" class="level3">
-<h3 class="anchored" data-anchor-id="week-14-preview-causal-inference">Week 14: Preview: Causal inference</h3>
-<p><em>To be posted</em></p>
+library(shiny)
+
+dat &lt;- read.csv("mexico_list.csv")
+
+GROUPS &lt;- list(
+  control = list(label = "Control list", J = 3, treat = 0, col = "#0479A8",
+                 model = "Y ~ Binomial(3, p)"),
+  treated = list(label = "Treated list", J = 4, treat = 1, col = "#c5050c",
+                 model = "Y ~ Binomial(3, p) + Binomial(1, θ)")
+)
+GAP_COL &lt;- "#C77400"
+INK     &lt;- "#333333"
+
+# Empirical PMF and CDF on the support 0..J
+for (g in names(GROUPS)) {
+  y &lt;- dat$y[dat$treat == GROUPS[[g]]$treat]
+  k &lt;- 0:GROUPS[[g]]$J
+  GROUPS[[g]]$n    &lt;- length(y)
+  GROUPS[[g]]$pmf  &lt;- as.numeric(table(factor(y, levels = k))) / length(y)
+  GROUPS[[g]]$cdf  &lt;- cumsum(GROUPS[[g]]$pmf)
+}
+
+css &lt;- "
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700&amp;family=Red+Hat+Text:wght@400;500;700&amp;display=swap');
+html, body { height:100%; }
+body { font-family:'Red Hat Text',system-ui,sans-serif; background:#F7F7F7; color:#333;
+       margin:0; padding:10px; font-size:14px; box-sizing:border-box; overflow:hidden; }
+h4 { font-family:'Red Hat Display',system-ui,sans-serif; margin:0; font-size:17px; }
+/* fluidPage() wraps the UI in an auto-height .container-fluid; it needs a
+   definite height for the plots below to size to the frame. */
+body &gt; .container-fluid { height:100%; padding:0; }
+.wrap { display:flex; gap:14px; height:100%; }
+.card { flex:1 1 0; min-width:0; display:flex; flex-direction:column;
+        background:#fff; border:1px solid #e2e2e2; border-radius:8px; padding:10px 12px;
+        box-sizing:border-box; }
+.hdr { display:flex; justify-content:space-between; align-items:baseline; }
+.model { font-size:13px; color:#666; }
+.form-group { margin-bottom:0; }
+.control-label { font-weight:500; white-space:nowrap; }
+.irs--shiny .irs-bar { border-color:var(--gc); background:var(--gc); }
+.irs--shiny .irs-single { background:var(--gc); }
+.irs--shiny .irs-handle { border-color:var(--gc); }
+.irs--shiny .irs-min, .irs--shiny .irs-max { display:none !important; }
+/* Everything above the plots has a fixed height. The plots take their size
+   from the space left over when they first render, which is before the
+   slider is built and the fit line is filled in. */
+.card &gt; .form-group { height:78px; flex:none; overflow:hidden; }
+.hdr { height:24px; flex:none; }
+.key { height:18px; flex:none; }
+.fit { display:flex; gap:18px; font-size:12px; color:#777; margin:2px 0 4px 0; }
+#fit_control, #fit_treated { height:28px; flex:none; }
+.fit b { font-family:'Red Hat Display',sans-serif; font-size:16px; color:#333; }
+.meter { display:inline-block; width:70px; height:8px; background:#eee; border-radius:3px;
+         overflow:hidden; vertical-align:middle; margin-left:4px; }
+.meter div { height:8px; }
+.plots { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+.plots &gt; div { flex:1 1 0; min-height:0; }
+.key { font-size:11.5px; color:#777; text-align:center; }
+.key span { display:inline-block; margin:0 6px; }
+.sw { display:inline-block; width:10px; height:10px; vertical-align:-1px; margin-right:3px; }
+"
+
+# The control card carries the shared p slider (it is the whole model for
+# that list); the treated card carries theta, which only it uses.
+SLIDERS &lt;- list(
+  control = sliderInput("p_base", "p – each non-sensitive item (both lists)",
+                        min = 0, max = 1, value = 0.5, step = 0.01, width = "100%"),
+  treated = sliderInput("theta", "θ – sensitive item (vote buying)",
+                        min = 0, max = 1, value = 0.1, step = 0.01, width = "100%")
+)
+
+group_card &lt;- function(g) {
+  G &lt;- GROUPS[[g]]
+  div(class = "card", style = paste0("--gc:", G$col, ";"),
+    div(class = "hdr",
+      h4(style = paste0("color:", G$col), G$label),
+      span(class = "model", sprintf("%s   n = %d", G$model, G$n))
+    ),
+    SLIDERS[[g]],
+    uiOutput(paste0("fit_", g)),
+    div(class = "plots",
+      plotOutput(paste0("pmf_", g), height = "100%"),
+      plotOutput(paste0("cdf_", g), height = "100%")
+    ),
+    div(class = "key",
+      span(span(class = "sw", style = paste0("background:", G$col)), "Data"),
+      span("○ – – Model"),
+      span(span(class = "sw", style = "background:#EEC48F"), "Gap"))
+  )
+}
+
+ui &lt;- fluidPage(
+  tags$head(tags$style(HTML(css))),
+  div(class = "wrap", group_card("control"), group_card("treated"))
+)
+
+draw_pmf &lt;- function(G, p) {
+  k &lt;- 0:G$J
+  par(mar = c(1.9, 3.4, 1.5, 0.6), mgp = c(1.9, 0.5, 0), tcl = -0.25, las = 1,
+      col.axis = "#555", family = "sans")
+  plot(NA, xlim = c(-0.6, G$J + 0.6), ylim = c(0, max(0.75, 1.06 * p)), xaxt = "n", yaxs = "i",
+       xlab = "", ylab = "P(Y = y)", bty = "l", fg = "#999")
+  axis(1, at = k, fg = "#999")
+  title(main = "PMF", adj = 0, font.main = 2, cex.main = 1, col.main = "#777", line = 0.4)
+  w &lt;- 0.32
+  # The data is drawn as plain solid bars; the model sits on top of them as
+  # stems and open points. The y-axis stays fixed unless the model outgrows
+  # it at extreme p.
+  rect(k - w, 0, k + w, G$pmf, col = G$col, border = NA)
+  segments(k, 0, k, p, col = INK, lwd = 1.3)
+  points(k, p, pch = 21, bg = "#fff", col = INK, cex = 1.3, lwd = 1.6)
+}
+
+draw_cdf &lt;- function(G, P) {
+  k &lt;- 0:G$J
+  x0 &lt;- c(-0.6, k); x1 &lt;- c(k, G$J + 0.6)
+  Fh &lt;- c(0, G$cdf); Ft &lt;- c(0, P)
+  par(mar = c(1.9, 3.4, 1.5, 0.6), mgp = c(1.9, 0.5, 0), tcl = -0.25, las = 1,
+      col.axis = "#555", family = "sans")
+  plot(NA, xlim = range(x0, x1), ylim = c(0, 1.02), xaxt = "n", yaxs = "i",
+       xlab = "", ylab = "P(Y ≤ y)", bty = "l", fg = "#999")
+  axis(1, at = k, fg = "#999")
+  title(main = "CDF", adj = 0, font.main = 2, cex.main = 1, col.main = "#777", line = 0.4)
+  # Shade the gap between the two step functions; the largest gap is darker.
+  gap &lt;- abs(Fh - Ft)
+  big &lt;- which.max(gap)
+  rect(x0, pmin(Fh, Ft), x1, pmax(Fh, Ft), border = NA,
+       col = ifelse(seq_along(x0) == big, adjustcolor(GAP_COL, 0.55),
+                    adjustcolor(GAP_COL, 0.18)))
+  segments(x0, Ft, x1, Ft, col = INK, lwd = 1.6, lty = 2)
+  segments(x0, Fh, x1, Fh, col = G$col, lwd = 3)
+  points(k, G$cdf, pch = 19, col = G$col, cex = 1.1)
+}
+
+server &lt;- function(input, output, session) {
+  # Control: the 3 non-sensitive items. Treated: those same 3 items plus an
+  # independent Binomial(1, theta) for the sensitive one, so the PMF is the
+  # convolution -- P(Y=k) = (1-theta) P(B=k) + theta P(B=k-1), B ~ Bin(3, p).
+  base &lt;- reactive(dbinom(0:3, 3, input$p_base))
+  pmfs &lt;- list(
+    control = base,
+    treated = reactive({
+      b &lt;- base()
+      c(b, 0) * (1 - input$theta) + c(0, b) * input$theta
+    })
+  )
+
+  lapply(names(GROUPS), function(g) {
+    G &lt;- GROUPS[[g]]
+    p &lt;- pmfs[[g]]
+    P &lt;- reactive(cumsum(p()))
+
+    output[[paste0("fit_", g)]] &lt;- renderUI({
+      ov  &lt;- sum(pmin(G$pmf, p()))
+      gap &lt;- max(abs(G$cdf - P()))
+      div(class = "fit",
+        span("PMF overlap ", tags$b(sprintf("%.0f%%", 100 * ov)),
+             span(class = "meter",
+                  div(style = sprintf("width:%.1f%%;background:%s", 100 * ov, G$col)))),
+        span("Largest CDF gap ", tags$b(sprintf("%.2f", gap)),
+             span(class = "meter",
+                  div(style = sprintf("width:%.1f%%;background:%s", 100 * gap, GAP_COL))))
+      )
+    })
+    output[[paste0("pmf_", g)]] &lt;- renderPlot(draw_pmf(G, p()), res = 96)
+    output[[paste0("cdf_", g)]] &lt;- renderPlot(draw_cdf(G, P()), res = 96)
+  })
+}
+
+shinyApp(ui, server)
+
+## file: mexico_list.csv
+"y","treat","direct"
+4,1,1
+3,0,0
+3,1,0
+3,0,0
+3,1,0
+3,0,1
+3,0,0
+2,0,0
+4,1,0
+3,0,0
+2,0,0
+3,0,0
+1,1,0
+1,1,0
+2,1,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,1,0
+1,0,1
+2,0,0
+1,0,0
+1,1,0
+2,1,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+2,0,0
+2,0,0
+2,1,0
+2,0,0
+1,0,0
+2,1,0
+2,0,0
+1,1,0
+0,0,0
+3,0,0
+1,0,0
+1,1,0
+1,1,0
+1,0,0
+1,1,0
+1,0,1
+2,1,0
+1,0,0
+2,0,0
+1,1,0
+1,0,0
+1,1,0
+2,0,0
+1,1,0
+1,1,0
+2,0,0
+2,1,0
+2,0,0
+2,1,0
+1,0,0
+1,1,0
+2,0,0
+2,0,0
+2,0,0
+1,1,0
+1,0,0
+2,1,0
+2,0,0
+2,1,0
+2,0,0
+1,1,0
+0,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,1
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+2,0,0
+2,1,0
+1,0,0
+3,1,0
+0,1,0
+3,0,0
+1,0,0
+1,0,0
+1,1,0
+2,1,0
+3,0,0
+4,1,0
+4,1,0
+3,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,1,0
+1,0,0
+1,0,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+3,1,0
+2,0,0
+2,1,0
+2,0,0
+3,0,0
+3,1,0
+3,0,0
+3,1,0
+3,0,0
+3,1,0
+2,0,0
+1,0,0
+2,0,0
+3,0,0
+3,1,0
+2,0,0
+1,0,0
+4,1,0
+3,0,0
+4,1,0
+2,0,0
+4,1,0
+3,0,0
+4,1,0
+2,0,0
+3,1,0
+4,1,0
+3,0,0
+3,1,0
+1,1,0
+3,0,0
+2,1,0
+3,1,0
+3,0,0
+2,1,0
+2,0,0
+1,0,0
+3,1,0
+2,0,0
+2,1,0
+2,0,0
+3,1,0
+2,0,0
+4,1,0
+3,0,0
+2,1,0
+2,0,0
+2,1,0
+3,0,0
+1,1,0
+2,1,0
+3,0,0
+2,1,0
+2,0,0
+1,1,0
+2,0,0
+3,1,0
+3,0,0
+2,1,0
+3,1,0
+1,0,0
+3,1,0
+2,1,0
+1,0,0
+1,0,0
+2,1,0
+0,0,0
+0,0,0
+1,0,0
+0,1,0
+2,0,0
+1,1,0
+2,1,0
+2,0,0
+1,1,0
+1,0,0
+2,1,0
+2,1,0
+2,0,0
+1,0,0
+1,0,1
+2,1,0
+2,0,0
+1,1,0
+1,1,1
+3,1,1
+2,0,1
+1,0,1
+1,1,0
+1,0,0
+1,1,1
+1,1,1
+3,0,0
+2,1,0
+1,0,0
+2,0,0
+1,0,0
+2,1,0
+1,1,0
+1,0,0
+3,1,1
+2,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+3,1,0
+2,0,0
+3,1,0
+1,0,0
+2,1,0
+3,0,0
+0,1,0
+2,0,0
+3,0,0
+2,0,0
+2,1,0
+2,1,0
+2,1,0
+2,1,0
+2,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,1,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+2,0,0
+1,1,0
+3,0,0
+2,1,0
+3,0,0
+3,1,0
+1,0,0
+1,0,0
+3,1,0
+3,0,1
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+2,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+2,0,0
+1,1,0
+2,0,0
+2,1,0
+3,0,1
+1,1,0
+2,0,0
+0,0,0
+3,1,0
+2,1,1
+3,0,0
+2,1,0
+3,0,0
+1,1,0
+2,0,0
+1,1,0
+0,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,1
+1,0,0
+3,1,0
+3,0,0
+1,1,0
+2,0,0
+2,1,0
+2,0,0
+2,1,0
+1,1,0
+2,0,0
+3,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+1,0,0
+1,0,0
+2,1,0
+2,0,0
+1,0,0
+0,1,0
+1,1,0
+0,0,0
+1,1,0
+0,0,0
+0,1,0
+3,1,0
+1,0,0
+1,1,0
+2,0,0
+2,1,0
+1,0,0
+1,0,0
+2,1,1
+2,0,0
+1,1,0
+1,0,0
+1,1,0
+2,0,0
+2,1,0
+2,0,1
+1,1,0
+2,1,0
+2,0,0
+1,1,0
+1,0,0
+1,0,0
+1,0,0
+1,1,0
+1,0,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+2,0,0
+2,1,0
+3,1,1
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+2,0,0
+2,1,0
+2,0,0
+2,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+3,1,0
+1,0,0
+2,1,0
+3,0,0
+3,1,0
+3,0,0
+2,1,0
+0,1,0
+1,0,0
+1,1,0
+3,0,0
+1,0,0
+1,1,0
+1,1,0
+2,0,1
+4,1,1
+2,0,0
+0,1,0
+3,0,0
+2,0,0
+3,1,1
+2,1,0
+0,1,0
+0,1,0
+2,0,0
+2,1,0
+2,0,0
+2,0,1
+0,0,0
+2,1,0
+1,0,0
+1,0,0
+2,0,0
+1,0,0
+2,1,0
+3,1,0
+2,1,0
+3,1,0
+2,0,0
+1,1,0
+1,0,0
+0,1,1
+3,0,0
+1,1,0
+2,0,0
+2,1,0
+0,0,0
+0,1,0
+0,0,0
+2,1,0
+1,1,0
+1,0,0
+1,1,0
+2,0,0
+1,1,0
+1,0,0
+1,0,0
+1,1,0
+1,0,0
+3,0,0
+1,1,0
+2,0,0
+3,1,0
+1,0,0
+2,1,0
+3,0,0
+3,1,0
+2,0,0
+1,1,0
+1,0,0
+3,1,0
+2,0,0
+1,1,0
+2,0,0
+1,1,0
+1,0,0
+1,1,0
+2,1,0
+1,0,0
+0,1,0
+3,0,0
+2,1,0
+2,0,0
+0,1,0
+1,0,0
+0,0,0
+1,1,0
+2,0,0
+2,0,0
+1,1,0
+1,0,1
+3,1,0
+2,0,0
+3,1,0
+2,0,0
+2,1,0
+2,0,0
+2,1,0
+2,0,0
+2,0,0
+2,1,0
+2,0,0
+2,1,0
+2,0,0
+3,1,0
+2,0,0
+3,1,0
+2,0,0
+1,0,0
+2,1,0
+4,1,0
+1,0,0
+1,0,0
+4,1,0
+1,0,0
+2,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+1,0,0
+2,1,0
+1,1,0
+1,1,0
+3,0,0
+3,1,0
+2,0,0
+3,1,0
+2,0,0
+1,1,0
+2,0,0
+2,1,0
+1,0,0
+3,1,0
+2,0,0
+3,1,1
+3,0,0
+2,1,0
+2,0,0
+1,1,0
+3,1,0
+2,0,0
+3,1,0
+4,1,0
+3,0,0
+4,1,0
+3,0,0
+4,1,0
+2,0,0
+4,1,0
+3,0,0
+2,0,0
+4,1,0
+3,0,0
+2,0,0
+4,1,0
+3,0,0
+1,1,0
+2,0,0
+2,1,0
+2,0,0
+2,1,0
+1,0,0
+3,1,0
+2,1,0
+1,0,0
+2,0,0
+2,0,0
+2,1,0
+2,1,0
+1,0,0
+1,1,0
+2,0,0
+1,1,0
+2,0,0
+2,1,0
+2,0,0
+1,0,0
+2,1,0
+2,0,1
+2,1,0
+2,0,0
+1,1,0
+1,0,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+1,1,0
+2,1,0
+1,0,0
+2,1,0
+2,0,0
+2,1,0
+2,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,1
+0,0,0
+2,1,0
+1,0,0
+2,1,0
+4,1,0
+1,1,0
+3,0,0
+1,1,0
+2,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,1
+1,0,0
+1,1,0
+2,0,0
+2,1,0
+1,0,0
+3,1,1
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+2,0,0
+2,0,0
+3,1,0
+4,1,1
+1,0,0
+2,1,0
+2,0,0
+2,0,0
+1,0,0
+3,0,0
+1,1,0
+1,0,1
+1,1,0
+1,0,0
+2,1,0
+2,0,0
+2,0,0
+1,0,0
+1,0,0
+1,1,1
+3,1,0
+4,1,1
+3,0,0
+4,1,0
+2,0,1
+3,0,0
+3,1,0
+3,0,0
+3,1,1
+3,0,0
+2,1,0
+2,0,0
+1,1,0
+1,0,0
+1,1,0
+1,1,0
+1,1,0
+1,0,0
+2,0,0
+1,1,0
+1,0,1
+1,1,0
+1,0,0
+1,1,0
+3,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+0,1,0
+1,0,0
+1,1,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+1,0,0
+1,1,0
+1,0,0
+1,0,0
+1,1,0
+3,0,0
+1,1,0
+2,1,0
+1,0,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+1,1,0
+2,0,0
+1,1,0
+2,0,0
+1,1,0
+3,0,1
+2,0,1
+2,0,0
+3,1,0
+1,0,0
+2,1,0
+2,0,0
+0,1,0
+0,1,0
+1,0,0
+1,1,0
+1,0,1
+2,0,0
+1,0,0
+1,0,0
+1,0,0
+2,0,0
+1,1,0
+1,0,0
+1,1,0
+3,1,0
+2,1,0
+3,1,0
+2,1,0
+1,0,0
+1,0,0
+3,1,0
+1,1,0
+2,0,0
+1,1,0
+2,0,0
+2,1,0
+3,1,0
+2,0,0
+1,1,0
+0,0,0
+4,1,0
+3,0,0
+3,1,0
+2,0,0
+1,1,0
+2,0,0
+3,1,0
+1,0,0
+2,1,0
+1,0,0
+3,0,0
+0,1,0
+1,0,0
+1,1,0
+3,1,0
+0,0,0
+0,1,0
+1,0,0
+0,1,0
+0,1,0
+0,1,0
+2,0,0
+0,1,0
+1,0,0
+1,1,0
+1,1,0
+3,0,0
+1,1,1
+0,1,0
+1,0,0
+1,1,0
+3,0,0
+1,1,0
+4,1,0
+1,0,0
+3,1,0
+1,1,0
+1,0,0
+1,0,0
+0,0,0
+1,1,0
+0,0,0
+1,0,0
+1,1,0
+2,0,0
+3,1,0
+3,0,0
+2,1,0
+2,0,0
+3,1,0
+1,0,0
+4,1,1
+2,0,0
+2,1,0
+2,0,0
+0,0,0
+1,1,0
+0,0,0
+0,0,0
+1,1,0
+1,0,0
+1,0,0
+1,1,0
+1,1,0
+0,0,0
+1,1,0
+2,0,0
+2,1,0
+2,0,0
+1,1,0
+2,1,0
+2,1,0
+2,1,0
+1,0,0
+3,1,0
+3,1,0
+1,0,0
+1,0,0
+2,1,0
+1,1,0
+1,0,0
+1,0,1
+1,1,0
+2,0,0
+2,1,0
+2,0,0
+2,1,0
+1,0,1
+2,1,1
+1,0,0
+2,1,0
+2,0,0
+2,1,0
+1,0,0
+1,1,0
+3,1,0
+0,1,0
+1,0,0
+2,1,0
+3,1,0
+1,0,0
+1,1,0
+1,0,0
+1,0,0
+2,0,0
+1,0,0
+3,1,1
+1,1,0
+2,0,0
+3,1,0
+2,1,0
+1,0,0
+1,1,0
+2,0,0
+3,1,0
+2,0,0
+2,1,0
+3,0,0
+2,1,0
+1,1,0
+2,0,0
+1,1,0
+1,1,0
+0,0,0
+0,1,0
+1,0,0
+1,1,0
+0,0,0
+0,1,0
+1,0,0
+2,1,0
+1,0,0
+0,0,0
+1,1,0
+0,0,0
+0,1,0
+2,1,0
+2,0,1
+2,1,0
+3,1,0
+2,1,0
+2,0,0
+1,1,0
+0,0,0
+0,1,0
+2,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+0,0,1
+1,1,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+2,1,0
+2,0,0
+1,1,0
+2,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,1
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+2,1,0
+2,0,0
+2,1,0
+3,0,0
+1,1,0
+2,1,1
+3,1,0
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,1
+2,1,0
+1,0,0
+3,1,0
+0,0,0
+2,1,0
+2,0,0
+2,1,0
+1,0,0
+2,1,0
+2,0,0
+2,1,0
+0,0,0
+2,1,0
+0,1,0
+0,1,0
+2,0,0
+3,1,0
+2,0,0
+1,1,0
+2,0,0
+1,1,0
+1,0,0
+2,1,0
+3,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+2,0,0
+3,1,0
+3,0,0
+3,1,0
+3,0,0
+3,1,0
+2,0,0
+3,1,0
+2,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+2,0,0
+1,1,0
+3,0,0
+3,1,1
+2,0,0
+0,1,0
+3,0,0
+3,1,0
+2,0,0
+0,1,0
+2,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+2,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+3,0,0
+3,1,0
+3,1,0
+1,0,0
+2,1,0
+2,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+2,0,0
+2,1,0
+2,0,0
+2,1,0
+1,0,0
+2,1,0
+3,0,0
+2,1,0
+2,0,0
+3,1,0
+2,0,0
+2,0,0
+0,1,0
+0,0,0
+1,0,0
+2,1,0
+2,0,0
+3,1,0
+1,0,0
+0,1,0
+1,0,0
+1,1,0
+3,0,0
+2,1,0
+2,0,0
+0,1,0
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+2,0,0
+2,1,0
+2,0,0
+1,1,0
+0,0,0
+2,1,0
+2,0,0
+0,1,0
+2,0,0
+1,1,0
+2,0,0
+1,1,0
+2,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,1
+2,0,0
+4,1,0
+2,0,1
+1,1,0
+1,0,0
+3,1,0
+2,0,0
+3,1,0
+0,0,0
+1,1,1
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+2,0,0
+1,1,0
+2,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+1,1,0
+3,0,0
+0,1,1
+0,0,0
+2,1,0
+2,0,0
+2,1,0
+3,0,0
+0,1,0
+2,0,0
+1,1,0
+2,0,0
+1,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+1,0,0
+1,1,0
+1,0,0
+2,1,0
+2,1,0
+1,1,0
+2,0,0
+3,1,1
+2,0,0
+1,1,0
+2,0,0
+0,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,1
+1,0,0
+1,1,0
+2,0,0
+1,1,0
+2,0,1
+1,0,0
+3,1,1
+1,1,0
+2,0,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+2,1,0
+1,0,0
+2,1,0
+1,0,0
+2,1,0
+4,1,0
+1,1,0
+2,0,0
+2,0,0
+3,1,0
+1,0,0
+1,1,0
+2,0,0
+1,1,1
+2,0,0
+</code></pre>
 
 
-</section>
-</section>
 
-</main> <!-- /main -->
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
