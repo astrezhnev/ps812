@@ -73,7 +73,7 @@ $$
   - The share of residents of Wisconsin who turn out in the 2026 midterm election.
   - The share of residents of a given Wisconsin precinct who turn out in the 2026 midterm election **given** that precinct's 2024 Harris vote share.
 - We will use our observed data to provide **estimates** of these quantities
-  - Assume our observations came from the distribution of interest...how "close" is our estimate from the truth.
+  - Assume our observations came from the distribution of interest...how "close" is our estimate to the truth?
   - How can we talk about this when we **don't know** the truth!?
 
 :::
@@ -524,7 +524,7 @@ die_pmf(rep(1, 6), "#0479A8", "Fair die") +
 - Suppose I want to calculate the expectation of some **function** of $X$, denoted $g(X)$.
 
 - If I just looked at the definition of expectation, I'd think:
-  - "What if I just plugged in $g(x)$ instead of $x$ and took the average over the same weights"
+  - "What if I just plugged in $g(x)$ instead of $x$ and took the average over the same weights?"
 
 - It turns out that works!
 
@@ -704,6 +704,27 @@ mexico |>
 
 - Also, the variance of the **difference** is not the difference in the variances...even for independent random variables, it's still the sum of the variances ($-1$ gets squared!)
   - We'll talk about this more next week when we define **covariance**
+
+:::
+
+## Variance of a Bernoulli
+
+::: {.incremental}
+
+- Let's derive the variance of the Bernoulli. Let $X \sim \text{Bernoulli}(p)$
+
+  $$
+  \begin{aligned}
+  \Var(X) &= \mathbb{E}[X^2] - \mathbb{E}[X]^2 \\
+  &= \mathbb{E}[X] - \mathbb{E}[X]^2 \\
+  &= p - p^2 \\
+  &= p(1 - p)
+  \end{aligned}
+  $$
+
+- The second line uses the fact that $X$ only takes on the values $0$ and $1$. $0^2 = 0$ and $1^2 = 1$.
+
+- **Intuition**: The uncertainty around a coin-flip is **maximized** when it's fair!
 
 :::
 
