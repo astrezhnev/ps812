@@ -637,6 +637,10 @@ mexico |>
   kable(digits = 3)
 ```
 
+## Variance
+
+## Properties of variance
+
 ## Continuous random variables
 
 - Recall the difference between the CDF of a **discrete** versus a **continuous** random variable.
@@ -657,16 +661,199 @@ p_pois + p_exp +
 
 ## Probability density functions (PDFs)
 
+::: {.incremental}
+
 - A **continuous** random variable is a random variable whose CDF is **continuous everywhere** and differentiable everywhere except for a possibly finite number of points
   - The support of a continuous random variable is the set of real numbers $\mathbf{R}$ or an interval (or union of intervals) of the reals.
 
+- The challenge with talking about a distribution defined on the **uncountably infinite** reals is that the probability of realizing any particular value $x$ is always **zero**
+
+- Instead of a PMF, continuous random variables have a **probability density function** (PDF) - defined as the **derivative** of the CDF
+  - Typical notation is a lowercase $f(\cdot)$
+
+  $$ f_X(x) = \frac{d}{dx} F_X(x) $$
+
+:::
+
+## Probability density functions (PDFs)
+
+::: {.incremental}
+
+- It's not a probability, but it **integrates** to a probability.
+  - From the **fundamental theorem of calculus**
+
+  $$ F_X(x) = \int_{\infty}^t f_x(t) dt $$
+
+- This is similar to how we **summed** the PMF to get the PDF
+- PDFs **integrate** to $1$ (just like how PMFs sum to $1$)
+
+  $$ \int_{-\infty}^{\infty} f_X(x)dx = 1 $$ 
+
+:::
+
+## Probability density functions (PDFs)
+
+::: {.incremental}
+
+- And we can integrate the PDF over any *interval* to get the probability of $X$ falling in that interval.
+
+  $$P(a < X \le b) =  \int_{a}^{b} f_X(x)dx $$
+
+- Intuitively, this follows from our earlier definition using CDFs
+
+  $$
+  \begin{aligned}
+  P(a < X \le b) &= F_X(b) - F_X(a) \\
+  &= \int_{-\infty}^{b} f_X(x)dx - \int_{-\infty}^{a} f_X(x)dx \\
+  &= \int_{a}^{b} f_X(x)dx
+  \end{aligned}
+  $$
+
+:::
+
 ## Normal distribution
 
-## Exponential distribution
+::: {.incremental}
 
-## Variance
+- The **normal** (or **Gaussian**) distribution is the most common continuous distribution you'll encounter
+  - It's the **approximate** distribution of sums and means of independent random variables.
+  - $X \sim \mathcal{N}(\mu, \sigma^2)$. Support over all of $\mathbb{R}$.
 
-## Properties of variance
+- The PDF is
+
+  $$ f_X(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left\{-\frac{(x - \mu)^2}{2\sigma^2}\right\} $$
+
+- Two parameters, $\mu$ and $\sigma^2$
+  - These parameters happen to be the expectation and variance!
+  - $\mu = \mathbb{E}[X]$, $\sigma^2 = Var(X)$
+
+:::
+
+## Normal distribution
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 3.5
+#| fig-align: center
+
+# Reuses cdf_theme from the CDF slide
+zz <- seq(-4, 4, length.out = 600)
+
+p_norm_pdf <- ggplot(data.frame(x = zz, f = dnorm(zz)), aes(x, f)) +
+  geom_area(fill = "#c5050c", alpha = 0.15) +
+  geom_line(linewidth = 1.1, colour = "#c5050c") +
+  scale_x_continuous(breaks = -4:4, limits = c(-4, 4), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, 0.45), expand = c(0.02, 0)) +
+  labs(title = "Normal(0, 1) PDF", x = "x", y = "f(x)") +
+  cdf_theme
+
+p_norm_cdf <- ggplot(data.frame(x = zz, F = pnorm(zz)), aes(x, F)) +
+  geom_line(linewidth = 1.1, colour = "#c5050c") +
+  scale_x_continuous(breaks = -4:4, limits = c(-4, 4), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, 1), expand = c(0.02, 0)) +
+  labs(title = "Normal(0, 1) CDF", x = "x", y = "F(x)") +
+  cdf_theme
+
+p_norm_pdf + p_norm_cdf +
+  plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
+```
+
+
+## Normal distribution
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 3.2
+#| fig-align: center
+
+norm_pars <- expand.grid(x = seq(-6, 6, length.out = 600),
+                         par = c("N(0, 1)", "N(2, 1)", "N(0, 4)"))
+norm_pars$mu <- c(0, 2, 0)[as.integer(norm_pars$par)]
+norm_pars$sd <- c(1, 1, 2)[as.integer(norm_pars$par)]
+norm_pars$f <- dnorm(norm_pars$x, norm_pars$mu, norm_pars$sd)
+norm_pars$F <- pnorm(norm_pars$x, norm_pars$mu, norm_pars$sd)
+
+norm_cols <- c("N(0, 1)" = "#c5050c", "N(2, 1)" = "#0479a8", "N(0, 4)" = "#646569")
+
+p_par_pdf <- ggplot(norm_pars, aes(x, f, colour = par)) +
+  geom_line(linewidth = 1.1) +
+  scale_colour_manual(values = norm_cols, name = NULL) +
+  scale_x_continuous(limits = c(-6, 6), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, 0.45), expand = c(0.02, 0)) +
+  labs(title = "PDF", x = "x", y = "f(x)") +
+  cdf_theme + theme(legend.position = "bottom")
+
+p_par_cdf <- ggplot(norm_pars, aes(x, F, colour = par)) +
+  geom_line(linewidth = 1.1) +
+  scale_colour_manual(values = norm_cols, name = NULL) +
+  scale_x_continuous(limits = c(-6, 6), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, 1), expand = c(0.02, 0)) +
+  labs(title = "CDF", x = "x", y = "F(x)") +
+  cdf_theme + theme(legend.position = "bottom")
+
+p_par_pdf + p_par_cdf + plot_layout(guides = "collect") +
+  plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA),
+                                legend.position = "bottom"))
+```
+
+## The standard normal
+
+::: {.incremental}
+
+- $\mathcal{N}(0, 1)$ is referred to as the **standard normal**
+  - PDF and CDF typically written as: $\phi(z)$ and $\Phi(z)$
+
+  $$ \phi(z) = \frac{1}{\sqrt{2\pi}} e^{-z^2/2}, $$
+
+- Any normal can be **standardized**. If $X \sim \mathcal{N}(\mu, \sigma^2)$, then
+
+  $$ Z = \frac{X - \mu}{\sigma} \sim \mathcal{N}(0, 1) $$
+
+- $\Phi$ has **no closed form**
+
+:::
+
+## Areas under the normal curve
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2.9
+#| fig-align: center
+
+# `rule` is the rounded number students should memorize; the exact integral sits below it
+sd_panel <- function(k, rule) {
+  d <- data.frame(x = seq(-4, 4, length.out = 800))
+  d$f <- dnorm(d$x)
+  prob <- pnorm(k) - pnorm(-k)
+  ggplot(d, aes(x, f)) +
+    geom_area(data = subset(d, x >= -k & x <= k), fill = "#c5050c", alpha = 0.25) +
+    geom_line(linewidth = 1.1, colour = "#c5050c") +
+    geom_segment(x = -k, xend = -k, y = 0, yend = dnorm(k),
+                 linetype = "dashed", colour = "#646569") +
+    geom_segment(x = k, xend = k, y = 0, yend = dnorm(k),
+                 linetype = "dashed", colour = "#646569") +
+    # double-headed arrow marking the width of the interval
+    annotate("segment", x = -k, xend = k, y = 0.055, yend = 0.055,
+             colour = "#282728", linewidth = 0.5,
+             arrow = arrow(ends = "both", length = unit(0.045, "npc"), type = "closed")) +
+    # sit the labels in headroom above the peak so they never cross the density
+    annotate("text", x = 0, y = 0.51, label = rule,
+             size = 5.6, fontface = "bold", colour = "#282728") +
+    annotate("text", x = 0, y = 0.44, label = sprintf("(%.2f%%)", 100 * prob),
+             size = 3.6, colour = "#646569") +
+    scale_x_continuous(breaks = -3:3, limits = c(-4, 4), expand = c(0, 0)) +
+    scale_y_continuous(breaks = seq(0, 0.4, 0.1), limits = c(0, 0.56),
+                       expand = c(0.02, 0)) +
+    labs(title = bquote(mu %+-% .(k) * sigma), x = "z", y = expression(phi(z))) +
+    cdf_theme
+}
+
+sd_panel(1, "\u2248 68%") + sd_panel(2, "\u2248 95%") + sd_panel(3, "\u2248 99.7%") +
+  plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
+```
 
 ## Next week
 
