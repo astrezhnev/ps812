@@ -81,14 +81,14 @@
     "href": "slides/week3/week3_random_variables.html#welcome-back",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Welcome back!",
-    "text": "Welcome back!"
+    "text": "Welcome back!\n\n\n\\[\n\\newcommand{\\Var}{\\text{Var}}\n\\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#week-overview",
     "href": "slides/week3/week3_random_variables.html#week-overview",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Week overview",
-    "text": "Week overview\n\nLast week\n\nConditional probability\nIndependence and conditional independence\nBayes’ rule\n\nThis week\n\nRandom variables\nDistributions\nProperties of random variables"
+    "text": "Week overview\n\nLast week\n\nConditional probability\nIndependence and conditional independence\nBayes’ rule\n\nThis week\n\nRandom variables\nDistributions\nExpectations and variances"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#where-were-going",
@@ -116,7 +116,7 @@
     "href": "slides/week3/week3_random_variables.html#random-variables-2",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Random variables",
-    "text": "Random variables\n\nWe can construct random variables as functions other random variables!\nLet \\(R\\) be a random variable denoting the GBP-USD exchange rate on a given day.\nLet \\(Y_i = R \\times X_i\\)\nThe probability that the respondent has an income between £50,000 and £100,000 is just \\[P (50{,}000 \\le Y_i \\le 100{,}000) \\]\n\\(Y_i\\) is itself another random variable!"
+    "text": "Random variables\n\nWe can construct random variables as functions of other random variables!\nLet \\(R\\) be a random variable denoting the USD-GBP (pounds per dollar) exchange rate on a given day.\nLet \\(Y_i = R \\times X_i\\)\nThe probability that the respondent has an income between £50,000 and £100,000 is just \\[P (50{,}000 \\le Y_i \\le 100{,}000) \\]\n\\(Y_i\\) is itself another random variable!"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#random-variables-notation",
@@ -137,14 +137,14 @@
     "href": "slides/week3/week3_random_variables.html#distribution-functions-1",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Distribution functions",
-    "text": "Distribution functions\n\nThe range of a CDF is between \\(0\\) and \\(1\\)\n\nIt’s output is a probability - probabilities can’t be negative or greater than \\(1\\)\n\nThe CDF is non-decreasing\n\nRemember the conjunction fallacy!\nCan’t make a probability of an event smaller by having it encompass more outcomes!\n\nLimits\n\nAs \\(x \\to \\infty\\), \\(F_X(x) \\to 1\\)\nAs \\(x \\to -\\infty\\), \\(F_X(x) \\to 0\\)"
+    "text": "Distribution functions\n\nThe range of a CDF is between \\(0\\) and \\(1\\)\n\nIts output is a probability - probabilities can’t be negative or greater than \\(1\\)\n\nThe CDF is non-decreasing\n\nRemember the conjunction fallacy!\nCan’t make a probability of an event smaller by having it encompass more outcomes!\n\nLimits\n\nAs \\(x \\to \\infty\\), \\(F_X(x) \\to 1\\)\nAs \\(x \\to -\\infty\\), \\(F_X(x) \\to 0\\)"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#distribution-functions-2",
     "href": "slides/week3/week3_random_variables.html#distribution-functions-2",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Distribution functions",
-    "text": "Distribution functions\n\nThe probability that \\(X\\) lies between two values is just the difference between two evaluations of the CDF.\n\\[P(a &lt; X \\le b) = F_X(b) - F_X(a) \\]\nWhy? Consider that \\(X \\le b\\) is the union of two disjoint events: \\(X \\le a\\) and \\(a &lt; X \\le b\\)\nThe probability of the union of two disjoint events is the sum of their probabilities.\n\\[\n\\begin{aligned}\nP(a &lt; X \\le b) &= P([X \\le a] \\cup [a &lt; X \\le b]) - P(X \\le a) \\\\\n&= P([X \\le a]) + P([a &lt; X \\le b]) - P(X \\le a) \\\\\n&= P([a &lt; X \\le b])\n\\end{aligned}\n\\]"
+    "text": "Distribution functions\n\nThe probability that \\(X\\) lies between two values is just the difference between two evaluations of the CDF.\n\\[P(a &lt; X \\le b) = F_X(b) - F_X(a) \\]\nWhy? Consider that \\(X \\le b\\) is the union of two disjoint events: \\(X \\le a\\) and \\(a &lt; X \\le b\\)\nThe probability of the union of two disjoint events is the sum of their probabilities.\n\\[\n\\begin{aligned}\nF_X(b) - F_X(a) &= P(X \\le b) - P(X \\le a) \\\\\n&= P([X \\le a] \\cup [a &lt; X \\le b]) - P(X \\le a) \\\\\n&= P([X \\le a]) + P([a &lt; X \\le b]) - P(X \\le a) \\\\\n&= P(a &lt; X \\le b)\n\\end{aligned}\n\\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#discrete-random-variables",
@@ -179,7 +179,7 @@
     "href": "slides/week3/week3_random_variables.html#example-list-experiments",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Example: List experiments",
-    "text": "Example: List experiments\n\nGetting people to be honest on surveys can be difficult for some types of questions.\n\nSocial desirability bias may make some respondent reticent to give truthful answers\n\nThe 2012 Mexico Panel Study (Greene 2016) wanted to study the prevalence of vote buying in the 2012 Mexican presidential election\n\nExchanging a vote for a gift is illegal - survey respondents may not want to admit to a crime!\n\nSolution: A list experiment - Respondents are randomly assigned to a “treated” or a “control” group\nRespondents see a list of itemas and are asked how many items on that list they did in recent weeks (not which ones)\n\nSee a television newscast that mentions a candidate\nAttend a campaign event\nTalk about politics with other people\nTreated group only: Exchange your vote for a gift, favor, or access to a service\n\nRespondents who admit to vote buying are not identifiable (except in one edge case!)\n\nBut with some assumptions, we can learn the share of respondents who experienced vote buying."
+    "text": "Example: List experiments\n\nGetting people to be honest on surveys can be difficult for some types of questions.\n\nSocial desirability bias may make some respondents reticent to give truthful answers\n\nThe 2012 Mexico Panel Study (Greene 2016) wanted to study the prevalence of vote buying in the 2012 Mexican presidential election\n\nExchanging a vote for a gift is illegal - survey respondents may not want to admit to a crime!\n\nSolution: A list experiment - Respondents are randomly assigned to a “treated” or a “control” group\nRespondents see a list of items and are asked how many items on that list they did in recent weeks (not which ones)\n\nSee a television newscast that mentions a candidate\nAttend a campaign event\nTalk about politics with other people\nTreated group only: Exchange your vote for a gift, favor, or access to a service\n\nRespondents who admit to vote buying are not identifiable (except in one edge case!)\n\nBut with some assumptions, we can learn the share of respondents who experienced vote buying."
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#example-list-experiments-1",
@@ -228,7 +228,7 @@
     "href": "slides/week3/week3_random_variables.html#linearity-of-expectations",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Linearity of expectations",
-    "text": "Linearity of expectations\n\nAn essential property of expectations is linearity\n\nThe expectation of the sum is the sum of the expectations\n\nLet \\(X\\) and \\(Y\\) be two random variables\n\\[\\mathbb{E}[X + Y] =  \\mathbb{E}[X] + \\mathbb{E}[Y] \\]\nLet \\(a\\) and \\(b\\) be constants: we can pull the constants out of the expectation\n\\[\\mathbb{E}[aX + bY] =  a\\mathbb{E}[X] + b\\mathbb{E}[Y] \\]\nYou’ll see this most often with sums over random variables indexed along some dimension\n\\[\\mathbb{E}\\bigg[\\sum_{i=1}^n c X_i\\bigg] = \\sum_{i=1}^n\\mathbb{E}[a X_i] = \\sum_{i=1}^n a\\mathbb{E}[X_i] = a\\sum_{i=1}^n \\mathbb{E}[X_i]\\]"
+    "text": "Linearity of expectations\n\nAn essential property of expectations is linearity\n\nThe expectation of the sum is the sum of the expectations\n\nLet \\(X\\) and \\(Y\\) be two random variables\n\\[\\mathbb{E}[X + Y] =  \\mathbb{E}[X] + \\mathbb{E}[Y] \\]\nLet \\(a\\) and \\(b\\) be constants: we can pull the constants out of the expectation\n\\[\\mathbb{E}[aX + bY] =  a\\mathbb{E}[X] + b\\mathbb{E}[Y] \\]\nYou’ll see this most often with sums over random variables indexed along some dimension\n\\[\\mathbb{E}\\bigg[\\sum_{i=1}^n a X_i\\bigg] = \\sum_{i=1}^n\\mathbb{E}[a X_i] = \\sum_{i=1}^n a\\mathbb{E}[X_i] = a\\sum_{i=1}^n \\mathbb{E}[X_i]\\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli",
@@ -238,18 +238,18 @@
     "text": "Expectation of the Bernoulli\n\nLet \\(X \\sim \\text{Bernoulli}(p)\\)\nThere are two possible values, let’s calculate the expectation!\n\\[\n\\begin{aligned}\n\\mathbb{E}[X] &= \\sum_{x \\in \\{0, 1\\}} x \\cdot P(X = x) \\\\\n&= 0 \\cdot P(X = 0) + 1 \\cdot P(X = 1) \\\\\n&= 0 \\cdot (1 - p) + 1 \\cdot p \\\\\n&= p\n\\end{aligned}\n\\]\nThe expected value of a Bernoulli/indicator random variable is just the probability that it takes on a value of \\(1\\)\n\nThis is the fundamental bridge between expectations and probability (Blitzstein and Hwang 2019)"
   },
   {
-    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli-1",
-    "href": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli-1",
+    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-binomial",
+    "href": "slides/week3/week3_random_variables.html#expectation-of-the-binomial",
     "title": "Week 3: Random Variables and Distributions",
-    "section": "Expectation of the Bernoulli",
-    "text": "Expectation of the Bernoulli\n\nNow let \\(X \\sim \\text{Binomial}(N, p)\\)\nWe could write this out and use properties of sums of factorials\n\\[ \\mathbb{E}[X] = \\sum_{x=0}^{N} x \\cdot \\binom{N}{x} p^x (1 - p)^{N - x} \\]\nOr we could use linearity of expectations - much easier!"
+    "section": "Expectation of the Binomial",
+    "text": "Expectation of the Binomial\n\nNow let \\(X \\sim \\text{Binomial}(N, p)\\)\nWe could write this out and use properties of sums of factorials\n\\[ \\mathbb{E}[X] = \\sum_{x=0}^{N} x \\cdot \\binom{N}{x} p^x (1 - p)^{N - x} \\]\nOr we could use linearity of expectations - much easier!"
   },
   {
-    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli-2",
-    "href": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli-2",
+    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-binomial-1",
+    "href": "slides/week3/week3_random_variables.html#expectation-of-the-binomial-1",
     "title": "Week 3: Random Variables and Distributions",
-    "section": "Expectation of the Bernoulli",
-    "text": "Expectation of the Bernoulli\n\nRecall that the Bernoulli is the sum of \\(N\\) independent and identically distributed Bernoulli random variables with success probability \\(p\\)\n\\[X = \\sum_{i=1}^N X_i \\quad\\quad\\quad X_i \\sim \\text{Bernoulli}(p) \\]\nApplying linearity of expectations\n\\[\\mathbb{E}[X] = \\mathbb{E}\\bigg[\\sum_{i=1}^N X_i\\bigg] = \\sum_{i=1}^N \\mathbb{E}[X_i]\\]\nPlugging in our expectation of the Bernoulli and summing\n\\[ \\mathbb{E}[X] = Np \\]"
+    "section": "Expectation of the Binomial",
+    "text": "Expectation of the Binomial\n\nRecall that the Binomial is the sum of \\(N\\) independent and identically distributed Bernoulli random variables with success probability \\(p\\)\n\\[X = \\sum_{i=1}^N X_i \\quad\\quad\\quad X_i \\sim \\text{Bernoulli}(p) \\]\nApplying linearity of expectations\n\\[\\mathbb{E}[X] = \\mathbb{E}\\bigg[\\sum_{i=1}^N X_i\\bigg] = \\sum_{i=1}^N \\mathbb{E}[X_i]\\]\nPlugging in our expectation of the Bernoulli and summing\n\\[ \\mathbb{E}[X] = Np \\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#example-list-experiment",
@@ -277,35 +277,35 @@
     "href": "slides/week3/week3_random_variables.html#variance",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Variance",
-    "text": "Variance"
+    "text": "Variance\n\nBeyond the expectation, there are other summaries of a distribution that capture other relevant features.\n\nWe may want to know how spread out realizations of the random variable are around the mean.\n\nThe variance of a random variable \\(\\Var(X)\\) is defined as the expected squared deviation from \\(\\mathbb{E}[X]\\)\n\\[\\Var(X) = \\mathbb{E}\\bigg[(X - \\mathbb{E}[X])^2\\bigg] \\]\nExpanding the square and applying linearity of expectation\n\\[\\Var(X) = \\mathbb{E}[X^2] - \\mathbb{E}[2X\\mathbb{E}[X]] + \\mathbb{E}[\\mathbb{E}[X]^2]\\]\nPulling out the constant \\(2\\mathbb{E}[X]\\) and \\(\\mathbb{E}[X]^2\\)\n\\[\n\\begin{aligned}\n\\Var(X) &= \\mathbb{E}[X^2] - 2\\mathbb{E}[X]\\mathbb{E}[X] + \\mathbb{E}[X]^2 \\\\\n&= \\mathbb{E}[X^2] - \\mathbb{E}[X]^2\n\\end{aligned}\n\\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#properties-of-variance",
     "href": "slides/week3/week3_random_variables.html#properties-of-variance",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Properties of variance",
-    "text": "Properties of variance"
+    "text": "Properties of variance\n\nThe variance is non-negative\n\nBy Jensen’s inequality for a convex function: \\(\\mathbb{E}[X^2] \\ge \\mathbb{E}[X]^2\\)\n\nFor a random variable \\(X\\) and a constant \\(a\\)\n\\[ \\Var(aX) = a^2\\Var(X) \\]\nBut be careful, the variance of the sum of two random variables \\(X\\) and \\(Y\\) is not the sum of the variances except in a special case we’ll talk about next week (independence)\n\\[ \\Var(X + Y) \\neq \\Var(X) + \\Var(Y) \\]\nAlso, the variance of the difference is not the difference in the variances…even for independent random variables, it’s still the sum of the variances (\\(-1\\) gets squared!)\n\nWe’ll talk about this more next week when we define covariance"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#continuous-random-variables",
     "href": "slides/week3/week3_random_variables.html#continuous-random-variables",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Continuous random variables",
-    "text": "Continuous random variables\n\nRecall the difference between the CDF of a discrete versus a continuous random variable.\n\n\n\nThe discrete variable’s CDF has discontinuities, the continuous variable’s CDF is continuous (and differentiable)"
+    "text": "Continuous random variables\n\nRecall the difference between the CDF of a discrete versus a continuous random variable.\n\n\n\nThe discrete variable’s CDF has discontinuities, the continuous variable’s CDF is continuous (and differentiable almost everywhere)"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
     "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Probability density functions (PDFs)",
-    "text": "Probability density functions (PDFs)\n\nA continuous random variable is a random variable whose CDF is continuous everywhere and differentiable everywhere except for a possibly finite number of points\n\nThe support of a continuous random variable is the set of real numbers \\(\\mathbf{R}\\) or an interval (or union of intervals) of the reals.\n\nThe challenge with talking about a distribution defined on the uncountably infinite reals is that the probability of realizing any particular value \\(x\\) is always zero\nInstead of a PMF, continuous random variables have a probability density function (PDF) - defined as the derivative of the CDF\n\nTypical notation is a lowercase \\(f(\\cdot)\\)\n\n\\[ f_X(x) = \\frac{d}{dx} F_X(x) \\]"
+    "text": "Probability density functions (PDFs)\n\nA continuous random variable is a random variable whose CDF is continuous everywhere and differentiable everywhere except possibly at a finite number of points (Blitzstein and Hwang 2019)\n\nThe support of a continuous random variable is typically the set of real numbers \\(\\mathbb{R}\\) or an interval (or union of intervals) of the reals.\n\nThe challenge with talking about a distribution defined on the uncountably infinite reals is that the probability of realizing any particular value \\(x\\) is always zero\nInstead of a PMF, continuous random variables have a probability density function (PDF) - defined as the derivative of the CDF\n\nTypical notation is a lowercase \\(f(\\cdot)\\)\n\n\\[ f_X(x) = \\frac{d}{dx} F_X(x) \\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-1",
     "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-1",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Probability density functions (PDFs)",
-    "text": "Probability density functions (PDFs)\n\nIt’s not a probability, but it integrates to a probability.\n\nFrom the fundamental theorem of calculus\n\n\\[ F_X(x) = \\int_{\\infty}^t f_x(t) dt \\]\nThis is similar to how we summed the PMF to get the PDF\nPDFs integrate to \\(1\\) (just like how PMFs sum to \\(1\\))\n\\[ \\int_{-\\infty}^{\\infty} f_X(x)dx = 1 \\]"
+    "text": "Probability density functions (PDFs)\n\nIt’s not a probability, but it integrates to a probability.\n\nFrom the fundamental theorem of calculus\n\n\\[ F_X(x) = \\int_{-\\infty}^{x} f_X(t) dt \\]\nThis is similar to how we summed the PMF to get the CDF\nPDFs integrate to \\(1\\) (just like how PMFs sum to \\(1\\))\n\\[ \\int_{-\\infty}^{\\infty} f_X(x)dx = 1 \\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-2",
@@ -319,7 +319,7 @@
     "href": "slides/week3/week3_random_variables.html#normal-distribution",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Normal distribution",
-    "text": "Normal distribution\n\nThe normal (or Gaussian) distribution is the most common continuous distribution you’ll encounter\n\nIt’s the approximate distribution of sums and means of independent random variables.\n\\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\). Support over all of \\(\\mathbb{R}\\).\n\nThe PDF is\n\\[ f_X(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} \\exp\\left\\{-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right\\} \\]\nTwo parameters, \\(\\mu\\) and \\(\\sigma^2\\)\n\nThese parameters happen to be the expectation and variance!\n\\(\\mu = \\mathbb{E}[X]\\), \\(\\sigma^2 = Var(X)\\)"
+    "text": "Normal distribution\n\nThe normal (or Gaussian) distribution is the most common continuous distribution you’ll encounter\n\nIt’s the approximate distribution of sums and means of independent random variables.\n\\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\). Support over all of \\(\\mathbb{R}\\).\n\nThe PDF is\n\\[ f_X(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} \\exp\\left\\{-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right\\} \\]\nTwo parameters, \\(\\mu\\) and \\(\\sigma^2\\)\n\nThese parameters happen to be the expectation and variance!\n\\(\\mu = \\mathbb{E}[X]\\), \\(\\sigma^2 = \\Var(X)\\)"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#normal-distribution-1",
@@ -340,7 +340,7 @@
     "href": "slides/week3/week3_random_variables.html#the-standard-normal",
     "title": "Week 3: Random Variables and Distributions",
     "section": "The standard normal",
-    "text": "The standard normal\n\n\\(\\mathcal{N}(0, 1)\\) is referred to as the standard normal\n\nPDF and CDF typically written as: \\(\\phi(z)\\) and \\(\\Phi(z)\\)\n\n\\[ \\phi(z) = \\frac{1}{\\sqrt{2\\pi}} e^{-z^2/2}, \\]\nAny normal can be standardized. If \\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\), then\n\\[ Z = \\frac{X - \\mu}{\\sigma} \\sim \\mathcal{N}(0, 1) \\]\n\\(\\Phi\\) has no closed form"
+    "text": "The standard normal\n\n\\(\\mathcal{N}(0, 1)\\) is referred to as the standard normal\n\nPDF and CDF typically written as: \\(\\phi(z)\\) and \\(\\Phi(z)\\)\n\n\\[ \\phi(z) = \\frac{1}{\\sqrt{2\\pi}} e^{-z^2/2} \\]\nAny normal can be standardized. If \\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\), then\n\\[ Z = \\frac{X - \\mu}{\\sigma} \\sim \\mathcal{N}(0, 1) \\]\n\\(\\Phi\\) has no closed form"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#areas-under-the-normal-curve",
@@ -354,14 +354,14 @@
     "href": "slides/week3/week3_random_variables.html#next-week",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Next week",
-    "text": "Next week\n\nJoint distributions\n\nDefinining the distribution of \\(X\\) and \\(Y\\) (and \\(Z\\), and…) together!\n\nConditional distributions\n\nSlicing the joint distribution at a particular point\n\nConditional expectations and the best linear predictor\nCovariances and correlations"
+    "text": "Next week\n\nJoint distributions\n\nDefining the distribution of \\(X\\) and \\(Y\\) (and \\(Z\\), and…) together!\n\nConditional distributions\n\nSlicing the joint distribution at a particular point\n\nConditional expectations and the best linear predictor\n\nLaw of total expectation\n\nCovariances and correlations"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#references",
     "href": "slides/week3/week3_random_variables.html#references",
     "title": "Week 3: Random Variables and Distributions",
     "section": "References",
-    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nGreene, Kenneth. 2016. “Mexico Panel Study, 2012.” Inter-university Consortium for Political; Social Research (ICPSR). https://doi.org/10.3886/ICPSR35024.v1."
+    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nGreene, Kenneth. 2016. Mexico Panel Study, 2012. Inter-university Consortium for Political; Social Research (ICPSR). https://doi.org/10.3886/ICPSR35024.v1."
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#welcome-back",
@@ -648,7 +648,7 @@
     "href": "slides/week2/week2_conditional_probability.html#references",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "References",
-    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nElliott, Marc N., Peter A. Morrison, Allen Fremont, Daniel F. McCaffrey, Philip Pantoja, and Nicole Lurie. 2009. “Using the Census Bureau’s Surname List to Improve Estimates of Race/Ethnicity and Associated Disparities.” Health Services and Outcomes Research Methodology 9 (2): 69–83. https://doi.org/10.1007/s10742-009-0047-1.\n\n\nFearon, James D., and David D. Laitin. 2003. “Ethnicity, Insurgency, and Civil War.” American Political Science Review 97 (1): 75–90. https://doi.org/10.1017/S0003055403000534.\n\n\nImai, Kosuke, and Kabir Khanna. 2016. “Improving Ecological Inference by Predicting Individual Ethnicity from Voter Registration Records.” Political Analysis 24 (2): 263–72. https://doi.org/10.1093/pan/mpw001."
+    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nElliott, Marc N., Peter A. Morrison, Allen Fremont, Daniel F. McCaffrey, Philip Pantoja, and Nicole Lurie. 2009. “Using the Census Bureau’s Surname List to Improve Estimates of Race/Ethnicity and Associated Disparities.” Health Services and Outcomes Research Methodology 9 (2): 69–83. https://doi.org/10.1007/s10742-009-0047-1.\n\n\nFearon, James D., and David D. Laitin. 2003. “Ethnicity, Insurgency, and Civil War.” American Political Science Review 97 (1): 75–90. https://doi.org/10.1017/S0003055403000534.\n\n\nImai, Kosuke, and Kabir Khanna. 2016. “Improving Ecological Inference by Predicting Individual Ethnicity from Voter Registration Records.” Political Analysis 24 (2): 263–72. https://doi.org/10.1093/pan/mpw001."
   },
   {
     "objectID": "sections.html",
@@ -1103,7 +1103,7 @@
     "href": "slides/week1/week1_intro_and_review.html#references",
     "title": "Week 1: Intro to Probability",
     "section": "References",
-    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. “Modern Plain Text Computing.” Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
+    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. Modern Plain Text Computing. Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
   },
   {
     "objectID": "staff.html",
