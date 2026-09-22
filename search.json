@@ -273,34 +273,6 @@
     "text": "Preview: Estimation\n\nlibrary(tidyverse)\nlibrary(knitr)\n\n# Sample means of the item count in each group\nmexico |&gt;\n  group_by(Group = if_else(treat == 1, \"Treated\", \"Control\")) |&gt;\n  summarize(`Mean count` = mean(y), N = n()) |&gt;\n  kable(digits = 3)\n\n\n\n\nGroup\nMean count\nN\n\n\n\n\nControl\n1.555\n559\n\n\nTreated\n1.749\n561\n\n\n\n\n# List experiment estimate of theta vs. share admitting vote buying when asked directly\nmexico |&gt;\n  summarize(`List experiment` = mean(y[treat == 1]) - mean(y[treat == 0]),\n            `Direct question` = mean(direct)) |&gt;\n  kable(digits = 3)\n\n\n\n\nList experiment\nDirect question\n\n\n\n\n0.194\n0.055"
   },
   {
-    "objectID": "slides/week3/week3_random_variables.html#continuous-random-variables",
-    "href": "slides/week3/week3_random_variables.html#continuous-random-variables",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Continuous random variables",
-    "text": "Continuous random variables\n\nRecall the difference between the CDF of a discrete versus a continuous random variable.\n\n\n\nThe discrete variable’s CDF has discontinuities, the continuous variable’s CDF is continuous (and differentiable)"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
-    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Probability density functions (PDFs)",
-    "text": "Probability density functions (PDFs)\n\nA continuous random variable is a random variable whose CDF is continuous everywhere and differentiable everywhere except for a possibly finite number of points\n\nThe support of a continuous random variable is the set of real numbers \\(\\mathbf{R}\\) or an interval (or union of intervals) of the reals."
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#normal-distribution",
-    "href": "slides/week3/week3_random_variables.html#normal-distribution",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Normal distribution",
-    "text": "Normal distribution"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#exponential-distribution",
-    "href": "slides/week3/week3_random_variables.html#exponential-distribution",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Exponential distribution",
-    "text": "Exponential distribution"
-  },
-  {
     "objectID": "slides/week3/week3_random_variables.html#variance",
     "href": "slides/week3/week3_random_variables.html#variance",
     "title": "Week 3: Random Variables and Distributions",
@@ -315,6 +287,69 @@
     "text": "Properties of variance"
   },
   {
+    "objectID": "slides/week3/week3_random_variables.html#continuous-random-variables",
+    "href": "slides/week3/week3_random_variables.html#continuous-random-variables",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Continuous random variables",
+    "text": "Continuous random variables\n\nRecall the difference between the CDF of a discrete versus a continuous random variable.\n\n\n\nThe discrete variable’s CDF has discontinuities, the continuous variable’s CDF is continuous (and differentiable)"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
+    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Probability density functions (PDFs)",
+    "text": "Probability density functions (PDFs)\n\nA continuous random variable is a random variable whose CDF is continuous everywhere and differentiable everywhere except for a possibly finite number of points\n\nThe support of a continuous random variable is the set of real numbers \\(\\mathbf{R}\\) or an interval (or union of intervals) of the reals.\n\nThe challenge with talking about a distribution defined on the uncountably infinite reals is that the probability of realizing any particular value \\(x\\) is always zero\nInstead of a PMF, continuous random variables have a probability density function (PDF) - defined as the derivative of the CDF\n\nTypical notation is a lowercase \\(f(\\cdot)\\)\n\n\\[ f_X(x) = \\frac{d}{dx} F_X(x) \\]"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-1",
+    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Probability density functions (PDFs)",
+    "text": "Probability density functions (PDFs)\n\nIt’s not a probability, but it integrates to a probability.\n\nFrom the fundamental theorem of calculus\n\n\\[ F_X(x) = \\int_{\\infty}^t f_x(t) dt \\]\nThis is similar to how we summed the PMF to get the PDF\nPDFs integrate to \\(1\\) (just like how PMFs sum to \\(1\\))\n\\[ \\int_{-\\infty}^{\\infty} f_X(x)dx = 1 \\]"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-2",
+    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-2",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Probability density functions (PDFs)",
+    "text": "Probability density functions (PDFs)\n\nAnd we can integrate the PDF over any interval to get the probability of \\(X\\) falling in that interval.\n\\[P(a &lt; X \\le b) =  \\int_{a}^{b} f_X(x)dx \\]\nIntuitively, this follows from our earlier definition using CDFs\n\\[\n\\begin{aligned}\nP(a &lt; X \\le b) &= F_X(b) - F_X(a) \\\\\n&= \\int_{-\\infty}^{b} f_X(x)dx - \\int_{-\\infty}^{a} f_X(x)dx \\\\\n&= \\int_{a}^{b} f_X(x)dx\n\\end{aligned}\n\\]"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#normal-distribution",
+    "href": "slides/week3/week3_random_variables.html#normal-distribution",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Normal distribution",
+    "text": "Normal distribution\n\nThe normal (or Gaussian) distribution is the most common continuous distribution you’ll encounter\n\nIt’s the approximate distribution of sums and means of independent random variables.\n\\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\). Support over all of \\(\\mathbb{R}\\).\n\nThe PDF is\n\\[ f_X(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} \\exp\\left\\{-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right\\} \\]\nTwo parameters, \\(\\mu\\) and \\(\\sigma^2\\)\n\nThese parameters happen to be the expectation and variance!\n\\(\\mu = \\mathbb{E}[X]\\), \\(\\sigma^2 = Var(X)\\)"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#normal-distribution-1",
+    "href": "slides/week3/week3_random_variables.html#normal-distribution-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Normal distribution",
+    "text": "Normal distribution"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#normal-distribution-2",
+    "href": "slides/week3/week3_random_variables.html#normal-distribution-2",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Normal distribution",
+    "text": "Normal distribution"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#the-standard-normal",
+    "href": "slides/week3/week3_random_variables.html#the-standard-normal",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "The standard normal",
+    "text": "The standard normal\n\n\\(\\mathcal{N}(0, 1)\\) is referred to as the standard normal\n\nPDF and CDF typically written as: \\(\\phi(z)\\) and \\(\\Phi(z)\\)\n\n\\[ \\phi(z) = \\frac{1}{\\sqrt{2\\pi}} e^{-z^2/2}, \\]\nAny normal can be standardized. If \\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\), then\n\\[ Z = \\frac{X - \\mu}{\\sigma} \\sim \\mathcal{N}(0, 1) \\]\n\\(\\Phi\\) has no closed form"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#areas-under-the-normal-curve",
+    "href": "slides/week3/week3_random_variables.html#areas-under-the-normal-curve",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Areas under the normal curve",
+    "text": "Areas under the normal curve"
+  },
+  {
     "objectID": "slides/week3/week3_random_variables.html#next-week",
     "href": "slides/week3/week3_random_variables.html#next-week",
     "title": "Week 3: Random Variables and Distributions",
@@ -326,7 +361,7 @@
     "href": "slides/week3/week3_random_variables.html#references",
     "title": "Week 3: Random Variables and Distributions",
     "section": "References",
-    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nGreene, Kenneth. 2016. Mexico Panel Study, 2012. Inter-university Consortium for Political; Social Research (ICPSR). https://doi.org/10.3886/ICPSR35024.v1."
+    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nGreene, Kenneth. 2016. “Mexico Panel Study, 2012.” Inter-university Consortium for Political; Social Research (ICPSR). https://doi.org/10.3886/ICPSR35024.v1."
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#welcome-back",
@@ -613,7 +648,7 @@
     "href": "slides/week2/week2_conditional_probability.html#references",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "References",
-    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nElliott, Marc N., Peter A. Morrison, Allen Fremont, Daniel F. McCaffrey, Philip Pantoja, and Nicole Lurie. 2009. “Using the Census Bureau’s Surname List to Improve Estimates of Race/Ethnicity and Associated Disparities.” Health Services and Outcomes Research Methodology 9 (2): 69–83. https://doi.org/10.1007/s10742-009-0047-1.\n\n\nFearon, James D., and David D. Laitin. 2003. “Ethnicity, Insurgency, and Civil War.” American Political Science Review 97 (1): 75–90. https://doi.org/10.1017/S0003055403000534.\n\n\nImai, Kosuke, and Kabir Khanna. 2016. “Improving Ecological Inference by Predicting Individual Ethnicity from Voter Registration Records.” Political Analysis 24 (2): 263–72. https://doi.org/10.1093/pan/mpw001."
+    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nElliott, Marc N., Peter A. Morrison, Allen Fremont, Daniel F. McCaffrey, Philip Pantoja, and Nicole Lurie. 2009. “Using the Census Bureau’s Surname List to Improve Estimates of Race/Ethnicity and Associated Disparities.” Health Services and Outcomes Research Methodology 9 (2): 69–83. https://doi.org/10.1007/s10742-009-0047-1.\n\n\nFearon, James D., and David D. Laitin. 2003. “Ethnicity, Insurgency, and Civil War.” American Political Science Review 97 (1): 75–90. https://doi.org/10.1017/S0003055403000534.\n\n\nImai, Kosuke, and Kabir Khanna. 2016. “Improving Ecological Inference by Predicting Individual Ethnicity from Voter Registration Records.” Political Analysis 24 (2): 263–72. https://doi.org/10.1093/pan/mpw001."
   },
   {
     "objectID": "sections.html",
@@ -1068,7 +1103,7 @@
     "href": "slides/week1/week1_intro_and_review.html#references",
     "title": "Week 1: Intro to Probability",
     "section": "References",
-    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. Modern Plain Text Computing. Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
+    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. “Modern Plain Text Computing.” Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
   },
   {
     "objectID": "staff.html",
