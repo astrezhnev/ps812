@@ -228,7 +228,7 @@
     "href": "slides/week3/week3_random_variables.html#expectations-of-functions",
     "title": "Week 3: Random Variables and Distributions",
     "section": "Expectations of functions",
-    "text": "Expectations of functions\n\nAn interesting property of the expected value is what is sometimes called the Law of the Unconscious Statistician (LOTUS)\nSuppose I want to calculate the expectation of some function of \\(X\\), denoted \\(g(X)\\).\nIf I just looked at the definition of expectation, I’d think:\n\n“What if I just plugged in \\(g(x)\\) instead of \\(x\\) and took the average over the same weights?”\n\nIt turns out that works!\n\\[\\mathbb{E}[g(X)] = \\sum_{x \\in \\mathcal{X}} g(x) \\cdot P(X = x) \\]"
+    "text": "Expectations of functions\n\nSuppose I want to know \\(\\mathbb{E}[g(X)]\\) where \\(g()\\) is some function.\n\n\\(\\mathbb{E}[g(X)] \\neq g(\\mathbb{E}[X])\\) except in a few cases (linear functions)\n\nAn interesting property of the expected value is what is sometimes called the Law of the Unconscious Statistician (LOTUS)\nSuppose I want to calculate the expectation of some function of \\(X\\), denoted \\(g(X)\\).\nIf I just looked at the definition of expectation, I’d think:\n\n“What if I just plugged in \\(g(x)\\) instead of \\(x\\) and took the average over the same weights?”\n\nIt turns out that works!\n\\[\\mathbb{E}[g(X)] = \\sum_{x \\in \\mathcal{X}} g(x) \\cdot P(X = x) \\]"
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#linearity-of-expectations",
