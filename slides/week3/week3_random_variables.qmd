@@ -532,7 +532,6 @@ die_pmf(rep(1, 6), "#0479A8") +
   - $\mathbb{E}[g(X)] \neq g(\mathbb{E}[X])$ except in a few cases (linear functions)
 
 - An interesting property of the expected value is what is sometimes called the **Law of the Unconscious Statistician** (LOTUS)
-- Suppose I want to calculate the expectation of some **function** of $X$, denoted $g(X)$.
 
 - If I just looked at the definition of expectation, I'd think:
   - "What if I just plugged in $g(x)$ instead of $x$ and took the average over the same weights?"
