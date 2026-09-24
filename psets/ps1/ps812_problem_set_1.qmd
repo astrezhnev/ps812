@@ -21,7 +21,7 @@ library(haven)
 ```
 
 
-> This problem set is due at the start of lecture on **Tuesday, September 22**. Please submit your solutions via [Gradescope](https://www.gradescope.com/). Upload both a rendered `.html` file saved as "Yourlastname_Yourfirstinitial_pset1.html" and the corresponding Quarto file saved as "Yourlastname_Yourfirstinitial_pset1.qmd". We recommend editing the provided `.qmd` file directly and writing your answers and code in line with the questions. We should be able to run your code without error messages. You are strongly encouraged to discuss the problems with other students, but each student must write up their own answers and code. In order to receive credit, homework submissions must be substantially started and all work must be shown.
+> This problem set is due at 11:59pm on **Tuesday, September 22**. Please submit your solutions via [Gradescope](https://www.gradescope.com/). Upload both a rendered `.html` file saved as "Yourlastname_Yourfirstinitial_pset1.html" and the corresponding Quarto file saved as "Yourlastname_Yourfirstinitial_pset1.qmd". We recommend editing the provided `.qmd` file directly and writing your answers and code in line with the questions. We should be able to run your code without error messages. You are strongly encouraged to discuss the problems with other students, but each student must write up their own answers and code. In order to receive credit, homework submissions must be substantially started and all work must be shown.
 
 # Problem 1
 
