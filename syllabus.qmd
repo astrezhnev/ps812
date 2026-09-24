@@ -76,7 +76,7 @@ Students should feel free to discuss any questions about the problem sets with t
 
 #### Submission Guidelines
 
-Problem sets will be distributed as HTMl and Quarto files (`.qmd`). You should submit your answers and any relevant R code in the same format: including the Quarto file (`.qmd` extension) and a corresponding rendered `.html` file as your submission. I highly recommend editing the provided Quarto file and providing your work in line with the questions. You will be submitting your problem sets via [Gradescope](https://www.gradescope.com/).
+Problem sets will be distributed as HTMl and Quarto files (`.qmd`). You should submit your answers and any relevant R code in the same format: including the Quarto file (`.qmd` extension) and a corresponding rendered `.html` file as your submission. I highly recommend editing the provided Quarto file and providing your work in line with the questions. You will be submitting your problem sets via [Gradescope](https://www.gradescope.com/). Problem sets are due at 11:59pm on the due date.
 
 ### Two in-person Midterms (20% each)
 

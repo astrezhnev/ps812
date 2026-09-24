@@ -112,7 +112,7 @@ execute:
 
 ## Problem Set 1
 
-1. **Problem Set 1 is due September 22, immediately before class (3:30pm).**
+1. **Problem Set 1 is due September 22 at 11:59pm.**
 
 ---
 

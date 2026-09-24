@@ -16,7 +16,7 @@ title: "Assignments"
 | **Second Midterm Exam**        | --               | **Nov 18 (Week 11)** |
 | **Replication Project Poster** | --               | **Dec 4 (Week 13)**  |
 
-Problem sets are assigned and due on Tuesdays, at the start of lecture. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade.
+Problem sets are assigned on Tuesdays and due at 11:59pm on Tuesdays. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade.
 
 ---
 
@@ -40,7 +40,9 @@ Links become active as each problem set is assigned.
 
 *Assigned Tuesday, September 22 -- due Tuesday, October 6*
 
-*To be posted*
+- [Problem Set 2 `.html`](https://www.antonstrezhnev.com/ps812/psets/ps2/ps812_problem_set_2.html)
+- [Problem Set 2 Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps2/)
+- [Problem Set 2 `.zip` archive](https://github.com/astrezhnev/ps812/raw/main/psets/ps2/ps812_problem_set_2.zip)
 
 ### Problem Set 3
 

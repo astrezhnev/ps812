@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="YOUR NAME">
-<meta name="dcterms.date" content="2026-09-08">
+<meta name="dcterms.date" content="2026-09-22">
 
-<title>PS 812: Problem Set 1</title>
+<title>PS 812: Problem Set 2</title>
 <style>
 
 span.smallcaps{font-variant: small-caps;}
@@ -2370,7 +2370,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">PS 812: Problem Set 1</h1>
+<h1 class="title">PS 812: Problem Set 2</h1>
 </div>
 
 
@@ -2387,7 +2387,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 8, 2026</p>
+      <p class="date">September 22, 2026</p>
     </div>
   </div>
   
@@ -2400,135 +2400,204 @@ window.Quarto = {
 
 
 <blockquote class="blockquote">
-<p>This problem set is due at 11:59pm on <strong>Tuesday, September 22</strong>. Please submit your solutions via <a href="https://www.gradescope.com/">Gradescope</a>. Upload both a rendered <code>.html</code> file saved as “Yourlastname_Yourfirstinitial_pset1.html” and the corresponding Quarto file saved as “Yourlastname_Yourfirstinitial_pset1.qmd”. We recommend editing the provided <code>.qmd</code> file directly and writing your answers and code in line with the questions. We should be able to run your code without error messages. You are strongly encouraged to discuss the problems with other students, but each student must write up their own answers and code. In order to receive credit, homework submissions must be substantially started and all work must be shown.</p>
+<p>This problem set is due at 11:59pm on <strong>Tuesday, October 6</strong>. Please submit your solutions via <a href="https://www.gradescope.com/">Gradescope</a>. Upload both a rendered <code>.html</code> file saved as “Yourlastname_Yourfirstinitial_pset2.html” and the corresponding Quarto file saved as “Yourlastname_Yourfirstinitial_pset2.qmd”. We recommend editing the provided <code>.qmd</code> file directly and writing your answers and code in line with the questions. We should be able to run your code without error messages. You are strongly encouraged to discuss the problems with other students, but each student must write up their own answers and code. In order to receive credit, homework submissions must be substantially started and all work must be shown.</p>
 </blockquote>
 <section id="problem-1" class="level1">
 <h1>Problem 1</h1>
-<p>Statistical analysis of administrative data is a very difficult task, especially when the quantity of interest is not clearly specified. The story of a recent publication (and subsequent retraction) in the <em>Proceedings of the National Academy of Sciences</em> (PNAS) provides a cautionary tale in being precise about what your data can and cannot speak to.</p>
-<p><span class="citation" data-cites="johnson2019officer">Johnson et al. (<a href="#ref-johnson2019officer" role="doc-biblioref">2019</a>)</span> study racial disparities in police officer shootings in the United States. They collect a dataset of all fatal shootings in 2015 and observe officer and civilian race as well as a battery of demographic covariates of the officer (e.g. sex, years of experience). We’ll set aside these covariates for simplicity (assume the analyses are within demographic strata of the officer characteristics and are all-else-equal)</p>
-<p>The study argues that although “[c]oncerns that White officers might disproportionately fatally shoot racial minorities can have powerful effects on police legitimacy” it claims to not find any evidence “for anti-Black or anti-Hispanic disparity in police use of force across all shootings” - that is, that white officers are not more likely to use force against minority civilians compared to minority officers.</p>
-<p>In response, <span class="citation" data-cites="knox2020making">Knox and Mummolo (<a href="#ref-knox2020making" role="doc-biblioref">2020</a>)</span> argue that <span class="citation" data-cites="johnson2019officer">Johnson et al. (<a href="#ref-johnson2019officer" role="doc-biblioref">2019</a>)</span> analyzes the wrong quantity. They argue that the question of whether white officers are more or less likely to use force, is the difference between the following two conditional probabilities:</p>
-<p><span class="math display">\[ Pr(\text{shot} \mid \text{minority civilian}, \text{white officer}) - Pr(\text{shot} \mid \text{minority civilian}, \text{minority officer})\]</span></p>
-<p>However, because <span class="citation" data-cites="johnson2019officer">Johnson et al. (<a href="#ref-johnson2019officer" role="doc-biblioref">2019</a>)</span> only observe cases where fatal shootings occur, they can only tell us about probabilities <strong>conditional</strong> on observing a shooting.</p>
-<p><span class="math display">\[ Pr( \text{minority civilian} \mid \text{shot}, \text{white officer}) \]</span></p>
-<p>and</p>
-<p><span class="math display">\[ Pr( \text{minority civilian} \mid \text{shot}, \text{minority officer}) \]</span></p>
+<p>There is a great deal of literature<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> indicating that the ordering of candidates on a ballot has an effect on their vote-share. In 2006, the New Hampshire Supreme Court held that the state’s practice of listing candidates on general election ballots in alphabetical order violated candidates’ “equal right to be elected” under the state constitution <span class="citation" data-cites="akins2006">(<a href="#ref-akins2006" role="doc-biblioref">New Hampshire Supreme Court 2006</a>)</span>. In an attempt to increase the fairness of the process, for the 2008 presidential primary New Hampshire randomly chose a letter from the alphabet (meaning every letter A-Z has equal probability of being chosen) and then listed the candidates in alphabetical order, by their last names, <em>starting with the first surname at or after that letter</em> and wrapping around from Z back to A <span class="citation" data-cites="aapor2009">(<a href="#ref-aapor2009" role="doc-biblioref">AAPOR Ad Hoc Committee on the 2008 Presidential Primary Polling 2009</a>)</span>. In this problem we will figure out whether this method accomplished the goal of fairness. Let the random variable <span class="math inline">\(X\)</span> be Barack Obama’s position on the New Hampshire primary ballot with <span class="math inline">\(1\)</span> denoting first position, <span class="math inline">\(2\)</span> denoting second, and so on.</p>
+<p>To simplify the problem slightly, assume the shortened candidate list below.</p>
+<table class="caption-top table">
+<caption>Candidates in a compressed version of the 2008 New Hampshire primary.</caption>
+<thead>
+<tr class="header">
+<th>Candidate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Joe Biden</td>
+</tr>
+<tr class="even">
+<td>Hillary Clinton</td>
+</tr>
+<tr class="odd">
+<td>John Edwards</td>
+</tr>
+<tr class="even">
+<td>Barack Obama</td>
+</tr>
+<tr class="odd">
+<td>Bill Richardson</td>
+</tr>
+</tbody>
+</table>
 <section id="part-a" class="level2">
 <h2 class="anchored" data-anchor-id="part-a">Part A</h2>
-<p>Using Bayes’ rule, write the actual quantity of interest suggested by <span class="citation" data-cites="knox2020making">Knox and Mummolo (<a href="#ref-knox2020making" role="doc-biblioref">2020</a>)</span> in terms of the conditional probabilities observed by <span class="citation" data-cites="johnson2019officer">Johnson et al. (<a href="#ref-johnson2019officer" role="doc-biblioref">2019</a>)</span>.</p>
-<p>Hint: Add the other quantities you need, including those that are not observable in the <span class="citation" data-cites="johnson2019officer">Johnson et al. (<a href="#ref-johnson2019officer" role="doc-biblioref">2019</a>)</span> data.</p>
+<p>Write down the PMF of Barack Obama’s ballot positioning with New Hampshire’s ballot ordering rule and the shortened list of candidates. Hint: Think about who is the first candidate listed for each possible letter drawn.</p>
 </section>
 <section id="part-b" class="level2">
 <h2 class="anchored" data-anchor-id="part-b">Part B</h2>
-<p>Assume that <span class="citation" data-cites="johnson2019officer">Johnson et al. (<a href="#ref-johnson2019officer" role="doc-biblioref">2019</a>)</span> correctly estimates its quantities and therefore that</p>
-<p><span class="math display">\[ Pr( \text{minority civilian} \mid \text{shot}, \text{white officer})  = Pr( \text{minority civilian} \mid \text{shot}, \text{minority officer}) \]</span></p>
-<p>In other words, that among fatal shootings involving a white officer compared to fatal shootings involving a minority officer, the probability that the civilian involved is a minority is the same. Can we conclude that there is no racial bias among white officers compared to minority officers?</p>
+<p>Create two graphs showing (1) the PMF from part A and (2) the CDF of the distribution.</p>
+<p>Make sure the graphs are well organized, legible, and have informative labels and titles.</p>
 </section>
 <section id="part-c" class="level2">
 <h2 class="anchored" data-anchor-id="part-c">Part C</h2>
-<p>A study of police use of force incidents in Chicago by <span class="citation" data-cites="ba2021role">Ba et al. (<a href="#ref-ba2021role" role="doc-biblioref">2021</a>)</span> found that on average, white officers are generally more likely to use force than minority officers. Given this result, and the assumption from Part B, what would have to be true in order to conclude that there is no racial bias in use of force among white officers compared to minority officers? Would this be a case where we would conclude that there is no differences in the behavior of white officers and minority officers in general?</p>
+<p>Calculate the expected value of <span class="math inline">\(X\)</span> (Barack Obama’s ballot position) and the variance of <span class="math inline">\(X\)</span>. Show your work.</p>
 </section>
 <section id="part-d" class="level2">
 <h2 class="anchored" data-anchor-id="part-d">Part D</h2>
-<p><span class="citation" data-cites="johnson2019officer">Johnson et al. (<a href="#ref-johnson2019officer" role="doc-biblioref">2019</a>)</span> was later retracted by the authors. Briefly summarize your conclusions from this exercise. What are the limitations of the data used by <span class="citation" data-cites="johnson2019officer">Johnson et al. (<a href="#ref-johnson2019officer" role="doc-biblioref">2019</a>)</span> and what is the logical flaw in its conclusions?</p>
+<p>Assume that the effects of each ballot position on vote share are the same for all candidates and are known to be the following for a five-candidate ballot:</p>
+<table class="caption-top table">
+<caption>Ballot order effects in a compressed version of the 2008 New Hampshire primary.</caption>
+<colgroup>
+<col style="width: 34%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Ballot Position (<span class="math inline">\(X\)</span>)</th>
+<th style="text-align: center;">Vote-share bump relative to 5th place (percentage points)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">3.56</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2.72</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">1.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.372</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0</td>
+</tr>
+</tbody>
+</table>
+<p>Calculate the expected ballot order effect for Barack Obama. Hint: Remember to use LOTUS.</p>
+</section>
+<section id="part-e" class="level2">
+<h2 class="anchored" data-anchor-id="part-e">Part E</h2>
+<p>Now for comparison, calculate the expected ballot order effect for Hillary Clinton. Do you think New Hampshire’s ballot ordering scheme is fair? Explain using your calculations for this problem.</p>
+</section>
+<section id="part-f" class="level2">
+<h2 class="anchored" data-anchor-id="part-f">Part F</h2>
+<p>In 2010, the legislature replaced this procedure with one that randomly selects the first <em>candidate</em> and then lists the remainder in alphabetical order (again, wrapping around from Z to A) <span class="citation" data-cites="nh2010ballot">(<a href="#ref-nh2010ballot" role="doc-biblioref">State of New Hampshire 2010</a>)</span>. Is this a fairer method than the one used in 2008?</p>
 </section>
 </section>
 <section id="problem-2" class="level1">
 <h1>Problem 2</h1>
-<p>The age at which routine breast cancer screening should begin has been a politically contentious issue for over a decade and recommendations have moved in both directions. In November 2009, the US Preventive Services Task Force recommended against routine screening mammography for women in their 40s, moving the recommended starting age from 40 to 50. At the time, Republicans <a href="https://archive.nytimes.com/prescriptions.blogs.nytimes.com/2009/11/17/republicans-say-cancer-screening-guidelines-portend-medical-rationing/">criticized the Obama administration</a> arguing that this was a move towards rationing healthcare. In 2024, the Task Force reversed course and now recommends biennial screening for all women aged 40 to 74 <span class="citation" data-cites="uspstf2024breast">(<a href="#ref-uspstf2024breast" role="doc-biblioref">US Preventive Services Task Force 2024</a>)</span>. This problem examines the probability theory behind this debate.</p>
-<p>Suppose you have a friend in her early 40s who has just gone to the hospital for a screening mammogram. Among women in this age group who select into screening, roughly <strong>3.5 in 1,000</strong> have a breast cancer that the exam could detect. The mammogram is accurate but it is not perfect. About <strong>82%</strong> of women who have breast cancer will test positive, and about <strong>89%</strong> of women who do not have breast cancer will test negative. (These figures are rounded from national performance benchmarks for screening digital mammography; see <span class="citation" data-cites="lehman2017national">Lehman et al. (<a href="#ref-lehman2017national" role="doc-biblioref">2017</a>)</span>.)</p>
+<p>Nearly all U.S. states maintain a list of registered voters with varying demographic data depending on what is required for registration. These “voter files” are <a href="https://www.pewresearch.org/short-reads/2018/02/15/voter-files-study-qa/">increasingly popular</a> for survey researchers looking for up-to-date population benchmarks to understand the overall composition of the electorate. In this problem, you will be studying the a 2022 snapshot of the registered voter file for Durham County, North Carolina and using it as a known population of interest.</p>
+<p>Below are the main packages that you will be using in this problem set.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The chunk below will load in the complete Durham County, North Carolina voter file subset down to registered voters that are considered “active.” This file was originally obtained from the <a href="https://www.ncsbe.gov/results-data/voter-registration-data#current-data">North Carolina State Board of Elections website</a> and slightly pre-processed for the purposes of this problem (e.g. removing names and addresses).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/nc_durham_Oct_2022.csv&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The dataset contains the following columns:</p>
+<ul>
+<li><code>gender</code>: Gender of voter</li>
+<li><code>race</code>: Race of voter</li>
+<li><code>party</code>: Party ID of voter</li>
+<li><code>age_at_year_end</code>: Age of voter</li>
+</ul>
 <section id="part-a-1" class="level2">
 <h2 class="anchored" data-anchor-id="part-a-1">Part A</h2>
-<p>Your friend takes the test and it comes back <strong>positive</strong>. Calculate the probability that she actually has breast cancer given this result. State the formula and the probabilities you use, and explain your reasoning. How worried should she be?</p>
+<p>Treat this voter file as the true population of registered voters in Durham County. Calculate the following five quantities:</p>
+<ol>
+<li>the population share of Democratic registered voters</li>
+<li>the population share of Black/African American registered voters</li>
+<li>the population share of registered voters who are Democrats and Black/African American</li>
+<li>the population mean age of registered voters</li>
+<li>the population standard deviation of age among registered voters</li>
+</ol>
 </section>
 <section id="part-b-1" class="level2">
 <h2 class="anchored" data-anchor-id="part-b-1">Part B</h2>
-<p>Instead, suppose the test comes back <strong>negative</strong>. What is the probability that she has breast cancer given this result?</p>
+<p>Create a histogram of the age of registered voters (use <code>geom_histogram()</code> and choose an appropriate number of bins). Overlay the population mean and population median (use <code>geom_vline()</code> to draw vertical lines). Comment on the shape of the distribution.</p>
 </section>
 <section id="part-c-1" class="level2">
 <h2 class="anchored" data-anchor-id="part-c-1">Part C</h2>
-<p>Now suppose your friend is in her early 50s instead. In this age group the prevalence among women screened is roughly <strong>4.7 in 1,000</strong>, and the exam performs somewhat better: about <strong>86%</strong> of women with breast cancer test positive and about <strong>90%</strong> of women without it test negative.</p>
-<p>Recalculate both quantities – the probability she has cancer given a positive result, and given a negative result. Compare all four numbers you have now computed. Which one changes most between the two age groups, and which barely moves at all? Discuss how your results might explain the motivation for the 2009 policy change.</p>
+<p>We’ll first ask whether the population age distribution is well-approximated by a known parametric form. A common distribution defined on the positive real numbers is the <strong>log-normal</strong> distribution, defined as <span class="math inline">\(\exp(X)\)</span> where <span class="math inline">\(X\)</span> is normally distributed. It has two parameters <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span> which are the mean and standard deviation on the <strong>log scale</strong>.</p>
+<p>First, calculate the mean and standard deviation of the <em>logged</em> age in the population.</p>
+<p>Second, set the seed to <code>53703</code>. Then, generate 5000 independent draws from the log-normal distribution with your calculated quantities as the parameters.</p>
+<p>Hint: Use <code>rlnorm()</code> and read the documentation to see where the arguments to the function should go. Note the <code>rlnorm()</code> function takes the <em>standard deviation</em> rather than the variance.</p>
+<p>Third, make a histogram of your draws and compare this distribution to your histogram in Part B. Is age approximately log-normally distributed? Explain why or why not.</p>
 </section>
 <section id="part-d-1" class="level2">
 <h2 class="anchored" data-anchor-id="part-d-1">Part D</h2>
-<p>In 2024 the Task Force lowered the recommended age to 40 <span class="citation" data-cites="uspstf2024breast">(<a href="#ref-uspstf2024breast" role="doc-biblioref">US Preventive Services Task Force 2024</a>)</span>. While this was in part driven by a change in the assessment of the relative costs of false positives versus benefits of early detection in lives saved as well as concerns over racial equity – breast cancer mortality is about 40% higher among Black women compared to white women – the report also noted that the incidence of breast cancer in women aged 40 to 49 years had grown slightly from 2015 to 2019. Explain how this change would affect your calculations from Parts A and B.</p>
+<p>Now we’ll look at the distribution of <strong>means of random samples</strong>. We’ll focus on a <strong>simple random sample</strong>, where every possible sample of the same size is equally likely to be drawn (and so each person in the population has an equal probability of being selected into the sample ex-ante). Suppose we draw a <strong>simple random sample</strong> of size 200 without replacement from the population and calculate the mean age of that sample. (Hint: <code>slice_sample()</code> works well here)</p>
+<p>Set the seed again to <code>53703</code>. Using a Monte Carlo simulation, repeat this procedure 1000 times. Each iteration should take a simple random sample without replacement, calculate the mean age and store that mean.</p>
+<p>Create a histogram of your 1000 sample means. Overlay the population mean age you calculated in Part A. How does this distribution relate to the true average population age of voters in Durham, NC?</p>
+</section>
+<section id="part-e-1" class="level2">
+<h2 class="anchored" data-anchor-id="part-e-1">Part E</h2>
+<p>Again, set the seed to <code>53703</code>. Then, generate 5000 independent draws from a <strong>normal</strong> distribution with mean equal to the population mean age you calculated in Part A and standard deviation equal to the population standard deviation of age <em>divided by</em> <span class="math inline">\(\sqrt{200}\)</span>.</p>
+<p>Hint: use <code>rnorm()</code> and check the documentation to see where the arguments to the function should go. Again note that <code>rnorm()</code> specifies the normal via the mean and <em>standard deviation</em>.</p>
+<p>Make a histogram of your draws and compare this distribution to your histogram in Part D. Are the sample means approximately normally distributed?</p>
 </section>
 </section>
 <section id="problem-3" class="level1">
 <h1>Problem 3</h1>
-<p>In this exercise, we will use data from <span class="citation" data-cites="pan2018concealing">Pan and Chen (<a href="#ref-pan2018concealing" role="doc-biblioref">2018</a>)</span>. “Concealing Corruption: How Chinese Officials Distort Upward Reporting of Online Grievances.” <em>The American Political Science Review</em>.</p>
-<p>The dataset contains the following variables describing corruption complaints filed online in China:</p>
-<ul>
-<li><code>daily</code>: whether the post is from a daily report or from the non-daily report</li>
-<li><code>send</code>: whether post was sent to upper-level leaders, 1 = yes</li>
-<li><code>wd</code>: whether post accuses government of wrongdoing, 1 = yes</li>
-<li><code>prefecturewd</code>: whether accusation relates to prefecture government, 1 = yes</li>
-<li><code>countywd</code>: whether accusation relates to county wrongdoing, 1 = yes</li>
-<li><code>censorship</code>: whether complaint cannot be found online, 1 = yes</li>
-<li><code>realworldca</code>: whether post discusses real-world collective action events, 1 = yes</li>
-</ul>
-<p>The code below loads the <code>panchen.csv</code> file in the <code>data</code> folder in as the data.frame <code>panchen</code></p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>panchen <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/panchen.csv&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 1412 Columns: 8
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (2): daily, jurisdiction
-dbl (6): send, wd, prefecturewd, countywd, censorship, realworldca
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-</div>
+<p>Suppose that we are polling undergraduates to determine how many voted in an election. For simplicity, we collect data at the dorm-room level. Suppose each undergraduate is assigned to a dorm room <span class="math inline">\(g\)</span>, where each dorm room houses two undergraduates. Let <span class="math inline">\(X_g\)</span> denote the outcome for whether or not the first undergraduate polled in dorm room <span class="math inline">\(g\)</span> voted (<span class="math inline">\(1\)</span> if yes, <span class="math inline">\(0\)</span> if no). Let <span class="math inline">\(Y_g\)</span> denote the outcome for whether the second undergraduate polled in dorm room <span class="math inline">\(g\)</span> voted.</p>
+<p>Let’s define the conditional probability <span class="math inline">\(Pr(X_g = 1 \mid Y_g)\)</span> – the probability that the first undergraduate voted given the vote of their roommate.</p>
+<p><span class="math display">\[
+Pr(X_g = 1 \mid Y_g) = \begin{cases} \alpha &amp; \text{if } Y_g = 1 \\ \beta &amp; \text{if } Y_g = 0 \end{cases}
+\]</span></p>
+<p>where <span class="math inline">\(0 &lt; \alpha &lt; 1\)</span> and <span class="math inline">\(0 &lt; \beta &lt; 1\)</span>. For the converse, <span class="math inline">\(Pr(Y_g = 1 \mid X_g)\)</span>, also assume</p>
+<p><span class="math display">\[
+Pr(Y_g = 1 \mid X_g) = \begin{cases} \alpha &amp; \text{if } X_g = 1 \\ \beta &amp; \text{if } X_g = 0 \end{cases}
+\]</span></p>
 <section id="part-a-2" class="level2">
 <h2 class="anchored" data-anchor-id="part-a-2">Part A</h2>
-<p>How many observations are in the dataset?</p>
+<p>Find the marginal probabilities <span class="math inline">\(Pr(X_g = 1)\)</span> and <span class="math inline">\(Pr(Y_g = 1)\)</span>. Hint: Two equations, two unknowns.</p>
 </section>
 <section id="part-b-2" class="level2">
 <h2 class="anchored" data-anchor-id="part-b-2">Part B</h2>
-<p>Compute (i) the number of complaints related to the prefecture government and (ii) the number of complaints that relate to county government.</p>
+<p>Find the joint probability <span class="math inline">\(Pr(X_g = 1, Y_g = 1)\)</span>.</p>
 </section>
 <section id="part-c-2" class="level2">
 <h2 class="anchored" data-anchor-id="part-c-2">Part C</h2>
-<p>Compute the proportion of complaints that simultaneously (i) allege wrongdoing by prefecture officials and (ii) were forwarded to upper-level leaders.</p>
-</section>
-<section id="part-d-2" class="level2">
-<h2 class="anchored" data-anchor-id="part-d-2">Part D</h2>
-<p>Conditional on alleging wrongdoing by prefecture officials, compute the proportion that were forwarded. How does this compare to the proportion that were forwarded conditional on <em>not</em> alleging wrongdoing by prefecture officials?</p>
-</section>
-<section id="part-e" class="level2">
-<h2 class="anchored" data-anchor-id="part-e">Part E</h2>
-<p>Sample <span class="math inline">\(K=100\)</span> complaints without replacement, using the <code>sample()</code> function, and compute the proportion that simultaneously (i) allege wrongdoing by prefecture officials and (ii) were forwarded to upper-level leaders. Repeat for <span class="math inline">\(K \in \{10, \dots, 1000\}\)</span> and create an appropriately labeled plot that indicates how sample results grow closer to the result in Part C as <span class="math inline">\(K\)</span> increases.</p>
+<p>Compute the covariance of <span class="math inline">\(X_g\)</span> and <span class="math inline">\(Y_g\)</span>, <span class="math inline">\(Cov(X_g, Y_g)\)</span>. What relationship must hold between <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> for <span class="math inline">\(X_g\)</span> and <span class="math inline">\(Y_g\)</span> to have covariance <span class="math inline">\(0\)</span>? (Hint: For binary random variables <span class="math inline">\(E[X] = Pr(X = 1)\)</span> – it’s the fundamental bridge!)</p>
 <div style="page-break-after: always;"></div>
 </section>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-ba2021role" class="csl-entry" role="listitem">
-Ba, Bocar A., Dean Knox, Jonathan Mummolo, and Roman Rivera. 2021. <span>“The Role of Officer Race and Gender in Police-Civilian Interactions in <span>C</span>hicago.”</span> <em>Science</em> 371 (6530): 696–702. <a href="https://doi.org/10.1126/science.abd8694">https://doi.org/10.1126/science.abd8694</a>.
+<div id="ref-aapor2009" class="csl-entry" role="listitem">
+AAPOR Ad Hoc Committee on the 2008 Presidential Primary Polling. 2009. <em>An Evaluation of the Methodology of the 2008 Pre-Election Primary Polls</em>. American Association for Public Opinion Research. <a href="https://aapor.org/wp-content/uploads/2022/11/AAPOR_Rept_FINAL-Rev-4-13-09.pdf">https://aapor.org/wp-content/uploads/2022/11/AAPOR_Rept_FINAL-Rev-4-13-09.pdf</a>.
 </div>
-<div id="ref-johnson2019officer" class="csl-entry" role="listitem">
-Johnson, David J., Trevor Tress, Nicole Burkel, Carley Taylor, and Joseph Cesario. 2019. <span>“Officer Characteristics and Racial Disparities in Fatal Officer-Involved Shootings.”</span> <em>Proceedings of the National Academy of Sciences</em> 116 (32): 15877–82. <a href="https://doi.org/10.1073/pnas.1903856116">https://doi.org/10.1073/pnas.1903856116</a>.
+<div id="ref-macinnis2021candidate" class="csl-entry" role="listitem">
+MacInnis, Bo, Joanne M. Miller, Jon A. Krosnick, Clifton Below, and Miriam Lindner. 2021. <span>“Candidate Name Order Effects in <span>N</span>ew <span>H</span>ampshire: Evidence from Primaries and from General Elections with Party Column Ballots.”</span> <em>PLOS ONE</em> 16 (3): e0248049. <a href="https://doi.org/10.1371/journal.pone.0248049">https://doi.org/10.1371/journal.pone.0248049</a>.
 </div>
-<div id="ref-knox2020making" class="csl-entry" role="listitem">
-Knox, Dean, and Jonathan Mummolo. 2020. <span>“Making Inferences about Racial Disparities in Police Violence.”</span> <em>Proceedings of the National Academy of Sciences</em> 117 (3): 1261–62. <a href="https://doi.org/10.1073/pnas.1919418117">https://doi.org/10.1073/pnas.1919418117</a>.
+<div id="ref-akins2006" class="csl-entry" role="listitem">
+New Hampshire Supreme Court. 2006. <span>“Akins v. Secretary of State.”</span> <em>New Hampshire Reports</em> 154: 67. <a href="https://www.courtlistener.com/opinion/8093200/akins-v-secretary-of-state/">https://www.courtlistener.com/opinion/8093200/akins-v-secretary-of-state/</a>.
 </div>
-<div id="ref-lehman2017national" class="csl-entry" role="listitem">
-Lehman, Constance D., Robert F. Arao, Brian L. Sprague, et al. 2017. <span>“National Performance Benchmarks for Modern Screening Digital Mammography: Update from the <span>B</span>reast <span>C</span>ancer <span>S</span>urveillance <span>C</span>onsortium.”</span> <em>Radiology</em> 283 (1): 49–58. <a href="https://doi.org/10.1148/radiol.2016161174">https://doi.org/10.1148/radiol.2016161174</a>.
-</div>
-<div id="ref-pan2018concealing" class="csl-entry" role="listitem">
-Pan, Jennifer, and Kaiping Chen. 2018. <span>“Concealing Corruption: How <span>C</span>hinese Officials Distort Upward Reporting of Online Grievances.”</span> <em>American Political Science Review</em> 112 (3): 602–20. <a href="https://doi.org/10.1017/S0003055418000205">https://doi.org/10.1017/S0003055418000205</a>.
-</div>
-<div id="ref-uspstf2024breast" class="csl-entry" role="listitem">
-US Preventive Services Task Force. 2024. <span>“Screening for Breast Cancer: <span>US</span> <span>P</span>reventive <span>S</span>ervices <span>T</span>ask <span>F</span>orce Recommendation Statement.”</span> <em>JAMA</em> 331 (22): 1918–30. <a href="https://doi.org/10.1001/jama.2024.5534">https://doi.org/10.1001/jama.2024.5534</a>.
+<div id="ref-nh2010ballot" class="csl-entry" role="listitem">
+State of New Hampshire. 2010. <em>An Act Relative to the Procedure for Listing Candidates on Election Ballots</em>. <a href="https://gc.nh.gov/legislation/2010/SB0157.html">https://gc.nh.gov/legislation/2010/SB0157.html</a>.
 </div>
 </div>
 </section>
 
-</main>
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>For a recent example, see <span class="citation" data-cites="macinnis2021candidate">MacInnis et al. (<a href="#ref-macinnis2021candidate" role="doc-biblioref">2021</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

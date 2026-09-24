@@ -1,0 +1,179 @@
+---
+title: 'PS 812: Problem Set 2'
+author: "YOUR NAME"
+date: "September 22, 2026"
+output:
+  html_document:
+    df_print: paged
+code:
+  execute: 
+    - r
+    - python
+embed-resources: true
+bibliography: references.bib
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Useful packages
+library(tidyverse)
+library(haven)
+```
+
+
+> This problem set is due at 11:59pm on **Tuesday, October 6**. Please submit your solutions via [Gradescope](https://www.gradescope.com/). Upload both a rendered `.html` file saved as "Yourlastname_Yourfirstinitial_pset2.html" and the corresponding Quarto file saved as "Yourlastname_Yourfirstinitial_pset2.qmd". We recommend editing the provided `.qmd` file directly and writing your answers and code in line with the questions. We should be able to run your code without error messages. You are strongly encouraged to discuss the problems with other students, but each student must write up their own answers and code. In order to receive credit, homework submissions must be substantially started and all work must be shown.
+
+# Problem 1
+
+There is a great deal of literature^[For a recent example, see @macinnis2021candidate.] indicating that the ordering of candidates on a ballot has an effect on their vote-share. In 2006, the New Hampshire Supreme Court held that the state's practice of listing candidates on general election ballots in alphabetical order violated candidates' "equal right to be elected" under the state constitution [@akins2006]. In an attempt to increase the fairness of the process, for the 2008 presidential primary New Hampshire randomly chose a letter from the alphabet (meaning every letter A-Z has equal probability of being chosen) and then listed the candidates in alphabetical order, by their last names, *starting with the first surname at or after that letter* and wrapping around from Z back to A [@aapor2009]. In this problem we will figure out whether this method accomplished the goal of fairness. Let the random variable $X$ be Barack Obama's position on the New Hampshire primary ballot with $1$ denoting first position, $2$ denoting second, and so on.
+
+To simplify the problem slightly, assume the shortened candidate list below.
+
+| Candidate       |
+|-----------------|
+| Joe Biden       |
+| Hillary Clinton |
+| John Edwards    |
+| Barack Obama    |
+| Bill Richardson |
+
+: Candidates in a compressed version of the 2008 New Hampshire primary.
+
+## Part A
+
+Write down the PMF of Barack Obama's ballot positioning with New Hampshire's ballot ordering rule and the shortened list of candidates. Hint: Think about who is the first candidate listed for each possible letter drawn.
+
+## Part B
+
+Create two graphs showing (1) the PMF from part A and (2) the CDF of the distribution.
+
+Make sure the graphs are well organized, legible, and have informative labels and titles.
+
+## Part C
+
+Calculate the expected value of $X$ (Barack Obama's ballot position) and the variance of $X$. Show your work.
+
+## Part D
+
+Assume that the effects of each ballot position on vote share are the same for all candidates and are known to be the following for a five-candidate ballot:
+
+| Ballot Position ($X$) | Vote-share bump relative to 5th place (percentage points) |
+|:---------------------:|:-----------------------------------------:|
+| 1                     | 3.56                                      |
+| 2                     | 2.72                                      |
+| 3                     | 1.04                                      |
+| 4                     | 0.372                                     |
+| 5                     | 0                                         |
+
+: Ballot order effects in a compressed version of the 2008 New Hampshire primary.
+
+Calculate the expected ballot order effect for Barack Obama. Hint: Remember to use LOTUS.
+
+## Part E
+
+Now for comparison, calculate the expected ballot order effect for Hillary Clinton. Do you think New Hampshire's ballot ordering scheme is fair? Explain using your calculations for this problem.
+
+## Part F
+
+In 2010, the legislature replaced this procedure with one that randomly selects the first *candidate* and then lists the remainder in alphabetical order (again, wrapping around from Z to A) [@nh2010ballot]. Is this a fairer method than the one used in 2008?
+
+# Problem 2 
+
+Nearly all U.S. states maintain a list of registered voters with varying demographic data depending on what is required for registration. These "voter files" are [increasingly popular](https://www.pewresearch.org/short-reads/2018/02/15/voter-files-study-qa/) for survey researchers looking for up-to-date population benchmarks to understand the overall composition of the electorate. In this problem, you will be studying the a 2022 snapshot of the registered voter file for Durham County, North Carolina and using it as a known population of interest.
+
+Below are the main packages that you will be using in this problem set.
+
+```{r, message=F}
+library(tidyverse)
+library(ggplot2)
+```
+
+The chunk below will load in the complete Durham County, North Carolina voter file subset down to registered voters that are considered "active." This file was originally obtained from the [North Carolina State Board of Elections website](https://www.ncsbe.gov/results-data/voter-registration-data#current-data) and slightly pre-processed for the purposes of this problem (e.g. removing names and addresses).
+
+```{r, message=F, warning=F}
+nc <- read_csv("data/nc_durham_Oct_2022.csv")
+```
+
+The dataset contains the following columns:
+
+- `gender`: Gender of voter
+- `race`: Race of voter
+- `party`: Party ID of voter
+- `age_at_year_end`: Age of voter
+
+## Part A
+
+Treat this voter file as the true population of registered voters in Durham County. Calculate the following five quantities:
+
+  #. the population share of Democratic registered voters
+  #. the population share of Black/African American registered voters
+  #. the population share of registered voters who are Democrats and Black/African American
+  #. the population mean age of registered voters
+  #. the population standard deviation of age among registered voters
+
+## Part B
+
+Create a histogram of the age of registered voters (use `geom_histogram()` and choose an appropriate number of bins). Overlay the population mean and population median (use `geom_vline()` to draw vertical lines). Comment on the shape of the distribution.
+
+## Part C
+
+We'll first ask whether the population age distribution is well-approximated by a known parametric form. A common distribution defined on the positive real numbers is the **log-normal** distribution, defined as $\exp(X)$ where $X$ is normally distributed. It has two parameters $\mu$ and $\sigma$ which are the mean and standard deviation on the **log scale**. 
+
+First, calculate the mean and standard deviation of the *logged* age in the population.
+
+Second, set the seed to `53703`. Then, generate 5000 independent draws from the log-normal distribution with your calculated quantities as the parameters.
+
+Hint: Use `rlnorm()` and read the documentation to see where the arguments to the function should go. Note the `rlnorm()` function takes the *standard deviation* rather than the variance.
+
+Third, make a histogram of your draws and compare this distribution to your histogram in Part B. Is age approximately log-normally distributed? Explain why or why not.
+
+## Part D
+
+Now we'll look at the distribution of **means of random samples**. We'll focus on a **simple random sample**, where every possible sample of the same size is equally likely to be drawn (and so each person in the population has an equal probability of being selected into the sample ex-ante). Suppose we draw a **simple random sample** of size 200 without replacement from the population and calculate the mean age of that sample. (Hint: `slice_sample()` works well here)
+
+Set the seed again to `53703`. Using a Monte Carlo simulation, repeat this procedure 1000 times. Each iteration should take a simple random sample without replacement, calculate the mean age and store that mean. 
+
+Create a histogram of your 1000 sample means. Overlay the population mean age you calculated in Part A. How does this distribution relate to the true average population age of voters in Durham, NC?
+
+## Part E
+
+Again, set the seed to `53703`. Then, generate 5000 independent draws from a **normal** distribution with mean equal to the population mean age you calculated in Part A and standard deviation equal to the population standard deviation of age *divided by* $\sqrt{200}$.
+
+Hint: use `rnorm()` and check the documentation to see where the arguments to the function should go. Again note that `rnorm()` specifies the normal via the mean and *standard deviation*. 
+
+Make a histogram of your draws and compare this distribution to your histogram in Part D. Are the sample means approximately normally distributed?
+
+# Problem 3
+
+Suppose that we are polling undergraduates to determine how many voted in an election. For simplicity, we collect data at the dorm-room level. Suppose each undergraduate is assigned to a dorm room $g$, where each dorm room houses two undergraduates. Let $X_g$ denote the outcome for whether or not the first undergraduate polled in dorm room $g$ voted ($1$ if yes, $0$ if no). Let $Y_g$ denote the outcome for whether the second undergraduate polled in dorm room $g$ voted.
+
+Let's define the conditional probability $Pr(X_g = 1 \mid Y_g)$ -- the probability that the first undergraduate voted given the vote of their roommate.
+
+$$
+Pr(X_g = 1 \mid Y_g) = \begin{cases} \alpha & \text{if } Y_g = 1 \\ \beta & \text{if } Y_g = 0 \end{cases}
+$$
+
+where $0 < \alpha < 1$ and $0 < \beta < 1$. For the converse, $Pr(Y_g = 1 \mid X_g)$, also assume
+
+$$
+Pr(Y_g = 1 \mid X_g) = \begin{cases} \alpha & \text{if } X_g = 1 \\ \beta & \text{if } X_g = 0 \end{cases}
+$$
+
+## Part A
+
+Find the marginal probabilities $Pr(X_g = 1)$ and $Pr(Y_g = 1)$. Hint: Two equations, two unknowns.
+
+## Part B
+
+Find the joint probability $Pr(X_g = 1, Y_g = 1)$.
+
+## Part C
+
+Compute the covariance of $X_g$ and $Y_g$, $Cov(X_g, Y_g)$. What relationship must hold between $\alpha$ and $\beta$ for $X_g$ and $Y_g$ to have covariance $0$? (Hint: For binary random variables $E[X] = Pr(X = 1)$ -- it's the fundamental bridge!)
+
+{{< pagebreak >}}
+
+# References
+
+::: {#refs}
+:::
