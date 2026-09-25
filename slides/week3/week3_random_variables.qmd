@@ -312,21 +312,21 @@ p_pmf + (p_pois + labs(title = "Poisson(2) CDF")) +
 - The simplest discrete probability distribution is the **Bernoulli** distribution
   - This is the distribution of a **weighted coin flip** with "success" probability $p$
 
-$$
-P(X = x) = \begin{cases}
-p & \text{if } x = 1 \\
-1 - p & \text{if } x = 0 \\
-0 & \text{otherwise}
-\end{cases}
-$$
+  $$
+  P(X = x) = \begin{cases}
+  p & \text{if } x = 1 \\
+  1 - p & \text{if } x = 0 \\
+  0 & \text{otherwise}
+  \end{cases}
+  $$
 
 - We'll use the $\sim$ syntax to denote that a variable has a particular distribution with particular parameters
 
-$$ X \sim \text{Bernoulli}(p) $$
+  $$ X \sim \text{Bernoulli}(p) $$
 
 - Bernoulli random variables often arise from **indicator** functions $\mathbf{1}(\cdot)$ applied to events $A$
 
-$$ \mathbf{1}(A) \sim \text{Bernoulli}(p) \quad p = P(A) $$
+  $$ \mathbf{1}(A) \sim \text{Bernoulli}(p) \quad p = P(A) $$
 
 :::
 

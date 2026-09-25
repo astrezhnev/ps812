@@ -1,0 +1,78 @@
+---
+title: "Week 4: Joint and Conditional Distributions"
+subtitle: "PS 812 - Introduction to Statistical Methods in Political Science"
+author:
+  - name: "Anton Strezhnev"
+    affiliation: "University of Wisconsin-Madison"
+    email: strezhnev@wisc.edu
+date: "September 29, 2026"
+date-format: "MMMM D, YYYY"
+editor: 
+  render-on-save: true
+format: 
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    overview: true
+    navigation-mode: vertical
+    progress: false
+    controls: true
+    link-external-newwindow: true
+    footer: "PS 812 - University of Wisconsin-Madison"
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+execute: 
+  cache: false
+code:
+  execute: 
+    - r
+    - python
+embed-resources: true
+bibliography: ../ps812.bib
+link-citations: true
+
+---
+
+## Welcome back! {.title-slide}
+
+<!-- MathJax macros for the whole deck. The reveal math plugin overwrites
+     window.MathJax, so a header config would be clobbered; defining them in
+     the first slide registers them before any later slide is typeset. The
+     wrapper takes up no space and renders nothing. -->
+::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
+$$
+\newcommand{\Var}{\text{Var}}
+$$
+:::
+
+## Week overview
+
+::: {.incremental}
+
+- Last week
+  - Random variables
+  - Distributions: CDFs, PMFs and PDFs
+  - Expectations and variances
+- This week
+  - **Joint distributions**
+  - **Conditional distributions**
+  - **Conditional expectations and the best linear predictor**
+  - **Covariances and correlations**
+
+:::
+
+## Next week
+
+::: {.incremental}
+
+- Estimands as features of distributions
+  - Defining estimands as statistical functionals
+  - Connecting theory to empirical targets
+
+:::
+
+## References {.refs-slide}
+
+::: {#refs}
+:::
