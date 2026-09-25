@@ -1,0 +1,747 @@
+---
+title: "PS 812"
+subtitle: "Section 3: Simulation and Monte Carlo"
+author: "John Hicks"
+institute: "Dept. of Political Science, UW-Madison"
+date: "9-25-2026"
+
+format:
+  revealjs:
+    embed-resources: true
+    theme: default
+    slide-number: true
+    transition: none
+    code-fold: false
+    code-line-numbers: true
+    chalkboard: false
+    width: 1600
+    height: 900
+    incremental: true
+    fig-width: 10
+    fig-height: 4.5
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: false
+---
+
+<style>
+
+.reveal {
+  font-family: Arial, sans-serif;
+}
+
+/* ---------------------------------
+   Headings
+   --------------------------------- */
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #8B0000;
+}
+
+.reveal h2 {
+  background-color: #eeeeee;
+  padding: 10px 20px;
+}
+
+/* ---------------------------------
+   Slide numbers
+   --------------------------------- */
+
+.reveal .slide-number {
+  color: #666666;
+  font-size: 0.7em;
+}
+
+/* ---------------------------------
+   Code
+   --------------------------------- */
+
+.reveal pre {
+  font-size: 0.65em;
+}
+
+.reveal code {
+  font-family: "Fira Code", "Courier New", monospace;
+}
+
+/* ---------------------------------
+   Cascade / incremental reveals
+   --------------------------------- */
+
+.reveal .fragment {
+  transition: opacity 0.35s ease-in-out;
+}
+
+.reveal .fragment.visible {
+  opacity: 1;
+}
+
+/* ---------------------------------
+   Lists
+   --------------------------------- */
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.35em;
+}
+
+/* ---------------------------------
+   Images
+   --------------------------------- */
+
+.reveal img {
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+</style>
+
+```{r}
+#| include: false
+library(tidyverse)
+theme_set(theme_minimal(base_size = 16))
+```
+
+# Announcements
+
+## Problem Set 2
+
+1. **Problem Set 2 is due Oct 6 at 11:59pm.**
+
+---
+
+# Today
+
+## Today
+
+::: {.fragment}
+**1. Random numbers in R**
+
+Pseudo-randomness, `set.seed()`, and `runif()`
+:::
+
+::: {.fragment}
+**2. Simulating from distributions**
+
+`rnorm()`, `rexp()`, `rbinom()`, and the d/p/q/r family
+:::
+
+::: {.fragment}
+**3. Iteration**
+
+A `for` loop first, then as a function with `map()`
+:::
+
+::: {.fragment}
+**4. Monte Carlo, LLN, and CLT**
+
+Expectations and probabilities by simulation
+:::
+
+::: {.fragment}
+**5. Application: the 2026 Senate**
+:::
+
+---
+
+# Random Numbers in R
+
+## Computers can't flip coins
+
+- R generates **pseudo-random** numbers
+- A deterministic algorithm yields a sequence of seemingly random numbers
+- The algorithm uses an internal state, which each draw uses then updates
+- R's default algorithm is Mersenne-Twister:
+
+```{r}
+RNGkind()
+```
+
+---
+
+## runif()
+
+`runif()` draws from a Uniform(0, 1) distribution.
+
+```{r}
+runif(5)
+runif(5)
+```
+
+By default, it's always different because the state changes.
+
+---
+
+## set.seed()
+
+`set.seed()` fixes this by setting the starting state.
+
+```{r}
+set.seed(812)
+runif(3)
+
+set.seed(812)
+runif(3)
+```
+
+- Use it to make results reproducible across different code runs
+- The number is arbitrary, as long as you don't **seed-hack**
+
+---
+
+## Seeds
+
+```{r}
+set.seed(812)
+a <- runif(3)
+b <- runif(3)
+
+set.seed(812)
+c <- runif(6)
+
+c(a, b)
+c
+```
+
+- Set the seed once at the start
+
+---
+
+## From uniform to anything
+
+If $U \sim \text{Unif}(0,1)$ and $F$ is a CDF, then $F^{-1}(U)$ has CDF $F$.
+
+In R, $F^{-1}$ is the `q` function:
+
+```{r}
+#| output-location: column
+set.seed(812)
+u <- runif(10000)
+y <- qexp(u, rate = 0.25)
+
+mean(y)
+
+tibble(u = u, y = y) |>
+  pivot_longer(everything()) |>
+  ggplot(aes(value)) +
+  geom_histogram(bins = 50) +
+  facet_wrap(~ name, scales = "free")
+```
+
+::: {.fragment}
+`rnorm()` does exactly this by default. That's the `"Inversion"` in `RNGkind()`.
+:::
+
+---
+
+# Simulating from Distributions
+
+## The d/p/q/r family
+
+Every distribution in R comes with four functions:
+
+| Prefix | Gives you | Normal example |
+|---|---|---|
+| `d` | density (PDF) or mass (PMF) | `dnorm(0)` |
+| `p` | CDF, $P(X \le x)$ | `pnorm(1.96)` |
+| `q` | quantile, the inverse CDF | `qnorm(0.975)` |
+| `r` | random draws | `rnorm(100)` |
+
+::: {.fragment}
+Swap the suffix for other distributions: `unif`, `norm`, `exp`, `binom`, `pois`, `geom`, `t`, `chisq`, ...
+:::
+
+---
+
+## Normal
+
+```{r}
+set.seed(812)
+x <- rnorm(10000, mean = 0, sd = 1)
+
+mean(x)
+sd(x)
+
+# share of draws above 1.96, vs. the exact answer
+mean(x > 1.96)
+1 - pnorm(1.96)
+```
+
+---
+
+```{r}
+ggplot(tibble(x = x), aes(x)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 60, fill = "grey70") +
+  geom_function(fun = dnorm, colour = "#8B0000", linewidth = 1) +
+  labs(title = "10,000 draws from N(0, 1) with the true density")
+```
+
+---
+
+## Exponential
+
+Waiting for the bus: $Y \sim \text{Exp}(\lambda = 0.25)$, so $E[Y] = 1/\lambda = 4$ minutes.
+
+```{r}
+set.seed(812)
+y <- rexp(10000, rate = 0.25)
+
+mean(y)
+
+# P(2 <= Y <= 10): simulated vs. exact
+mean(y >= 2 & y <= 10)
+pexp(10, rate = 0.25) - pexp(2, rate = 0.25)
+```
+
+---
+
+## Bernoulli and Binomial
+
+```{r}
+set.seed(812)
+
+# Bernoulli(p=0.5) or 10 coin flips
+rbinom(10, size = 1, prob = 0.5)
+
+# Binom(n=20,p=0.3) or 10 sets of 20 30% chance coin flips
+rbinom(10, size = 20, prob = 0.3)
+
+# a Bernoulli by hand: TRUE with probability p
+runif(10) < 0.3
+```
+
+::: {.fragment}
+The last one comes back on the Senate exercise.
+:::
+
+---
+
+## Check the parameterization
+
+Pay attention to the parameters
+
+- `rnorm()` takes the **SD**, not the variance
+- `rexp()` takes the **rate**, not the mean
+- `rgeom()` counts **failures before the first success**, so its mean is $(1-p)/p$, not $1/p$
+
+```{r}
+set.seed(812)
+mean(rgeom(100000, prob = 0.2))       # about 4, not 5
+mean(rgeom(100000, prob = 0.2) + 1)   # trials until first success: about 5
+```
+
+---
+
+# Iteration
+
+## Why we need loops
+
+A Monte Carlo simulation is:
+
+1. Run one random experiment
+2. Record the result
+3. Repeat many times
+4. Summarize the results
+
+::: {.fragment}
+Step 3 is a loop.
+:::
+
+---
+
+## A for loop
+
+```{r}
+for (i in 1:5) {
+  print(i^2)
+}
+```
+
+- `i` takes each value in `1:5`, one at a time
+- Everything inside `{ }` runs once per value
+
+---
+
+## Storing results
+
+Example: roll two dice. What's $P(\text{sum} = 7)$?
+
+```{r}
+set.seed(812)
+n_sims <- 10000
+
+results <- numeric(n_sims)   # empty vector to fill in
+
+for (i in 1:n_sims) {
+  dice <- sample(1:6, size = 2, replace = TRUE)
+  results[i] <- sum(dice)
+}
+
+head(results)
+mean(results == 7)
+6 / 36
+```
+
+---
+
+## Don't grow vectors inside a loop
+
+Make the empty vector first (`numeric(n_sims)`) and fill it in. Don't append with `c()`:
+
+```{r}
+n <- 30000
+
+system.time({
+  grown <- c()
+  for (i in 1:n) grown <- c(grown, runif(1))   # copies the whole vector every time
+})
+
+system.time({
+  filled <- numeric(n)
+  for (i in 1:n) filled[i] <- runif(1)
+})
+```
+
+---
+
+## Don't set seed inside a loop
+
+```{r}
+results <- numeric(5)
+
+for (i in 1:5) {
+  set.seed(812)            # resets the stream every iteration
+  results[i] <- runif(1)
+}
+
+results
+```
+
+- 
+
+---
+
+## Functionalized version
+
+```{r}
+roll_two <- function() {
+  dice <- sample(1:6, size = 2, replace = TRUE)
+  sum(dice)
+}
+
+roll_two()
+roll_two()
+```
+
+::: {.fragment}
+The loop gets shorter:
+
+```{r}
+set.seed(812)
+results <- numeric(n_sims)
+for (i in 1:n_sims) {
+  results[i] <- roll_two()
+}
+mean(results == 7)
+```
+:::
+
+---
+
+## Instead of for-looping: map() and replicate()
+
+```{r}
+set.seed(812)
+
+# purrr: call the function once for each element of 1:n_sims
+results <- map_int(1:n_sims, \(i) roll_two())
+mean(results == 7)
+
+# base R equivalent
+results <- replicate(n_sims, roll_two())
+mean(results == 7)
+```
+
+- `\(i)` means `function(i)`. We ignore `i` because every experiment is the same
+- `map_int()` returns integers, `map_dbl()` numbers, `map_lgl()` TRUE/FALSE, `map()` a list
+- A preallocated `for` loop is not slow. The payoff is readable, reusable code
+
+---
+
+## Functions with arguments
+
+We can modify a functionalized input through its arguments
+
+```{r}
+roll_n <- function(n_dice) {
+  sum(sample(1:6, size = n_dice, replace = TRUE))
+}
+
+set.seed(812)
+avg_sum <- map_dbl(1:6, \(k) mean(replicate(5000, roll_n(k))))
+
+tibble(n_dice = 1:6, simulated = avg_sum, exact = 3.5 * (1:6))
+```
+
+---
+
+# Monte Carlo
+
+## The idea
+
+Approximate a tough calculation with the average of many simulated draws.
+
+$$
+E[g(X)] = \int g(x) f(x)\, dx \;\approx\; \frac{1}{M}\sum_{i=1}^{M} g\big(x^{(i)}\big), \qquad x^{(i)} \sim f
+$$
+
+::: {.fragment}
+A probability is an expectation of an indicator: $P(A) = E[\mathbf{1}\{A\}]$.
+
+So `mean(results == 7)` **is** a Monte Carlo estimate.
+:::
+
+---
+
+## An expectation
+
+$Y \sim \text{Exp}(0.25)$. What is $E\big[\sqrt{1 + Y}\big]$?
+
+```{r}
+set.seed(812)
+y <- rexp(100000, rate = 0.25)
+mean(sqrt(1 + y))
+
+# numerical integration, for comparison
+integrate(\(y) sqrt(1 + y) * dexp(y, rate = 0.25), lower = 0, upper = Inf)
+```
+
+---
+
+## A probability: the urn
+
+An urn has 5 red and 5 green balls. Draw 4 without replacement. What's the probability they're all the same color?
+
+```{r}
+urn <- c(rep(1, 5), rep(0, 5))   # 1 = red, 0 = green
+
+same_color <- function() {
+  draw <- sample(urn, size = 4, replace = FALSE)
+  sum(draw) %in% c(0, 4)
+}
+
+set.seed(812)
+p_hat <- mean(replicate(100000, same_color()))
+p_hat
+
+2 * choose(5, 4) / choose(10, 4)   # exact
+```
+
+---
+
+## How close is close enough?
+
+A simulated proportion $\hat p$ from $M$ independent sims has **Monte Carlo standard error**
+
+$$
+\text{SE}(\hat p) = \sqrt{\frac{\hat p (1 - \hat p)}{M}}
+$$
+
+```{r}
+sqrt(p_hat * (1 - p_hat) / 100000)
+```
+
+- The error shrinks like $1/\sqrt{M}$
+- 10x more precision costs 100x more simulations
+
+---
+
+# LLN and CLT
+
+## Law of Large Numbers
+
+As $n \to \infty$, the sample mean $\bar{X}_n$ converges to $E[X]$.
+
+```{r}
+set.seed(812)
+paths <- map(1:5, \(p) {
+  y <- rexp(5000, rate = 0.25)
+  tibble(path = p, n = 1:5000, running_mean = cumsum(y) / (1:5000))
+}) |> list_rbind()
+
+ggplot(paths, aes(n, running_mean, group = path)) +
+  geom_line(alpha = 0.7) +
+  geom_hline(yintercept = 4, colour = "#8B0000", linetype = "dashed") +
+  scale_x_log10() +
+  labs(x = "Number of draws (log scale)", y = "Running mean",
+       title = "Five running means of Exp(0.25) draws, true mean = 4")
+```
+
+---
+
+## Why Monte Carlo works
+
+- Every Monte Carlo estimate is a sample mean of simulated draws
+- The LLN says that sample mean converges to the thing we want
+- More sims, closer answer. The SE tells you how close
+
+---
+
+## Central Limit Theorem
+
+For iid draws with mean $\mu$ and variance $\sigma^2$, the sample mean is approximately normal for large $n$:
+
+$$
+\bar{X}_n \;\approx\; N\!\left(\mu,\; \frac{\sigma^2}{n}\right)
+$$
+
+::: {.fragment}
+This holds **even when $X$ itself is not normal**. The exponential is skewed. Take the mean of $n$ draws, 5,000 times:
+
+```{r}
+sample_mean <- function(n) mean(rexp(n, rate = 0.25))
+
+set.seed(812)
+clt <- map(c(1, 5, 30, 200), \(n) {
+  tibble(n = n, xbar = replicate(5000, sample_mean(n)))
+}) |> list_rbind()
+```
+:::
+
+---
+
+```{r}
+#| fig-height: 6
+# the normal density the CLT predicts, for each n: N(4, 16/n)
+curves <- expand_grid(n = c(1, 5, 30, 200), x = seq(0, 20, length.out = 400)) |>
+  mutate(density = dnorm(x, mean = 4, sd = 4 / sqrt(n)))
+
+ggplot(clt, aes(xbar)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 50, fill = "grey70") +
+  geom_line(data = curves, aes(x, density), colour = "#8B0000", linewidth = 1) +
+  facet_wrap(~ n, scales = "free", labeller = label_both, nrow = 1) +
+  labs(x = "Sample mean", y = "Density")
+```
+
+---
+
+## Even a coin flip
+
+$X \sim \text{Bernoulli}(0.1)$ only takes the values 0 and 1. The mean of $n$ flips:
+
+```{r}
+#| fig-height: 4
+set.seed(812)
+flips <- map(c(1, 10, 50, 500), \(n) {
+  tibble(n = n, xbar = replicate(5000, mean(rbinom(n, size = 1, prob = 0.1))))
+}) |> list_rbind()
+
+ggplot(flips, aes(xbar)) +
+  geom_histogram(bins = 30, fill = "grey70") +
+  facet_wrap(~ n, scales = "free", labeller = label_both, nrow = 1) +
+  labs(x = "Share of heads", y = "Simulations")
+```
+
+---
+
+## LLN vs. CLT
+
+- **LLN:** *where* the sample mean ends up ($\mu$)
+- **CLT:** the *shape* of its error around $\mu$ (normal, with SD $\sigma/\sqrt{n}$)
+
+---
+
+# Application: the 2026 Senate
+
+## What's the probability Democrats win the Senate?
+
+Split Ticket's 2026 Senate model (published by *The Argument*, retrieved 9/23/2026). One row per race:
+
+```{r}
+senate <- read_csv("data/splitticket_senate_races_2026-09-23.csv")
+
+senate |>
+  select(state, dem_name, rep_name, margin, dem_prob, rating) |>
+  arrange(abs(margin)) |>
+  head(10)
+```
+
+---
+
+## Setup
+
+- The Democratic caucus has 47 seats. 13 are up this year, so **34** are not on the ballot
+- 35 races this year
+- With a Republican VP breaking ties, Democrats need **51** seats
+- Following Split Ticket, a win by one of the four independents (ID, MT, NE, SD) counts as a Democratic seat
+
+::: {.fragment}
+Each race is a Bernoulli random variable, $X_s \sim \text{Bern}(p_s)$:
+
+$$
+\text{Dem seats} = 34 + \sum_{s=1}^{35} X_s
+$$
+:::
+
+---
+
+## Why simulate?
+
+- $E[\text{Dem seats}]$ is easy (linearity of expectation)
+- But control depends on $P(\text{Dem seats} \ge 51)$, which needs the **whole distribution** of the sum
+- A sum of 35 Bernoullis with 35 different $p$'s isn't something you want to work out by hand
+- So we simulate it
+
+---
+
+## Model 1: independent coin flips
+
+- Flip 35 coins, each with its own probability of heads: `runif(35) < p`
+- Count the heads, add 34
+- Repeat many times
+- Takes the published probabilities at face value
+
+---
+
+## Model 2: simulate the margins
+
+Suppose the real margin is the forecast margin plus a normal error:
+
+$$
+\text{margin}_s + \varepsilon_s, \qquad \varepsilon_s \sim N(0, s^2)
+\quad\Rightarrow\quad
+P(\text{D wins}) = P(\varepsilon_s > -\text{margin}_s) = \Phi\!\left(\frac{\text{margin}_s}{s}\right)
+$$
+
+- Draw 35 errors, add them to the forecast margins, count the races above 0
+- We need a value for $s$: how uncertain are the margins?
+
+---
+
+## Margins and probabilities
+
+```{r}
+ggplot(senate, aes(margin, dem_prob / 100)) +
+  geom_point(size = 3) +
+  labs(x = "Forecast margin (D - R)", y = "P(D wins)")
+```
+
+::: {.fragment}
+Which curve fits these points, and what $s$ does it imply?
+:::
+
+---
+
+# Exercise
+
+## Exercise
+
+Open `ps812_section3_exercise.qmd`.
+
+- Part 1: seeds, distributions, loops, LLN, CLT
+- Part 2: the Senate forecast

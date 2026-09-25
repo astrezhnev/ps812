@@ -1,0 +1,187 @@
+---
+title: "PS 812: Section 3 Exercise"
+author: "YOUR NAME"
+date: "9-25-2026"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| eval: true
+library(tidyverse)
+
+set.seed(812)
+
+senate <- read_csv("data/splitticket_senate_races_2026-09-23.csv")
+st_seats <- read_csv("data/splitticket_senate_seat_dist_2026-09-23.csv")
+```
+
+# Part 1: Simulation basics
+
+## Task 1: seeds
+
+Run `runif(3)` twice in a row. Then run `set.seed(1)` followed by `runif(3)` twice (setting the seed each time). What's different?
+
+```{r}
+
+```
+
+## Task 2: normal draws
+
+Draw 10,000 values from a normal with mean 50 and SD 10. Check the mean and SD of your draws. Use them to estimate $P(X > 70)$ and compare to the exact answer from `pnorm()`.
+
+```{r}
+
+```
+
+## Task 3: exponential draws
+
+Draw 10,000 values from an exponential with rate 0.5. What should the mean be? Make a histogram.
+
+```{r}
+
+```
+
+## Task 4: a for loop
+
+Flip 10 fair coins and count the heads. Use a `for` loop to repeat this 10,000 times, storing the count each time in a preallocated vector. Estimate $P(\text{7 or more heads})$ and compare to `1 - pbinom(6, 10, 0.5)`.
+
+```{r}
+
+```
+
+## Task 5: the same thing as a function
+
+Write a function `count_heads()` that runs one experiment from Task 4 and returns the count. Redo Task 4 with `map_int()` instead of a loop.
+
+```{r}
+
+```
+
+## Task 6: LLN
+
+Draw 5,000 values from a Uniform(0, 1). Compute the running mean (hint: `cumsum()`) and plot it against the number of draws. Where does it end up?
+
+```{r}
+
+```
+
+## Task 7: CLT
+
+Write a function that returns the mean of `n` draws from a Uniform(0, 1). For `n = 1`, `2`, `5`, and `30`, simulate 5,000 sample means and plot their histograms (`facet_wrap(~ n)`). What happens to the shape and the spread as `n` grows?
+
+```{r}
+
+```
+
+# Part 2: Who wins the Senate?
+
+Data: Split Ticket 2026 Senate model, published by *The Argument* and retrieved 9/23/2026 ([article](https://www.theargumentmag.com/p/split-ticket-2026-midterms-model)).
+
+Columns in `senate`:
+
+- `state`, `state_name`
+- `dem_name`: the main non-Republican candidate (an independent in ID, MT, NE, SD)
+- `rep_name`: Republican nominee
+- `independent`: `TRUE` if `dem_name` is an independent
+- `margin`: forecast margin in points (positive = Dem/Ind ahead)
+- `dem_prob`: forecast probability (0 to 100) that `dem_name` wins
+- `rating`: Safe / Likely / Lean / Tossup
+
+Democrats hold 34 seats that are not up this year and need 51 for control. Count an independent win as a Democratic seat.
+
+```{r}
+dem_hold   <- 34
+seats_need <- 51
+n_races    <- nrow(senate)
+```
+
+## Task 8: setup
+
+Add a column `p_dem` with the win probability on a 0 to 1 scale. How many of the 35 races do Democrats need to win? Use `count()` to see how many races fall in each rating.
+
+```{r}
+
+```
+
+## Task 9: expected seats
+
+What is the expected number of Democratic seats? You don't need to simulate this. Does it tell you the probability Democrats win control? Why not?
+
+```{r}
+
+```
+
+## Task 10: simulate one election
+
+Write a function `sim_election(p)` that takes a vector of win probabilities, flips one coin per race, and returns the total number of Democratic seats (including the 34 not up). Hint: `runif(length(p)) < p`. Run it a few times.
+
+```{r}
+
+```
+
+## Task 11: simulate many elections
+
+Simulate 100,000 elections two ways: first with a preallocated `for` loop, then with `map_int()`. Check that the mean number of seats matches Task 9.
+
+```{r}
+
+```
+
+## Task 12: probability of control
+
+Estimate $P(\text{Dem seats} \ge 51)$ and its Monte Carlo standard error. Plot the distribution of seats with `geom_bar()`, filled by who controls the Senate.
+
+```{r}
+
+```
+
+## Task 13: from probabilities to margins
+
+Suppose the actual margin in each race is `margin` plus a $N(0, s^2)$ error, so $P(\text{D wins}) = \Phi(\text{margin}/s)$. Find the $s$ that best fits the published probabilities by regressing `qnorm(p_dem)` on `margin` with no intercept (the slope is $1/s$). Leave out races listed at exactly 0% or 100%. Why?
+
+Plot `p_dem` against `margin` and add the fitted curve with `geom_function()`.
+
+```{r}
+
+```
+
+## Task 14: simulate the margins
+
+Write a function that simulates one election by drawing one normal error per race, adding it to `margin`, and counting the races where the result is above 0. Simulate 100,000 elections and estimate $P(\text{control})$. How does it compare to Task 12? Why isn't it exactly the same?
+
+```{r}
+
+```
+
+## Task 15: independents
+
+Redo Task 12 assuming none of the four independents caucus with Democrats. How much does $P(\text{control})$ change?
+
+```{r}
+
+```
+
+## Bonus: a national polling miss
+
+Polls tend to miss in the same direction everywhere. Split the error into a national piece shared by every race and a state piece:
+
+$$
+\varepsilon_s = \text{national} + \text{state}_s, \qquad s^2 = \sigma_{\text{nat}}^2 + \sigma_{\text{state}}^2
+$$
+
+Set $\sigma_{\text{nat}} = 5$ and pick $\sigma_{\text{state}}$ so the total stays equal to your $s$ from Task 13. Simulate again.
+
+1. Does each race's individual win probability change?
+2. Compare the mean, SD, $P(\text{control})$, $P(\text{54+ seats})$, and $P(\text{47 or fewer})$ to Task 14. Why does $P(\text{control})$ barely move while the tails change a lot?
+3. `st_seats` has Split Ticket's own seat distribution (`pct` = percent of their simulations). Compute its mean, SD, and $P(\text{control})$. Which of your models is closer?
+
+```{r}
+
+```
