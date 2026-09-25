@@ -1,0 +1,403 @@
+---
+title: "PS 812: Section 3 Exercise Solutions"
+date: "9-25-2026"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: true
+  eval: true
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 14))
+
+set.seed(812)
+
+senate <- read_csv("data/splitticket_senate_races_2026-09-23.csv")
+st_seats <- read_csv("data/splitticket_senate_seat_dist_2026-09-23.csv")
+```
+
+The seed is set once, at the top. Every chunk below continues the same random stream, so your numbers will match these only if you run the chunks in order.
+
+# Part 1: Simulation basics
+
+## Task 1: seeds
+
+Run `runif(3)` twice in a row. Then run `set.seed(1)` followed by `runif(3)` twice (setting the seed each time). What's different?
+
+```{r}
+runif(3)
+runif(3)
+
+set.seed(1)
+runif(3)
+set.seed(1)
+runif(3)
+```
+
+Without resetting the seed, the two calls give different numbers, because each call moves the generator forward. After `set.seed(1)` the generator starts from the same state both times, so the two draws are identical. That is what makes a simulation reproducible.
+
+```{r}
+set.seed(812)  # back to the document's stream after the demo
+```
+
+## Task 2: normal draws
+
+Draw 10,000 values from a normal with mean 50 and SD 10. Check the mean and SD of your draws. Use them to estimate $P(X > 70)$ and compare to the exact answer from `pnorm()`.
+
+```{r}
+x <- rnorm(10000, mean = 50, sd = 10)
+
+mean(x)
+sd(x)
+
+# simulated vs. exact
+mean(x > 70)
+1 - pnorm(70, mean = 50, sd = 10)
+```
+
+The sample mean and SD are close to 50 and 10. About `r round(100 * mean(x > 70), 1)`% of the draws are above 70, against an exact $P(X > 70) = 1 - \Phi(2) =$ `r round(1 - pnorm(2), 4)`.
+
+## Task 3: exponential draws
+
+Draw 10,000 values from an exponential with rate 0.5. What should the mean be? Make a histogram.
+
+```{r}
+y <- rexp(10000, rate = 0.5)
+mean(y)
+
+ggplot(tibble(y = y), aes(y)) +
+  geom_histogram(bins = 60, fill = "grey70") +
+  geom_vline(xintercept = 2, colour = "#8B0000", linetype = "dashed") +
+  labs(x = "Draw", y = "Count", title = "10,000 draws from Exp(0.5), true mean = 2")
+```
+
+The mean of an exponential is $1/\lambda = 1/0.5 = 2$. The simulated mean is `r round(mean(y), 3)`. The histogram is strongly right-skewed.
+
+## Task 4: a for loop
+
+Flip 10 fair coins and count the heads. Use a `for` loop to repeat this 10,000 times, storing the count each time in a preallocated vector. Estimate $P(\text{7 or more heads})$ and compare to `1 - pbinom(6, 10, 0.5)`.
+
+```{r}
+n_sims <- 10000
+heads <- numeric(n_sims)   # preallocate
+
+for (i in 1:n_sims) {
+  flips <- rbinom(10, size = 1, prob = 0.5)
+  heads[i] <- sum(flips)
+}
+
+mean(heads >= 7)
+1 - pbinom(6, 10, 0.5)
+```
+
+`1 - pbinom(6, 10, 0.5)` is $1 - P(X \le 6) = P(X \ge 7)$ for $X \sim \text{Binom}(10, 0.5)$, which equals `r round(1 - pbinom(6, 10, 0.5), 4)`. The simulation gets close.
+
+## Task 5: the same thing as a function
+
+Write a function `count_heads()` that runs one experiment from Task 4 and returns the count. Redo Task 4 with `map_int()` instead of a loop.
+
+```{r}
+count_heads <- function() {
+  sum(rbinom(10, size = 1, prob = 0.5))
+}
+
+count_heads()
+
+heads <- map_int(1:n_sims, \(i) count_heads())
+mean(heads >= 7)
+```
+
+`sum()` of integers returns an integer, so `map_int()` works. We ignore `i` because every experiment is identical.
+
+## Task 6: LLN
+
+Draw 5,000 values from a Uniform(0, 1). Compute the running mean (hint: `cumsum()`) and plot it against the number of draws. Where does it end up?
+
+```{r}
+u <- runif(5000)
+running <- tibble(n = 1:5000, running_mean = cumsum(u) / (1:5000))
+
+ggplot(running, aes(n, running_mean)) +
+  geom_line() +
+  geom_hline(yintercept = 0.5, colour = "#8B0000", linetype = "dashed") +
+  labs(x = "Number of draws", y = "Running mean",
+       title = "Running mean of Uniform(0, 1) draws")
+
+tail(running$running_mean, 1)
+```
+
+The running mean bounces around early, then settles at $E[U] = 0.5$. After 5,000 draws it is `r round(tail(running$running_mean, 1), 4)`. This is the Law of Large Numbers.
+
+## Task 7: CLT
+
+Write a function that returns the mean of `n` draws from a Uniform(0, 1). For `n = 1`, `2`, `5`, and `30`, simulate 5,000 sample means and plot their histograms (`facet_wrap(~ n)`). What happens to the shape and the spread as `n` grows?
+
+```{r}
+unif_mean <- function(n) mean(runif(n))
+
+clt <- map(c(1, 2, 5, 30), \(n) {
+  tibble(n = n, xbar = replicate(5000, unif_mean(n)))
+}) |> list_rbind()
+
+ggplot(clt, aes(xbar)) +
+  geom_histogram(bins = 40, fill = "grey70") +
+  facet_wrap(~ n, labeller = label_both, nrow = 1) +
+  labs(x = "Sample mean", y = "Simulations")
+
+# spread: simulated SD vs. the CLT prediction sqrt(1/12) / sqrt(n)
+clt |>
+  group_by(n) |>
+  summarise(sd_sim = sd(xbar)) |>
+  mutate(sd_clt = sqrt(1 / 12) / sqrt(n))
+```
+
+- **Shape:** at `n = 1` the histogram is flat (the uniform itself). At `n = 2` it is triangular. By `n = 5` it already looks bell-shaped, and by `n = 30` it is very close to normal.
+- **Spread:** the histograms narrow around 0.5. The SD falls like $\sigma/\sqrt{n}$, with $\sigma = \sqrt{1/12} \approx 0.289$ for a Uniform(0, 1). So at `n = 30` it is about `r round(sqrt(1/12)/sqrt(30), 3)`.
+
+# Part 2: Who wins the Senate?
+
+Data: Split Ticket 2026 Senate model, published by *The Argument* and retrieved 9/23/2026 ([article](https://www.theargumentmag.com/p/split-ticket-2026-midterms-model)).
+
+Democrats hold 34 seats that are not up this year and need 51 for control. Count an independent win as a Democratic seat.
+
+```{r}
+dem_hold   <- 34
+seats_need <- 51
+n_races    <- nrow(senate)
+```
+
+## Task 8: setup
+
+Add a column `p_dem` with the win probability on a 0 to 1 scale. How many of the 35 races do Democrats need to win? Use `count()` to see how many races fall in each rating.
+
+```{r}
+senate <- senate |> mutate(p_dem = dem_prob / 100)
+
+seats_need - dem_hold
+
+senate |> count(rating)
+```
+
+Democrats need `r seats_need - dem_hold` of the `r n_races` races.
+
+## Task 9: expected seats
+
+What is the expected number of Democratic seats? You don't need to simulate this. Does it tell you the probability Democrats win control? Why not?
+
+```{r}
+exp_seats <- dem_hold + sum(senate$p_dem)
+exp_seats
+```
+
+Seats are $34 + \sum_s X_s$ with $X_s \sim \text{Bern}(p_s)$. By linearity of expectation, $E[\text{seats}] = 34 + \sum_s p_s =$ `r round(exp_seats, 2)`. Linearity holds whether or not the races are independent.
+
+The expectation alone does not give $P(\text{seats} \ge 51)$. That probability depends on the whole distribution of seats, including how spread out it is, and the spread depends on how the races are related. Two models with the same expected seats can give very different probabilities of control. The bonus shows exactly this. The expectation is also just below 51, so control comes down to how much probability mass falls just above versus just below the threshold.
+
+## Task 10: simulate one election
+
+Write a function `sim_election(p)` that takes a vector of win probabilities, flips one coin per race, and returns the total number of Democratic seats (including the 34 not up). Hint: `runif(length(p)) < p`. Run it a few times.
+
+```{r}
+sim_election <- function(p) {
+  wins <- runif(length(p)) < p     # one Bernoulli(p_s) per race
+  dem_hold + sum(wins)
+}
+
+sim_election(senate$p_dem)
+sim_election(senate$p_dem)
+sim_election(senate$p_dem)
+```
+
+## Task 11: simulate many elections
+
+Simulate 100,000 elections two ways: first with a preallocated `for` loop, then with `map_int()`. Check that the mean number of seats matches Task 9.
+
+```{r}
+n_elec <- 100000
+
+seats_loop <- numeric(n_elec)
+for (i in 1:n_elec) {
+  seats_loop[i] <- sim_election(senate$p_dem)
+}
+
+seats <- map_int(1:n_elec, \(i) sim_election(senate$p_dem))
+
+c(loop = mean(seats_loop), map = mean(seats), exact = exp_seats)
+```
+
+Both means are within about 0.01 of the exact `r round(exp_seats, 2)`.
+
+## Task 12: probability of control
+
+Estimate $P(\text{Dem seats} \ge 51)$ and its Monte Carlo standard error. Plot the distribution of seats with `geom_bar()`, filled by who controls the Senate.
+
+```{r}
+p_ctrl_12 <- mean(seats >= seats_need)
+se_12 <- sqrt(p_ctrl_12 * (1 - p_ctrl_12) / n_elec)
+c(p_control = p_ctrl_12, mc_se = se_12)
+
+tibble(seats = seats) |>
+  mutate(control = if_else(seats >= seats_need, "Democrats", "Republicans")) |>
+  ggplot(aes(seats, fill = control)) +
+  geom_bar() +
+  scale_fill_manual(values = c(Democrats = "#1f5aa6", Republicans = "#b2182b")) +
+  labs(x = "Democratic seats", y = "Simulations", fill = "Control",
+       title = "Model 1: independent coin flips")
+```
+
+With independent races, Democrats win control in about `r round(100 * p_ctrl_12, 1)`% of simulations. The Monte Carlo SE is `r round(se_12, 4)`, so the simulation error is tiny compared with the modeling assumptions.
+
+## Task 13: from probabilities to margins
+
+Suppose the actual margin in each race is `margin` plus a $N(0, s^2)$ error, so $P(\text{D wins}) = \Phi(\text{margin}/s)$. Find the $s$ that best fits the published probabilities by regressing `qnorm(p_dem)` on `margin` with no intercept (the slope is $1/s$). Leave out races listed at exactly 0% or 100%. Why?
+
+Plot `p_dem` against `margin` and add the fitted curve with `geom_function()`.
+
+```{r}
+fit_races <- senate |> filter(p_dem > 0, p_dem < 1)
+nrow(fit_races)
+
+fit <- lm(qnorm(p_dem) ~ 0 + margin, data = fit_races)
+slope <- coef(fit)[["margin"]]
+s <- 1 / slope
+c(slope = slope, s = s)
+
+ggplot(senate, aes(margin, p_dem)) +
+  geom_point(size = 2.5) +
+  geom_function(fun = \(m) pnorm(m / s), colour = "#8B0000", linewidth = 1) +
+  labs(x = "Forecast margin (D - R)", y = "P(D wins)",
+       title = paste0("Fitted curve: P = Phi(margin / ", round(s, 2), ")"))
+```
+
+If $P = \Phi(\text{margin}/s)$, then $\Phi^{-1}(P) = \text{margin}/s$: a line through the origin with slope $1/s$. The fit gives $s \approx$ `r round(s, 2)` points.
+
+Races at exactly 0% or 100% must be dropped because `qnorm(0) = -Inf` and `qnorm(1) = Inf`, which would break the regression. The published numbers are also rounded, so "0%" means "below 0.5%". Those races carry no usable information about the curve's shape.
+
+## Task 14: simulate the margins
+
+Write a function that simulates one election by drawing one normal error per race, adding it to `margin`, and counting the races where the result is above 0. Simulate 100,000 elections and estimate $P(\text{control})$. How does it compare to Task 12? Why isn't it exactly the same?
+
+```{r}
+sim_margins <- function(margin, s) {
+  result <- margin + rnorm(length(margin), mean = 0, sd = s)
+  dem_hold + sum(result > 0)
+}
+
+seats_14 <- map_int(1:n_elec, \(i) sim_margins(senate$margin, s))
+
+p_ctrl_14 <- mean(seats_14 >= seats_need)
+c(p_control = p_ctrl_14,
+  mc_se = sqrt(p_ctrl_14 * (1 - p_ctrl_14) / n_elec),
+  task12 = p_ctrl_12)
+```
+
+$P(\text{control})$ is `r round(100 * p_ctrl_14, 1)`%, compared with `r round(100 * p_ctrl_12, 1)`% in Task 12. The two are close because both models treat races as independent. They differ, by more than Monte Carlo error, because the implied probabilities $\Phi(\text{margin}_s/s)$ do not exactly equal the published ones:
+
+- A single $s$ is a best fit across races. Split Ticket's model has race-specific uncertainty, so some races sit above the fitted curve and some below.
+- The "safe" races published as 0% or 100% get small but nonzero upset probabilities under the normal model.
+- The published probabilities are rounded.
+
+## Task 15: independents
+
+Redo Task 12 assuming none of the four independents caucus with Democrats. How much does $P(\text{control})$ change?
+
+```{r}
+senate |> filter(independent) |> select(state, dem_name, margin, p_dem)
+
+# an independent win no longer adds a Democratic seat
+p_no_ind <- if_else(senate$independent, 0, senate$p_dem)
+
+seats_15 <- map_int(1:n_elec, \(i) sim_election(p_no_ind))
+p_ctrl_15 <- mean(seats_15 >= seats_need)
+c(with_independents = p_ctrl_12, without = p_ctrl_15, change = p_ctrl_15 - p_ctrl_12)
+```
+
+The four independents are long shots except Dan Osborn in Nebraska (`r round(100 * senate$p_dem[senate$state == "NE"])`%). Dropping them lowers expected seats by only `r round(sum(senate$p_dem[senate$independent]), 2)`. Yet $P(\text{control})$ falls by about `r round(100 * (p_ctrl_12 - p_ctrl_15), 1)` points, because the seat distribution has a lot of mass right at the 50/51 threshold.
+
+## Bonus: a national polling miss
+
+Polls tend to miss in the same direction everywhere. Split the error into a national piece shared by every race and a state piece:
+
+$$
+\varepsilon_s = \text{national} + \text{state}_s, \qquad s^2 = \sigma_{\text{nat}}^2 + \sigma_{\text{state}}^2
+$$
+
+Set $\sigma_{\text{nat}} = 5$ and pick $\sigma_{\text{state}}$ so the total stays equal to your $s$ from Task 13. Simulate again.
+
+```{r}
+sd_nat <- 5
+sd_state <- sqrt(s^2 - sd_nat^2)
+sd_state
+
+sim_national <- function(margin, sd_nat, sd_state) {
+  national <- rnorm(1, mean = 0, sd = sd_nat)                   # one draw, shared by all races
+  state    <- rnorm(length(margin), mean = 0, sd = sd_state)    # one draw per race
+  dem_hold + sum(margin + national + state > 0)
+}
+
+seats_nat <- map_int(1:n_elec, \(i) sim_national(senate$margin, sd_nat, sd_state))
+```
+
+**1. Does each race's individual win probability change?**
+
+No. In any single race, $\varepsilon_s = \text{national} + \text{state}_s$ is a sum of independent normals, so $\varepsilon_s \sim N(0, 5^2 + \sigma_{\text{state}}^2) = N(0, s^2)$. $P(\text{D wins race } s) = \Phi(\text{margin}_s/s)$ is unchanged. What changes is the correlation between races: they now tend to break the same way together. A quick check for the closest race:
+
+```{r}
+ak <- senate$margin[senate$state == "AK"]
+mean(ak + rnorm(n_elec, 0, sd_nat) + rnorm(n_elec, 0, sd_state) > 0)  # national model
+pnorm(ak / s)                                                          # Task 13 model
+```
+
+**2. Compare with Task 14.**
+
+```{r}
+summarise_seats <- function(x) {
+  tibble(mean = mean(x), sd = sd(x),
+         p_control = mean(x >= 51), p_54_plus = mean(x >= 54), p_47_or_fewer = mean(x <= 47))
+}
+
+bind_rows(
+  summarise_seats(seats_14)  |> mutate(model = "Task 14: independent errors"),
+  summarise_seats(seats_nat) |> mutate(model = "Bonus: national + state errors")
+) |>
+  relocate(model)
+
+tibble(`Task 14` = seats_14, `National miss` = seats_nat) |>
+  pivot_longer(everything(), names_to = "model", values_to = "seats") |>
+  ggplot(aes(seats, fill = seats >= seats_need)) +
+  geom_bar() +
+  facet_wrap(~ model, ncol = 1) +
+  scale_fill_manual(values = c(`TRUE` = "#1f5aa6", `FALSE` = "#b2182b"),
+                    labels = c(`TRUE` = "Democrats", `FALSE` = "Republicans")) +
+  labs(x = "Democratic seats", y = "Simulations", fill = "Control")
+```
+
+The mean barely moves, since each race's probability is unchanged. The SD roughly doubles, and the tails get much fatter: $P(54+)$ and $P(\le 47)$ both jump.
+
+$P(\text{control})$ moves only a few points (`r round(100 * p_ctrl_14, 1)`% to `r round(100 * mean(seats_nat >= seats_need), 1)`%), while the tails grow several-fold. The reason is that the expected seat count, `r round(mean(seats_nat), 1)`, sits right at the threshold. A shared national error spreads outcomes out roughly symmetrically around that center. Mass moves from just above 51 out to "Democrats win big", and from just below 51 out to "Republicans win big". The share on either side of 51 stays about the same. Correlated errors change how *uncertain* the outcome is, not which side is favored.
+
+**3. Compare with Split Ticket's own distribution.**
+
+```{r}
+st <- st_seats |> mutate(w = pct / sum(pct))   # pct sums to slightly under 100
+st_mean <- sum(st$dem_seats * st$w)
+st_sd <- sqrt(sum((st$dem_seats - st_mean)^2 * st$w))
+st_ctrl <- sum(st$w[st$dem_seats >= seats_need])
+
+tibble(model = c("Split Ticket", "Task 14", "Bonus"),
+       mean = c(st_mean, mean(seats_14), mean(seats_nat)),
+       sd = c(st_sd, sd(seats_14), sd(seats_nat)),
+       p_control = c(st_ctrl, p_ctrl_14, mean(seats_nat >= seats_need)))
+```
+
+The national-error model is much closer on every statistic:
+
+- **SD:** Split Ticket's is `r round(st_sd, 2)`, against `r round(sd(seats_nat), 2)` for the national-error model and `r round(sd(seats_14), 2)` for the independent-races model.
+- **$P(\text{control})$:** `r round(100 * st_ctrl, 1)`% for Split Ticket, against `r round(100 * mean(seats_nat >= seats_need), 1)`% with a national miss and `r round(100 * p_ctrl_14, 1)`% with independent races.
+
+Their forecast builds in correlated polling error across states. Treating races as independent badly understates how uncertain the Senate outcome is, and it overstates the favorite's chances.
