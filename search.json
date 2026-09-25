@@ -77,312 +77,487 @@
     "text": "Acknowledgments\nThis course is indebted to the many wonderful and generous scholars in political methodology, econometrics and sociology who have made their materials available to the public. In particular, I thank Adeline Lo, whose previous version of PS812 forms the core of this syllabus and its schedule, as well as Matthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nLastly, thanks to Andrew Heiss and Matt Blackwell for their Quarto website templates, which I have extensively borrowed from in designing this course site."
   },
   {
-    "objectID": "slides/week3/week3_random_variables.html#welcome-back",
-    "href": "slides/week3/week3_random_variables.html#welcome-back",
-    "title": "Week 3: Random Variables and Distributions",
+    "objectID": "slides/week4/week4_joint_distributions.html#welcome-back",
+    "href": "slides/week4/week4_joint_distributions.html#welcome-back",
+    "title": "Week 4: Joint and Conditional Distributions",
     "section": "Welcome back!",
     "text": "Welcome back!\n\n\n\\[\n\\newcommand{\\Var}{\\text{Var}}\n\\]"
   },
   {
-    "objectID": "slides/week3/week3_random_variables.html#week-overview",
-    "href": "slides/week3/week3_random_variables.html#week-overview",
-    "title": "Week 3: Random Variables and Distributions",
+    "objectID": "slides/week4/week4_joint_distributions.html#week-overview",
+    "href": "slides/week4/week4_joint_distributions.html#week-overview",
+    "title": "Week 4: Joint and Conditional Distributions",
     "section": "Week overview",
-    "text": "Week overview\n\nLast week\n\nConditional probability\nIndependence and conditional independence\nBayes’ rule\n\nThis week\n\nRandom variables\nDistributions\nExpectations and variances"
+    "text": "Week overview\n\nLast week\n\nRandom variables\nDistributions: CDFs, PMFs and PDFs\nExpectations and variances\n\nThis week\n\nJoint distributions\nConditional distributions\nConditional expectations and the best linear predictor\nCovariances and correlations"
   },
   {
-    "objectID": "slides/week3/week3_random_variables.html#where-were-going",
-    "href": "slides/week3/week3_random_variables.html#where-were-going",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Where we’re going",
-    "text": "Where we’re going\n\nThis week, we’ll go beyond events and illustrate a way of talking about random processes that map on to the real numbers \\(\\mathbb{R}\\)\n\nThese are what we’ll call random variables\n\nRandom variables are defined by their distributions\n\nWe’ll summarize features of these distributions with quantities like the expectation and the variance\n\nThese will eventually be our empirical estimands\n\nThe share of residents of Wisconsin who turn out in the 2026 midterm election.\nThe share of residents of a given Wisconsin precinct who turn out in the 2026 midterm election given that precinct’s 2024 Harris vote share.\n\nWe will use our observed data to provide estimates of these quantities\n\nAssume our observations came from the distribution of interest…how “close” is our estimate to the truth?\nHow can we talk about this when we don’t know the truth!?"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#random-variables",
-    "href": "slides/week3/week3_random_variables.html#random-variables",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Random variables",
-    "text": "Random variables\n\nThere are clear limitations in using the language of events alone in talking about probabilities\nExample: Suppose we’re trying to measure income using a random survey\n\nLet \\(A_{ik}\\) be the event that the respondent \\(i\\) has an income of exactly \\(k\\) dollars.\nHow would we represent the probability that a randomly selected respondent has an income between $50,000 and $100,000?\n\\[\n\\begin{aligned}\nP\\left(\\bigcup_{k = 50{,}000}^{100{,}000} A_{ik}\\right) &= \\sum_{k = 50{,}000}^{100{,}000} P(A_{ik}) \\\\\n&= P(A_{i,50000}) + P(A_{i,50001}) + \\cdots + P(A_{i,99999}) + P(A_{i,100000})\n\\end{aligned}\n\\]\n\nSuppose we measure in dollars but want to calculate the probability that the respondent has an income between £50,000 and £100,000?\n\nSuppose the exchange rate is itself random?\n\nThere has to be a better way!"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#random-variables-1",
-    "href": "slides/week3/week3_random_variables.html#random-variables-1",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Random variables",
-    "text": "Random variables\n\nA random variable is a function that maps from the sample space \\(\\Omega\\) to the real numbers \\(\\mathbb{R}\\)\n\nReturning to our income example, we can now say that \\(X_i\\) is a random variable denoting respondent \\(i\\)’s income in dollars\nNow we can write the probability of our earlier event as \\(P(50{,}000 \\le X_i \\le 100{,}000)\\)"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#random-variables-2",
-    "href": "slides/week3/week3_random_variables.html#random-variables-2",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Random variables",
-    "text": "Random variables\n\nWe can construct random variables as functions of other random variables!\nLet \\(R\\) be a random variable denoting the USD-GBP (pounds per dollar) exchange rate on a given day.\nLet \\(Y_i = R \\times X_i\\)\nThe probability that the respondent has an income between £50,000 and £100,000 is just \\[P (50{,}000 \\le Y_i \\le 100{,}000) \\]\n\\(Y_i\\) is itself another random variable!"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#random-variables-notation",
-    "href": "slides/week3/week3_random_variables.html#random-variables-notation",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Random variables: Notation",
-    "text": "Random variables: Notation\n\nWe typically refer to random variables using capital roman letters\n\n(e.g. \\(X\\), \\(Y\\), \\(D\\))\nSometimes subscripted when we have repetitions across some margin (\\(i\\) for units or \\(t\\) for time)\n\nWe’ll refer to a realization of a random variable using lower-case roman letters\n\ne.g. \\(P(X = x)\\) refers to the probability that a random variable \\(X\\) takes on a specific value \\(x\\).\n\nWe’ll refer to the support of a random variable with a calligraphic capital letter \\(\\mathcal{X}\\)\n\nThe support of a random variable \\(X\\) is the set of all values where \\(X\\) has non-zero probability (or density for continuous r.v.)"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#distribution-functions",
-    "href": "slides/week3/week3_random_variables.html#distribution-functions",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Distribution functions",
-    "text": "Distribution functions\n\nRandom variables can be defined by their distribution function\n\nTypically denoted with a capital \\(F(\\cdot)\\)\nSometimes subscripted to specify the particular random variable: \\(F_X(\\cdot)\\)\n\nThe cumulative distribution function (CDF) gives the probability that a particular random variable \\(X\\) takes on a value less than or equal to \\(x\\)\n\\[ F_X(x) = P(X \\le x) \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#distribution-functions-1",
-    "href": "slides/week3/week3_random_variables.html#distribution-functions-1",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Distribution functions",
-    "text": "Distribution functions\n\nThe range of a CDF is between \\(0\\) and \\(1\\)\n\nIts output is a probability - probabilities can’t be negative or greater than \\(1\\)\n\nThe CDF is non-decreasing\n\nRemember the conjunction fallacy!\nCan’t make a probability of an event smaller by having it encompass more outcomes!\n\nLimits\n\nAs \\(x \\to \\infty\\), \\(F_X(x) \\to 1\\)\nAs \\(x \\to -\\infty\\), \\(F_X(x) \\to 0\\)"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#distribution-functions-2",
-    "href": "slides/week3/week3_random_variables.html#distribution-functions-2",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Distribution functions",
-    "text": "Distribution functions\n\nThe probability that \\(X\\) lies between two values is just the difference between two evaluations of the CDF.\n\\[P(a &lt; X \\le b) = F_X(b) - F_X(a) \\]\nWhy? Consider that \\(X \\le b\\) is the union of two disjoint events: \\(X \\le a\\) and \\(a &lt; X \\le b\\)\nThe probability of the union of two disjoint events is the sum of their probabilities.\n\\[\n\\begin{aligned}\nF_X(b) - F_X(a) &= P(X \\le b) - P(X \\le a) \\\\\n&= P([X \\le a] \\cup [a &lt; X \\le b]) - P(X \\le a) \\\\\n&= P([X \\le a]) + P([a &lt; X \\le b]) - P(X \\le a) \\\\\n&= P(a &lt; X \\le b)\n\\end{aligned}\n\\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#discrete-random-variables",
-    "href": "slides/week3/week3_random_variables.html#discrete-random-variables",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Discrete random variables",
-    "text": "Discrete random variables\n\nWe typically discuss two types of random variables: discrete and continuous\n\nDiscrete random variables take on a finite or countably infinite number of values.\nAs a result, we can talk about its support as the set where \\(P(X = x) &gt; 0\\)\nIn fact, \\(P(X = x)\\) is a coherent idea!\n\nIn the social sciences, essentially everything is discrete\n\nOur samples are from large but finite populations (e.g. \\(262{,}083{,}034\\) voting age U.S. residents as of 2023).\nOur outcomes are discretized (finite number of response options: support/oppose, 5-point Likert).\nEven something like income is technically discrete\n\nContinuous random variables typically arise as limits and/or approximations"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#probability-mass-functions-pmf",
-    "href": "slides/week3/week3_random_variables.html#probability-mass-functions-pmf",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Probability mass functions (PMF)",
-    "text": "Probability mass functions (PMF)\n\nA discrete random variable has a probability mass function (PMF)\n\nTypically written as lower-case \\(p(\\cdot)\\)\n\nThe PMF gives the probability that a particular random variable \\(X\\) takes on a value equal to \\(x\\)\n\\[p_X(x) = P(X = x) \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#probability-mass-functions-pmf-1",
-    "href": "slides/week3/week3_random_variables.html#probability-mass-functions-pmf-1",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Probability mass functions (PMF)",
-    "text": "Probability mass functions (PMF)\n\nPMFs are non-negative: \\(p_X(x) &gt; 0\\) for \\(x\\) in the support and \\(0\\) otherwise\n\nAgain, PMFs return probabilities\n\nPMFs sum to \\(1\\) over the support of \\(X\\)\n\\[ \\sum_{x \\in \\mathcal{X}} p_X(x) = 1 \\]\nOne can get the CDF by summing the PMF over all values less than or equal to \\(x\\).\n\\[ F_X(x) = \\sum_{t \\in \\mathcal{X} : t \\le x} p_X(t) \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#bernoulli-distribution",
-    "href": "slides/week3/week3_random_variables.html#bernoulli-distribution",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Bernoulli distribution",
-    "text": "Bernoulli distribution\n\nThe simplest discrete probability distribution is the Bernoulli distribution\n\nThis is the distribution of a weighted coin flip with “success” probability \\(p\\)\n\n\n\\[\nP(X = x) = \\begin{cases}\np & \\text{if } x = 1 \\\\\n1 - p & \\text{if } x = 0 \\\\\n0 & \\text{otherwise}\n\\end{cases}\n\\]\n\nWe’ll use the \\(\\sim\\) syntax to denote that a variable has a particular distribution with particular parameters\n\n\\[ X \\sim \\text{Bernoulli}(p) \\]\n\nBernoulli random variables often arise from indicator functions \\(\\mathbf{1}(\\cdot)\\) applied to events \\(A\\)\n\n\\[ \\mathbf{1}(A) \\sim \\text{Bernoulli}(p) \\quad p = P(A) \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#example-list-experiments",
-    "href": "slides/week3/week3_random_variables.html#example-list-experiments",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Example: List experiments",
-    "text": "Example: List experiments\n\nGetting people to be honest on surveys can be difficult for some types of questions.\n\nSocial desirability bias may make some respondents reticent to give truthful answers\n\nThe 2012 Mexico Panel Study (Greene 2016) wanted to study the prevalence of vote buying in the 2012 Mexican presidential election\n\nExchanging a vote for a gift is illegal - survey respondents may not want to admit to a crime!\n\nSolution: A list experiment - Respondents are randomly assigned to a “treated” or a “control” group\nRespondents see a list of items and are asked how many items on that list they did in recent weeks (not which ones)\n\nSee a television newscast that mentions a candidate\nAttend a campaign event\nTalk about politics with other people\nTreated group only: Exchange your vote for a gift, favor, or access to a service\n\nRespondents who admit to vote buying are not identifiable (except in one edge case!)\n\nBut with some assumptions, we can learn the share of respondents who experienced vote buying."
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#example-list-experiments-1",
-    "href": "slides/week3/week3_random_variables.html#example-list-experiments-1",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Example: List experiments",
-    "text": "Example: List experiments\n\nLet \\(C_i\\) be the number of items that respondent \\(i\\) would say they did if assigned to control\n\n\\(C_i\\) is a random variable (randomness from both sampling and treatment assignment)\nIt is a discrete random variable that takes on integers from \\(0\\) to \\(3\\)\n\nLet \\(T_i\\) be the number of items that respondent \\(i\\) would say they did if assigned to treatment\n\nHere the random variable ranges from integers \\(0\\) to \\(4\\).\n\nThe simplest way to define these distributions is to assign a unique parameter to each possible value\n\\[\nP(C_i = c) = \\begin{cases}\np_0 & \\text{if } c = 0 \\\\\np_1 & \\text{if } c = 1 \\\\\np_2 & \\text{if } c = 2 \\\\\np_3 & \\text{if } c = 3 \\\\\n0 & \\text{otherwise}\n\\end{cases}\n\\qquad p_c \\ge 0, \\quad \\sum_{c=0}^{3} p_c = 1\n\\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#example-list-experiments-2",
-    "href": "slides/week3/week3_random_variables.html#example-list-experiments-2",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Example: List experiments",
-    "text": "Example: List experiments"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#example-list-experiments-3",
-    "href": "slides/week3/week3_random_variables.html#example-list-experiments-3",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Example: List experiments",
-    "text": "Example: List experiments\n\nWe want to try to learn about the probability of responding to the sensitive item.\n\nLet \\(Z_i \\sim \\text{Bernoulli}(\\theta)\\) be the random variable denoting whether respondent \\(i\\) engaged in vote buying\n\nNow we’ll make some assumptions about how \\(Z_i\\) relates to the other two variables\n\\[ \\underbrace{T_i}_{\\text{treated count}} = \\underbrace{C_i}_{\\text{control count}} + \\underbrace{Z_i}_{\\text{sensitive item}} \\]\nWe’ve defined the data generating process for the list experiment!\n\nWhat’s the key behavioral assumption hidden here?\nRespondents’ reaction to the baseline items doesn’t change if they’re exposed to the sensitive item."
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#binomial-distribution",
-    "href": "slides/week3/week3_random_variables.html#binomial-distribution",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Binomial distribution",
-    "text": "Binomial distribution\n\nWe saw how the most flexible way to represent any discrete random variable defined on a finite support is to just assign a unique parameter to each unique value.\n\nBut this can get unwieldy for a lot of statistical tasks - can we be more parsimonious?\nWhat if we assumed that respondents had a common probability \\(p\\) of responding yes to each component of the list and that items were independent\n\nThen we would get the Binomial distribution: the distribution of the sum of independent and identical weighted coin flips\n\nTwo parameters: \\(N\\): Number of trials, \\(p\\): Success probability\n\n\\[\nP(X = x) = \\begin{cases}\n\\binom{N}{x} p^x (1 - p)^{N - x} & \\text{if } x \\in \\{0, 1, \\dots, N\\} \\\\\n0 & \\text{otherwise}\n\\end{cases}\n\\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#fitting-a-binomial",
-    "href": "slides/week3/week3_random_variables.html#fitting-a-binomial",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Fitting a Binomial",
-    "text": "Fitting a Binomial\n\n\n\n\n2012 Mexico Panel Study, Wave 2 (Greene 2016)"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#expected-value",
-    "href": "slides/week3/week3_random_variables.html#expected-value",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Expected value",
-    "text": "Expected value\n\nOne very important property of a random variable is its expectation \\(\\mathbb{E}[X]\\)\n\nCan think of this as a summary of that random variable’s “long-run” behavior.\n\nFor a discrete random variable, the expectation is a weighted average of that variable’s possible outcomes with the weights given by the probability of each outcome\n\\[ \\mathbb{E}[X] =  \\sum_{x \\in \\mathcal{X}} x \\cdot P(X = x) \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#expectations-of-functions",
-    "href": "slides/week3/week3_random_variables.html#expectations-of-functions",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Expectations of functions",
-    "text": "Expectations of functions\n\nSuppose I want to know \\(\\mathbb{E}[g(X)]\\) where \\(g()\\) is some function.\n\n\\(\\mathbb{E}[g(X)] \\neq g(\\mathbb{E}[X])\\) except in a few cases (linear functions)\n\nAn interesting property of the expected value is what is sometimes called the Law of the Unconscious Statistician (LOTUS)\nIf I just looked at the definition of expectation, I’d think:\n\n“What if I just plugged in \\(g(x)\\) instead of \\(x\\) and took the average over the same weights?”\n\nIt turns out that works!\n\\[\\mathbb{E}[g(X)] = \\sum_{x \\in \\mathcal{X}} g(x) \\cdot P(X = x) \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#linearity-of-expectations",
-    "href": "slides/week3/week3_random_variables.html#linearity-of-expectations",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Linearity of expectations",
-    "text": "Linearity of expectations\n\nAnother essential property of expectations is linearity\n\nThe expectation of the sum is the sum of the expectations\n\nLet \\(X\\) and \\(Y\\) be two random variables\n\\[\\mathbb{E}[X + Y] =  \\mathbb{E}[X] + \\mathbb{E}[Y] \\]\nLet \\(a\\) and \\(b\\) be constants: we can pull the constants out of the expectation\n\\[\\mathbb{E}[aX + bY] =  a\\mathbb{E}[X] + b\\mathbb{E}[Y] \\]\nYou’ll see this most often with sums over random variables indexed along some dimension\n\\[\\mathbb{E}\\bigg[\\sum_{i=1}^n a X_i\\bigg] = \\sum_{i=1}^n\\mathbb{E}[a X_i] = \\sum_{i=1}^n a\\mathbb{E}[X_i] = a\\sum_{i=1}^n \\mathbb{E}[X_i]\\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli",
-    "href": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Expectation of the Bernoulli",
-    "text": "Expectation of the Bernoulli\n\nLet \\(X \\sim \\text{Bernoulli}(p)\\)\nThere are two possible values, let’s calculate the expectation!\n\\[\n\\begin{aligned}\n\\mathbb{E}[X] &= \\sum_{x \\in \\{0, 1\\}} x \\cdot P(X = x) \\\\\n&= 0 \\cdot P(X = 0) + 1 \\cdot P(X = 1) \\\\\n&= 0 \\cdot (1 - p) + 1 \\cdot p \\\\\n&= p\n\\end{aligned}\n\\]\nThe expected value of a Bernoulli/indicator random variable is just the probability that it takes on a value of \\(1\\)\n\nThis is the fundamental bridge between expectations and probability (Blitzstein and Hwang 2019)"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-binomial",
-    "href": "slides/week3/week3_random_variables.html#expectation-of-the-binomial",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Expectation of the Binomial",
-    "text": "Expectation of the Binomial\n\nNow let \\(X \\sim \\text{Binomial}(N, p)\\)\nWe could write this out and use properties of sums of factorials\n\\[ \\mathbb{E}[X] = \\sum_{x=0}^{N} x \\cdot \\binom{N}{x} p^x (1 - p)^{N - x} \\]\nOr we could use linearity of expectations - much easier!"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-binomial-1",
-    "href": "slides/week3/week3_random_variables.html#expectation-of-the-binomial-1",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Expectation of the Binomial",
-    "text": "Expectation of the Binomial\n\nRecall that the Binomial is the sum of \\(N\\) independent and identically distributed Bernoulli random variables with success probability \\(p\\)\n\\[X = \\sum_{i=1}^N X_i \\quad\\quad\\quad X_i \\sim \\text{Bernoulli}(p) \\]\nApplying linearity of expectations\n\\[\\mathbb{E}[X] = \\mathbb{E}\\bigg[\\sum_{i=1}^N X_i\\bigg] = \\sum_{i=1}^N \\mathbb{E}[X_i]\\]\nPlugging in our expectation of the Bernoulli and summing\n\\[ \\mathbb{E}[X] = Np \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#example-list-experiment",
-    "href": "slides/week3/week3_random_variables.html#example-list-experiment",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Example: List experiment",
-    "text": "Example: List experiment\n\nLet’s return to our list experiment example. Remember, we have\n\\[ \\underbrace{T_i}_{\\text{treated count}} = \\underbrace{C_i}_{\\text{control count}} + \\underbrace{Z_i}_{\\text{sensitive item}} \\]\nWe want to know \\(P(Z_i = 1) = \\theta\\) - the share of respondents who participated in vote buying\nTaking expectations of both sides and using linearity\n\\[ \\mathbb{E}[T_i] = \\mathbb{E}[C_i] + \\theta \\]\nSolving for \\(\\theta\\)\n\\[\\theta  = \\mathbb{E}[T_i] - \\mathbb{E}[C_i] \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#preview-estimation",
-    "href": "slides/week3/week3_random_variables.html#preview-estimation",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Preview: Estimation",
-    "text": "Preview: Estimation\n\nIn our sample, we assume that we observe realizations of these two random variables\n\nIn the treated group we have \\(N_{T}\\) draws of \\(T_i\\)\nIn the control group we have \\(N_{C}\\) draws of \\(C_i\\)\n\nWe’ll plug-in an estimate of each expectation using its sample analogue: the average\n\\[\n\\begin{aligned}\n\\hat{\\theta} &= \\widehat{\\mathbb{E}}[T_i] - \\widehat{\\mathbb{E}}[C_i] \\\\\n&= \\frac{1}{N_T} \\sum_{i=1}^{N_T} T_i - \\frac{1}{N_C} \\sum_{i=1}^{N_C} C_i\n\\end{aligned}\n\\]\nLater, we’ll show that under assumptions about how we got our sample (i.i.d. random smapling)…\n\n…these sample averages converge to the population expected values\n“law of large numbers”\n\nNote that we don’t actually need the assumption that \\(C_i \\sim \\text{Binomial}(3, p)\\) to estimate \\(\\theta\\)\n\nJust that exposure to the sensitive item doesn’t alter responses to the baseline list"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#preview-estimation-1",
-    "href": "slides/week3/week3_random_variables.html#preview-estimation-1",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Preview: Estimation",
-    "text": "Preview: Estimation\n\nlibrary(tidyverse)\nlibrary(knitr)\n\n# Sample means of the item count in each group\nmexico |&gt;\n  group_by(Group = if_else(treat == 1, \"Treated\", \"Control\")) |&gt;\n  summarize(`Mean count` = mean(y), N = n()) |&gt;\n  kable(digits = 3)\n\n\n\n\nGroup\nMean count\nN\n\n\n\n\nControl\n1.555\n559\n\n\nTreated\n1.749\n561\n\n\n\n\n# List experiment estimate of theta vs. share admitting vote buying when asked directly\nmexico |&gt;\n  summarize(`List experiment` = mean(y[treat == 1]) - mean(y[treat == 0]),\n            `Direct question` = mean(direct)) |&gt;\n  kable(digits = 3)\n\n\n\n\nList experiment\nDirect question\n\n\n\n\n0.194\n0.055"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#variance",
-    "href": "slides/week3/week3_random_variables.html#variance",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Variance",
-    "text": "Variance\n\nBeyond the expectation, there are other summaries that capture other relevant features.\n\nWe may want to know how spread out realizations of the random variable are.\n\nThe variance of a random variable \\(\\Var(X)\\) is the expected squared deviation from \\(\\mathbb{E}[X]\\)\n\\[\\Var(X) = \\mathbb{E}\\bigg[(X - \\mathbb{E}[X])^2\\bigg] \\]\nExpanding the square and applying linearity of expectation\n\\[\\Var(X) = \\mathbb{E}[X^2] - \\mathbb{E}[2X\\mathbb{E}[X]] + \\mathbb{E}[\\mathbb{E}[X]^2]\\]\nPulling out the constant \\(2\\mathbb{E}[X]\\) and \\(\\mathbb{E}[X]^2\\)\n\\[\n\\begin{aligned}\n\\Var(X) &= \\mathbb{E}[X^2] - 2\\mathbb{E}[X]\\mathbb{E}[X] + \\mathbb{E}[X]^2 \\\\\n&= \\mathbb{E}[X^2] - \\mathbb{E}[X]^2\n\\end{aligned}\n\\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#properties-of-variance",
-    "href": "slides/week3/week3_random_variables.html#properties-of-variance",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Properties of variance",
-    "text": "Properties of variance\n\nThe variance is non-negative\n\nBy Jensen’s inequality for a convex function: \\(\\mathbb{E}[X^2] \\ge \\mathbb{E}[X]^2\\)\n\nFor a random variable \\(X\\) and a constant \\(a\\)\n\\[ \\Var(aX) = a^2\\Var(X) \\]\nBut be careful, the variance of the sum of two random variables \\(X\\) and \\(Y\\) is not the sum of the variances except in a special case we’ll talk about next week (independence)\n\\[ \\Var(X + Y) \\neq \\Var(X) + \\Var(Y) \\]\nAlso, the variance of the difference is not the difference in the variances…even for independent random variables, it’s still the sum of the variances (\\(-1\\) gets squared!)\n\nWe’ll talk about this more next week when we define covariance"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#variance-of-a-bernoulli",
-    "href": "slides/week3/week3_random_variables.html#variance-of-a-bernoulli",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Variance of a Bernoulli",
-    "text": "Variance of a Bernoulli\n\nLet’s derive the variance of the Bernoulli. Let \\(X \\sim \\text{Bernoulli}(p)\\)\n\\[\n\\begin{aligned}\n\\Var(X) &= \\mathbb{E}[X^2] - \\mathbb{E}[X]^2 \\\\\n&= \\mathbb{E}[X] - \\mathbb{E}[X]^2 \\\\\n&= p - p^2 \\\\\n&= p(1 - p)\n\\end{aligned}\n\\]\nThe second line uses the fact that \\(X\\) only takes on the values \\(0\\) and \\(1\\). \\(0^2 = 0\\) and \\(1^2 = 1\\).\nIntuition: The uncertainty around a coin-flip is maximized when it’s fair!"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#continuous-random-variables",
-    "href": "slides/week3/week3_random_variables.html#continuous-random-variables",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Continuous random variables",
-    "text": "Continuous random variables\n\nRecall the difference between the CDF of a discrete versus a continuous random variable.\n\n\n\nThe discrete variable’s CDF has discontinuities, the continuous variable’s CDF is continuous (and differentiable almost everywhere)"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
-    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Probability density functions (PDFs)",
-    "text": "Probability density functions (PDFs)\n\nA continuous random variable is a random variable whose CDF is continuous everywhere and differentiable everywhere except possibly at a finite number of points (Blitzstein and Hwang 2019)\n\nThe support of a continuous random variable is typically the set of real numbers \\(\\mathbb{R}\\) or an interval (or union of intervals) of the reals.\n\nThe challenge with talking about a distribution defined on the uncountably infinite reals is that the probability of realizing any particular value \\(x\\) is always zero\nInstead of a PMF, continuous random variables have a probability density function (PDF) - defined as the derivative of the CDF\n\nTypical notation is a lowercase \\(f(\\cdot)\\)\n\n\\[ f_X(x) = \\frac{d}{dx} F_X(x) \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-1",
-    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-1",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Probability density functions (PDFs)",
-    "text": "Probability density functions (PDFs)\n\nIt’s not a probability, but it integrates to a probability.\n\nFrom the fundamental theorem of calculus\n\n\\[ F_X(x) = \\int_{-\\infty}^{x} f_X(t) dt \\]\nThis is similar to how we summed the PMF to get the CDF\nPDFs integrate to \\(1\\) (just like how PMFs sum to \\(1\\))\n\\[ \\int_{-\\infty}^{\\infty} f_X(x)dx = 1 \\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-2",
-    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-2",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Probability density functions (PDFs)",
-    "text": "Probability density functions (PDFs)\n\nAnd we can integrate the PDF over any interval to get the probability of \\(X\\) falling in that interval.\n\\[P(a &lt; X \\le b) =  \\int_{a}^{b} f_X(x)dx \\]\nIntuitively, this follows from our earlier definition using CDFs\n\\[\n\\begin{aligned}\nP(a &lt; X \\le b) &= F_X(b) - F_X(a) \\\\\n&= \\int_{-\\infty}^{b} f_X(x)dx - \\int_{-\\infty}^{a} f_X(x)dx \\\\\n&= \\int_{a}^{b} f_X(x)dx\n\\end{aligned}\n\\]"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#expectations-of-continuous-random-variables",
-    "href": "slides/week3/week3_random_variables.html#expectations-of-continuous-random-variables",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Expectations of continuous random variables",
-    "text": "Expectations of continuous random variables\n\nWe defined the expected value for a discrete random variable as a sum\n\nWe’ll do the same for a continuous random variable using an integral\n\nFor continuous \\(X\\)\n\\[\\mathbb{E}[X] = \\int_{\\mathcal{X}} x f(x) dx \\]\nMore generally, the distinction between discrete and continuous vanishes when we define integrals with respect to the distribution (Lebesgue integration)\n\\[\\mathbb{E}[X] = \\int_{\\mathcal{X}} x \\, dF_X(x) \\]\n\nRather than slicing up the \\(x\\)-axis into small intervals, we slice up the probability and ask how much of it sits at each value of \\(X\\)\n\nBut we won’t spend time on that in this class…your Riemann integral intuition (sum of the areas of tinier and tinier rectangles) is enough!"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#normal-distribution",
-    "href": "slides/week3/week3_random_variables.html#normal-distribution",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Normal distribution",
-    "text": "Normal distribution\n\nThe normal (or Gaussian) distribution is the most common continuous distribution you’ll encounter\n\nIt’s the approximate distribution of sums and means of independent random variables.\n\\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\). Support over all of \\(\\mathbb{R}\\).\n\nThe PDF is\n\\[ f_X(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} \\exp\\left\\{-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right\\} \\]\nTwo parameters, \\(\\mu\\) and \\(\\sigma^2\\)\n\nThese parameters happen to be the expectation and variance!\n\\(\\mu = \\mathbb{E}[X]\\), \\(\\sigma^2 = \\Var(X)\\)"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#normal-distribution-1",
-    "href": "slides/week3/week3_random_variables.html#normal-distribution-1",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Normal distribution",
-    "text": "Normal distribution"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#normal-distribution-2",
-    "href": "slides/week3/week3_random_variables.html#normal-distribution-2",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Normal distribution",
-    "text": "Normal distribution"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#the-standard-normal",
-    "href": "slides/week3/week3_random_variables.html#the-standard-normal",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "The standard normal",
-    "text": "The standard normal\n\n\\(\\mathcal{N}(0, 1)\\) is referred to as the standard normal\n\nPDF and CDF typically written as: \\(\\phi(z)\\) and \\(\\Phi(z)\\)\n\\[ \\phi(z) = \\frac{1}{\\sqrt{2\\pi}} e^{-z^2/2} \\]\n\nAny normal can be standardized. If \\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\), then\n\\[ Z = \\frac{X - \\mu}{\\sigma} \\sim \\mathcal{N}(0, 1) \\]\n\\(\\Phi\\) has no closed form\n\nThis is why old stats books had tables of pre-computed quantiles of the normal distribution!\nAnd why we’ll rely on our computer + various approximations to evaluate the CDF (pnorm())"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#areas-under-the-normal-curve",
-    "href": "slides/week3/week3_random_variables.html#areas-under-the-normal-curve",
-    "title": "Week 3: Random Variables and Distributions",
-    "section": "Areas under the normal curve",
-    "text": "Areas under the normal curve"
-  },
-  {
-    "objectID": "slides/week3/week3_random_variables.html#next-week",
-    "href": "slides/week3/week3_random_variables.html#next-week",
-    "title": "Week 3: Random Variables and Distributions",
+    "objectID": "slides/week4/week4_joint_distributions.html#next-week",
+    "href": "slides/week4/week4_joint_distributions.html#next-week",
+    "title": "Week 4: Joint and Conditional Distributions",
     "section": "Next week",
-    "text": "Next week\n\nJoint distributions\n\nDefining the distribution of \\(X\\) and \\(Y\\) (and \\(Z\\), and…) together!\n\nConditional distributions\n\nSlicing the joint distribution at a particular point\n\nConditional expectations and the best linear predictor\n\nLaw of total expectation\n\nCovariances and correlations"
+    "text": "Next week\n\nEstimands as features of distributions\n\nDefining estimands as statistical functionals\nConnecting theory to empirical targets"
   },
   {
-    "objectID": "slides/week3/week3_random_variables.html#references",
-    "href": "slides/week3/week3_random_variables.html#references",
-    "title": "Week 3: Random Variables and Distributions",
+    "objectID": "slides/week4/week4_joint_distributions.html#references",
+    "href": "slides/week4/week4_joint_distributions.html#references",
+    "title": "Week 4: Joint and Conditional Distributions",
     "section": "References",
-    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nGreene, Kenneth. 2016. Mexico Panel Study, 2012. Inter-university Consortium for Political; Social Research (ICPSR). https://doi.org/10.3886/ICPSR35024.v1."
+    "text": "References"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#welcome",
+    "href": "slides/week1/week1_intro_and_review.html#welcome",
+    "title": "Week 1: Intro to Probability",
+    "section": "Welcome!",
+    "text": "Welcome!"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#week-overview",
+    "href": "slides/week1/week1_intro_and_review.html#week-overview",
+    "title": "Week 1: Intro to Probability",
+    "section": "Week overview",
+    "text": "Week overview\n\nThis week\n\nIntroductions + course logistics\nIntro to probability\n\nNext week\n\nConditional probability\nIndependence\nBayes’ rule\n\nLong-run\n\nprobability \\(\\to\\) inference \\(\\to\\) regression"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-overview",
+    "href": "slides/week1/week1_intro_and_review.html#course-overview",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course Overview",
+    "text": "Course Overview\n\nInstructor: Anton Strezhnev\nTA: John Hicks\nMethods Mentor: Nastya Andreeva\nLogistics:\n\nLectures T/W - 3:30pm-4:45pm, Ogg Room (North Hall 422)\nSection F - 9:30am-10:20am, Ogg Room (North Hall 422)\n5 Problem Sets (~ 2 weeks)\nIn-class midterms (October 7, November 18)\nReplication project poster (December 4th)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-overview-1",
+    "href": "slides/week1/week1_intro_and_review.html#course-overview-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course Overview",
+    "text": "Course Overview\n\nMy office hours: Tuesdays 9am-11am (North Hall 322D)\nJohn’s office hours: Thursdays 9am-11am (North Hall 201D)\nNastya’s office hours: Fridays 10:30am-12:30pm (North Hall 315)\nCourse Website: https://www.antonstrezhnev.com/ps812\nAnnouncements will be posted on Slack - you should have received an invite."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-objectives",
+    "href": "slides/week1/week1_intro_and_review.html#course-objectives",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course Objectives",
+    "text": "Course Objectives\n\nWhat is this course about?\n\nProbability - How do we talk about uncertainty in a structured manner?\nInference - Given what we observe, how do we learn about what we don’t?\nRegression - Can we characterize the average of one quantity given information about another?\n\nGoals for the course\n\nCritically read, interpret and evaluate quantitative social science articles\nConduct, interpret and communicate results from a regression analysis\nWrite clean, reusable and reliable analysis code in R\nSee how research is conducted by working with real replication data."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#statistical-computing",
+    "href": "slides/week1/week1_intro_and_review.html#statistical-computing",
+    "title": "Week 1: Intro to Probability",
+    "section": "Statistical computing",
+    "text": "Statistical computing\n\nThis course will teach you how to work in the  programming language.\n\nA high-level language designed for statistical computing\n\nWe’ll focus on the concepts of computing\n\n(e.g. functions, data types, control structures)\nData cleaning/processing via tidyverse\nSyntax is important…but LLMs are making memorization less necessary.\n\nScientific publishing in Quarto\nMore broadly, I want you to learn how your computers work for research\n\nKieran Healy’s Modern Plain Text Computing (Healy 2025)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nLectures (Tuesdays/Wednesdays)\n\nOne set of slides for each of the two lectures in each week\nYour primary point of instruction - goal is to synthesize the core material + give you the tools to learn more.\nI want lectures to be interactive - you should ask questions and interrupt!\n\nSection (Fridays)\n\nMeets once a week - this is where we do the computing.\nStarts with questions and review, then short guided exercises in R.\nBring your laptop and bring your problem set questions!"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-1",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nReadings\n\nCore textbook: Foundations of Agnostic Statistics (Aronow and Miller 2019)\nSupplemental:\n\nA User’s Guide to Statistical Inference and Regression (Blackwell 2025)\nIntroduction to Probability (Blitzstein and Hwang 2019)\n\nVarious papers from political science and adjacent disciplines are assigned throughout.\nEverything is available digitally either directly or through the UW-Madison online library resources\nDo the readings prior to each week, but definitely be sure to do them before the Wednesday."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-2",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow-2",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nProblem sets (20% of your grade)\n\nFive problem sets, each covering roughly a two-week block of material.\nMain day-to-day component of the class – meant to get you working with your colleagues and thinking hard about the material.\nCollaboration is strongly encouraged – you should ask and answer questions on our class Slack Discussion board\nSubmit on the Gradescope assignment platform\nGrading is on a plus/check/minus scale.\n\nConversion to grade point is somewhat holistic.\nMajority plusses is an A, Majority checks is an AB, Majority minus is a B\n\nSolutions will be posted to Canvas after the due-date."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-3",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow-3",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nTwo in-class midterms (20% of your grade each)\n\nOctober 7 – the first five weeks of probability theory.\nNovember 18 – statistical inference and linear regression.\nClosed-book, pen-and-paper - similar format to comprehensive exams\n\nReplication project (30% of your grade)\n\nWork in groups of 2-3 to replicate and extend a published paper.\nPresented as a poster at the MEAD grad poster session, December 4th.\nAn ungraded check-in memo is due October 21\n\nParticipation (10% of your grade)\n\nIt is important that you actively engage with lecture, section, and the teaching staff – ask and answer questions.\nParticipating on Slack counts as well, as does attending MEAD talks."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-4",
+    "href": "slides/week1/week1_intro_and_review.html#course-workflow-4",
+    "title": "Week 1: Intro to Probability",
+    "section": "Course workflow",
+    "text": "Course workflow\n\nModels, Experiments and Data workshop\n\nCheck out the Fall 2026 schedule here: https://sites.google.com/view/meadwisc/home\n\nGet added to the Slack workspace:\n\nhttps://join.slack.com/t/modelsanddata/shared_invite/zt-3cfv6l4lv-4XVF2V_toX_B0qQce55vCg"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#class-requirements",
+    "href": "slides/week1/week1_intro_and_review.html#class-requirements",
+    "title": "Week 1: Intro to Probability",
+    "section": "Class Requirements",
+    "text": "Class Requirements\n\nOverall: An interest in learning and willingness to ask questions.\nNo formal pre-requisites\n\nMath camp should get you up to speed on topics/refresh your memory of HS math.\nWe’ll spend time on the really relevant stuff: probability/inference\n\nMath is not about intrinsic aptitude, it’s about effort\n\n…in mathematics you don’t understand things. You just get used to them.\n— John Von Neumann\n\nWe don’t do rigor for rigor’s sake\n\nBut rigor is important - we will tell you why we need to be clear and precise about things!\n\nYou’re developing your ability to reason and not just memorize\nIf you’re unsure or confused, always ask - we will match the effort you put in\nWe all come from different backgrounds. Please have patience with yourself and with others"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#llm-policy",
+    "href": "slides/week1/week1_intro_and_review.html#llm-policy",
+    "title": "Week 1: Intro to Probability",
+    "section": "LLM Policy",
+    "text": "LLM Policy\n\nSee the syllabus for the long version.\nIn short…\n\nYou should have LLMs do things for you\nYou should not have LLMs think for you\nYou should definitely not have LLMs speak for you\n\nSometimes it’s valuable to not have the LLM do something so that you can learn to think.\n\nTry to minimize use on the problem sets.\nThe exams are ultimately the check on this…\n…as is the poster session."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#acknowledgements",
+    "href": "slides/week1/week1_intro_and_review.html#acknowledgements",
+    "title": "Week 1: Intro to Probability",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\n\nFirst and foremost, this course is indebted to Adeline Lo who taught it for the last several years and has provided a wealth of materials.\nBut it’s also an iteration in the broader project of methods education in political methodology and is indebted to many of those who have taught versions of this course in the past and at other institutions\n\nMatthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nAnd special thanks to Andrew Heiss for the modern website/Quarto approach to teaching materials."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#a-brief-overview",
+    "href": "slides/week1/week1_intro_and_review.html#a-brief-overview",
+    "title": "Week 1: Intro to Probability",
+    "section": "A brief overview",
+    "text": "A brief overview\n\nWeeks 1-2: Probability, conditional probability and independence\nWeeks 3-5: Random variables, distributions, expectation, variance and covariance\n\nFirst midterm: Wednesday, October 7\n\nWeeks 6-7: Estimation - bias, variance, consistency and the central limit theorem\nWeek 8: Confidence intervals and hypothesis testing\nWeeks 9-11: Linear regression - estimation, inference and interpretation\n\nSecond midterm: Wednesday, November 18\n\nWeek 12: Regression wrap-up - polynomials, overfitting and penalized regression\nWeek 13: Weighting estimators - missing data, IPW and survey weights\nWeek 14: A preview of causal inference (and of PS 813)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#statistics-and-political-science",
+    "href": "slides/week1/week1_intro_and_review.html#statistics-and-political-science",
+    "title": "Week 1: Intro to Probability",
+    "section": "Statistics and Political Science",
+    "text": "Statistics and Political Science\n\nStatistics is an extremely recent field - hypothesis testing formalized in early 20th century\n\nProbability a bit older - 17th/18th century.\n\nEarly applied statistics mostly in medicine/biological sciences - biostatistics\nIn the social sciences, econometrics becomes a distinct discipline around the 1930s\nPolitical methodology starts to define itself around 1984 (first PolMeth meeting)\nWhat is political methodology?\n\nA messy blend of all of these + computer science!"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#what-is-statistics",
+    "href": "slides/week1/week1_intro_and_review.html#what-is-statistics",
+    "title": "Week 1: Intro to Probability",
+    "section": "What is Statistics?",
+    "text": "What is Statistics?\n\nHow do we take something that we know and use it to learn about what we do not know?\n\nHow do we quantify our uncertainty around our predictions?\n\nOur main tools are assumptions about the data-generating process\n\nIf we assume that the thing we know came from some known process connected to the thing we don’t know…\n… then we can draw inferences about what we don’t know!"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#agnostic-statistics",
+    "href": "slides/week1/week1_intro_and_review.html#agnostic-statistics",
+    "title": "Week 1: Intro to Probability",
+    "section": "Agnostic Statistics",
+    "text": "Agnostic Statistics\n\nTraditional education in statistics often starts from very strong modeling assumptions\n\n(e.g. outcomes are known to be normally distributed)\n\nThis may work for some fields, but not the social sciences\n\nOur models are wrong - they’re analytical tools\n\nIf we make assumptions, we want them rooted in substantive knowledge.\n\n(e.g. randomization of a treatment)\n\nOtherwise, we want to be as agnostic as possible."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#probability-and-inference",
+    "href": "slides/week1/week1_intro_and_review.html#probability-and-inference",
+    "title": "Week 1: Intro to Probability",
+    "section": "Probability and Inference",
+    "text": "Probability and Inference\n\n\nFigure from Blackwell (2025), Ch. 2"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#what-is-probability",
+    "href": "slides/week1/week1_intro_and_review.html#what-is-probability",
+    "title": "Week 1: Intro to Probability",
+    "section": "What is probability?",
+    "text": "What is probability?\n\nProbability quantifies the likelihood of an event from a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events\nDefine the sample space \\(\\Omega\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nModeled after Blitzstein and Hwang (2019), Figure 1.1"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#events",
+    "href": "slides/week1/week1_intro_and_review.html#events",
+    "title": "Week 1: Intro to Probability",
+    "section": "Events",
+    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nWe’ll denote the event space – the set of all events that can be assigned a probability – as \\(\\mathcal{S}\\) (this is called the “\\(\\sigma\\)-algebra”)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#set-review",
+    "href": "slides/week1/week1_intro_and_review.html#set-review",
+    "title": "Week 1: Intro to Probability",
+    "section": "Set review",
+    "text": "Set review\n\nThe empty set \\(\\emptyset\\) is the set that contains no elements\nThe complement of a set \\(A\\), denoted \\(A^{c}\\), is the set of all elements not in \\(A\\)\n\nImplicitly complements are defined w.r.t. some “universal” set - here the sample space \\(\\Omega\\).\nWhat’s \\(\\Omega^c\\)?\n\nPractice: In the figure below, is \\(A^{c} = B\\)?"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#set-review-1",
+    "href": "slides/week1/week1_intro_and_review.html#set-review-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Set review",
+    "text": "Set review\n\nThe union of two events \\(A \\cup B\\) contains all elements in either \\(A\\) or \\(B\\)\n\nWe’ll sometimes use a big \\(\\displaystyle\\bigcup_{i=1}^N\\) to denote a union over many events\n\nThe intersection of two events \\(A \\cap B\\) contains all elements both in \\(A\\) and \\(B\\)\n\nSame idea for notation: \\(\\displaystyle\\bigcap_{i=1}^N\\) denotes an intersection over many events\n\nTwo sets \\(A\\) and \\(B\\) are disjoint or mutually exclusive if \\(A \\cap B = \\emptyset\\)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#set-review-2",
+    "href": "slides/week1/week1_intro_and_review.html#set-review-2",
+    "title": "Week 1: Intro to Probability",
+    "section": "Set review",
+    "text": "Set review\n\nPractice: In the figure below, are \\(A\\) and \\(B\\) disjoint?"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#set-review-3",
+    "href": "slides/week1/week1_intro_and_review.html#set-review-3",
+    "title": "Week 1: Intro to Probability",
+    "section": "Set review",
+    "text": "Set review\n\nDe Morgan’s Laws:\n\n\\((A \\cup B)^{c} = A^{c} \\cap B^{c}\\) – not in either means in neither\n\\((A \\cap B)^{c} = A^{c} \\cup B^{c}\\) – not in both means missing from at least one\nExtension to many events: \\(\\left(\\bigcup_i A_i\\right)^{c} = \\bigcap_i A_i^{c}\\)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#probability-axioms",
+    "href": "slides/week1/week1_intro_and_review.html#probability-axioms",
+    "title": "Week 1: Intro to Probability",
+    "section": "Probability axioms",
+    "text": "Probability axioms\n\nProbability is a function that maps from the event space \\(\\mathcal{S}\\) to the real numbers.\n\n\\(P \\colon \\mathcal{S} \\to \\mathbb{R}\\)\n\nThe probability function \\(P\\) obeys three axioms (Kolmogorov’s Axioms)\n\nNon-negativity: \\(P(A) \\geq 0\\) for every event \\(A \\in \\mathcal{S}\\)\nNormalization: \\(P(\\Omega) = 1\\)\nCountable additivity: for pairwise disjoint events \\(A_1, A_2, A_3, \\dotsc\\)\n\\[P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)\\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#probability-isnt-always-intuitive",
+    "href": "slides/week1/week1_intro_and_review.html#probability-isnt-always-intuitive",
+    "title": "Week 1: Intro to Probability",
+    "section": "Probability isn’t always intuitive",
+    "text": "Probability isn’t always intuitive\n\nTversky and Kahneman (1983) gave this question to a sample of undergraduate students:\n\n\n\nA health survey was conducted in a representative sample of adult males in British Columbia of all ages and occupations.\nMr. F. was included in the sample. He was selected by chance from the list of participants.\nWhich of the following statements is more probable? (check one)\n1. Mr. F. has had one or more heart attacks. 2. Mr. F. has had one or more heart attacks and he is over 55 years old.\n\n\n\n\n58% of respondents incorrectly said the second option\n\nWhy?"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#monotonicity",
+    "href": "slides/week1/week1_intro_and_review.html#monotonicity",
+    "title": "Week 1: Intro to Probability",
+    "section": "Monotonicity",
+    "text": "Monotonicity\n\nIf \\(A \\subseteq B\\), then \\(P(A) \\leq P(B)\\)\n\nA bigger event can’t be less likely\n\nProof\n\nSplit \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[B = A \\cup (B \\cap A^{c})\\]\nAdditivity turns the union into a sum, and \\(P(B \\cap A^{c}) \\geq 0\\) by non-negativity\n\\[P(B) = P(A) + \\underbrace{P(B \\cap A^{c})}_{\\geq 0} \\geq P(A)\\]\n\nEvery event is a subset of the sample space: \\(A \\subseteq \\Omega\\), so \\(P(A) \\leq P(\\Omega) = 1\\)\n\nWith non-negativity, this pins probabilities to the interval \\([0, 1]\\)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#the-complement-rule",
+    "href": "slides/week1/week1_intro_and_review.html#the-complement-rule",
+    "title": "Week 1: Intro to Probability",
+    "section": "The complement rule",
+    "text": "The complement rule\n\nThe probability of an event is one minus the probability that it doesn’t happen\n\\[P(A) = 1 - P(A^{c})\\]\nProof\n\n\\(A\\) and \\(A^{c}\\) are disjoint and together they make up the whole sample space\n\\[A \\cup A^{c} = \\Omega\\]\nAdditivity and then normalization give us\n\\[P(A) + P(A^{c}) = P(\\Omega) = 1\\]\n\nOften it’s much easier to compute the probability of the complement – take \\(A\\) = “at least one” and \\(A^{c}\\) = “none”\nSetting \\(A = \\Omega\\) gives us \\(P(\\emptyset) = 1 - P(\\Omega) = 0\\)"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#inclusionexclusion",
+    "href": "slides/week1/week1_intro_and_review.html#inclusionexclusion",
+    "title": "Week 1: Intro to Probability",
+    "section": "Inclusion/Exclusion",
+    "text": "Inclusion/Exclusion\n\nThe probability of a union of two events is the sum of their respective probabilities minus the probability of their intersection\n\\[ P(A \\cup B) = P(A) + P(B) - P(A \\cap B) \\]\nProof\n\nSplit both \\(A \\cup B\\) and \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[A \\cup B = A \\cup (B \\cap A^{c}) \\qquad\\qquad B = (A \\cap B) \\cup (B \\cap A^{c})\\]\nAdditivity turns each union into a sum\n\\[P(A \\cup B) = P(A) + P(B \\cap A^{c}) \\qquad P(B) = P(A \\cap B) + P(B \\cap A^{c})\\]\nSolve the second for \\(P(B \\cap A^{c}) = P(B) - P(A \\cap B)\\), then substitute into the first."
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#inclusionexclusion-1",
+    "href": "slides/week1/week1_intro_and_review.html#inclusionexclusion-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Inclusion/Exclusion",
+    "text": "Inclusion/Exclusion"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection",
+    "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection",
+    "title": "Week 1: Intro to Probability",
+    "section": "Bounding the probability of an intersection",
+    "text": "Bounding the probability of an intersection\n\nRearrange the union rule\n\\[P(A \\cap B) = P(A) + P(B) - P(A \\cup B)\\]\nFrom earlier, we can split the union into disjoint parts: \\(P(A \\cup B) = P(A) + P(B \\cap A^{c})\\)\n\nNon-negativity of \\(P(B \\cap A^{c})\\) bounds the union from below and, symmetrically, splitting on \\(B\\) and \\(B^c\\) gives us two bounds:\n\\[P(A \\cup B) \\geq P(A) \\qquad\\qquad P(A \\cup B) \\geq P(B)\\]\n\nSubstituting \\(P(A \\cup B) \\geq P(B)\\) gives \\(P(A \\cap B) \\leq P(A)\\)\nSubstituting \\(P(A \\cup B) \\geq P(A)\\) gives \\(P(A \\cap B) \\leq P(B)\\)\nBoth hold at once, so the intersection is bounded by the smaller of the two\n\\[P(A \\cap B) \\leq \\min\\{P(A),\\, P(B)\\}\\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection-1",
+    "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection-1",
+    "title": "Week 1: Intro to Probability",
+    "section": "Bounding the probability of an intersection",
+    "text": "Bounding the probability of an intersection\n\nThat’s an upper bound, how about the lower bound?\nLet’s inspect our expression for \\(P(A \\cap B)\\) \\[ P(A \\cap B) = P(A) + P(B) - P(A \\cup B) \\]\nWe have \\(P(A) + P(B)\\)…but what about \\(P(A \\cup B)\\)\n\n\\(A \\cup B \\subseteq \\Omega\\) and \\(P(\\Omega) = 1\\). So \\(P(A \\cup B) \\leq 1\\)\n\nSo one lower bound is\n\\[ P(A \\cap B) \\geq P(A) + P(B) - 1 \\]\nBut by non-negativity, the probability is also trivially bounded below by \\(0\\), so we have\n\\[ P(A \\cap B) \\geq \\max\\{0,\\, P(A) + P(B) - 1\\} \\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-a-union",
+    "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-a-union",
+    "title": "Week 1: Intro to Probability",
+    "section": "Bounding the probability of a union",
+    "text": "Bounding the probability of a union\n\nHow about \\(P(A \\cup B)\\)?\nWe have a lower bound from earlier\n\\[ P(A \\cup B) \\geq \\max\\{P(A),\\, P(B)\\} \\]\nAnd an upper bound follows from the Union Rule + non-negativity: \\(P(A \\cap B) \\geq 0\\)\n\\[ P(A \\cup B) \\leq P(A) + P(B) \\]\nAnd from before, we also have \\(P(A \\cup B) \\leq 1\\)\n\\[ P(A \\cup B) \\leq \\min\\{1,\\, P(A) + P(B)\\} \\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#fréchet-inequalities-for-two-events",
+    "href": "slides/week1/week1_intro_and_review.html#fréchet-inequalities-for-two-events",
+    "title": "Week 1: Intro to Probability",
+    "section": "Fréchet inequalities for two events",
+    "text": "Fréchet inequalities for two events\n\nFor any two events \\(A, B\\), their intersection is bounded by\n\\[\\max\\{0,\\, P(A) + P(B) - 1\\} \\;\\leq\\; P(A \\cap B) \\;\\leq\\; \\min\\{P(A),\\, P(B)\\}\\]\nFor any two events \\(A, B\\), their union is bounded by\n\\[\\max\\{P(A),\\, P(B)\\} \\;\\leq\\; P(A \\cup B) \\;\\leq\\; \\min\\{1,\\, P(A) + P(B)\\}\\]"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#next-week",
+    "href": "slides/week1/week1_intro_and_review.html#next-week",
+    "title": "Week 1: Intro to Probability",
+    "section": "Next week",
+    "text": "Next week\n\nConditional probabilities\n\nHow do the chances of one event change if I know another event has occurred?\nConditioning restricts the sample space\n\nIndependence\n\nWhat happens when knowing one event tells me nothing about the probability of another?\n\nBayes’ rule\n\nHow do we relate the probability of \\(A\\) given \\(B\\) to the probability of \\(B\\) given \\(A\\)?"
+  },
+  {
+    "objectID": "slides/week1/week1_intro_and_review.html#references",
+    "href": "slides/week1/week1_intro_and_review.html#references",
+    "title": "Week 1: Intro to Probability",
+    "section": "References",
+    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. Modern Plain Text Computing. Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
+  },
+  {
+    "objectID": "schedule.html",
+    "href": "schedule.html",
+    "title": "Schedule",
+    "section": "",
+    "text": "A schedule of topics and readings is provided below. Each week covers a single topic or group of topics. You should make sure to review the readings prior to that week’s lectures with an aim towards completing them before Wednesday’s lecture.\nTextbook readings are from Aronow and Miller, Foundations of Agnostic Statistics, which is available through the UW-Madison library. All hyperlinks to papers and to other books are either to the published version or to a freely available copy."
+  },
+  {
+    "objectID": "schedule.html#week-1-introduction-and-foundations-of-probability",
+    "href": "schedule.html#week-1-introduction-and-foundations-of-probability",
+    "title": "Schedule",
+    "section": "Week 1: Introduction and Foundations of Probability",
+    "text": "Week 1: Introduction and Foundations of Probability\nTuesday, September 8 & Wednesday, September 9\nTopics:\n\nCourse introduction: what is statistics for, and what is this sequence for?\nSample spaces, events, and the probability measure\nThe axioms of probability and their implications\n\nReadings:\n\nSection 1.1; Aronow, Peter M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press.\nSoftware familiarization: Chapters 1-4 and 28 (“Quarto”); Wickham, Hadley, Mine Çetinkaya-Rundel, and Garrett Grolemund. 2023. R for Data Science, 2nd ed.\n\n\n\n\n\n\n\nProblem Set 1 assigned Tuesday, September 8 – due Tuesday, September 22."
+  },
+  {
+    "objectID": "schedule.html#week-2-conditional-probability-and-independence",
+    "href": "schedule.html#week-2-conditional-probability-and-independence",
+    "title": "Schedule",
+    "section": "Week 2: Conditional Probability and Independence",
+    "text": "Week 2: Conditional Probability and Independence\nTuesday, September 15 & Wednesday, September 16\nTopics:\n\nConditional probability and the law of total probability\nIndependence and conditional independence\nReasoning with Bayes’ rule\n\nReadings:\n\nSection 1.2; Aronow and Miller 2019."
+  },
+  {
+    "objectID": "schedule.html#week-3-random-variables-expectations",
+    "href": "schedule.html#week-3-random-variables-expectations",
+    "title": "Schedule",
+    "section": "Week 3: Random Variables, Expectations",
+    "text": "Week 3: Random Variables, Expectations\nTuesday, September 22 & Wednesday, September 23\nTopics:\n\nRandom variables as functions on the sample space\nDefining a distribution: CDFs, PMFs and PDFs\nProperties of random variables: expected value and variance\n\nReadings:\n\nSection 1.3; Aronow and Miller 2019.\nSection 2.1; Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 1 due Tuesday, September 22. Problem Set 2 assigned Tuesday, September 22 – due Tuesday, October 6"
+  },
+  {
+    "objectID": "schedule.html#week-4-joint-and-conditional-distributions",
+    "href": "schedule.html#week-4-joint-and-conditional-distributions",
+    "title": "Schedule",
+    "section": "Week 4: Joint and Conditional Distributions",
+    "text": "Week 4: Joint and Conditional Distributions\nTuesday, September 29 & Wednesday, September 30\nTopics:\n\nJoint, marginal and conditional distributions\nConditional expectation functions and the “best linear predictor”\nCovariance and correlation\nLaw of iterated expectations\n\nReadings:\n\nSection 2.2-2.3; Aronow and Miller 2019."
+  },
+  {
+    "objectID": "schedule.html#week-5-estimands-as-features-of-distributions",
+    "href": "schedule.html#week-5-estimands-as-features-of-distributions",
+    "title": "Schedule",
+    "section": "Week 5: Estimands as features of distributions",
+    "text": "Week 5: Estimands as features of distributions\nTuesday, October 6 & Wednesday, October 7\nTopics:\n\nDefining estimands as statistical functionals\nConnecting theory to empirical targets\n\nReadings:\n\nLundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. “What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory.” American Sociological Review 86 (3): 532-565.\n\n\n\n\n\n\n\nProblem Set 2 due Tuesday, October 6. Problem Set 3 assigned Tuesday, October 6 – due Tuesday, October 20\n\n\n\n\n\n\n\n\n\nFirst Midterm Exam - Wednesday, October 7th"
+  },
+  {
+    "objectID": "schedule.html#week-6-estimation-part-1",
+    "href": "schedule.html#week-6-estimation-part-1",
+    "title": "Schedule",
+    "section": "Week 6: Estimation: Part 1",
+    "text": "Week 6: Estimation: Part 1\nTuesday, October 13 & Wednesday, October 14\nTopics:\n\nRandom sampling from a target population\nProperties of estimators: bias, variance and consistency\nConvergence in probability and the weak law of large numbers\n\nReadings:\n\nSections 3.1 - 3.2; Aronow and Miller 2019.\nChapter 3 (“Asymptotics”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression."
+  },
+  {
+    "objectID": "schedule.html#week-7-estimation-part-2",
+    "href": "schedule.html#week-7-estimation-part-2",
+    "title": "Schedule",
+    "section": "Week 7: Estimation: Part 2",
+    "text": "Week 7: Estimation: Part 2\nTuesday, October 20 & Wednesday, October 21\nTopics:\n\nConvergence in distribution and the central limit theorem\nPlug-in estimators of statistical functionals\nDensity estimation\n\nReadings:\n\nSection 3.3; Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 3 due Tuesday, October 20. Problem Set 4 assigned Tuesday, October 20 – due Tuesday, November 3\n\n\n\n\n\n\n\n\n\nReplication project memo due Wednesday, October 21"
+  },
+  {
+    "objectID": "schedule.html#week-8-confidence-intervals-and-hypothesis-testing",
+    "href": "schedule.html#week-8-confidence-intervals-and-hypothesis-testing",
+    "title": "Schedule",
+    "section": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "text": "Week 8: Confidence Intervals and Hypothesis Testing\nTuesday, October 27 & Wednesday, October 28\nTopics:\n\nStandard errors and the construction of confidence intervals\nHypothesis tests, test statistics and p-values\nThe bootstrap\n\nReadings:\n\nSection 3.4-3.5; Aronow and Miller 2019.\nWasserstein, Ronald L., and Nicole A. Lazar. 2016. “ASA Statement on Statistical Significance and P-Values” The American Statistician 70 (2): 129-133."
+  },
+  {
+    "objectID": "schedule.html#week-9-introduction-to-regression",
+    "href": "schedule.html#week-9-introduction-to-regression",
+    "title": "Schedule",
+    "section": "Week 9: Introduction to Regression",
+    "text": "Week 9: Introduction to Regression\nTuesday, November 3 & Wednesday, November 4\nTopics:\n\nOrdinary least squares as an estimator of the Best Linear Predictor\nClassical OLS and estimation of the conditional expectation function\nProperties of the OLS estimator\n\nReadings:\n\nSection 4.1; Aronow and Miller 2019.\nChapter 6 (“Linear Regression”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression.\nChapter 7 (“The Mechanics of Least Squares”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression.\n\n\n\n\n\n\n\nProblem Set 4 due Tuesday, November 3. Problem Set 5 assigned Tuesday, November 3 – due Tuesday, November 17"
+  },
+  {
+    "objectID": "schedule.html#week-10-inference-for-regression",
+    "href": "schedule.html#week-10-inference-for-regression",
+    "title": "Schedule",
+    "section": "Week 10: Inference for Regression",
+    "text": "Week 10: Inference for Regression\nTuesday, November 10 & Wednesday, November 11\nTopics:\n\nSampling distribution of the OLS estimator\nHeteroskedasticity-consistent standard errors\nClassical OLS standard errors under homoskedasticity\n\nReadings:\n\nSection 4.2; Aronow and Miller 2019.\nChapter 8 (“The Statistics of Least Squares”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression."
+  },
+  {
+    "objectID": "schedule.html#week-11-interpreting-regressions",
+    "href": "schedule.html#week-11-interpreting-regressions",
+    "title": "Schedule",
+    "section": "Week 11: Interpreting Regressions",
+    "text": "Week 11: Interpreting Regressions\nTuesday, November 17 & Wednesday, November 18\nTopics:\n\nInterpreting multiple regression and the Frisch-Waugh-Lovell theorem\nInteractions, summarizing partial derivatives and “marginal effects”\n\nReadings:\n\nSection 4.3; Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 5 due Tuesday, November 17.\n\n\n\n\n\n\n\n\n\nSecond Midterm Exam - Wednesday, November 18"
+  },
+  {
+    "objectID": "schedule.html#week-12-regression-wrap-up",
+    "href": "schedule.html#week-12-regression-wrap-up",
+    "title": "Schedule",
+    "section": "Week 12: Regression wrap-up",
+    "text": "Week 12: Regression wrap-up\nTuesday, November 24\nTopics:\n\nPolynomial regression, sieve estimators\nOverfitting and penalized regression\n\n\n\n\n\n\n\nThanksgiving recess runs November 26-29. Class meets as usual on Tuesday this week."
+  },
+  {
+    "objectID": "schedule.html#week-13-weighting-estimators",
+    "href": "schedule.html#week-13-weighting-estimators",
+    "title": "Schedule",
+    "section": "Week 13: Weighting estimators",
+    "text": "Week 13: Weighting estimators\nTuesday, December 1 & Wednesday, December 2\nTopics:\n\nMissing data, bounds for the sample mean, and assumptions for point identification\nHorvitz-Thompson and Hájek inverse probability weighting estimators\nPost-stratification/raking weights in surveys.\n\nReadings:\n\nSection 6.1-6.2; Aronow and Miller 2019.\nSection 1-2. Caughey, Devin, Adam J. Berinsky, Sara Chatfield, Erin Hartman, Eric Schickler, and Jasjeet S. Sekhon. “Target Estimation and Adjustment Weighting for Survey Nonresponse and Sampling Bias.” Elements in Quantitative and Computational Methods for the Social Sciences. Cambridge: Cambridge University Press, 2020.\n\n\n\n\n\n\n\nFall Grad Poster Presentations at MEAD, Friday 12/4, 1:30-4pm Ogg Room"
+  },
+  {
+    "objectID": "schedule.html#week-14-preview-causal-inference",
+    "href": "schedule.html#week-14-preview-causal-inference",
+    "title": "Schedule",
+    "section": "Week 14: Preview: Causal inference",
+    "text": "Week 14: Preview: Causal inference\nTuesday, December 8 & Wednesday, December 9\nTopics:\n\nThe potential outcomes model for causal inference\nThe fundamental problem of causal inference\nThe “credibility revolution” and the centrality of research design\n\nReadings:\n\nSection 7.1; Aronow and Miller 2019.\nTorreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2026. “The Credibility Revolution in Political Science.” Working paper."
+  },
+  {
+    "objectID": "lectures.html",
+    "href": "lectures.html",
+    "title": "Lectures",
+    "section": "",
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nIllustrating conditional probability - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)\nIllustrating Bayes’ rule with BISG - Can we predict an individual’s race/ethnicity from geolocation and surname frequency data (RShiny app using the Census Bureau surname list and the 2020 Census)\n\n\n\n\n\nWeek 3 Github Repository\nWeek 3 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+  },
+  {
+    "objectID": "lectures.html#lecture-slides",
+    "href": "lectures.html#lecture-slides",
+    "title": "Lectures",
+    "section": "",
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nIllustrating conditional probability - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)\nIllustrating Bayes’ rule with BISG - Can we predict an individual’s race/ethnicity from geolocation and surname frequency data (RShiny app using the Census Bureau surname list and the 2020 Census)\n\n\n\n\n\nWeek 3 Github Repository\nWeek 3 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+  },
+  {
+    "objectID": "assignments.html",
+    "href": "assignments.html",
+    "title": "Assignments",
+    "section": "",
+    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 8 (Week 1)\nSept 22 (Week 3)\n\n\nProblem Set 2\nSept 22 (Week 3)\nOct 6 (Week 5)\n\n\nFirst Midterm Exam\n–\nOct 7 (Week 5)\n\n\nProblem Set 3\nOct 6 (Week 5)\nOct 20 (Week 7)\n\n\nReplication project memo\n–\nOct 21 (Week 7)\n\n\nProblem Set 4\nOct 20 (Week 7)\nNov 3 (Week 9)\n\n\nProblem Set 5\nNov 3 (Week 9)\nNov 17 (Week 11)\n\n\nSecond Midterm Exam\n–\nNov 18 (Week 11)\n\n\nReplication Project Poster\n–\nDec 4 (Week 13)\n\n\n\nProblem sets are assigned on Tuesdays and due at 11:59pm on Tuesdays. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade."
+  },
+  {
+    "objectID": "assignments.html#schedule",
+    "href": "assignments.html#schedule",
+    "title": "Assignments",
+    "section": "",
+    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 8 (Week 1)\nSept 22 (Week 3)\n\n\nProblem Set 2\nSept 22 (Week 3)\nOct 6 (Week 5)\n\n\nFirst Midterm Exam\n–\nOct 7 (Week 5)\n\n\nProblem Set 3\nOct 6 (Week 5)\nOct 20 (Week 7)\n\n\nReplication project memo\n–\nOct 21 (Week 7)\n\n\nProblem Set 4\nOct 20 (Week 7)\nNov 3 (Week 9)\n\n\nProblem Set 5\nNov 3 (Week 9)\nNov 17 (Week 11)\n\n\nSecond Midterm Exam\n–\nNov 18 (Week 11)\n\n\nReplication Project Poster\n–\nDec 4 (Week 13)\n\n\n\nProblem sets are assigned on Tuesdays and due at 11:59pm on Tuesdays. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade."
+  },
+  {
+    "objectID": "assignments.html#problem-sets",
+    "href": "assignments.html#problem-sets",
+    "title": "Assignments",
+    "section": "Problem Sets",
+    "text": "Problem Sets\nProblem sets are distributed as .qmd files along with their rendered .html form. You should edit the provided .qmd file and render to .html when submitting the assignment. Additional files (e.g. datasets) are located in sub-folders. For convenience, all the combined files are also distributed as a .zip compressed archive.\nSubmit both your rendered .html file and the .qmd source that produced it on Gradescope, saved as Yourlastname_Yourfirstinitial_psetN.html and Yourlastname_Yourfirstinitial_psetN.qmd.\nLinks become active as each problem set is assigned.\n\nProblem Set 1\nAssigned Tuesday, September 8 – due Tuesday, September 22\n\nProblem Set 1 .html\nProblem Set 1 Github Repository\nProblem Set 1 .zip archive\n\n\n\nProblem Set 2\nAssigned Tuesday, September 22 – due Tuesday, October 6\n\nProblem Set 2 .html\nProblem Set 2 Github Repository\nProblem Set 2 .zip archive\n\n\n\nProblem Set 3\nAssigned Tuesday, October 6 – due Tuesday, October 20\nTo be posted\n\n\nProblem Set 4\nAssigned Tuesday, October 20 – due Tuesday, November 3\nTo be posted\n\n\nProblem Set 5\nAssigned Tuesday, November 3 – due Tuesday, November 17\nTo be posted"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "PoliSci 812",
+    "section": "",
+    "text": "Introduction to Statistical Methods in Political Science\nThe fundamentals of probability, statistical inference and regression\nPoliSci 812 • Fall 2026University of Wisconsin-Madison\n\n\n\n\n\n\n\n\nInstructor\n\n   Anton Strezhnev\n   North Hall 322D\n   strezhnev@wisc.edu\n\n\n\nTeaching Assistant\n\n   John Hicks\n   john.hicks@wisc.edu\n\n\n\n\nCourse details\n\n   Tuesdays & Wednesdays\n   9/8/2026 - 12/9/2026\n   3:30PM-4:45PM\n   Ogg Room (North Hall 422)\n   Section: Friday 9:30AM-10:20AM, Ogg Room (North Hall 422)\n\n\n\nContacting me\nSlack is the best way to get in touch with me. My dedicated office hours are Tuesdays 9am-11am if you want to meet in-person. I am also generally in my office on weekdays during normal hours and my door is open, so you are welcome to drop in. You can also feel free to contact me to confirm availability or to schedule a virtual meeting via Zoom."
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Resources",
+    "section": "",
+    "text": "The main text for the course is listed first. The remaining books are useful supplements. Each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, P. M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version"
+  },
+  {
+    "objectID": "resources.html#textbooks",
+    "href": "resources.html#textbooks",
+    "title": "Resources",
+    "section": "",
+    "text": "The main text for the course is listed first. The remaining books are useful supplements. Each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, P. M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version"
+  },
+  {
+    "objectID": "resources.html#software",
+    "href": "resources.html#software",
+    "title": "Resources",
+    "section": "Software",
+    "text": "Software\n\nR and RStudio\nThis course uses R for all programming assignments. You are welcome to use the RStudio Interactive Development Environment (IDE) to write code and edit the assignment write-up. Due to the extensive integration of Quarto into Posit-developed IDEs, I encourage using either RStudio or the more recent Positron IDE.\n\nR: Download from https://www.r-project.org\nRStudio: Download from https://posit.co/download/rstudio-desktop/\nPositron: Download from https://positron.posit.co/\n\n\nRecommended Guides for R Programming\nThe following are excellent introductions to R, roughly in increasing order of difficulty.\n\nR For Data Science Available at https://r4ds.hadley.nz/\nData Visualization: A Practical Introduction Available at https://socviz.co/\nAdvanced R Wickham, Hadley. Available at https://adv-r.hadley.nz/\n\n\n\n\nQuarto and Markdown\nThe assignments are distributed as .qmd Quarto files. Quarto is the successor to R Markdown and lets you present your analysis, code, figures and written discussion all in a single document. It uses Markdown syntax for formatting text and supports embedded R code chunks that execute when you render the document.\nTo complete assignments, you will edit the provided .qmd file, adding your code and written responses, then render it to an HTML file for submission. Both your .html output and .qmd file will be submitted via Gradescope.\n\nQuarto: Download from https://quarto.org/docs/get-started/\nQuarto Guide: https://quarto.org/docs/guide/\nMarkdown Basics: https://quarto.org/docs/authoring/markdown-basics.html\nNote also the chapter on Quarto in R For Data Science\n\n\n\nLaTeX Math Notation\nProblem sets involve writing math, which you will typeset using LaTeX inside your Quarto document.\n\nQuarto math syntax: https://quarto.org/docs/authoring/markdown-basics.html#equations\nA quick LaTeX math reference: https://en.wikibooks.org/wiki/LaTeX/Mathematics"
+  },
+  {
+    "objectID": "resources.html#math-review",
+    "href": "resources.html#math-review",
+    "title": "Resources",
+    "section": "Math Review",
+    "text": "Math Review\nThe course assumes the algebra and single-variable calculus covered in the summer math camp. If you would like a refresher:\n\nMoore, Will H., and David A. Siegel. A Mathematics Course for Political and Social Research. Princeton University Press, 2013.\nKhan Academy calculus: https://www.khanacademy.org/math/calculus-1\n3Blue1Brown, Essence of Calculus: https://www.3blue1brown.com/topics/calculus"
+  },
+  {
+    "objectID": "resources.html#beyond-the-course",
+    "href": "resources.html#beyond-the-course",
+    "title": "Resources",
+    "section": "Beyond the Course",
+    "text": "Beyond the Course\n\nModels, Experiments and Data (MEAD) workshop: https://sites.google.com/view/meadwisc/home – the applied statistics workshop at UW-Madison. Attending is one of the best ways to see what quantitative political science actually looks like in practice, and you are strongly encouraged to come.\nSociety for Political Methodology: https://polmeth.org/"
+  },
+  {
+    "objectID": "sections.html",
+    "href": "sections.html",
+    "title": "Section Exercises",
+    "section": "",
+    "text": "Section meets Fridays, 9:30AM-10:20AM, in the Ogg Room (North Hall 422). Each meeting typically begins with questions and review, and the remainder is devoted to short, guided exercises that implement the week’s material in .\nLinks to the section materials on Github are available below. Download the folder (or clone the repository) to access the code yourself in .\nLinks become active as the materials for each week are posted.\n\n\n\nFriday, September 11\nTo be posted\n\n\n\nFriday, September 18\n\nWeek 2 GitHub Repository\n\n\n\n\nFriday, September 25\n\nWeek 3 GitHub Repository\n\n\n\n\nFriday, October 2\nTo be posted\n\n\n\nFriday, October 9\nTo be posted\n\n\n\nFriday, October 16\nTo be posted\n\n\n\nFriday, October 23\nTo be posted\n\n\n\nFriday, October 30\nTo be posted\n\n\n\nFriday, November 6\nTo be posted\n\n\n\nFriday, November 13\nTo be posted\n\n\n\nFriday, November 20\nTo be posted\n\n\n\nNo section – Thanksgiving recess runs November 26-29\n\n\n\nFriday, December 4\nTo be posted\n\n\n\nFriday, December 11\nTo be posted"
+  },
+  {
+    "objectID": "sections.html#section-materials",
+    "href": "sections.html#section-materials",
+    "title": "Section Exercises",
+    "section": "",
+    "text": "Section meets Fridays, 9:30AM-10:20AM, in the Ogg Room (North Hall 422). Each meeting typically begins with questions and review, and the remainder is devoted to short, guided exercises that implement the week’s material in .\nLinks to the section materials on Github are available below. Download the folder (or clone the repository) to access the code yourself in .\nLinks become active as the materials for each week are posted.\n\n\n\nFriday, September 11\nTo be posted\n\n\n\nFriday, September 18\n\nWeek 2 GitHub Repository\n\n\n\n\nFriday, September 25\n\nWeek 3 GitHub Repository\n\n\n\n\nFriday, October 2\nTo be posted\n\n\n\nFriday, October 9\nTo be posted\n\n\n\nFriday, October 16\nTo be posted\n\n\n\nFriday, October 23\nTo be posted\n\n\n\nFriday, October 30\nTo be posted\n\n\n\nFriday, November 6\nTo be posted\n\n\n\nFriday, November 13\nTo be posted\n\n\n\nFriday, November 20\nTo be posted\n\n\n\nNo section – Thanksgiving recess runs November 26-29\n\n\n\nFriday, December 4\nTo be posted\n\n\n\nFriday, December 11\nTo be posted"
   },
   {
     "objectID": "slides/week2/week2_conditional_probability.html#welcome-back",
@@ -672,459 +847,312 @@
     "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nElliott, Marc N., Peter A. Morrison, Allen Fremont, Daniel F. McCaffrey, Philip Pantoja, and Nicole Lurie. 2009. “Using the Census Bureau’s Surname List to Improve Estimates of Race/Ethnicity and Associated Disparities.” Health Services and Outcomes Research Methodology 9 (2): 69–83. https://doi.org/10.1007/s10742-009-0047-1.\n\n\nFearon, James D., and David D. Laitin. 2003. “Ethnicity, Insurgency, and Civil War.” American Political Science Review 97 (1): 75–90. https://doi.org/10.1017/S0003055403000534.\n\n\nImai, Kosuke, and Kabir Khanna. 2016. “Improving Ecological Inference by Predicting Individual Ethnicity from Voter Registration Records.” Political Analysis 24 (2): 263–72. https://doi.org/10.1093/pan/mpw001."
   },
   {
-    "objectID": "sections.html",
-    "href": "sections.html",
-    "title": "Section Exercises",
-    "section": "",
-    "text": "Section meets Fridays, 9:30AM-10:20AM, in the Ogg Room (North Hall 422). Each meeting typically begins with questions and review, and the remainder is devoted to short, guided exercises that implement the week’s material in .\nLinks to the section materials on Github are available below. Download the folder (or clone the repository) to access the code yourself in .\nLinks become active as the materials for each week are posted.\n\n\n\nFriday, September 11\nTo be posted\n\n\n\nFriday, September 18\n\nWeek 2 GitHub Repository\n\n\n\n\nFriday, September 25\n\nWeek 3 GitHub Repository\n\n\n\n\nFriday, October 2\nTo be posted\n\n\n\nFriday, October 9\nTo be posted\n\n\n\nFriday, October 16\nTo be posted\n\n\n\nFriday, October 23\nTo be posted\n\n\n\nFriday, October 30\nTo be posted\n\n\n\nFriday, November 6\nTo be posted\n\n\n\nFriday, November 13\nTo be posted\n\n\n\nFriday, November 20\nTo be posted\n\n\n\nNo section – Thanksgiving recess runs November 26-29\n\n\n\nFriday, December 4\nTo be posted\n\n\n\nFriday, December 11\nTo be posted"
+    "objectID": "slides/week3/week3_random_variables.html#welcome-back",
+    "href": "slides/week3/week3_random_variables.html#welcome-back",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Welcome back!",
+    "text": "Welcome back!\n\n\n\\[\n\\newcommand{\\Var}{\\text{Var}}\n\\]"
   },
   {
-    "objectID": "sections.html#section-materials",
-    "href": "sections.html#section-materials",
-    "title": "Section Exercises",
-    "section": "",
-    "text": "Section meets Fridays, 9:30AM-10:20AM, in the Ogg Room (North Hall 422). Each meeting typically begins with questions and review, and the remainder is devoted to short, guided exercises that implement the week’s material in .\nLinks to the section materials on Github are available below. Download the folder (or clone the repository) to access the code yourself in .\nLinks become active as the materials for each week are posted.\n\n\n\nFriday, September 11\nTo be posted\n\n\n\nFriday, September 18\n\nWeek 2 GitHub Repository\n\n\n\n\nFriday, September 25\n\nWeek 3 GitHub Repository\n\n\n\n\nFriday, October 2\nTo be posted\n\n\n\nFriday, October 9\nTo be posted\n\n\n\nFriday, October 16\nTo be posted\n\n\n\nFriday, October 23\nTo be posted\n\n\n\nFriday, October 30\nTo be posted\n\n\n\nFriday, November 6\nTo be posted\n\n\n\nFriday, November 13\nTo be posted\n\n\n\nFriday, November 20\nTo be posted\n\n\n\nNo section – Thanksgiving recess runs November 26-29\n\n\n\nFriday, December 4\nTo be posted\n\n\n\nFriday, December 11\nTo be posted"
-  },
-  {
-    "objectID": "resources.html",
-    "href": "resources.html",
-    "title": "Resources",
-    "section": "",
-    "text": "The main text for the course is listed first. The remaining books are useful supplements. Each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, P. M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version"
-  },
-  {
-    "objectID": "resources.html#textbooks",
-    "href": "resources.html#textbooks",
-    "title": "Resources",
-    "section": "",
-    "text": "The main text for the course is listed first. The remaining books are useful supplements. Each is available either as a free online version or in digital form via UW-Madison library access.\n\n\n\nAronow, P. M., and Benjamin T. Miller. Foundations of Agnostic Statistics. Cambridge University Press, 2019.\n\nUW-Madison Library Access\n\n\n\n\n\n\nBlackwell, Matthew. A User’s Guide to Statistical Inference and Regression.\n\nFree online version\n\nBlitzstein, Joseph K., and Jessica Hwang. Introduction to Probability. 2nd Edition. Chapman and Hall/CRC, 2019.\n\nFree online version"
-  },
-  {
-    "objectID": "resources.html#software",
-    "href": "resources.html#software",
-    "title": "Resources",
-    "section": "Software",
-    "text": "Software\n\nR and RStudio\nThis course uses R for all programming assignments. You are welcome to use the RStudio Interactive Development Environment (IDE) to write code and edit the assignment write-up. Due to the extensive integration of Quarto into Posit-developed IDEs, I encourage using either RStudio or the more recent Positron IDE.\n\nR: Download from https://www.r-project.org\nRStudio: Download from https://posit.co/download/rstudio-desktop/\nPositron: Download from https://positron.posit.co/\n\n\nRecommended Guides for R Programming\nThe following are excellent introductions to R, roughly in increasing order of difficulty.\n\nR For Data Science Available at https://r4ds.hadley.nz/\nData Visualization: A Practical Introduction Available at https://socviz.co/\nAdvanced R Wickham, Hadley. Available at https://adv-r.hadley.nz/\n\n\n\n\nQuarto and Markdown\nThe assignments are distributed as .qmd Quarto files. Quarto is the successor to R Markdown and lets you present your analysis, code, figures and written discussion all in a single document. It uses Markdown syntax for formatting text and supports embedded R code chunks that execute when you render the document.\nTo complete assignments, you will edit the provided .qmd file, adding your code and written responses, then render it to an HTML file for submission. Both your .html output and .qmd file will be submitted via Gradescope.\n\nQuarto: Download from https://quarto.org/docs/get-started/\nQuarto Guide: https://quarto.org/docs/guide/\nMarkdown Basics: https://quarto.org/docs/authoring/markdown-basics.html\nNote also the chapter on Quarto in R For Data Science\n\n\n\nLaTeX Math Notation\nProblem sets involve writing math, which you will typeset using LaTeX inside your Quarto document.\n\nQuarto math syntax: https://quarto.org/docs/authoring/markdown-basics.html#equations\nA quick LaTeX math reference: https://en.wikibooks.org/wiki/LaTeX/Mathematics"
-  },
-  {
-    "objectID": "resources.html#math-review",
-    "href": "resources.html#math-review",
-    "title": "Resources",
-    "section": "Math Review",
-    "text": "Math Review\nThe course assumes the algebra and single-variable calculus covered in the summer math camp. If you would like a refresher:\n\nMoore, Will H., and David A. Siegel. A Mathematics Course for Political and Social Research. Princeton University Press, 2013.\nKhan Academy calculus: https://www.khanacademy.org/math/calculus-1\n3Blue1Brown, Essence of Calculus: https://www.3blue1brown.com/topics/calculus"
-  },
-  {
-    "objectID": "resources.html#beyond-the-course",
-    "href": "resources.html#beyond-the-course",
-    "title": "Resources",
-    "section": "Beyond the Course",
-    "text": "Beyond the Course\n\nModels, Experiments and Data (MEAD) workshop: https://sites.google.com/view/meadwisc/home – the applied statistics workshop at UW-Madison. Attending is one of the best ways to see what quantitative political science actually looks like in practice, and you are strongly encouraged to come.\nSociety for Political Methodology: https://polmeth.org/"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "PoliSci 812",
-    "section": "",
-    "text": "Introduction to Statistical Methods in Political Science\nThe fundamentals of probability, statistical inference and regression\nPoliSci 812 • Fall 2026University of Wisconsin-Madison\n\n\n\n\n\n\n\n\nInstructor\n\n   Anton Strezhnev\n   North Hall 322D\n   strezhnev@wisc.edu\n\n\n\nTeaching Assistant\n\n   John Hicks\n   john.hicks@wisc.edu\n\n\n\n\nCourse details\n\n   Tuesdays & Wednesdays\n   9/8/2026 - 12/9/2026\n   3:30PM-4:45PM\n   Ogg Room (North Hall 422)\n   Section: Friday 9:30AM-10:20AM, Ogg Room (North Hall 422)\n\n\n\nContacting me\nSlack is the best way to get in touch with me. My dedicated office hours are Tuesdays 9am-11am if you want to meet in-person. I am also generally in my office on weekdays during normal hours and my door is open, so you are welcome to drop in. You can also feel free to contact me to confirm availability or to schedule a virtual meeting via Zoom."
-  },
-  {
-    "objectID": "assignments.html",
-    "href": "assignments.html",
-    "title": "Assignments",
-    "section": "",
-    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 8 (Week 1)\nSept 22 (Week 3)\n\n\nProblem Set 2\nSept 22 (Week 3)\nOct 6 (Week 5)\n\n\nFirst Midterm Exam\n–\nOct 7 (Week 5)\n\n\nProblem Set 3\nOct 6 (Week 5)\nOct 20 (Week 7)\n\n\nReplication project memo\n–\nOct 21 (Week 7)\n\n\nProblem Set 4\nOct 20 (Week 7)\nNov 3 (Week 9)\n\n\nProblem Set 5\nNov 3 (Week 9)\nNov 17 (Week 11)\n\n\nSecond Midterm Exam\n–\nNov 18 (Week 11)\n\n\nReplication Project Poster\n–\nDec 4 (Week 13)\n\n\n\nProblem sets are assigned on Tuesdays and due at 11:59pm on Tuesdays. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade."
-  },
-  {
-    "objectID": "assignments.html#schedule",
-    "href": "assignments.html#schedule",
-    "title": "Assignments",
-    "section": "",
-    "text": "Assignment\nAssigned\nDue\n\n\n\n\nProblem Set 1\nSept 8 (Week 1)\nSept 22 (Week 3)\n\n\nProblem Set 2\nSept 22 (Week 3)\nOct 6 (Week 5)\n\n\nFirst Midterm Exam\n–\nOct 7 (Week 5)\n\n\nProblem Set 3\nOct 6 (Week 5)\nOct 20 (Week 7)\n\n\nReplication project memo\n–\nOct 21 (Week 7)\n\n\nProblem Set 4\nOct 20 (Week 7)\nNov 3 (Week 9)\n\n\nProblem Set 5\nNov 3 (Week 9)\nNov 17 (Week 11)\n\n\nSecond Midterm Exam\n–\nNov 18 (Week 11)\n\n\nReplication Project Poster\n–\nDec 4 (Week 13)\n\n\n\nProblem sets are assigned on Tuesdays and due at 11:59pm on Tuesdays. Solutions are posted to Canvas after the deadline. Both midterms are held in class on the Wednesday of their week. The replication project memo is ungraded; the poster and its accompanying code are what count towards your grade."
-  },
-  {
-    "objectID": "assignments.html#problem-sets",
-    "href": "assignments.html#problem-sets",
-    "title": "Assignments",
-    "section": "Problem Sets",
-    "text": "Problem Sets\nProblem sets are distributed as .qmd files along with their rendered .html form. You should edit the provided .qmd file and render to .html when submitting the assignment. Additional files (e.g. datasets) are located in sub-folders. For convenience, all the combined files are also distributed as a .zip compressed archive.\nSubmit both your rendered .html file and the .qmd source that produced it on Gradescope, saved as Yourlastname_Yourfirstinitial_psetN.html and Yourlastname_Yourfirstinitial_psetN.qmd.\nLinks become active as each problem set is assigned.\n\nProblem Set 1\nAssigned Tuesday, September 8 – due Tuesday, September 22\n\nProblem Set 1 .html\nProblem Set 1 Github Repository\nProblem Set 1 .zip archive\n\n\n\nProblem Set 2\nAssigned Tuesday, September 22 – due Tuesday, October 6\n\nProblem Set 2 .html\nProblem Set 2 Github Repository\nProblem Set 2 .zip archive\n\n\n\nProblem Set 3\nAssigned Tuesday, October 6 – due Tuesday, October 20\nTo be posted\n\n\nProblem Set 4\nAssigned Tuesday, October 20 – due Tuesday, November 3\nTo be posted\n\n\nProblem Set 5\nAssigned Tuesday, November 3 – due Tuesday, November 17\nTo be posted"
-  },
-  {
-    "objectID": "lectures.html",
-    "href": "lectures.html",
-    "title": "Lectures",
-    "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nIllustrating conditional probability - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)\nIllustrating Bayes’ rule with BISG - Can we predict an individual’s race/ethnicity from geolocation and surname frequency data (RShiny app using the Census Bureau surname list and the 2020 Census)\n\n\n\n\n\nWeek 3 Github Repository\nWeek 3 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
-  },
-  {
-    "objectID": "lectures.html#lecture-slides",
-    "href": "lectures.html#lecture-slides",
-    "title": "Lectures",
-    "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nIllustrating conditional probability - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)\nIllustrating Bayes’ rule with BISG - Can we predict an individual’s race/ethnicity from geolocation and surname frequency data (RShiny app using the Census Bureau surname list and the 2020 Census)\n\n\n\n\n\nWeek 3 Github Repository\nWeek 3 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
-  },
-  {
-    "objectID": "schedule.html",
-    "href": "schedule.html",
-    "title": "Schedule",
-    "section": "",
-    "text": "A schedule of topics and readings is provided below. Each week covers a single topic or group of topics. You should make sure to review the readings prior to that week’s lectures with an aim towards completing them before Wednesday’s lecture.\nTextbook readings are from Aronow and Miller, Foundations of Agnostic Statistics, which is available through the UW-Madison library. All hyperlinks to papers and to other books are either to the published version or to a freely available copy."
-  },
-  {
-    "objectID": "schedule.html#week-1-introduction-and-foundations-of-probability",
-    "href": "schedule.html#week-1-introduction-and-foundations-of-probability",
-    "title": "Schedule",
-    "section": "Week 1: Introduction and Foundations of Probability",
-    "text": "Week 1: Introduction and Foundations of Probability\nTuesday, September 8 & Wednesday, September 9\nTopics:\n\nCourse introduction: what is statistics for, and what is this sequence for?\nSample spaces, events, and the probability measure\nThe axioms of probability and their implications\n\nReadings:\n\nSection 1.1; Aronow, Peter M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press.\nSoftware familiarization: Chapters 1-4 and 28 (“Quarto”); Wickham, Hadley, Mine Çetinkaya-Rundel, and Garrett Grolemund. 2023. R for Data Science, 2nd ed.\n\n\n\n\n\n\n\nProblem Set 1 assigned Tuesday, September 8 – due Tuesday, September 22."
-  },
-  {
-    "objectID": "schedule.html#week-2-conditional-probability-and-independence",
-    "href": "schedule.html#week-2-conditional-probability-and-independence",
-    "title": "Schedule",
-    "section": "Week 2: Conditional Probability and Independence",
-    "text": "Week 2: Conditional Probability and Independence\nTuesday, September 15 & Wednesday, September 16\nTopics:\n\nConditional probability and the law of total probability\nIndependence and conditional independence\nReasoning with Bayes’ rule\n\nReadings:\n\nSection 1.2; Aronow and Miller 2019."
-  },
-  {
-    "objectID": "schedule.html#week-3-random-variables-expectations",
-    "href": "schedule.html#week-3-random-variables-expectations",
-    "title": "Schedule",
-    "section": "Week 3: Random Variables, Expectations",
-    "text": "Week 3: Random Variables, Expectations\nTuesday, September 22 & Wednesday, September 23\nTopics:\n\nRandom variables as functions on the sample space\nDefining a distribution: CDFs, PMFs and PDFs\nProperties of random variables: expected value and variance\n\nReadings:\n\nSection 1.3; Aronow and Miller 2019.\nSection 2.1; Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 1 due Tuesday, September 22. Problem Set 2 assigned Tuesday, September 22 – due Tuesday, October 6"
-  },
-  {
-    "objectID": "schedule.html#week-4-joint-and-conditional-distributions",
-    "href": "schedule.html#week-4-joint-and-conditional-distributions",
-    "title": "Schedule",
-    "section": "Week 4: Joint and Conditional Distributions",
-    "text": "Week 4: Joint and Conditional Distributions\nTuesday, September 29 & Wednesday, September 30\nTopics:\n\nJoint, marginal and conditional distributions\nConditional expectation functions and the “best linear predictor”\nCovariance and correlation\nLaw of iterated expectations\n\nReadings:\n\nSection 2.2-2.3; Aronow and Miller 2019."
-  },
-  {
-    "objectID": "schedule.html#week-5-estimands-as-features-of-distributions",
-    "href": "schedule.html#week-5-estimands-as-features-of-distributions",
-    "title": "Schedule",
-    "section": "Week 5: Estimands as features of distributions",
-    "text": "Week 5: Estimands as features of distributions\nTuesday, October 6 & Wednesday, October 7\nTopics:\n\nDefining estimands as statistical functionals\nConnecting theory to empirical targets\n\nReadings:\n\nLundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. “What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory.” American Sociological Review 86 (3): 532-565.\n\n\n\n\n\n\n\nProblem Set 2 due Tuesday, October 6. Problem Set 3 assigned Tuesday, October 6 – due Tuesday, October 20\n\n\n\n\n\n\n\n\n\nFirst Midterm Exam - Wednesday, October 7th"
-  },
-  {
-    "objectID": "schedule.html#week-6-estimation-part-1",
-    "href": "schedule.html#week-6-estimation-part-1",
-    "title": "Schedule",
-    "section": "Week 6: Estimation: Part 1",
-    "text": "Week 6: Estimation: Part 1\nTuesday, October 13 & Wednesday, October 14\nTopics:\n\nRandom sampling from a target population\nProperties of estimators: bias, variance and consistency\nConvergence in probability and the weak law of large numbers\n\nReadings:\n\nSections 3.1 - 3.2; Aronow and Miller 2019.\nChapter 3 (“Asymptotics”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression."
-  },
-  {
-    "objectID": "schedule.html#week-7-estimation-part-2",
-    "href": "schedule.html#week-7-estimation-part-2",
-    "title": "Schedule",
-    "section": "Week 7: Estimation: Part 2",
-    "text": "Week 7: Estimation: Part 2\nTuesday, October 20 & Wednesday, October 21\nTopics:\n\nConvergence in distribution and the central limit theorem\nPlug-in estimators of statistical functionals\nDensity estimation\n\nReadings:\n\nSection 3.3; Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 3 due Tuesday, October 20. Problem Set 4 assigned Tuesday, October 20 – due Tuesday, November 3\n\n\n\n\n\n\n\n\n\nReplication project memo due Wednesday, October 21"
-  },
-  {
-    "objectID": "schedule.html#week-8-confidence-intervals-and-hypothesis-testing",
-    "href": "schedule.html#week-8-confidence-intervals-and-hypothesis-testing",
-    "title": "Schedule",
-    "section": "Week 8: Confidence Intervals and Hypothesis Testing",
-    "text": "Week 8: Confidence Intervals and Hypothesis Testing\nTuesday, October 27 & Wednesday, October 28\nTopics:\n\nStandard errors and the construction of confidence intervals\nHypothesis tests, test statistics and p-values\nThe bootstrap\n\nReadings:\n\nSection 3.4-3.5; Aronow and Miller 2019.\nWasserstein, Ronald L., and Nicole A. Lazar. 2016. “ASA Statement on Statistical Significance and P-Values” The American Statistician 70 (2): 129-133."
-  },
-  {
-    "objectID": "schedule.html#week-9-introduction-to-regression",
-    "href": "schedule.html#week-9-introduction-to-regression",
-    "title": "Schedule",
-    "section": "Week 9: Introduction to Regression",
-    "text": "Week 9: Introduction to Regression\nTuesday, November 3 & Wednesday, November 4\nTopics:\n\nOrdinary least squares as an estimator of the Best Linear Predictor\nClassical OLS and estimation of the conditional expectation function\nProperties of the OLS estimator\n\nReadings:\n\nSection 4.1; Aronow and Miller 2019.\nChapter 6 (“Linear Regression”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression.\nChapter 7 (“The Mechanics of Least Squares”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression.\n\n\n\n\n\n\n\nProblem Set 4 due Tuesday, November 3. Problem Set 5 assigned Tuesday, November 3 – due Tuesday, November 17"
-  },
-  {
-    "objectID": "schedule.html#week-10-inference-for-regression",
-    "href": "schedule.html#week-10-inference-for-regression",
-    "title": "Schedule",
-    "section": "Week 10: Inference for Regression",
-    "text": "Week 10: Inference for Regression\nTuesday, November 10 & Wednesday, November 11\nTopics:\n\nSampling distribution of the OLS estimator\nHeteroskedasticity-consistent standard errors\nClassical OLS standard errors under homoskedasticity\n\nReadings:\n\nSection 4.2; Aronow and Miller 2019.\nChapter 8 (“The Statistics of Least Squares”); Blackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression."
-  },
-  {
-    "objectID": "schedule.html#week-11-interpreting-regressions",
-    "href": "schedule.html#week-11-interpreting-regressions",
-    "title": "Schedule",
-    "section": "Week 11: Interpreting Regressions",
-    "text": "Week 11: Interpreting Regressions\nTuesday, November 17 & Wednesday, November 18\nTopics:\n\nInterpreting multiple regression and the Frisch-Waugh-Lovell theorem\nInteractions, summarizing partial derivatives and “marginal effects”\n\nReadings:\n\nSection 4.3; Aronow and Miller 2019.\n\n\n\n\n\n\n\nProblem Set 5 due Tuesday, November 17.\n\n\n\n\n\n\n\n\n\nSecond Midterm Exam - Wednesday, November 18"
-  },
-  {
-    "objectID": "schedule.html#week-12-regression-wrap-up",
-    "href": "schedule.html#week-12-regression-wrap-up",
-    "title": "Schedule",
-    "section": "Week 12: Regression wrap-up",
-    "text": "Week 12: Regression wrap-up\nTuesday, November 24\nTopics:\n\nPolynomial regression, sieve estimators\nOverfitting and penalized regression\n\n\n\n\n\n\n\nThanksgiving recess runs November 26-29. Class meets as usual on Tuesday this week."
-  },
-  {
-    "objectID": "schedule.html#week-13-weighting-estimators",
-    "href": "schedule.html#week-13-weighting-estimators",
-    "title": "Schedule",
-    "section": "Week 13: Weighting estimators",
-    "text": "Week 13: Weighting estimators\nTuesday, December 1 & Wednesday, December 2\nTopics:\n\nMissing data, bounds for the sample mean, and assumptions for point identification\nHorvitz-Thompson and Hájek inverse probability weighting estimators\nPost-stratification/raking weights in surveys.\n\nReadings:\n\nSection 6.1-6.2; Aronow and Miller 2019.\nSection 1-2. Caughey, Devin, Adam J. Berinsky, Sara Chatfield, Erin Hartman, Eric Schickler, and Jasjeet S. Sekhon. “Target Estimation and Adjustment Weighting for Survey Nonresponse and Sampling Bias.” Elements in Quantitative and Computational Methods for the Social Sciences. Cambridge: Cambridge University Press, 2020.\n\n\n\n\n\n\n\nFall Grad Poster Presentations at MEAD, Friday 12/4, 1:30-4pm Ogg Room"
-  },
-  {
-    "objectID": "schedule.html#week-14-preview-causal-inference",
-    "href": "schedule.html#week-14-preview-causal-inference",
-    "title": "Schedule",
-    "section": "Week 14: Preview: Causal inference",
-    "text": "Week 14: Preview: Causal inference\nTuesday, December 8 & Wednesday, December 9\nTopics:\n\nThe potential outcomes model for causal inference\nThe fundamental problem of causal inference\nThe “credibility revolution” and the centrality of research design\n\nReadings:\n\nSection 7.1; Aronow and Miller 2019.\nTorreblanca, Carolina, William Dinneen, Guy Grossman, and Yiqing Xu. 2026. “The Credibility Revolution in Political Science.” Working paper."
-  },
-  {
-    "objectID": "slides/week1/week1_intro_and_review.html#welcome",
-    "href": "slides/week1/week1_intro_and_review.html#welcome",
-    "title": "Week 1: Intro to Probability",
-    "section": "Welcome!",
-    "text": "Welcome!"
-  },
-  {
-    "objectID": "slides/week1/week1_intro_and_review.html#week-overview",
-    "href": "slides/week1/week1_intro_and_review.html#week-overview",
-    "title": "Week 1: Intro to Probability",
+    "objectID": "slides/week3/week3_random_variables.html#week-overview",
+    "href": "slides/week3/week3_random_variables.html#week-overview",
+    "title": "Week 3: Random Variables and Distributions",
     "section": "Week overview",
-    "text": "Week overview\n\nThis week\n\nIntroductions + course logistics\nIntro to probability\n\nNext week\n\nConditional probability\nIndependence\nBayes’ rule\n\nLong-run\n\nprobability \\(\\to\\) inference \\(\\to\\) regression"
+    "text": "Week overview\n\nLast week\n\nConditional probability\nIndependence and conditional independence\nBayes’ rule\n\nThis week\n\nRandom variables\nDistributions\nExpectations and variances"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#course-overview",
-    "href": "slides/week1/week1_intro_and_review.html#course-overview",
-    "title": "Week 1: Intro to Probability",
-    "section": "Course Overview",
-    "text": "Course Overview\n\nInstructor: Anton Strezhnev\nTA: John Hicks\nMethods Mentor: Nastya Andreeva\nLogistics:\n\nLectures T/W - 3:30pm-4:45pm, Ogg Room (North Hall 422)\nSection F - 9:30am-10:20am, Ogg Room (North Hall 422)\n5 Problem Sets (~ 2 weeks)\nIn-class midterms (October 7, November 18)\nReplication project poster (December 4th)"
+    "objectID": "slides/week3/week3_random_variables.html#where-were-going",
+    "href": "slides/week3/week3_random_variables.html#where-were-going",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Where we’re going",
+    "text": "Where we’re going\n\nThis week, we’ll go beyond events and illustrate a way of talking about random processes that map on to the real numbers \\(\\mathbb{R}\\)\n\nThese are what we’ll call random variables\n\nRandom variables are defined by their distributions\n\nWe’ll summarize features of these distributions with quantities like the expectation and the variance\n\nThese will eventually be our empirical estimands\n\nThe share of residents of Wisconsin who turn out in the 2026 midterm election.\nThe share of residents of a given Wisconsin precinct who turn out in the 2026 midterm election given that precinct’s 2024 Harris vote share.\n\nWe will use our observed data to provide estimates of these quantities\n\nAssume our observations came from the distribution of interest…how “close” is our estimate to the truth?\nHow can we talk about this when we don’t know the truth!?"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#course-overview-1",
-    "href": "slides/week1/week1_intro_and_review.html#course-overview-1",
-    "title": "Week 1: Intro to Probability",
-    "section": "Course Overview",
-    "text": "Course Overview\n\nMy office hours: Tuesdays 9am-11am (North Hall 322D)\nJohn’s office hours: Thursdays 9am-11am (North Hall 201D)\nNastya’s office hours: Fridays 10:30am-12:30pm (North Hall 315)\nCourse Website: https://www.antonstrezhnev.com/ps812\nAnnouncements will be posted on Slack - you should have received an invite."
+    "objectID": "slides/week3/week3_random_variables.html#random-variables",
+    "href": "slides/week3/week3_random_variables.html#random-variables",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Random variables",
+    "text": "Random variables\n\nThere are clear limitations in using the language of events alone in talking about probabilities\nExample: Suppose we’re trying to measure income using a random survey\n\nLet \\(A_{ik}\\) be the event that the respondent \\(i\\) has an income of exactly \\(k\\) dollars.\nHow would we represent the probability that a randomly selected respondent has an income between $50,000 and $100,000?\n\\[\n\\begin{aligned}\nP\\left(\\bigcup_{k = 50{,}000}^{100{,}000} A_{ik}\\right) &= \\sum_{k = 50{,}000}^{100{,}000} P(A_{ik}) \\\\\n&= P(A_{i,50000}) + P(A_{i,50001}) + \\cdots + P(A_{i,99999}) + P(A_{i,100000})\n\\end{aligned}\n\\]\n\nSuppose we measure in dollars but want to calculate the probability that the respondent has an income between £50,000 and £100,000?\n\nSuppose the exchange rate is itself random?\n\nThere has to be a better way!"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#course-objectives",
-    "href": "slides/week1/week1_intro_and_review.html#course-objectives",
-    "title": "Week 1: Intro to Probability",
-    "section": "Course Objectives",
-    "text": "Course Objectives\n\nWhat is this course about?\n\nProbability - How do we talk about uncertainty in a structured manner?\nInference - Given what we observe, how do we learn about what we don’t?\nRegression - Can we characterize the average of one quantity given information about another?\n\nGoals for the course\n\nCritically read, interpret and evaluate quantitative social science articles\nConduct, interpret and communicate results from a regression analysis\nWrite clean, reusable and reliable analysis code in R\nSee how research is conducted by working with real replication data."
+    "objectID": "slides/week3/week3_random_variables.html#random-variables-1",
+    "href": "slides/week3/week3_random_variables.html#random-variables-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Random variables",
+    "text": "Random variables\n\nA random variable is a function that maps from the sample space \\(\\Omega\\) to the real numbers \\(\\mathbb{R}\\)\n\nReturning to our income example, we can now say that \\(X_i\\) is a random variable denoting respondent \\(i\\)’s income in dollars\nNow we can write the probability of our earlier event as \\(P(50{,}000 \\le X_i \\le 100{,}000)\\)"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#statistical-computing",
-    "href": "slides/week1/week1_intro_and_review.html#statistical-computing",
-    "title": "Week 1: Intro to Probability",
-    "section": "Statistical computing",
-    "text": "Statistical computing\n\nThis course will teach you how to work in the  programming language.\n\nA high-level language designed for statistical computing\n\nWe’ll focus on the concepts of computing\n\n(e.g. functions, data types, control structures)\nData cleaning/processing via tidyverse\nSyntax is important…but LLMs are making memorization less necessary.\n\nScientific publishing in Quarto\nMore broadly, I want you to learn how your computers work for research\n\nKieran Healy’s Modern Plain Text Computing (Healy 2025)"
+    "objectID": "slides/week3/week3_random_variables.html#random-variables-2",
+    "href": "slides/week3/week3_random_variables.html#random-variables-2",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Random variables",
+    "text": "Random variables\n\nWe can construct random variables as functions of other random variables!\nLet \\(R\\) be a random variable denoting the USD-GBP (pounds per dollar) exchange rate on a given day.\nLet \\(Y_i = R \\times X_i\\)\nThe probability that the respondent has an income between £50,000 and £100,000 is just \\[P (50{,}000 \\le Y_i \\le 100{,}000) \\]\n\\(Y_i\\) is itself another random variable!"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow",
-    "href": "slides/week1/week1_intro_and_review.html#course-workflow",
-    "title": "Week 1: Intro to Probability",
-    "section": "Course workflow",
-    "text": "Course workflow\n\nLectures (Tuesdays/Wednesdays)\n\nOne set of slides for each of the two lectures in each week\nYour primary point of instruction - goal is to synthesize the core material + give you the tools to learn more.\nI want lectures to be interactive - you should ask questions and interrupt!\n\nSection (Fridays)\n\nMeets once a week - this is where we do the computing.\nStarts with questions and review, then short guided exercises in R.\nBring your laptop and bring your problem set questions!"
+    "objectID": "slides/week3/week3_random_variables.html#random-variables-notation",
+    "href": "slides/week3/week3_random_variables.html#random-variables-notation",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Random variables: Notation",
+    "text": "Random variables: Notation\n\nWe typically refer to random variables using capital roman letters\n\n(e.g. \\(X\\), \\(Y\\), \\(D\\))\nSometimes subscripted when we have repetitions across some margin (\\(i\\) for units or \\(t\\) for time)\n\nWe’ll refer to a realization of a random variable using lower-case roman letters\n\ne.g. \\(P(X = x)\\) refers to the probability that a random variable \\(X\\) takes on a specific value \\(x\\).\n\nWe’ll refer to the support of a random variable with a calligraphic capital letter \\(\\mathcal{X}\\)\n\nThe support of a random variable \\(X\\) is the set of all values where \\(X\\) has non-zero probability (or density for continuous r.v.)"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-1",
-    "href": "slides/week1/week1_intro_and_review.html#course-workflow-1",
-    "title": "Week 1: Intro to Probability",
-    "section": "Course workflow",
-    "text": "Course workflow\n\nReadings\n\nCore textbook: Foundations of Agnostic Statistics (Aronow and Miller 2019)\nSupplemental:\n\nA User’s Guide to Statistical Inference and Regression (Blackwell 2025)\nIntroduction to Probability (Blitzstein and Hwang 2019)\n\nVarious papers from political science and adjacent disciplines are assigned throughout.\nEverything is available digitally either directly or through the UW-Madison online library resources\nDo the readings prior to each week, but definitely be sure to do them before the Wednesday."
+    "objectID": "slides/week3/week3_random_variables.html#distribution-functions",
+    "href": "slides/week3/week3_random_variables.html#distribution-functions",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Distribution functions",
+    "text": "Distribution functions\n\nRandom variables can be defined by their distribution function\n\nTypically denoted with a capital \\(F(\\cdot)\\)\nSometimes subscripted to specify the particular random variable: \\(F_X(\\cdot)\\)\n\nThe cumulative distribution function (CDF) gives the probability that a particular random variable \\(X\\) takes on a value less than or equal to \\(x\\)\n\\[ F_X(x) = P(X \\le x) \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-2",
-    "href": "slides/week1/week1_intro_and_review.html#course-workflow-2",
-    "title": "Week 1: Intro to Probability",
-    "section": "Course workflow",
-    "text": "Course workflow\n\nProblem sets (20% of your grade)\n\nFive problem sets, each covering roughly a two-week block of material.\nMain day-to-day component of the class – meant to get you working with your colleagues and thinking hard about the material.\nCollaboration is strongly encouraged – you should ask and answer questions on our class Slack Discussion board\nSubmit on the Gradescope assignment platform\nGrading is on a plus/check/minus scale.\n\nConversion to grade point is somewhat holistic.\nMajority plusses is an A, Majority checks is an AB, Majority minus is a B\n\nSolutions will be posted to Canvas after the due-date."
+    "objectID": "slides/week3/week3_random_variables.html#distribution-functions-1",
+    "href": "slides/week3/week3_random_variables.html#distribution-functions-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Distribution functions",
+    "text": "Distribution functions\n\nThe range of a CDF is between \\(0\\) and \\(1\\)\n\nIts output is a probability - probabilities can’t be negative or greater than \\(1\\)\n\nThe CDF is non-decreasing\n\nRemember the conjunction fallacy!\nCan’t make a probability of an event smaller by having it encompass more outcomes!\n\nLimits\n\nAs \\(x \\to \\infty\\), \\(F_X(x) \\to 1\\)\nAs \\(x \\to -\\infty\\), \\(F_X(x) \\to 0\\)"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-3",
-    "href": "slides/week1/week1_intro_and_review.html#course-workflow-3",
-    "title": "Week 1: Intro to Probability",
-    "section": "Course workflow",
-    "text": "Course workflow\n\nTwo in-class midterms (20% of your grade each)\n\nOctober 7 – the first five weeks of probability theory.\nNovember 18 – statistical inference and linear regression.\nClosed-book, pen-and-paper - similar format to comprehensive exams\n\nReplication project (30% of your grade)\n\nWork in groups of 2-3 to replicate and extend a published paper.\nPresented as a poster at the MEAD grad poster session, December 4th.\nAn ungraded check-in memo is due October 21\n\nParticipation (10% of your grade)\n\nIt is important that you actively engage with lecture, section, and the teaching staff – ask and answer questions.\nParticipating on Slack counts as well, as does attending MEAD talks."
+    "objectID": "slides/week3/week3_random_variables.html#distribution-functions-2",
+    "href": "slides/week3/week3_random_variables.html#distribution-functions-2",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Distribution functions",
+    "text": "Distribution functions\n\nThe probability that \\(X\\) lies between two values is just the difference between two evaluations of the CDF.\n\\[P(a &lt; X \\le b) = F_X(b) - F_X(a) \\]\nWhy? Consider that \\(X \\le b\\) is the union of two disjoint events: \\(X \\le a\\) and \\(a &lt; X \\le b\\)\nThe probability of the union of two disjoint events is the sum of their probabilities.\n\\[\n\\begin{aligned}\nF_X(b) - F_X(a) &= P(X \\le b) - P(X \\le a) \\\\\n&= P([X \\le a] \\cup [a &lt; X \\le b]) - P(X \\le a) \\\\\n&= P([X \\le a]) + P([a &lt; X \\le b]) - P(X \\le a) \\\\\n&= P(a &lt; X \\le b)\n\\end{aligned}\n\\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#course-workflow-4",
-    "href": "slides/week1/week1_intro_and_review.html#course-workflow-4",
-    "title": "Week 1: Intro to Probability",
-    "section": "Course workflow",
-    "text": "Course workflow\n\nModels, Experiments and Data workshop\n\nCheck out the Fall 2026 schedule here: https://sites.google.com/view/meadwisc/home\n\nGet added to the Slack workspace:\n\nhttps://join.slack.com/t/modelsanddata/shared_invite/zt-3cfv6l4lv-4XVF2V_toX_B0qQce55vCg"
+    "objectID": "slides/week3/week3_random_variables.html#discrete-random-variables",
+    "href": "slides/week3/week3_random_variables.html#discrete-random-variables",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Discrete random variables",
+    "text": "Discrete random variables\n\nWe typically discuss two types of random variables: discrete and continuous\n\nDiscrete random variables take on a finite or countably infinite number of values.\nAs a result, we can talk about its support as the set where \\(P(X = x) &gt; 0\\)\nIn fact, \\(P(X = x)\\) is a coherent idea!\n\nIn the social sciences, essentially everything is discrete\n\nOur samples are from large but finite populations (e.g. \\(262{,}083{,}034\\) voting age U.S. residents as of 2023).\nOur outcomes are discretized (finite number of response options: support/oppose, 5-point Likert).\nEven something like income is technically discrete\n\nContinuous random variables typically arise as limits and/or approximations"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#class-requirements",
-    "href": "slides/week1/week1_intro_and_review.html#class-requirements",
-    "title": "Week 1: Intro to Probability",
-    "section": "Class Requirements",
-    "text": "Class Requirements\n\nOverall: An interest in learning and willingness to ask questions.\nNo formal pre-requisites\n\nMath camp should get you up to speed on topics/refresh your memory of HS math.\nWe’ll spend time on the really relevant stuff: probability/inference\n\nMath is not about intrinsic aptitude, it’s about effort\n\n…in mathematics you don’t understand things. You just get used to them.\n— John Von Neumann\n\nWe don’t do rigor for rigor’s sake\n\nBut rigor is important - we will tell you why we need to be clear and precise about things!\n\nYou’re developing your ability to reason and not just memorize\nIf you’re unsure or confused, always ask - we will match the effort you put in\nWe all come from different backgrounds. Please have patience with yourself and with others"
+    "objectID": "slides/week3/week3_random_variables.html#probability-mass-functions-pmf",
+    "href": "slides/week3/week3_random_variables.html#probability-mass-functions-pmf",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Probability mass functions (PMF)",
+    "text": "Probability mass functions (PMF)\n\nA discrete random variable has a probability mass function (PMF)\n\nTypically written as lower-case \\(p(\\cdot)\\)\n\nThe PMF gives the probability that a particular random variable \\(X\\) takes on a value equal to \\(x\\)\n\\[p_X(x) = P(X = x) \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#llm-policy",
-    "href": "slides/week1/week1_intro_and_review.html#llm-policy",
-    "title": "Week 1: Intro to Probability",
-    "section": "LLM Policy",
-    "text": "LLM Policy\n\nSee the syllabus for the long version.\nIn short…\n\nYou should have LLMs do things for you\nYou should not have LLMs think for you\nYou should definitely not have LLMs speak for you\n\nSometimes it’s valuable to not have the LLM do something so that you can learn to think.\n\nTry to minimize use on the problem sets.\nThe exams are ultimately the check on this…\n…as is the poster session."
+    "objectID": "slides/week3/week3_random_variables.html#probability-mass-functions-pmf-1",
+    "href": "slides/week3/week3_random_variables.html#probability-mass-functions-pmf-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Probability mass functions (PMF)",
+    "text": "Probability mass functions (PMF)\n\nPMFs are non-negative: \\(p_X(x) &gt; 0\\) for \\(x\\) in the support and \\(0\\) otherwise\n\nAgain, PMFs return probabilities\n\nPMFs sum to \\(1\\) over the support of \\(X\\)\n\\[ \\sum_{x \\in \\mathcal{X}} p_X(x) = 1 \\]\nOne can get the CDF by summing the PMF over all values less than or equal to \\(x\\).\n\\[ F_X(x) = \\sum_{t \\in \\mathcal{X} : t \\le x} p_X(t) \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#acknowledgements",
-    "href": "slides/week1/week1_intro_and_review.html#acknowledgements",
-    "title": "Week 1: Intro to Probability",
-    "section": "Acknowledgements",
-    "text": "Acknowledgements\n\nFirst and foremost, this course is indebted to Adeline Lo who taught it for the last several years and has provided a wealth of materials.\nBut it’s also an iteration in the broader project of methods education in political methodology and is indebted to many of those who have taught versions of this course in the past and at other institutions\n\nMatthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nAnd special thanks to Andrew Heiss for the modern website/Quarto approach to teaching materials."
+    "objectID": "slides/week3/week3_random_variables.html#bernoulli-distribution",
+    "href": "slides/week3/week3_random_variables.html#bernoulli-distribution",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Bernoulli distribution",
+    "text": "Bernoulli distribution\n\nThe simplest discrete probability distribution is the Bernoulli distribution\n\nThis is the distribution of a weighted coin flip with “success” probability \\(p\\)\n\n\\[\nP(X = x) = \\begin{cases}\np & \\text{if } x = 1 \\\\\n1 - p & \\text{if } x = 0 \\\\\n0 & \\text{otherwise}\n\\end{cases}\n\\]\nWe’ll use the \\(\\sim\\) syntax to denote that a variable has a particular distribution with particular parameters\n\\[ X \\sim \\text{Bernoulli}(p) \\]\nBernoulli random variables often arise from indicator functions \\(\\mathbf{1}(\\cdot)\\) applied to events \\(A\\)\n\\[ \\mathbf{1}(A) \\sim \\text{Bernoulli}(p) \\quad p = P(A) \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#a-brief-overview",
-    "href": "slides/week1/week1_intro_and_review.html#a-brief-overview",
-    "title": "Week 1: Intro to Probability",
-    "section": "A brief overview",
-    "text": "A brief overview\n\nWeeks 1-2: Probability, conditional probability and independence\nWeeks 3-5: Random variables, distributions, expectation, variance and covariance\n\nFirst midterm: Wednesday, October 7\n\nWeeks 6-7: Estimation - bias, variance, consistency and the central limit theorem\nWeek 8: Confidence intervals and hypothesis testing\nWeeks 9-11: Linear regression - estimation, inference and interpretation\n\nSecond midterm: Wednesday, November 18\n\nWeek 12: Regression wrap-up - polynomials, overfitting and penalized regression\nWeek 13: Weighting estimators - missing data, IPW and survey weights\nWeek 14: A preview of causal inference (and of PS 813)"
+    "objectID": "slides/week3/week3_random_variables.html#example-list-experiments",
+    "href": "slides/week3/week3_random_variables.html#example-list-experiments",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Example: List experiments",
+    "text": "Example: List experiments\n\nGetting people to be honest on surveys can be difficult for some types of questions.\n\nSocial desirability bias may make some respondents reticent to give truthful answers\n\nThe 2012 Mexico Panel Study (Greene 2016) wanted to study the prevalence of vote buying in the 2012 Mexican presidential election\n\nExchanging a vote for a gift is illegal - survey respondents may not want to admit to a crime!\n\nSolution: A list experiment - Respondents are randomly assigned to a “treated” or a “control” group\nRespondents see a list of items and are asked how many items on that list they did in recent weeks (not which ones)\n\nSee a television newscast that mentions a candidate\nAttend a campaign event\nTalk about politics with other people\nTreated group only: Exchange your vote for a gift, favor, or access to a service\n\nRespondents who admit to vote buying are not identifiable (except in one edge case!)\n\nBut with some assumptions, we can learn the share of respondents who experienced vote buying."
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#statistics-and-political-science",
-    "href": "slides/week1/week1_intro_and_review.html#statistics-and-political-science",
-    "title": "Week 1: Intro to Probability",
-    "section": "Statistics and Political Science",
-    "text": "Statistics and Political Science\n\nStatistics is an extremely recent field - hypothesis testing formalized in early 20th century\n\nProbability a bit older - 17th/18th century.\n\nEarly applied statistics mostly in medicine/biological sciences - biostatistics\nIn the social sciences, econometrics becomes a distinct discipline around the 1930s\nPolitical methodology starts to define itself around 1984 (first PolMeth meeting)\nWhat is political methodology?\n\nA messy blend of all of these + computer science!"
+    "objectID": "slides/week3/week3_random_variables.html#example-list-experiments-1",
+    "href": "slides/week3/week3_random_variables.html#example-list-experiments-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Example: List experiments",
+    "text": "Example: List experiments\n\nLet \\(C_i\\) be the number of items that respondent \\(i\\) would say they did if assigned to control\n\n\\(C_i\\) is a random variable (randomness from both sampling and treatment assignment)\nIt is a discrete random variable that takes on integers from \\(0\\) to \\(3\\)\n\nLet \\(T_i\\) be the number of items that respondent \\(i\\) would say they did if assigned to treatment\n\nHere the random variable ranges from integers \\(0\\) to \\(4\\).\n\nThe simplest way to define these distributions is to assign a unique parameter to each possible value\n\\[\nP(C_i = c) = \\begin{cases}\np_0 & \\text{if } c = 0 \\\\\np_1 & \\text{if } c = 1 \\\\\np_2 & \\text{if } c = 2 \\\\\np_3 & \\text{if } c = 3 \\\\\n0 & \\text{otherwise}\n\\end{cases}\n\\qquad p_c \\ge 0, \\quad \\sum_{c=0}^{3} p_c = 1\n\\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#what-is-statistics",
-    "href": "slides/week1/week1_intro_and_review.html#what-is-statistics",
-    "title": "Week 1: Intro to Probability",
-    "section": "What is Statistics?",
-    "text": "What is Statistics?\n\nHow do we take something that we know and use it to learn about what we do not know?\n\nHow do we quantify our uncertainty around our predictions?\n\nOur main tools are assumptions about the data-generating process\n\nIf we assume that the thing we know came from some known process connected to the thing we don’t know…\n… then we can draw inferences about what we don’t know!"
+    "objectID": "slides/week3/week3_random_variables.html#example-list-experiments-2",
+    "href": "slides/week3/week3_random_variables.html#example-list-experiments-2",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Example: List experiments",
+    "text": "Example: List experiments"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#agnostic-statistics",
-    "href": "slides/week1/week1_intro_and_review.html#agnostic-statistics",
-    "title": "Week 1: Intro to Probability",
-    "section": "Agnostic Statistics",
-    "text": "Agnostic Statistics\n\nTraditional education in statistics often starts from very strong modeling assumptions\n\n(e.g. outcomes are known to be normally distributed)\n\nThis may work for some fields, but not the social sciences\n\nOur models are wrong - they’re analytical tools\n\nIf we make assumptions, we want them rooted in substantive knowledge.\n\n(e.g. randomization of a treatment)\n\nOtherwise, we want to be as agnostic as possible."
+    "objectID": "slides/week3/week3_random_variables.html#example-list-experiments-3",
+    "href": "slides/week3/week3_random_variables.html#example-list-experiments-3",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Example: List experiments",
+    "text": "Example: List experiments\n\nWe want to try to learn about the probability of responding to the sensitive item.\n\nLet \\(Z_i \\sim \\text{Bernoulli}(\\theta)\\) be the random variable denoting whether respondent \\(i\\) engaged in vote buying\n\nNow we’ll make some assumptions about how \\(Z_i\\) relates to the other two variables\n\\[ \\underbrace{T_i}_{\\text{treated count}} = \\underbrace{C_i}_{\\text{control count}} + \\underbrace{Z_i}_{\\text{sensitive item}} \\]\nWe’ve defined the data generating process for the list experiment!\n\nWhat’s the key behavioral assumption hidden here?\nRespondents’ reaction to the baseline items doesn’t change if they’re exposed to the sensitive item."
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#probability-and-inference",
-    "href": "slides/week1/week1_intro_and_review.html#probability-and-inference",
-    "title": "Week 1: Intro to Probability",
-    "section": "Probability and Inference",
-    "text": "Probability and Inference\n\n\nFigure from Blackwell (2025), Ch. 2"
+    "objectID": "slides/week3/week3_random_variables.html#binomial-distribution",
+    "href": "slides/week3/week3_random_variables.html#binomial-distribution",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Binomial distribution",
+    "text": "Binomial distribution\n\nWe saw how the most flexible way to represent any discrete random variable defined on a finite support is to just assign a unique parameter to each unique value.\n\nBut this can get unwieldy for a lot of statistical tasks - can we be more parsimonious?\nWhat if we assumed that respondents had a common probability \\(p\\) of responding yes to each component of the list and that items were independent\n\nThen we would get the Binomial distribution: the distribution of the sum of independent and identical weighted coin flips\n\nTwo parameters: \\(N\\): Number of trials, \\(p\\): Success probability\n\n\\[\nP(X = x) = \\begin{cases}\n\\binom{N}{x} p^x (1 - p)^{N - x} & \\text{if } x \\in \\{0, 1, \\dots, N\\} \\\\\n0 & \\text{otherwise}\n\\end{cases}\n\\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#what-is-probability",
-    "href": "slides/week1/week1_intro_and_review.html#what-is-probability",
-    "title": "Week 1: Intro to Probability",
-    "section": "What is probability?",
-    "text": "What is probability?\n\nProbability quantifies the likelihood of an event from a given data-generating process\n\nObjectivist interpretation: probabilities are long-run frequencies\nSubjectivist interpretation: probabilities are degrees of belief\n\nTo talk about probability, we first need to talk about events\nDefine the sample space \\(\\Omega\\) as the set of all possible outcomes of an “experiment”\n\n\n\n\n\n\n\n\nModeled after Blitzstein and Hwang (2019), Figure 1.1"
+    "objectID": "slides/week3/week3_random_variables.html#fitting-a-binomial",
+    "href": "slides/week3/week3_random_variables.html#fitting-a-binomial",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Fitting a Binomial",
+    "text": "Fitting a Binomial\n\n\n\n\n2012 Mexico Panel Study, Wave 2 (Greene 2016)"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#events",
-    "href": "slides/week1/week1_intro_and_review.html#events",
-    "title": "Week 1: Intro to Probability",
-    "section": "Events",
-    "text": "Events\n\nAn event is a subset of the sample space (including the empty set)\n\nWe’ll denote the event space – the set of all events that can be assigned a probability – as \\(\\mathcal{S}\\) (this is called the “\\(\\sigma\\)-algebra”)"
+    "objectID": "slides/week3/week3_random_variables.html#expected-value",
+    "href": "slides/week3/week3_random_variables.html#expected-value",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Expected value",
+    "text": "Expected value\n\nOne very important property of a random variable is its expectation \\(\\mathbb{E}[X]\\)\n\nCan think of this as a summary of that random variable’s “long-run” behavior.\n\nFor a discrete random variable, the expectation is a weighted average of that variable’s possible outcomes with the weights given by the probability of each outcome\n\\[ \\mathbb{E}[X] =  \\sum_{x \\in \\mathcal{X}} x \\cdot P(X = x) \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#set-review",
-    "href": "slides/week1/week1_intro_and_review.html#set-review",
-    "title": "Week 1: Intro to Probability",
-    "section": "Set review",
-    "text": "Set review\n\nThe empty set \\(\\emptyset\\) is the set that contains no elements\nThe complement of a set \\(A\\), denoted \\(A^{c}\\), is the set of all elements not in \\(A\\)\n\nImplicitly complements are defined w.r.t. some “universal” set - here the sample space \\(\\Omega\\).\nWhat’s \\(\\Omega^c\\)?\n\nPractice: In the figure below, is \\(A^{c} = B\\)?"
+    "objectID": "slides/week3/week3_random_variables.html#expectations-of-functions",
+    "href": "slides/week3/week3_random_variables.html#expectations-of-functions",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Expectations of functions",
+    "text": "Expectations of functions\n\nSuppose I want to know \\(\\mathbb{E}[g(X)]\\) where \\(g()\\) is some function.\n\n\\(\\mathbb{E}[g(X)] \\neq g(\\mathbb{E}[X])\\) except in a few cases (linear functions)\n\nAn interesting property of the expected value is what is sometimes called the Law of the Unconscious Statistician (LOTUS)\nIf I just looked at the definition of expectation, I’d think:\n\n“What if I just plugged in \\(g(x)\\) instead of \\(x\\) and took the average over the same weights?”\n\nIt turns out that works!\n\\[\\mathbb{E}[g(X)] = \\sum_{x \\in \\mathcal{X}} g(x) \\cdot P(X = x) \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#set-review-1",
-    "href": "slides/week1/week1_intro_and_review.html#set-review-1",
-    "title": "Week 1: Intro to Probability",
-    "section": "Set review",
-    "text": "Set review\n\nThe union of two events \\(A \\cup B\\) contains all elements in either \\(A\\) or \\(B\\)\n\nWe’ll sometimes use a big \\(\\displaystyle\\bigcup_{i=1}^N\\) to denote a union over many events\n\nThe intersection of two events \\(A \\cap B\\) contains all elements both in \\(A\\) and \\(B\\)\n\nSame idea for notation: \\(\\displaystyle\\bigcap_{i=1}^N\\) denotes an intersection over many events\n\nTwo sets \\(A\\) and \\(B\\) are disjoint or mutually exclusive if \\(A \\cap B = \\emptyset\\)"
+    "objectID": "slides/week3/week3_random_variables.html#linearity-of-expectations",
+    "href": "slides/week3/week3_random_variables.html#linearity-of-expectations",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Linearity of expectations",
+    "text": "Linearity of expectations\n\nAnother essential property of expectations is linearity\n\nThe expectation of the sum is the sum of the expectations\n\nLet \\(X\\) and \\(Y\\) be two random variables\n\\[\\mathbb{E}[X + Y] =  \\mathbb{E}[X] + \\mathbb{E}[Y] \\]\nLet \\(a\\) and \\(b\\) be constants: we can pull the constants out of the expectation\n\\[\\mathbb{E}[aX + bY] =  a\\mathbb{E}[X] + b\\mathbb{E}[Y] \\]\nYou’ll see this most often with sums over random variables indexed along some dimension\n\\[\\mathbb{E}\\bigg[\\sum_{i=1}^n a X_i\\bigg] = \\sum_{i=1}^n\\mathbb{E}[a X_i] = \\sum_{i=1}^n a\\mathbb{E}[X_i] = a\\sum_{i=1}^n \\mathbb{E}[X_i]\\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#set-review-2",
-    "href": "slides/week1/week1_intro_and_review.html#set-review-2",
-    "title": "Week 1: Intro to Probability",
-    "section": "Set review",
-    "text": "Set review\n\nPractice: In the figure below, are \\(A\\) and \\(B\\) disjoint?"
+    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli",
+    "href": "slides/week3/week3_random_variables.html#expectation-of-the-bernoulli",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Expectation of the Bernoulli",
+    "text": "Expectation of the Bernoulli\n\nLet \\(X \\sim \\text{Bernoulli}(p)\\)\nThere are two possible values, let’s calculate the expectation!\n\\[\n\\begin{aligned}\n\\mathbb{E}[X] &= \\sum_{x \\in \\{0, 1\\}} x \\cdot P(X = x) \\\\\n&= 0 \\cdot P(X = 0) + 1 \\cdot P(X = 1) \\\\\n&= 0 \\cdot (1 - p) + 1 \\cdot p \\\\\n&= p\n\\end{aligned}\n\\]\nThe expected value of a Bernoulli/indicator random variable is just the probability that it takes on a value of \\(1\\)\n\nThis is the fundamental bridge between expectations and probability (Blitzstein and Hwang 2019)"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#set-review-3",
-    "href": "slides/week1/week1_intro_and_review.html#set-review-3",
-    "title": "Week 1: Intro to Probability",
-    "section": "Set review",
-    "text": "Set review\n\nDe Morgan’s Laws:\n\n\\((A \\cup B)^{c} = A^{c} \\cap B^{c}\\) – not in either means in neither\n\\((A \\cap B)^{c} = A^{c} \\cup B^{c}\\) – not in both means missing from at least one\nExtension to many events: \\(\\left(\\bigcup_i A_i\\right)^{c} = \\bigcap_i A_i^{c}\\)"
+    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-binomial",
+    "href": "slides/week3/week3_random_variables.html#expectation-of-the-binomial",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Expectation of the Binomial",
+    "text": "Expectation of the Binomial\n\nNow let \\(X \\sim \\text{Binomial}(N, p)\\)\nWe could write this out and use properties of sums of factorials\n\\[ \\mathbb{E}[X] = \\sum_{x=0}^{N} x \\cdot \\binom{N}{x} p^x (1 - p)^{N - x} \\]\nOr we could use linearity of expectations - much easier!"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#probability-axioms",
-    "href": "slides/week1/week1_intro_and_review.html#probability-axioms",
-    "title": "Week 1: Intro to Probability",
-    "section": "Probability axioms",
-    "text": "Probability axioms\n\nProbability is a function that maps from the event space \\(\\mathcal{S}\\) to the real numbers.\n\n\\(P \\colon \\mathcal{S} \\to \\mathbb{R}\\)\n\nThe probability function \\(P\\) obeys three axioms (Kolmogorov’s Axioms)\n\nNon-negativity: \\(P(A) \\geq 0\\) for every event \\(A \\in \\mathcal{S}\\)\nNormalization: \\(P(\\Omega) = 1\\)\nCountable additivity: for pairwise disjoint events \\(A_1, A_2, A_3, \\dotsc\\)\n\\[P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)\\]"
+    "objectID": "slides/week3/week3_random_variables.html#expectation-of-the-binomial-1",
+    "href": "slides/week3/week3_random_variables.html#expectation-of-the-binomial-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Expectation of the Binomial",
+    "text": "Expectation of the Binomial\n\nRecall that the Binomial is the sum of \\(N\\) independent and identically distributed Bernoulli random variables with success probability \\(p\\)\n\\[X = \\sum_{i=1}^N X_i \\quad\\quad\\quad X_i \\sim \\text{Bernoulli}(p) \\]\nApplying linearity of expectations\n\\[\\mathbb{E}[X] = \\mathbb{E}\\bigg[\\sum_{i=1}^N X_i\\bigg] = \\sum_{i=1}^N \\mathbb{E}[X_i]\\]\nPlugging in our expectation of the Bernoulli and summing\n\\[ \\mathbb{E}[X] = Np \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#probability-isnt-always-intuitive",
-    "href": "slides/week1/week1_intro_and_review.html#probability-isnt-always-intuitive",
-    "title": "Week 1: Intro to Probability",
-    "section": "Probability isn’t always intuitive",
-    "text": "Probability isn’t always intuitive\n\nTversky and Kahneman (1983) gave this question to a sample of undergraduate students:\n\n\n\nA health survey was conducted in a representative sample of adult males in British Columbia of all ages and occupations.\nMr. F. was included in the sample. He was selected by chance from the list of participants.\nWhich of the following statements is more probable? (check one)\n1. Mr. F. has had one or more heart attacks. 2. Mr. F. has had one or more heart attacks and he is over 55 years old.\n\n\n\n\n58% of respondents incorrectly said the second option\n\nWhy?"
+    "objectID": "slides/week3/week3_random_variables.html#example-list-experiment",
+    "href": "slides/week3/week3_random_variables.html#example-list-experiment",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Example: List experiment",
+    "text": "Example: List experiment\n\nLet’s return to our list experiment example. Remember, we have\n\\[ \\underbrace{T_i}_{\\text{treated count}} = \\underbrace{C_i}_{\\text{control count}} + \\underbrace{Z_i}_{\\text{sensitive item}} \\]\nWe want to know \\(P(Z_i = 1) = \\theta\\) - the share of respondents who participated in vote buying\nTaking expectations of both sides and using linearity\n\\[ \\mathbb{E}[T_i] = \\mathbb{E}[C_i] + \\theta \\]\nSolving for \\(\\theta\\)\n\\[\\theta  = \\mathbb{E}[T_i] - \\mathbb{E}[C_i] \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#monotonicity",
-    "href": "slides/week1/week1_intro_and_review.html#monotonicity",
-    "title": "Week 1: Intro to Probability",
-    "section": "Monotonicity",
-    "text": "Monotonicity\n\nIf \\(A \\subseteq B\\), then \\(P(A) \\leq P(B)\\)\n\nA bigger event can’t be less likely\n\nProof\n\nSplit \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[B = A \\cup (B \\cap A^{c})\\]\nAdditivity turns the union into a sum, and \\(P(B \\cap A^{c}) \\geq 0\\) by non-negativity\n\\[P(B) = P(A) + \\underbrace{P(B \\cap A^{c})}_{\\geq 0} \\geq P(A)\\]\n\nEvery event is a subset of the sample space: \\(A \\subseteq \\Omega\\), so \\(P(A) \\leq P(\\Omega) = 1\\)\n\nWith non-negativity, this pins probabilities to the interval \\([0, 1]\\)"
+    "objectID": "slides/week3/week3_random_variables.html#preview-estimation",
+    "href": "slides/week3/week3_random_variables.html#preview-estimation",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Preview: Estimation",
+    "text": "Preview: Estimation\n\nIn our sample, we assume that we observe realizations of these two random variables\n\nIn the treated group we have \\(N_{T}\\) draws of \\(T_i\\)\nIn the control group we have \\(N_{C}\\) draws of \\(C_i\\)\n\nWe’ll plug-in an estimate of each expectation using its sample analogue: the average\n\\[\n\\begin{aligned}\n\\hat{\\theta} &= \\widehat{\\mathbb{E}}[T_i] - \\widehat{\\mathbb{E}}[C_i] \\\\\n&= \\frac{1}{N_T} \\sum_{i=1}^{N_T} T_i - \\frac{1}{N_C} \\sum_{i=1}^{N_C} C_i\n\\end{aligned}\n\\]\nLater, we’ll show that under assumptions about how we got our sample (i.i.d. random smapling)…\n\n…these sample averages converge to the population expected values\n“law of large numbers”\n\nNote that we don’t actually need the assumption that \\(C_i \\sim \\text{Binomial}(3, p)\\) to estimate \\(\\theta\\)\n\nJust that exposure to the sensitive item doesn’t alter responses to the baseline list"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#the-complement-rule",
-    "href": "slides/week1/week1_intro_and_review.html#the-complement-rule",
-    "title": "Week 1: Intro to Probability",
-    "section": "The complement rule",
-    "text": "The complement rule\n\nThe probability of an event is one minus the probability that it doesn’t happen\n\\[P(A) = 1 - P(A^{c})\\]\nProof\n\n\\(A\\) and \\(A^{c}\\) are disjoint and together they make up the whole sample space\n\\[A \\cup A^{c} = \\Omega\\]\nAdditivity and then normalization give us\n\\[P(A) + P(A^{c}) = P(\\Omega) = 1\\]\n\nOften it’s much easier to compute the probability of the complement – take \\(A\\) = “at least one” and \\(A^{c}\\) = “none”\nSetting \\(A = \\Omega\\) gives us \\(P(\\emptyset) = 1 - P(\\Omega) = 0\\)"
+    "objectID": "slides/week3/week3_random_variables.html#preview-estimation-1",
+    "href": "slides/week3/week3_random_variables.html#preview-estimation-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Preview: Estimation",
+    "text": "Preview: Estimation\n\nlibrary(tidyverse)\nlibrary(knitr)\n\n# Sample means of the item count in each group\nmexico |&gt;\n  group_by(Group = if_else(treat == 1, \"Treated\", \"Control\")) |&gt;\n  summarize(`Mean count` = mean(y), N = n()) |&gt;\n  kable(digits = 3)\n\n\n\n\nGroup\nMean count\nN\n\n\n\n\nControl\n1.555\n559\n\n\nTreated\n1.749\n561\n\n\n\n\n# List experiment estimate of theta vs. share admitting vote buying when asked directly\nmexico |&gt;\n  summarize(`List experiment` = mean(y[treat == 1]) - mean(y[treat == 0]),\n            `Direct question` = mean(direct)) |&gt;\n  kable(digits = 3)\n\n\n\n\nList experiment\nDirect question\n\n\n\n\n0.194\n0.055"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#inclusionexclusion",
-    "href": "slides/week1/week1_intro_and_review.html#inclusionexclusion",
-    "title": "Week 1: Intro to Probability",
-    "section": "Inclusion/Exclusion",
-    "text": "Inclusion/Exclusion\n\nThe probability of a union of two events is the sum of their respective probabilities minus the probability of their intersection\n\\[ P(A \\cup B) = P(A) + P(B) - P(A \\cap B) \\]\nProof\n\nSplit both \\(A \\cup B\\) and \\(B\\) into disjoint pieces using \\(A\\) and \\(A^{c}\\)\n\\[A \\cup B = A \\cup (B \\cap A^{c}) \\qquad\\qquad B = (A \\cap B) \\cup (B \\cap A^{c})\\]\nAdditivity turns each union into a sum\n\\[P(A \\cup B) = P(A) + P(B \\cap A^{c}) \\qquad P(B) = P(A \\cap B) + P(B \\cap A^{c})\\]\nSolve the second for \\(P(B \\cap A^{c}) = P(B) - P(A \\cap B)\\), then substitute into the first."
+    "objectID": "slides/week3/week3_random_variables.html#variance",
+    "href": "slides/week3/week3_random_variables.html#variance",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Variance",
+    "text": "Variance\n\nBeyond the expectation, there are other summaries that capture other relevant features.\n\nWe may want to know how spread out realizations of the random variable are.\n\nThe variance of a random variable \\(\\Var(X)\\) is the expected squared deviation from \\(\\mathbb{E}[X]\\)\n\\[\\Var(X) = \\mathbb{E}\\bigg[(X - \\mathbb{E}[X])^2\\bigg] \\]\nExpanding the square and applying linearity of expectation\n\\[\\Var(X) = \\mathbb{E}[X^2] - \\mathbb{E}[2X\\mathbb{E}[X]] + \\mathbb{E}[\\mathbb{E}[X]^2]\\]\nPulling out the constant \\(2\\mathbb{E}[X]\\) and \\(\\mathbb{E}[X]^2\\)\n\\[\n\\begin{aligned}\n\\Var(X) &= \\mathbb{E}[X^2] - 2\\mathbb{E}[X]\\mathbb{E}[X] + \\mathbb{E}[X]^2 \\\\\n&= \\mathbb{E}[X^2] - \\mathbb{E}[X]^2\n\\end{aligned}\n\\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#inclusionexclusion-1",
-    "href": "slides/week1/week1_intro_and_review.html#inclusionexclusion-1",
-    "title": "Week 1: Intro to Probability",
-    "section": "Inclusion/Exclusion",
-    "text": "Inclusion/Exclusion"
+    "objectID": "slides/week3/week3_random_variables.html#properties-of-variance",
+    "href": "slides/week3/week3_random_variables.html#properties-of-variance",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Properties of variance",
+    "text": "Properties of variance\n\nThe variance is non-negative\n\nBy Jensen’s inequality for a convex function: \\(\\mathbb{E}[X^2] \\ge \\mathbb{E}[X]^2\\)\n\nFor a random variable \\(X\\) and a constant \\(a\\)\n\\[ \\Var(aX) = a^2\\Var(X) \\]\nBut be careful, the variance of the sum of two random variables \\(X\\) and \\(Y\\) is not the sum of the variances except in a special case we’ll talk about next week (independence)\n\\[ \\Var(X + Y) \\neq \\Var(X) + \\Var(Y) \\]\nAlso, the variance of the difference is not the difference in the variances…even for independent random variables, it’s still the sum of the variances (\\(-1\\) gets squared!)\n\nWe’ll talk about this more next week when we define covariance"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection",
-    "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection",
-    "title": "Week 1: Intro to Probability",
-    "section": "Bounding the probability of an intersection",
-    "text": "Bounding the probability of an intersection\n\nRearrange the union rule\n\\[P(A \\cap B) = P(A) + P(B) - P(A \\cup B)\\]\nFrom earlier, we can split the union into disjoint parts: \\(P(A \\cup B) = P(A) + P(B \\cap A^{c})\\)\n\nNon-negativity of \\(P(B \\cap A^{c})\\) bounds the union from below and, symmetrically, splitting on \\(B\\) and \\(B^c\\) gives us two bounds:\n\\[P(A \\cup B) \\geq P(A) \\qquad\\qquad P(A \\cup B) \\geq P(B)\\]\n\nSubstituting \\(P(A \\cup B) \\geq P(B)\\) gives \\(P(A \\cap B) \\leq P(A)\\)\nSubstituting \\(P(A \\cup B) \\geq P(A)\\) gives \\(P(A \\cap B) \\leq P(B)\\)\nBoth hold at once, so the intersection is bounded by the smaller of the two\n\\[P(A \\cap B) \\leq \\min\\{P(A),\\, P(B)\\}\\]"
+    "objectID": "slides/week3/week3_random_variables.html#variance-of-a-bernoulli",
+    "href": "slides/week3/week3_random_variables.html#variance-of-a-bernoulli",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Variance of a Bernoulli",
+    "text": "Variance of a Bernoulli\n\nLet’s derive the variance of the Bernoulli. Let \\(X \\sim \\text{Bernoulli}(p)\\)\n\\[\n\\begin{aligned}\n\\Var(X) &= \\mathbb{E}[X^2] - \\mathbb{E}[X]^2 \\\\\n&= \\mathbb{E}[X] - \\mathbb{E}[X]^2 \\\\\n&= p - p^2 \\\\\n&= p(1 - p)\n\\end{aligned}\n\\]\nThe second line uses the fact that \\(X\\) only takes on the values \\(0\\) and \\(1\\). \\(0^2 = 0\\) and \\(1^2 = 1\\).\nIntuition: The uncertainty around a coin-flip is maximized when it’s fair!"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection-1",
-    "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-an-intersection-1",
-    "title": "Week 1: Intro to Probability",
-    "section": "Bounding the probability of an intersection",
-    "text": "Bounding the probability of an intersection\n\nThat’s an upper bound, how about the lower bound?\nLet’s inspect our expression for \\(P(A \\cap B)\\) \\[ P(A \\cap B) = P(A) + P(B) - P(A \\cup B) \\]\nWe have \\(P(A) + P(B)\\)…but what about \\(P(A \\cup B)\\)\n\n\\(A \\cup B \\subseteq \\Omega\\) and \\(P(\\Omega) = 1\\). So \\(P(A \\cup B) \\leq 1\\)\n\nSo one lower bound is\n\\[ P(A \\cap B) \\geq P(A) + P(B) - 1 \\]\nBut by non-negativity, the probability is also trivially bounded below by \\(0\\), so we have\n\\[ P(A \\cap B) \\geq \\max\\{0,\\, P(A) + P(B) - 1\\} \\]"
+    "objectID": "slides/week3/week3_random_variables.html#continuous-random-variables",
+    "href": "slides/week3/week3_random_variables.html#continuous-random-variables",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Continuous random variables",
+    "text": "Continuous random variables\n\nRecall the difference between the CDF of a discrete versus a continuous random variable.\n\n\n\nThe discrete variable’s CDF has discontinuities, the continuous variable’s CDF is continuous (and differentiable almost everywhere)"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-a-union",
-    "href": "slides/week1/week1_intro_and_review.html#bounding-the-probability-of-a-union",
-    "title": "Week 1: Intro to Probability",
-    "section": "Bounding the probability of a union",
-    "text": "Bounding the probability of a union\n\nHow about \\(P(A \\cup B)\\)?\nWe have a lower bound from earlier\n\\[ P(A \\cup B) \\geq \\max\\{P(A),\\, P(B)\\} \\]\nAnd an upper bound follows from the Union Rule + non-negativity: \\(P(A \\cap B) \\geq 0\\)\n\\[ P(A \\cup B) \\leq P(A) + P(B) \\]\nAnd from before, we also have \\(P(A \\cup B) \\leq 1\\)\n\\[ P(A \\cup B) \\leq \\min\\{1,\\, P(A) + P(B)\\} \\]"
+    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
+    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Probability density functions (PDFs)",
+    "text": "Probability density functions (PDFs)\n\nA continuous random variable is a random variable whose CDF is continuous everywhere and differentiable everywhere except possibly at a finite number of points (Blitzstein and Hwang 2019)\n\nThe support of a continuous random variable is typically the set of real numbers \\(\\mathbb{R}\\) or an interval (or union of intervals) of the reals.\n\nThe challenge with talking about a distribution defined on the uncountably infinite reals is that the probability of realizing any particular value \\(x\\) is always zero\nInstead of a PMF, continuous random variables have a probability density function (PDF) - defined as the derivative of the CDF\n\nTypical notation is a lowercase \\(f(\\cdot)\\)\n\n\\[ f_X(x) = \\frac{d}{dx} F_X(x) \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#fréchet-inequalities-for-two-events",
-    "href": "slides/week1/week1_intro_and_review.html#fréchet-inequalities-for-two-events",
-    "title": "Week 1: Intro to Probability",
-    "section": "Fréchet inequalities for two events",
-    "text": "Fréchet inequalities for two events\n\nFor any two events \\(A, B\\), their intersection is bounded by\n\\[\\max\\{0,\\, P(A) + P(B) - 1\\} \\;\\leq\\; P(A \\cap B) \\;\\leq\\; \\min\\{P(A),\\, P(B)\\}\\]\nFor any two events \\(A, B\\), their union is bounded by\n\\[\\max\\{P(A),\\, P(B)\\} \\;\\leq\\; P(A \\cup B) \\;\\leq\\; \\min\\{1,\\, P(A) + P(B)\\}\\]"
+    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-1",
+    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Probability density functions (PDFs)",
+    "text": "Probability density functions (PDFs)\n\nIt’s not a probability, but it integrates to a probability.\n\nFrom the fundamental theorem of calculus\n\n\\[ F_X(x) = \\int_{-\\infty}^{x} f_X(t) dt \\]\nThis is similar to how we summed the PMF to get the CDF\nPDFs integrate to \\(1\\) (just like how PMFs sum to \\(1\\))\n\\[ \\int_{-\\infty}^{\\infty} f_X(x)dx = 1 \\]"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#next-week",
-    "href": "slides/week1/week1_intro_and_review.html#next-week",
-    "title": "Week 1: Intro to Probability",
+    "objectID": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-2",
+    "href": "slides/week3/week3_random_variables.html#probability-density-functions-pdfs-2",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Probability density functions (PDFs)",
+    "text": "Probability density functions (PDFs)\n\nAnd we can integrate the PDF over any interval to get the probability of \\(X\\) falling in that interval.\n\\[P(a &lt; X \\le b) =  \\int_{a}^{b} f_X(x)dx \\]\nIntuitively, this follows from our earlier definition using CDFs\n\\[\n\\begin{aligned}\nP(a &lt; X \\le b) &= F_X(b) - F_X(a) \\\\\n&= \\int_{-\\infty}^{b} f_X(x)dx - \\int_{-\\infty}^{a} f_X(x)dx \\\\\n&= \\int_{a}^{b} f_X(x)dx\n\\end{aligned}\n\\]"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#expectations-of-continuous-random-variables",
+    "href": "slides/week3/week3_random_variables.html#expectations-of-continuous-random-variables",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Expectations of continuous random variables",
+    "text": "Expectations of continuous random variables\n\nWe defined the expected value for a discrete random variable as a sum\n\nWe’ll do the same for a continuous random variable using an integral\n\nFor continuous \\(X\\)\n\\[\\mathbb{E}[X] = \\int_{\\mathcal{X}} x f(x) dx \\]\nMore generally, the distinction between discrete and continuous vanishes when we define integrals with respect to the distribution (Lebesgue integration)\n\\[\\mathbb{E}[X] = \\int_{\\mathcal{X}} x \\, dF_X(x) \\]\n\nRather than slicing up the \\(x\\)-axis into small intervals, we slice up the probability and ask how much of it sits at each value of \\(X\\)\n\nBut we won’t spend time on that in this class…your Riemann integral intuition (sum of the areas of tinier and tinier rectangles) is enough!"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#normal-distribution",
+    "href": "slides/week3/week3_random_variables.html#normal-distribution",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Normal distribution",
+    "text": "Normal distribution\n\nThe normal (or Gaussian) distribution is the most common continuous distribution you’ll encounter\n\nIt’s the approximate distribution of sums and means of independent random variables.\n\\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\). Support over all of \\(\\mathbb{R}\\).\n\nThe PDF is\n\\[ f_X(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} \\exp\\left\\{-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right\\} \\]\nTwo parameters, \\(\\mu\\) and \\(\\sigma^2\\)\n\nThese parameters happen to be the expectation and variance!\n\\(\\mu = \\mathbb{E}[X]\\), \\(\\sigma^2 = \\Var(X)\\)"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#normal-distribution-1",
+    "href": "slides/week3/week3_random_variables.html#normal-distribution-1",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Normal distribution",
+    "text": "Normal distribution"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#normal-distribution-2",
+    "href": "slides/week3/week3_random_variables.html#normal-distribution-2",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Normal distribution",
+    "text": "Normal distribution"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#the-standard-normal",
+    "href": "slides/week3/week3_random_variables.html#the-standard-normal",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "The standard normal",
+    "text": "The standard normal\n\n\\(\\mathcal{N}(0, 1)\\) is referred to as the standard normal\n\nPDF and CDF typically written as: \\(\\phi(z)\\) and \\(\\Phi(z)\\)\n\\[ \\phi(z) = \\frac{1}{\\sqrt{2\\pi}} e^{-z^2/2} \\]\n\nAny normal can be standardized. If \\(X \\sim \\mathcal{N}(\\mu, \\sigma^2)\\), then\n\\[ Z = \\frac{X - \\mu}{\\sigma} \\sim \\mathcal{N}(0, 1) \\]\n\\(\\Phi\\) has no closed form\n\nThis is why old stats books had tables of pre-computed quantiles of the normal distribution!\nAnd why we’ll rely on our computer + various approximations to evaluate the CDF (pnorm())"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#areas-under-the-normal-curve",
+    "href": "slides/week3/week3_random_variables.html#areas-under-the-normal-curve",
+    "title": "Week 3: Random Variables and Distributions",
+    "section": "Areas under the normal curve",
+    "text": "Areas under the normal curve"
+  },
+  {
+    "objectID": "slides/week3/week3_random_variables.html#next-week",
+    "href": "slides/week3/week3_random_variables.html#next-week",
+    "title": "Week 3: Random Variables and Distributions",
     "section": "Next week",
-    "text": "Next week\n\nConditional probabilities\n\nHow do the chances of one event change if I know another event has occurred?\nConditioning restricts the sample space\n\nIndependence\n\nWhat happens when knowing one event tells me nothing about the probability of another?\n\nBayes’ rule\n\nHow do we relate the probability of \\(A\\) given \\(B\\) to the probability of \\(B\\) given \\(A\\)?"
+    "text": "Next week\n\nJoint distributions\n\nDefining the distribution of \\(X\\) and \\(Y\\) (and \\(Z\\), and…) together!\n\nConditional distributions\n\nSlicing the joint distribution at a particular point\n\nConditional expectations and the best linear predictor\n\nLaw of total expectation\n\nCovariances and correlations"
   },
   {
-    "objectID": "slides/week1/week1_intro_and_review.html#references",
-    "href": "slides/week1/week1_intro_and_review.html#references",
-    "title": "Week 1: Intro to Probability",
+    "objectID": "slides/week3/week3_random_variables.html#references",
+    "href": "slides/week3/week3_random_variables.html#references",
+    "title": "Week 3: Random Variables and Distributions",
     "section": "References",
-    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. Modern Plain Text Computing. Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
+    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nGreene, Kenneth. 2016. Mexico Panel Study, 2012. Inter-university Consortium for Political; Social Research (ICPSR). https://doi.org/10.3886/ICPSR35024.v1."
   },
   {
     "objectID": "staff.html",

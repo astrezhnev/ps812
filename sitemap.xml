@@ -2,58 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://astrezhnev.github.io/ps812/syllabus.html</loc>
-    <lastmod>2026-09-25T04:02:22.479Z</lastmod>
+    <lastmod>2026-09-24T14:39:03.858Z</lastmod>
   </url>
   <url>
-    <loc>https://astrezhnev.github.io/ps812/slides/week3/week3_random_variables.html</loc>
-    <lastmod>2026-09-25T04:02:22.478Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/slides/week2/week2_conditional_probability.html</loc>
-    <lastmod>2026-09-25T04:02:22.477Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/slides/week2/bisg_app.html</loc>
-    <lastmod>2026-09-16T19:45:24.835Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/sections.html</loc>
-    <lastmod>2026-09-25T04:02:22.564Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/resources.html</loc>
-    <lastmod>2026-09-14T18:59:37.610Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/index.html</loc>
-    <lastmod>2026-09-14T18:59:37.600Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/assignments.html</loc>
-    <lastmod>2026-09-25T04:02:22.425Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/lectures.html</loc>
-    <lastmod>2026-09-25T04:02:22.425Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/schedule.html</loc>
-    <lastmod>2026-09-25T04:02:22.475Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/slides/week1/week1_intro_and_review.html</loc>
-    <lastmod>2026-09-14T18:59:37.614Z</lastmod>
-  </url>
-  <url>
-    <loc>https://astrezhnev.github.io/ps812/slides/week2/ces_conditioning_app.html</loc>
-    <lastmod>2026-09-16T19:45:24.839Z</lastmod>
+    <loc>https://astrezhnev.github.io/ps812/slides/week4/week4_joint_distributions.html</loc>
+    <lastmod>2026-09-25T21:53:51.817Z</lastmod>
   </url>
   <url>
     <loc>https://astrezhnev.github.io/ps812/slides/week3/binomial_app.html</loc>
-    <lastmod>2026-09-25T04:02:22.478Z</lastmod>
+    <lastmod>2026-09-22T19:41:45.658Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/slides/week2/ces_conditioning_app.html</loc>
+    <lastmod>2026-09-16T11:59:51.591Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/slides/week1/week1_intro_and_review.html</loc>
+    <lastmod>2026-09-09T16:39:10.835Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/schedule.html</loc>
+    <lastmod>2026-09-21T18:52:34.542Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/lectures.html</loc>
+    <lastmod>2026-09-21T17:04:07.272Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/assignments.html</loc>
+    <lastmod>2026-09-24T14:39:03.816Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/index.html</loc>
+    <lastmod>2026-08-26T20:58:44.888Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/resources.html</loc>
+    <lastmod>2026-08-26T20:51:59.938Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/sections.html</loc>
+    <lastmod>2026-09-25T21:53:51.788Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/slides/week2/bisg_app.html</loc>
+    <lastmod>2026-09-16T11:59:51.585Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/slides/week2/week2_conditional_probability.html</loc>
+    <lastmod>2026-09-21T16:42:46.838Z</lastmod>
+  </url>
+  <url>
+    <loc>https://astrezhnev.github.io/ps812/slides/week3/week3_random_variables.html</loc>
+    <lastmod>2026-09-25T21:53:51.817Z</lastmod>
   </url>
   <url>
     <loc>https://astrezhnev.github.io/ps812/staff.html</loc>
-    <lastmod>2026-09-14T18:59:37.628Z</lastmod>
+    <lastmod>2026-08-26T20:50:01.493Z</lastmod>
   </url>
 </urlset>
