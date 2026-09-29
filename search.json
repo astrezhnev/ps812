@@ -291,7 +291,7 @@
     "href": "slides/week4/week4_joint_distributions.html#example-weighting-to-recalled-vote-2",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "Example: Weighting to recalled vote",
-    "text": "Example: Weighting to recalled vote\n\nAveraging over the 2024 result\n\\[\n\\begin{aligned}\n\\mathbb{E}[Y_D] &= 0.07 (0.51) + 0.90 (0.49) = 0.477 \\\\\n\\mathbb{E}[Y_R] &= 0.80 (0.51) + 0.01 (0.49) = 0.413\n\\end{aligned}\n\\]\nThe margin, \\(\\mathbb{E}[Y_D] - \\mathbb{E}[Y_R]\\): the Democratic candidate leads by 6 points\n\nThe actual poll has it at \\(45\\%\\) to \\(37\\%\\): 8 points. They’re weighting on additional factors beyond recalled vote!\n\nSurvey weighting is just the art of figuring out which distribution of \\(X\\) to average over.\n\nIn Week 13, we’ll talk about how to actually do estimation"
+    "text": "Example: Weighting to recalled vote\n\nAveraging over the 2024 result\n\\[\n\\begin{aligned}\n\\mathbb{E}[Y_D] &= 0.07 (0.51) + 0.90 (0.49) = 0.477 \\\\\n\\mathbb{E}[Y_R] &= 0.80 (0.51) + 0.01 (0.49) = 0.413\n\\end{aligned}\n\\]\nThe margin, \\(\\mathbb{E}[Y_D] - \\mathbb{E}[Y_R]\\): the Democratic candidate leads by 6 points\n\nThe actual poll has it at \\(45\\%\\) to \\(37\\%\\) because they’re also including 2024 non-voters who are leaning Democratic.\n\nSurvey weighting is just the art of figuring out which distribution of \\(X\\) to average over.\n\nIn Week 13, we’ll talk about how to actually do estimation"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#next-week",
