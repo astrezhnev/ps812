@@ -1029,7 +1029,7 @@ terms <- function(y, p) paste0(f2(recall[[y]]), " (", f2(recall[[p]]), ")", coll
   $$
 
 - The **margin**, $\mathbb{E}[Y_D] - \mathbb{E}[Y_R]$: the Democratic candidate leads by `r round(100 * (ey("dem", "bench") - ey("rep", "bench")))` points
-  - The actual poll has it at $45\%$ to $37\%$: 8 points. They're weighting on additional factors beyond recalled vote!
+  - The actual poll has it at $45\%$ to $37\%$ because they're also including 2024 non-voters who are leaning Democratic.
 
 - **Survey weighting** is just the art of figuring out which distribution of $X$ to average over. 
   - In Week 13, we'll talk about how to actually do *estimation*
