@@ -552,6 +552,7 @@ htmltools::tagList(
 - For **discrete** random variables, the definition is exactly what we had before: joint over marginal
 
   $$p_{Y \mid X}(y \mid x) = P(Y = y \mid X = x) = \frac{p_{XY}(x, y)}{p_X(x)} $$
+
 - For **continuous** random variables it's a bit tricky (since $X = x$ has probability zero), but we use the same approach to define a conditional density
 
   $$f_{Y \mid X}(y \mid x) = \frac{f_{XY}(x, y)}{f_X(x)} $$
@@ -592,12 +593,6 @@ htmltools::tagList(
     \end{aligned}
     $$
 
-:::
-
-## Factoring joint PMFs/PDFs
-
-::: {.incremental}
-
 - For continuous random variables $X_1, \dotsc, X_N$
 
   $$
@@ -607,9 +602,6 @@ htmltools::tagList(
   &= \prod_{i=1}^{N} f_{X_i \mid X_1, \dotsc, X_{i-1}}(x_i \mid x_1, \dotsc, x_{i-1})
   \end{aligned}
   $$
-
-- **Intuitively**, we can think of a draw from a joint distribution as a sequence of draws from **univariate** distributions, each conditioning on the realizations of the previously drawn random variables
-
 
 :::
 
@@ -677,7 +669,8 @@ htmltools::tagList(
 
   $$ p_{XY}(x, y) = p_X(x) \, p_Y(y) \qquad f_{XY}(x, y) = f_X(x) \, f_Y(y) $$
 
-- Conditioning on one doesn't change the distribution of the other - the marginal and conditional distributions are the same
+- Conditioning on one doesn't change the distribution of the other 
+  - The marginal and conditional distributions are the same
 
   $$ p_{Y \mid X}(y \mid x)  = p_Y(y) \qquad  p_{X \mid Y}(x \mid y) = p_{X}(x)$$
   $$ f_{Y \mid X}(y \mid x)  = f_Y(y) \qquad  f_{X \mid Y}(x \mid y) = f_{X}(x)$$
@@ -915,6 +908,7 @@ htmltools::tagList(
 - Let's complete the proof for the discrete case. Substitute in the definition of conditional expectation
 
   $$ \mathbb{E}\big[\mathbb{E}[Y \mid X]\big] =  \sum_{x} \sum_{y} y \cdot p_{Y \mid X}(y \mid x) \cdot p_X(x) $$
+
 - That conditional times marginal is just the joint distribution of $X$ and $Y$ 
 
   $$ \mathbb{E}\big[\mathbb{E}[Y \mid X]\big] =  \sum_{x} \sum_{y} y \cdot p_{XY}(x,y)  $$
@@ -950,7 +944,7 @@ htmltools::tagList(
 
 - We want to predict the 2026 midterm elections.
   - **Problem**: Surveys aren't representative and we don't have a perfect way of dealing with **non-response bias**
-- A recent strategy used by some polling firms is to **weight by recalled vote**
+- A newly popular strategy used by some polling firms is to **weight by recalled vote**
   - Imagine that the voters in 2026 are similar to 2024
   - We have a **known** 2024 benchmark: the observed Trump-Harris vote totals.
   - Calculate average vote choice **conditional** on recalled vote and average using the known 2024 distribution
@@ -1034,10 +1028,11 @@ terms <- function(y, p) paste0(f2(recall[[y]]), " (", f2(recall[[p]]), ")", coll
   \end{aligned}
   $$
 
-- The **raw gap**, $\mathbb{E}[Y_D] - \mathbb{E}[Y_R]$: the Democratic candidate leads by `r round(100 * (ey("dem", "bench") - ey("rep", "bench")))` points (respondents who pick neither party count toward neither share)
+- The **margin**, $\mathbb{E}[Y_D] - \mathbb{E}[Y_R]$: the Democratic candidate leads by `r round(100 * (ey("dem", "bench") - ey("rep", "bench")))` points
+  - The actual poll has it at $45\%$ to $37\%$: 8 points. They're weighting on additional factors beyond recalled vote!
 
-- **Survey weighting** is just choosing which distribution of $X$ to average over. 
-  - In Week 13, we'll talk about how to *estimate* these pieces (stratification, post-stratification)
+- **Survey weighting** is just the art of figuring out which distribution of $X$ to average over. 
+  - In Week 13, we'll talk about how to actually do *estimation*
 
 :::
 
