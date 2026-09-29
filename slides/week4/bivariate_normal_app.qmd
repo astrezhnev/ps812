@@ -1,0 +1,434 @@
+---
+title: "Slicing a bivariate normal"
+format:
+  html:
+    page-layout: custom
+    toc: false
+    embed-resources: false
+    include-in-header:
+      text: |
+        <style>
+          /* This page exists to be framed inside the week 4 slides, so the
+             site navbar, footer and title block are hidden. */
+          .navbar, .nav-footer, #title-block-header, header#title-block-header
+            { display:none !important; }
+          body { padding:0 !important; margin:0 !important; background:#F7F7F7; }
+          main, .page-columns, .content { padding:0 !important; margin:0 !important;
+            max-width:none !important; }
+          /* shinylive sizes its viewer to a fixed `viewerHeight`, which overflows
+             the frame whenever the slide gives this page less room than that. The
+             overflow is unreachable: a wheel over the app scrolls the app's own
+             panels, and scroll chaining stops at the iframe boundary. So pin the
+             widget to whatever viewport it lands in and let the app scroll its
+             panels inside, which is what its own layout is built to do. */
+          html, body { height:100%; overflow:hidden; }
+          .shinylive-wrapper, .shinylive-container {
+            height:100vh !important; height:100dvh !important; min-height:0 !important;
+            margin:0 !important; padding:0 !important; border:0 !important;
+            border-radius:0 !important; box-shadow:none !important; }
+          .shinylive-container > div { height:100% !important; min-height:0 !important; }
+          iframe.app-frame { display:block; border:0 !important;
+            height:100vh !important; height:100dvh !important; }
+        </style>
+filters:
+  - shinylive
+---
+
+<!-- GENERATED FILE -- do not edit by hand.
+     Edit bvn-app/app.R and run:  Rscript bvn-app/build_app_qmd.R -->
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [viewer]
+
+## file: app.R
+# ---------------------------------------------------------------------------
+# Slicing a bivariate normal.
+#
+# (X, Y) is bivariate normal with means mu_X, mu_Y, SDs sigma_X, sigma_Y and
+# correlation rho, all on sliders. The 3D panel draws the joint density with
+# the two marginals standing on the back walls; a vertical slice at X = x (or
+# Y = y) cuts the surface, and the cross-section is the joint density along
+# that line. Rescaled to area 1, that cross-section is the conditional density,
+# which the lower panel sets against the marginal of the other variable:
+#
+#   Y | X = x  ~  N( mu_Y + rho * sigma_Y / sigma_X * (x - mu_X),
+#                    sigma_Y^2 * (1 - rho^2) )
+#
+# so the conditional SD is sqrt(1 - rho^2) times the marginal SD, whatever x is.
+#
+# Deliberately base R + shiny only. Every extra package is another wasm
+# download when this runs in the browser through shinylive. The 3D panel is
+# drawn by plotly.js loaded straight from a CDN rather than the plotly R
+# package (which would pull in ggplot2, data.table, httr, ...): R computes
+# every number and sends the arrays over; the JS only draws them.
+# ---------------------------------------------------------------------------
+
+library(shiny)
+
+LIM <- 5                                  # both axes run over [-LIM, LIM]
+G   <- seq(-LIM, LIM, length.out = 101)   # fine enough for the rho = 0.95 ridge
+
+COLS     <- c(X = "#c5050c", Y = "#0479A8")
+COND_COL <- "#C77400"
+INK      <- "#333333"
+
+PLOTLY_JS <- "https://cdn.jsdelivr.net/npm/plotly.js-gl3d-dist-min@3.7.0/plotly-gl3d.min.js"
+
+dbvn <- function(x, y, p) {
+  zx <- (x - p$mx) / p$sx
+  zy <- (y - p$my) / p$sy
+  q  <- 1 - p$rho^2
+  exp(-(zx^2 - 2 * p$rho * zx * zy + zy^2) / (2 * q)) / (2 * pi * p$sx * p$sy * sqrt(q))
+}
+
+# The slice, written in terms of the variable conditioned on ("by") and the
+# other one ("of"), so conditioning on X and on Y share one code path.
+slice_of <- function(p, by, at) {
+  if (by == "X") {
+    mb <- p$mx; sb <- p$sx; mo <- p$my; so <- p$sy; of <- "Y"
+  } else {
+    mb <- p$my; sb <- p$sy; mo <- p$mx; so <- p$sx; of <- "X"
+  }
+  slope <- p$rho * so / sb
+  list(by = by, of = of, at = at, mb = mb, mo = mo, slope = slope,
+       m_marg = mo, s_marg = so,
+       m_cond = mo + slope * (at - mb), s_cond = so * sqrt(1 - p$rho^2))
+}
+
+css <- "
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700&family=Red+Hat+Text:wght@400;500;700&display=swap');
+html, body { height:100%; }
+body { font-family:'Red Hat Text',system-ui,sans-serif; background:#F7F7F7; color:#333;
+       margin:0; padding:10px; font-size:14px; box-sizing:border-box; overflow:hidden; }
+h4 { font-family:'Red Hat Display',system-ui,sans-serif; margin:0; font-size:17px; }
+h5 { font-family:'Red Hat Display',system-ui,sans-serif; margin:2px 0 4px 0; font-size:14px;
+     font-weight:700; color:#666; }
+/* fluidPage() wraps the UI in an auto-height .container-fluid; it needs a
+   definite height for the panels below to size to the frame. */
+body > .container-fluid { height:100%; padding:0; }
+.wrap { display:flex; gap:12px; height:100%; }
+.card { display:flex; flex-direction:column; min-width:0; min-height:0;
+        background:#fff; border:1px solid #e2e2e2; border-radius:8px; padding:10px 12px;
+        box-sizing:border-box; }
+.side { width:232px; flex:none; overflow-y:auto; }
+.side hr { margin:8px 0 6px 0; border-color:#eee; }
+.main { flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:12px; }
+.c3d { flex:1.75 1 0; }
+.c2d { flex:1 1 0; }
+.hdr { display:flex; justify-content:space-between; align-items:baseline; height:24px; flex:none; }
+.hdr .opts { display:flex; align-items:baseline; gap:14px; font-size:12.5px; color:#666; }
+.hdr .form-group { width:auto !important; margin:0; }
+.hdr .checkbox { margin:0; }
+.hdr a { color:#0479A8; cursor:pointer; }
+.model { font-size:12.5px; color:#666; }
+.hdr h4 .m, .fit .m { color:var(--mc); }
+.hdr h4 .c, .fit .c { color:#C77400; }
+#bvn3d { flex:1 1 auto; min-height:0; }
+#bvn3d .nojs { color:#999; margin:40px; text-align:center; }
+.plot2d { flex:1 1 auto; min-height:0; }
+.form-group { margin-bottom:0; }
+.control-label { font-weight:500; white-space:nowrap; font-size:13px; margin-bottom:0; }
+.radio-inline { font-size:13px; }
+.irs--shiny .irs-bar { border-color:var(--gc); background:var(--gc); }
+.irs--shiny .irs-single { background:var(--gc); }
+.irs--shiny .irs-handle { border-color:var(--gc); }
+.irs--shiny .irs-min, .irs--shiny .irs-max { display:none !important; }
+.slider-animate-container { margin-top:-4px; font-size:13px; }
+.fit { display:flex; gap:22px; font-size:12px; color:#777; margin:4px 0 0 0; height:28px;
+       flex:none; align-items:center; }
+.fit b { font-family:'Red Hat Display',sans-serif; font-size:16px; color:#333; }
+.meter { display:inline-block; width:70px; height:8px; background:#eee; border-radius:3px;
+         overflow:hidden; vertical-align:middle; margin-left:4px; }
+.meter div { height:8px; }
+"
+
+# Draws the 3D panel from the arrays the server sends as a `bvn` message.
+js <- r"---(
+(function () {
+  var LIM = 5, WALL = LIM - 0.02;   // curves sit just off the walls so they don't z-fight
+  var COL = { X: '#c5050c', Y: '#0479A8', slice: '#C77400', cef: '#333333' };
+  var FLAT = { ambient: 1, diffuse: 0, specular: 0, fresnel: 0 };
+  // Home views face the slice: from the +x side when slicing at X = x (so the
+  // cross-section and Y's marginal on the back wall are seen head-on), from
+  // the -y side when slicing at Y = y.
+  var HOME = { X: { az: -30, el: 26 }, Y: { az: -62, el: 26 } };
+  var EYE_R = 1.25, ZOOM = 1.45, Z_ASPECT = 0.7;
+  var last = null, reset = false, lastBy = null, near = null, hooked = false;
+
+  function arr(v) { return [].concat(v); }
+  function rep(v, n) { var a = []; for (var i = 0; i < n; i++) a.push(v); return a; }
+
+  // Shaded area between the floor and a curve, in the curve's vertical plane
+  function area(xs, ys, zs, color, opacity, visible) {
+    var n = xs.length, X = [], Y = [], Z = [], I = [], J = [], K = [];
+    for (var k = 0; k < n; k++) { X.push(xs[k]); Y.push(ys[k]); Z.push(0); }
+    for (var k = 0; k < n; k++) { X.push(xs[k]); Y.push(ys[k]); Z.push(zs[k]); }
+    for (var k = 0; k < n - 1; k++) { I.push(k, k + 1); J.push(k + 1, n + k + 1); K.push(n + k, n + k); }
+    return { type: 'mesh3d', x: X, y: Y, z: Z, i: I, j: J, k: K, color: color, opacity: opacity,
+             flatshading: true, lighting: FLAT, hoverinfo: 'skip', visible: visible };
+  }
+  function curve(xs, ys, zs, color, width, visible, dash) {
+    return { type: 'scatter3d', mode: 'lines', x: xs, y: ys, z: zs, visible: visible,
+             line: { color: color, width: width, dash: dash || 'solid' }, hoverinfo: 'skip' };
+  }
+  function axis(title, range) {
+    return { title: { text: title }, range: range, gridcolor: '#dddddd', zeroline: false,
+             showspikes: false, showbackground: true, backgroundcolor: '#F4F4F4',
+             tickfont: { size: 11 }, tickangle: 0, nticks: 6 };
+  }
+  // A marginal's label, placed just right of its peak at about one SD out
+  function label(g, f, onX, color, text) {
+    var i = f.indexOf(Math.max.apply(null, f)), peak = f[i], sd = 0.3989 / peak;
+    var at = Math.min(g[i] + 1.1 * sd, LIM - 0.8);
+    return { x: onX ? -WALL : at, y: onX ? at : WALL, z: 0.8 * peak, text: text,
+             showarrow: false, xanchor: 'left', font: { size: 14, color: color } };
+  }
+  function homeCamera(by) {
+    var a = HOME[by].az * Math.PI / 180, e = HOME[by].el * Math.PI / 180;
+    return { eye: { x: EYE_R * Math.cos(e) * Math.cos(a), y: EYE_R * Math.cos(e) * Math.sin(a),
+                    z: EYE_R * Math.sin(e) },
+             up: { x: 0, y: 0, z: 1 }, center: { x: 0, y: 0, z: -0.05 },
+             projection: { type: 'orthographic' } };
+  }
+
+  // Which side of the slice the camera is on (true = the high side)
+  function nearSide(camera, byX) { return byX ? camera.eye.x > 0 : camera.eye.y > 0; }
+
+  // Split the surface at the slice into the part behind it, drawn solid, and
+  // the part between the slice and the camera, ghosted so the cut face shows.
+  // The grid and the slice slider share a 0.1 step, so the cut falls on a
+  // grid line, which both halves keep.
+  function cut(z, g, byX, at, nearHigh) {
+    var solid = [], ghost = [];
+    for (var i = 0; i < g.length; i++) {
+      var zs = [], zg = [];
+      for (var j = 0; j < g.length; j++) {
+        var d = (byX ? g[j] : g[i]) - at;
+        var edge = Math.abs(d) < 1e-6, inFront = !edge && (nearHigh ? d > 0 : d < 0);
+        zs.push(inFront ? null : z[i][j]);
+        zg.push(inFront || edge ? z[i][j] : null);
+      }
+      solid.push(zs); ghost.push(zg);
+    }
+    return { solid: solid, ghost: ghost };
+  }
+
+  function render(m) {
+    var el = document.getElementById('bvn3d');
+    if (!window.Plotly) {
+      el.innerHTML = '<p class="nojs">The 3D view needs plotly.js, which loads from the internet.</p>';
+      return;
+    }
+    last = m;
+    var g = arr(m.grid), n = g.length, s = m.slice, c = m.cef, zmax = m.zmax;
+    var margX = arr(m.margX), margY = arr(m.margY), sz = arr(s.z);
+    var byX = s.by === 'X';
+    var sx = byX ? rep(s.at, n) : g, sy = byX ? g : rep(s.at, n);
+    var ct = arr(c.t), co = arr(c.o);
+    // The cutting plane, as two triangles
+    var px = byX ? rep(s.at, 4) : [-LIM, LIM, LIM, -LIM];
+    var py = byX ? [-LIM, LIM, LIM, -LIM] : rep(s.at, 4);
+
+    // Keep wherever the viewer has rotated / zoomed to. Read the live scene:
+    // plotly writes a drag back to the layout only after a delay, so a slider
+    // moved straight after a drag would otherwise snap the camera back.
+    // Switching the conditioning variable goes back to that variable's home.
+    var sc = el._fullLayout && el._fullLayout.scene && el._fullLayout.scene._scene;
+    var camera = homeCamera(s.by), aspect = { x: ZOOM, y: ZOOM, z: Z_ASPECT * ZOOM };
+    if (sc && !reset && s.by === lastBy) {
+      camera = sc.getCamera();
+      camera.projection = { type: 'orthographic' };
+      aspect = sc.glplot.getAspectratio();
+    }
+    reset = false;
+    lastBy = s.by;
+    near = nearSide(camera, byX);
+    var z = s.show ? cut(m.z, g, byX, s.at, near) : { solid: m.z, ghost: [[null]] };
+
+    var SURF = { type: 'surface', x: g, y: g, cmin: 0, cmax: zmax, showscale: false,
+                 hoverinfo: 'skip', colorscale: [[0, '#f7eded'], [0.4, '#e0676c'], [1, '#9b0000']],
+                 lighting: { ambient: 0.85, diffuse: 0.35, specular: 0.05, roughness: 0.9, fresnel: 0.05 } };
+    var traces = [
+      Object.assign({}, SURF, { z: z.solid,
+        contours: { x: { highlight: false }, y: { highlight: false },
+                    z: { show: true, start: zmax / 9, end: zmax, size: zmax / 9,
+                         color: '#ffffff', width: 1, highlight: false } } }),
+      Object.assign({}, SURF, { z: z.ghost, opacity: 0.2, visible: s.show,
+        contours: { x: { highlight: false }, y: { highlight: false }, z: { highlight: false } } }),
+      area(g, rep(WALL, n), margX, COL.X, 0.15, true),
+      curve(g, rep(WALL, n), margX, COL.X, 6, true),
+      area(rep(-WALL, n), g, margY, COL.Y, 0.15, true),
+      curve(rep(-WALL, n), g, margY, COL.Y, 6, true),
+      { type: 'mesh3d', x: px, y: py, z: [0, 0, zmax, zmax], i: [0, 0], j: [1, 2], k: [2, 3],
+        color: '#777777', opacity: 0.1, flatshading: true, lighting: FLAT, hoverinfo: 'skip',
+        visible: s.show },
+      area(sx, sy, sz, COL.slice, 0.5, s.show),
+      curve(sx, sy, sz, COL.slice, 9, s.show),
+      curve(c.by === 'X' ? ct : co, c.by === 'X' ? co : ct, rep(0, ct.length),
+            COL.cef, 5, c.show, 'dash'),
+      { type: 'scatter3d', mode: 'markers', x: [byX ? s.at : s.mean], y: [byX ? s.mean : s.at],
+        z: [0], marker: { size: 5, color: COL.slice, symbol: 'diamond' }, hoverinfo: 'skip',
+        visible: s.show }
+    ];
+
+
+    var layout = {
+      paper_bgcolor: '#ffffff', margin: { l: 0, r: 0, t: 0, b: 0 }, showlegend: false,
+      font: { family: "'Red Hat Text', sans-serif", color: '#333333' },
+      scene: {
+        xaxis: axis('x', [-LIM, LIM]), yaxis: axis('y', [-LIM, LIM]), zaxis: axis('', [0, zmax]),
+        aspectmode: 'manual', aspectratio: aspect, camera: camera,
+        dragmode: 'turntable', hovermode: false,
+        annotations: [label(g, margX, false, COL.X, 'f<sub>X</sub>(x)'),
+                      label(g, margY, true, COL.Y, 'f<sub>Y</sub>(y)')]
+      }
+    };
+    Plotly.react(el, traces, layout, { displayModeBar: false, responsive: true, doubleClick: false });
+
+    // Rotating round to the other side of the slice moves the ghosted half
+    if (!hooked) {
+      hooked = true;
+      el.on('plotly_relayout', function () {
+        var sc = el._fullLayout.scene._scene;
+        if (last && nearSide(sc.getCamera(), last.slice.by === 'X') !== near) render(last);
+      });
+    }
+  }
+
+  Shiny.addCustomMessageHandler('bvn', render);
+  document.addEventListener('click', function (e) {
+    if (e.target && e.target.id === 'reset3d') {
+      e.preventDefault();
+      reset = true;
+      if (last) render(last);
+    }
+  });
+})();
+)---"
+
+slider <- function(id, label, min, max, value, step, col, ...) {
+  div(style = paste0("--gc:", col, ";"),
+      sliderInput(id, HTML(label), min = min, max = max, value = value, step = step,
+                  width = "100%", ticks = FALSE, ...))
+}
+
+ui <- fluidPage(
+  tags$head(tags$style(HTML(css)), tags$script(src = PLOTLY_JS)),
+  div(class = "wrap",
+    div(class = "card side",
+      h5("Joint distribution"),
+      slider("rho", "ρ &ndash; correlation", -0.95, 0.95, 0.8, 0.05, INK),
+      slider("sx", "σ<sub>X</sub> &ndash; SD of X", 0.5, 2, 1, 0.1, COLS[["X"]]),
+      slider("sy", "σ<sub>Y</sub> &ndash; SD of Y", 0.5, 2, 1, 0.1, COLS[["Y"]]),
+      slider("mx", "μ<sub>X</sub> &ndash; mean of X", -2, 2, 0, 0.1, COLS[["X"]]),
+      slider("my", "μ<sub>Y</sub> &ndash; mean of Y", -2, 2, 0, 0.1, COLS[["Y"]]),
+      tags$hr(),
+      h5("Slice"),
+      radioButtons("by", NULL, c("Condition on X" = "X", "Condition on Y" = "Y"), inline = TRUE),
+      slider("at", "Slice at X =", -3, 3, 1, 0.1, COND_COL,
+             animate = animationOptions(interval = 400, loop = TRUE))
+    ),
+    div(class = "main",
+      div(class = "card c3d",
+        div(class = "hdr",
+          h4("Joint density f(x, y)"),
+          div(class = "opts",
+            checkboxInput("show_slice", "Show slice", TRUE),
+            checkboxInput("show_cef", "E[Y | X = x] line", FALSE),
+            tags$a(id = "reset3d", "reset view"),
+            span("drag to rotate · scroll to zoom")
+          )
+        ),
+        div(id = "bvn3d")
+      ),
+      div(class = "card c2d",
+        div(class = "hdr", uiOutput("cond_title", inline = TRUE),
+            span(class = "model", "the orange slice, rescaled to area 1")),
+        uiOutput("stats"),
+        div(class = "plot2d", plotOutput("cond_plot", height = "100%"))
+      )
+    )
+  ),
+  tags$script(HTML(js))
+)
+
+draw_cond <- function(s) {
+  u  <- seq(-LIM, LIM, length.out = 500)
+  fm <- dnorm(u, s$m_marg, s$s_marg)
+  fc <- dnorm(u, s$m_cond, s$s_cond)
+  mc <- COLS[[s$of]]
+  par(mar = c(2.7, 3.4, 0.5, 0.6), mgp = c(1.6, 0.5, 0), tcl = -0.25, las = 1,
+      col.axis = "#555", family = "sans")
+  plot(NA, xlim = c(-LIM, LIM), ylim = c(0, 1.15 * max(fm, fc)), xaxs = "i", yaxs = "i",
+       xlab = tolower(s$of), ylab = "density", bty = "l", fg = "#999")
+  polygon(c(u, rev(u)), c(fm, 0 * u), col = adjustcolor(mc, 0.15), border = NA)
+  polygon(c(u, rev(u)), c(fc, 0 * u), col = adjustcolor(COND_COL, 0.25), border = NA)
+  segments(s$m_marg, 0, s$m_marg, max(fm), col = mc, lty = 3)
+  segments(s$m_cond, 0, s$m_cond, max(fc), col = COND_COL, lty = 2)
+  lines(u, fm, col = mc, lwd = 2.5)
+  lines(u, fc, col = COND_COL, lwd = 3)
+}
+
+server <- function(input, output, session) {
+  pars <- reactive(list(mx = input$mx, my = input$my, sx = input$sx, sy = input$sy,
+                        rho = input$rho))
+  sl <- reactive(slice_of(pars(), input$by, input$at))
+
+  observeEvent(input$by, {
+    of <- setdiff(c("X", "Y"), input$by)
+    updateSliderInput(session, "at", label = sprintf("Slice at %s =", input$by))
+    updateCheckboxInput(session, "show_cef",
+                        label = sprintf("E[%s | %s = %s] line", of, input$by, tolower(input$by)))
+  }, ignoreInit = TRUE)
+
+  observe({
+    p <- pars()
+    s <- sl()
+    z <- outer(G, G, function(y, x) dbvn(x, y, p))    # rows are y, as plotly wants
+    along <- if (s$by == "X") dbvn(s$at, G, p) else dbvn(G, s$at, p)
+    # Conditional-mean line E[of | by = t] across the floor, kept inside the box
+    cef <- s$mo + s$slope * (G - s$mb)
+    keep <- abs(cef) <= LIM
+    session$sendCustomMessage("bvn", list(
+      grid  = G,
+      z     = signif(z, 4),
+      margX = dnorm(G, p$mx, p$sx),
+      margY = dnorm(G, p$my, p$sy),
+      zmax  = max(0.45, 1.08 * max(z, dnorm(0) / p$sx, dnorm(0) / p$sy)),
+      slice = list(show = input$show_slice, by = s$by, at = s$at, z = along, mean = s$m_cond),
+      cef   = list(show = input$show_cef, by = s$by, t = G[keep], o = cef[keep])
+    ))
+  })
+
+  # The title doubles as the plot's legend: conditional in orange, marginal in
+  # the other variable's colour
+  output$cond_title <- renderUI({
+    s <- sl()
+    h4(style = paste0("--mc:", COLS[[s$of]]),
+       span(class = "c", sprintf("%s given %s = %.1f", s$of, s$by, s$at)), " against ",
+       span(class = "m", sprintf("%s on its own", s$of)))
+  })
+
+  output$stats <- renderUI({
+    s <- sl()
+    r <- s$s_cond / s$s_marg
+    div(class = "fit", style = paste0("--mc:", COLS[[s$of]]),
+      span(class = "m", sprintf("SD(%s) ", s$of), tags$b(sprintf("%.2f", s$s_marg))),
+      span(class = "c", sprintf("SD(%s | %s = %.1f) ", s$of, s$by, s$at),
+           tags$b(sprintf("%.2f", s$s_cond)),
+           span(class = "meter",
+                div(style = sprintf("width:%.1f%%;background:%s", 100 * r, COND_COL)))),
+      span("ratio √(1 − ρ²) ", tags$b(sprintf("%.2f", r))),
+      span(class = "c", sprintf("E[%s | %s = %.1f] ", s$of, s$by, s$at),
+           tags$b(sprintf("%.2f", s$m_cond)))
+    )
+  })
+
+  output$cond_plot <- renderPlot(draw_cond(sl()), res = 96)
+}
+
+shinyApp(ui, server)
+
+```

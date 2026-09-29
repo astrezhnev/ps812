@@ -43,6 +43,8 @@ link-citations: true
 ::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
 $$
 \newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Cor}{\text{Cor}}
 $$
 :::
 
@@ -61,6 +63,129 @@ $$
   - **Covariances and correlations**
 
 :::
+
+## From one random variable to two {.bvn-slide}
+
+```{r}
+#| echo: false
+
+library(plotly)
+
+# Correlations the joint density steps through, one per click once it's up
+bvn_rhos <- c(0, 0.5, 0.9, -0.5, -0.9)
+
+lim <- 4
+g <- seq(-lim, lim, length.out = 101)
+n <- length(g)
+phi <- dnorm(g)
+wall <- lim - 0.02   # just in front of the axis walls, so the curves don't z-fight them
+
+# Shaded area under a marginal, as a flat strip of triangles between the floor
+# (vertices 1..n) and the curve (vertices n+1..2n)
+strip <- list(i = c(0:(n - 2), 1:(n - 1)),
+              j = c(1:(n - 1), (n + 1):(2 * n - 1)),
+              k = c(n:(2 * n - 2), n:(2 * n - 2)))
+n_tri <- length(strip$i)
+flat <- list(ambient = 1, diffuse = 0, specular = 0, fresnel = 0)
+
+bvn_axis <- function(title, range, ticks, ...) {
+  list(title = list(text = title), range = range, tickvals = ticks,
+       gridcolor = "#d9d9d9", zeroline = FALSE, showspikes = FALSE,
+       showbackground = TRUE, backgroundcolor = "#EFEFEF",
+       tickfont = list(size = 12), tickangle = 0, ...)
+}
+
+bvn_label <- function(x, y, text, colour, visible = TRUE) {
+  list(x = x, y = y, z = 0.3, text = text, showarrow = FALSE, xanchor = "left",
+       font = list(size = 16, color = colour), visible = visible)
+}
+
+# Trace order matters: bivariate_normal.js addresses traces by index
+p_bvn <- plot_ly(width = 1000, height = 560) |>
+  add_surface(x = g, y = g, z = matrix(0, n, n), visible = FALSE,
+              cmin = 0, cmax = 0.37, showscale = FALSE, hoverinfo = "skip",
+              colorscale = list(c(0, "#f7eded"), c(0.4, "#e0676c"), c(1, "#9b0000")),
+              lighting = list(ambient = 0.85, diffuse = 0.35, specular = 0.05,
+                              roughness = 0.9, fresnel = 0.05),
+              contours = list(x = list(highlight = FALSE), y = list(highlight = FALSE),
+                              z = list(show = TRUE, start = 0.02, end = 0.4, size = 0.04,
+                                       color = "#ffffff", width = 1, highlight = FALSE))) |>
+  # X's marginal on the back wall
+  add_trace(type = "mesh3d", x = c(g, g), y = rep(wall, 2 * n), z = c(rep(0, n), phi),
+            i = strip$i, j = strip$j, k = strip$k, facecolor = rep("#c5050c", n_tri), opacity = 0.15,
+            flatshading = TRUE, lighting = flat, hoverinfo = "skip") |>
+  add_trace(type = "scatter3d", mode = "lines", x = g, y = rep(wall, n), z = phi,
+            line = list(color = "#c5050c", width = 7), hoverinfo = "skip") |>
+  # Y's marginal on the side wall, grown by the animation
+  add_trace(type = "mesh3d", x = rep(-wall, 2 * n), y = c(g, g), z = rep(0, 2 * n),
+            i = strip$i, j = strip$j, k = strip$k, facecolor = rep("#0479a8", n_tri), opacity = 0.15,
+            flatshading = TRUE, lighting = flat, hoverinfo = "skip", visible = FALSE) |>
+  add_trace(type = "scatter3d", mode = "lines", x = rep(-wall, n), y = g, z = rep(0, n),
+            line = list(color = "#0479a8", width = 7), hoverinfo = "skip", visible = FALSE) |>
+  layout(
+    showlegend = FALSE,
+    paper_bgcolor = "#F7F7F7",
+    margin = list(l = 0, r = 0, t = 0, b = 0),
+    font = list(family = "Red Hat Text, sans-serif", color = "#333333"),
+    scene = list(
+      xaxis = bvn_axis("x", c(-lim, lim), seq(-lim, lim, 2)),
+      yaxis = bvn_axis("", c(-lim, lim), seq(-lim, lim, 2), showticklabels = FALSE),
+      zaxis = bvn_axis("", c(0, 0.42), seq(0.1, 0.4, 0.1)),
+      aspectmode = "manual", aspectratio = list(x = 1, y = 1, z = 0.7),
+      camera = list(projection = list(type = "orthographic")),   # set by the animation
+      dragmode = "turntable", hovermode = FALSE,
+      annotations = list(
+        bvn_label(1.2, wall, "f<sub>X</sub>(x)", "#c5050c"),
+        bvn_label(-wall, 1.2, "f<sub>Y</sub>(y)", "#0479a8", visible = FALSE)
+      )
+    )
+  ) |>
+  config(displayModeBar = FALSE, doubleClick = FALSE)
+
+p_bvn <- htmlwidgets::onRender(
+  p_bvn,
+  paste(readLines("bvn-anim/bivariate_normal.js"), collapse = "\n"),
+  data = list(grid = g, rhos = bvn_rhos)
+)
+
+# One empty fragment per animation step after the first
+htmltools::tagList(
+  p_bvn,
+  lapply(seq_len(1 + length(bvn_rhos)), function(i) htmltools::span(class = "fragment bvn-step"))
+)
+```
+
+## Slicing the bivariate normal {.app-slide}
+
+::: {.app-frame data-app="bivariate_normal_app.html" data-title="Slicing a bivariate normal"}
+:::
+
+```{=html}
+<script>
+// The widget is a separate page framed here. The <iframe> is built at runtime
+// because `embed-resources: true` would otherwise inline the target into a
+// data: URI, breaking the app's relative asset paths and its service worker.
+// Mounting only once the slide is reached also delays the webR download.
+(function () {
+  function mount() {
+    document.querySelectorAll("section.present .app-frame[data-app]").forEach(function (el) {
+      if (el.dataset.mounted) return;
+      el.dataset.mounted = "1";
+      var f = document.createElement("iframe");
+      f.src = el.dataset.app;
+      f.title = el.dataset.title || "Interactive widget";
+      f.setAttribute("allow", "clipboard-write");
+      el.appendChild(f);
+    });
+  }
+  // Reveal is not defined while this script is parsed, so wire up after load.
+  window.addEventListener("load", function () {
+    if (window.Reveal && typeof Reveal.on === "function") Reveal.on("slidechanged", mount);
+    mount();
+  });
+})();
+</script>
+```
 
 ## Next week
 

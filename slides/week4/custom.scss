@@ -84,3 +84,56 @@ strong {
   text-align: center;
   margin-top: 0.4em;
 }
+
+// Full-bleed slide for the embedded shinylive widget. The app is a separate
+// page (bivariate_normal_app.qmd) framed here, so it needs the whole slide.
+
+.reveal .app-slide h2 {
+  font-size: 1.1em;
+  margin-bottom: 0.15em;
+}
+
+.reveal .app-frame {
+  width: 100%;
+  height: 615px;   // reveal slides are 700px tall in their own coordinates
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #F7F7F7;
+  }
+}
+
+// Bivariate normal animation (bvn-anim/bivariate_normal.js). The caption is
+// laid over the top-left corner of the plotly widget and updated as it steps.
+
+.reveal .bvn-slide h2 {
+  margin-bottom: 0.1em;
+}
+
+.reveal .bvn-caption {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  z-index: 10;
+  pointer-events: none;
+  text-align: left;
+  line-height: 1.3;
+
+  .bvn-main {
+    font-size: 0.8em;
+  }
+
+  .bvn-rho {
+    font-size: 0.8em;
+    font-weight: 700;
+    color: $accent-red;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bvn-note {
+    font-size: 0.55em;
+    color: $text-muted;
+  }
+}
