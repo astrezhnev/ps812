@@ -34,7 +34,9 @@ Links become active as the materials for each week are posted.
 
 ### Week 4: Joint Distributions and Expectation
 
-*To be posted*
+- [Week 4 Github Repository](https://github.com/astrezhnev/ps812/tree/main/slides/week4/)
+- [Week 4 `.html` slides](https://www.antonstrezhnev.com/ps812/slides/week4/week4_joint_distributions.html)
+- [Slicing a bivariate normal](https://www.antonstrezhnev.com/ps812/slides/week4/bivariate_normal_app.html) - How does the conditional distribution of $Y$ change as you slice a bivariate normal at different values of $X$ and vary the correlation? (RShiny app)
 
 ### Week 5: Variance, Covariance, and Conditional Expectation
 

@@ -15,12 +15,18 @@ function (el, x, cfg) {
   // and a click on the plot (a drag rotates it instead) all step through them,
   // and stepping backwards runs the animation in reverse. The slide title
   // changes with the stages too.
+  //
+  // Two options let a later slide reprise the correlation steps on their own:
+  // cfg.start is the stage the slide opens on (its first fragment moves to
+  // start + 1), and cfg.title, if given, is the title from the first joint
+  // stage on, with "{rho}" replaced by the current correlation.
   var gd = el;
   var g = [].concat(cfg.grid), n = g.length;
   var rhos = [].concat(cfg.rhos);
   var walk = [].concat(cfg.walk);                  // [{mu, sd}, ...], starting at N(0, 1)
   var S3D = walk.length, SJOINT = S3D + 1;         // first 3D stage, first joint stage
   var nStages = SJOINT + rhos.length;
+  var START = cfg.start || 0;
   // Trace order set in the R chunk: surface, X's fill and line, Y's fill and line
 
   // How far the marginals recede once the joint density is up
@@ -105,8 +111,14 @@ function (el, x, cfg) {
   var slide = el.closest('section');
   var title = slide && slide.querySelector('h2');
   function setTitle(s) {
-    if (title) title.textContent = s < S3D ? 'From one random variable...' :
-                                   s === S3D ? '...to two!' : 'Joint distributions';
+    if (!title) return;
+    if (cfg.title && s >= SJOINT) {
+      var r = rhos[s - SJOINT];
+      title.textContent = cfg.title.replace('{rho}', (r < 0 ? '−' : '') + Math.abs(r));
+      return;
+    }
+    title.textContent = s < S3D ? 'From one random variable...' :
+                        s === S3D ? '...to two!' : 'Joint distributions';
   }
 
   // Push a state to the plot. All five traces go in one update: attributes a
@@ -196,7 +208,7 @@ function (el, x, cfg) {
   // Reveal wiring. Reveal's events bubble to document, which is also safe to
   // listen on before Reveal has initialised.
   function fragmentStage() {
-    return slide ? slide.querySelectorAll('.fragment.bvn-step.visible').length : 0;
+    return START + (slide ? slide.querySelectorAll('.fragment.bvn-step.visible').length : 0);
   }
   function onThisSlide() {
     return window.Reveal && Reveal.getCurrentSlide && Reveal.getCurrentSlide() === slide;

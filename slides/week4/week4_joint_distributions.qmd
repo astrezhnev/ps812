@@ -44,7 +44,8 @@ link-citations: true
 $$
 \newcommand{\Var}{\text{Var}}
 \newcommand{\Cov}{\text{Cov}}
-\newcommand{\Cor}{\text{Cor}}
+\newcommand{\Corr}{\text{Corr}}
+\newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
 $$
 :::
 
@@ -59,7 +60,7 @@ $$
 - This week
   - **Joint distributions**
   - **Conditional distributions**
-  - **Conditional expectations and the best linear predictor**
+  - **Conditional expectations**
   - **Covariances and correlations**
 
 :::
@@ -153,6 +154,8 @@ p_bvn <- plot_ly(width = 1000, height = 560) |>
   ) |>
   config(displayModeBar = FALSE, doubleClick = FALSE)
 
+bvn_base <- p_bvn   # the bare widget, reused by the correlation reprise
+
 p_bvn <- htmlwidgets::onRender(
   p_bvn,
   paste(readLines("bvn-anim/bivariate_normal.js"), collapse = "\n"),
@@ -169,7 +172,467 @@ htmltools::tagList(
 )
 ```
 
-## Joint distributions {.app-slide}
+## Joint distribution functions
+
+::: {.incremental}
+
+- We've so far talked about the joint probabilities of **events** $P(A \cap B)$
+  - And their **conditional** probabilities: $P(A \mid B)$
+
+- Let's extend these ideas to talk about **random variables**
+- We can define a **joint cumulative distribution function** that takes values of *multiple* variables as inputs
+
+  - For two random variables, $X$ and $Y$
+
+    $$F_{XY}(x, y) = P(X \le x, Y \le y) $$
+
+  - We can generalize to **many** random variables
+
+    $$F_{X_1, \dotsc X_n}(x_1, \dotsc x_n) = P(X_1 \le x_1, \dotsc X_n \le x_n)$$
+
+:::
+
+## A joint CDF {.cdf-slide}
+
+```{r}
+#| echo: false
+
+# The CDF of the opening animation's rho = 0.5 bivariate normal, in the same
+# style, with the grid, strips and axis helpers from that chunk. The marginal
+# CDFs sit faint on the back walls: F(x, y) climbs to F_X(x) as y grows, and
+# to F_Y(y) as x grows.
+rho_cdf <- 0.5
+F_cdf <- outer(g, g, Vectorize(function(y, x)
+  mvtnorm::pmvnorm(upper = c(x, y), corr = matrix(c(1, rho_cdf, rho_cdf, 1), 2),
+                   algorithm = mvtnorm::TVPACK())[1]))   # rows are y, as plotly wants
+Phi <- pnorm(g)
+
+# The opening animation's resting camera: azimuth -62, elevation 34, zoom 1.2
+cdf_az <- -62 * pi / 180
+cdf_el <- 34 * pi / 180
+cdf_zoom <- 1.2
+
+cdf_quiet <- list(width = 3.5, line = 0.45, fill = 0.06, label = 0.55)
+
+plot_ly(width = 1000, height = 560) |>
+  add_surface(x = g, y = g, z = F_cdf, cmin = 0, cmax = 1,
+              showscale = FALSE, hoverinfo = "skip",
+              colorscale = list(c(0, "#e9dff1"), c(0.35, "#9b6cc2"), c(1, "#4a1766")),
+              lighting = list(ambient = 0.7, diffuse = 0.5, specular = 0.1,
+                              roughness = 0.8, fresnel = 0.05),
+              contours = list(x = list(highlight = FALSE), y = list(highlight = FALSE),
+                              z = list(show = TRUE, start = 0.1, end = 0.9, size = 0.1,
+                                       color = "#ffffff", width = 1, highlight = FALSE))) |>
+  add_trace(type = "mesh3d", x = c(g, g), y = rep(wall, 2 * n), z = c(rep(0, n), Phi),
+            i = strip$i, j = strip$j, k = strip$k, facecolor = rep("#c5050c", n_tri),
+            opacity = cdf_quiet$fill, flatshading = TRUE, lighting = flat, hoverinfo = "skip") |>
+  add_trace(type = "scatter3d", mode = "lines", x = g, y = rep(wall, n), z = Phi,
+            opacity = cdf_quiet$line, line = list(color = "#c5050c", width = cdf_quiet$width),
+            hoverinfo = "skip") |>
+  add_trace(type = "mesh3d", x = rep(-wall, 2 * n), y = c(g, g), z = c(rep(0, n), Phi),
+            i = strip$i, j = strip$j, k = strip$k, facecolor = rep("#0479a8", n_tri),
+            opacity = cdf_quiet$fill, flatshading = TRUE, lighting = flat, hoverinfo = "skip") |>
+  add_trace(type = "scatter3d", mode = "lines", x = rep(-wall, n), y = g, z = Phi,
+            opacity = cdf_quiet$line, line = list(color = "#0479a8", width = cdf_quiet$width),
+            hoverinfo = "skip") |>
+  layout(
+    showlegend = FALSE,
+    paper_bgcolor = "#F7F7F7",
+    margin = list(l = 0, r = 0, t = 0, b = 0),
+    font = list(family = "Red Hat Text, sans-serif", color = "#333333"),
+    scene = list(
+      xaxis = bvn_axis("x", c(-lim, lim), -lim:lim),
+      yaxis = bvn_axis("y", c(-lim, lim), -lim:lim),
+      zaxis = bvn_axis("", c(0, 1.05), seq(0.25, 1, 0.25)),
+      aspectmode = "manual",
+      aspectratio = list(x = cdf_zoom, y = cdf_zoom, z = 0.7 * cdf_zoom),
+      camera = list(eye = list(x = 1.25 * cos(cdf_el) * cos(cdf_az),
+                               y = 1.25 * cos(cdf_el) * sin(cdf_az),
+                               z = 1.25 * sin(cdf_el)),
+                    projection = list(type = "orthographic")),
+      dragmode = "turntable", hovermode = FALSE,
+      annotations = list(
+        c(list(x = 0.6, y = wall, z = 0.86, text = "F<sub>X</sub>(x)", showarrow = FALSE,
+               xanchor = "left", font = list(size = 16, color = "#c5050c")),
+          opacity = cdf_quiet$label),
+        c(list(x = -wall, y = 0.6, z = 0.86, text = "F<sub>Y</sub>(y)", showarrow = FALSE,
+               xanchor = "left", font = list(size = 16, color = "#0479a8")),
+          opacity = cdf_quiet$label)
+      )
+    )
+  ) |>
+  config(displayModeBar = FALSE, doubleClick = FALSE)
+```
+
+## Joint PMFs
+
+::: {.incremental}
+
+- For discrete random variables, we can also talk about the **joint** probability that $X$ takes on a particular value $x$ and $Y$ takes on a particular value $y$
+
+- We define the **joint** probability mass function (PMF) in a similar way as before
+
+  - For two discrete random variables, $X$ and $Y$
+
+    $$p_{XY}(x, y) = P(X = x, Y = y) $$
+
+  - Generalizing to **many** random variables
+
+    $$p_{X_1, \dotsc X_n}(x_1, \dotsc x_n) = P(X_1 = x_1, \dotsc X_n = x_n) $$
+:::
+
+## A discrete joint distribution {.pmf-slide}
+
+```{r}
+#| echo: false
+
+# The week 3 list experiment: D is the list assignment (1 = treated), Y the
+# number of items the respondent reported
+mexico <- read.csv("../week3/data/mexico_list.csv")
+pmf_d <- mexico$treat
+pmf_y <- mexico$y
+pmf_n <- nrow(mexico)
+
+# Every respondent is one dot, stacked in a column over their (d, y) cell, so
+# a column's height is the share of respondents in that cell: the empirical
+# joint PMF P(D = d, Y = y). Each layer of a column is a 3 x 3 block of dots.
+per_side <- 3
+per_layer <- per_side^2
+layer_h <- per_layer / pmf_n   # one layer of dots, in probability units
+
+# The x and y axes cover ranges of different lengths, so a square footprint
+# needs different spacings in data units. pmf_aspect is the scene's shape.
+pmf_xr <- c(-0.5, 1.5)
+pmf_yr <- c(-0.5, 4.5)
+pmf_aspect <- list(x = 1, y = 1.8, z = 1.1)
+foot <- 0.026   # dot spacing, in the scene's own units (the ones aspectratio uses)
+dx <- foot * diff(pmf_xr) / pmf_aspect$x
+dy <- foot * diff(pmf_yr) / pmf_aspect$y
+
+cell <- paste(pmf_d, pmf_y)
+k <- ave(seq_len(pmf_n), cell, FUN = seq_along) - 1   # position within the column
+pos <- k %% per_layer
+dots <- data.frame(
+  d = pmf_d,
+  x3 = pmf_d + (pos %% per_side - (per_side - 1) / 2) * dx,
+  y3 = pmf_y + (pos %/% per_side - (per_side - 1) / 2) * dy,
+  z3 = (k %/% per_layer + 0.5) * layer_h
+)
+
+# The PMF itself, for the labels over each column. The control list has only
+# three items, so (0, 4) is an impossible cell with probability 0.
+pmf <- expand.grid(d = 0:1, y = 0:4)
+pmf$p <- mapply(function(d, y) mean(pmf_d == d & pmf_y == y), pmf$d, pmf$y)
+
+pmf_axis <- function(title, ...) {
+  list(title = list(text = title), gridcolor = "#d9d9d9", zeroline = FALSE,
+       showspikes = FALSE, showbackground = TRUE, backgroundcolor = "#EFEFEF",
+       tickfont = list(size = 12), tickangle = 0, ...)
+}
+
+pmf_labels <- lapply(seq_len(nrow(pmf)), function(i) {
+  list(x = pmf$d[i], y = pmf$y[i], z = pmf$p[i] + 0.012,
+       text = sprintf("%.3f", pmf$p[i]), showarrow = FALSE, yanchor = "bottom",
+       font = list(size = 13, color = "#333333"))
+})
+
+pmf_cols <- c("#0479A8", "#c5050c")   # control blue, treated red, as in week 3
+
+p_pmf <- plot_ly(width = 1000, height = 560)
+for (d in 0:1) {
+  s <- dots[dots$d == d, ]
+  p_pmf <- p_pmf |>
+    add_trace(type = "scatter3d", mode = "markers", x = s$x3, y = s$y3, z = s$z3,
+              marker = list(size = 6, color = pmf_cols[d + 1], opacity = 1,
+                            line = list(color = "#ffffff", width = 0.5)),
+              hoverinfo = "skip")
+}
+
+p_pmf |>
+  layout(
+    showlegend = FALSE,
+    paper_bgcolor = "#F7F7F7",
+    margin = list(l = 0, r = 0, t = 0, b = 0),
+    font = list(family = "Red Hat Text, sans-serif", color = "#333333"),
+    scene = list(
+      xaxis = pmf_axis("D (list assignment)", range = pmf_xr, tickvals = 0:1,
+                       ticktext = c("0 control", "1 treated")),
+      yaxis = pmf_axis("Y (items reported)", range = pmf_yr, tickvals = 0:4),
+      zaxis = pmf_axis("P(D = d, Y = y)", range = c(0, 0.27),
+                       tickvals = seq(0, 0.25, 0.05)),
+      aspectmode = "manual", aspectratio = pmf_aspect,
+      # from about 45 degrees, so the control row shows between the treated columns
+      camera = list(eye = list(x = 0.95, y = -1.05, z = 0.75),
+                    projection = list(type = "orthographic")),
+      dragmode = "turntable", hovermode = FALSE,
+      annotations = pmf_labels
+    )
+  ) |>
+  config(displayModeBar = FALSE, doubleClick = FALSE)
+```
+
+## Joint PDFs
+
+::: {.incremental}
+
+- As before, with continuous random variables $X$ and $Y$, the probability that $X$ or $Y$ take on specific values $x$ and $y$ is zero.
+  - We cannot work with a probability mass function $P(X = x, Y = y)$
+
+- Instead, we'll define a **joint density function** as the derivative of the joint CDF with respect to each of the variables
+
+  - For two continuous random variables, $X$ and $Y$
+
+    $$f_{XY}(x, y) = \frac{\partial^2 F_{XY}(x,y)}{\partial x \partial y} $$
+
+  - Again, generalizing to **many** random variables
+
+    $$f_{X_1, \dotsc X_n}(x_1, \dotsc x_n) = \frac{\partial^n F_{X_1, \dotsc X_n}(x_1, \dotsc x_n)}{\partial x_1 \dotsc \partial x_n} $$
+
+:::
+
+## A continuous joint distribution {.pdf-slide}
+
+```{r}
+#| echo: false
+
+# The opening animation's rho = 0.5 stage, held still so it can be rotated.
+# Reuses the grid, strips and axis helpers from that chunk, and matches its
+# final look: the surface in front, the marginals faint on the back walls.
+rho_pdf <- 0.5
+f_pdf <- outer(g, g, function(y, x)
+  exp(-(x^2 - 2 * rho_pdf * x * y + y^2) / (2 * (1 - rho_pdf^2))) /
+    (2 * pi * sqrt(1 - rho_pdf^2)))   # rows are y, as plotly wants
+peak_pdf <- max(f_pdf)
+
+# The animation's resting camera: azimuth -62, elevation 34, zoom 1.2
+cam_az <- -62 * pi / 180
+cam_el <- 34 * pi / 180
+cam_zoom <- 1.2
+
+quiet <- list(width = 3.5, line = 0.45, fill = 0.06, label = 0.55)
+
+plot_ly(width = 1000, height = 560) |>
+  add_surface(x = g, y = g, z = f_pdf, cmin = 0, cmax = peak_pdf,
+              showscale = FALSE, hoverinfo = "skip",
+              colorscale = list(c(0, "#e9dff1"), c(0.35, "#9b6cc2"), c(1, "#4a1766")),
+              lighting = list(ambient = 0.7, diffuse = 0.5, specular = 0.1,
+                              roughness = 0.8, fresnel = 0.05),
+              contours = list(x = list(highlight = FALSE), y = list(highlight = FALSE),
+                              z = list(show = TRUE, start = 0.02, end = 0.4, size = 0.04,
+                                       color = "#ffffff", width = 1, highlight = FALSE))) |>
+  add_trace(type = "mesh3d", x = c(g, g), y = rep(wall, 2 * n), z = c(rep(0, n), phi),
+            i = strip$i, j = strip$j, k = strip$k, facecolor = rep("#c5050c", n_tri),
+            opacity = quiet$fill, flatshading = TRUE, lighting = flat, hoverinfo = "skip") |>
+  add_trace(type = "scatter3d", mode = "lines", x = g, y = rep(wall, n), z = phi,
+            opacity = quiet$line, line = list(color = "#c5050c", width = quiet$width),
+            hoverinfo = "skip") |>
+  add_trace(type = "mesh3d", x = rep(-wall, 2 * n), y = c(g, g), z = c(rep(0, n), phi),
+            i = strip$i, j = strip$j, k = strip$k, facecolor = rep("#0479a8", n_tri),
+            opacity = quiet$fill, flatshading = TRUE, lighting = flat, hoverinfo = "skip") |>
+  add_trace(type = "scatter3d", mode = "lines", x = rep(-wall, n), y = g, z = phi,
+            opacity = quiet$line, line = list(color = "#0479a8", width = quiet$width),
+            hoverinfo = "skip") |>
+  layout(
+    showlegend = FALSE,
+    paper_bgcolor = "#F7F7F7",
+    margin = list(l = 0, r = 0, t = 0, b = 0),
+    font = list(family = "Red Hat Text, sans-serif", color = "#333333"),
+    scene = list(
+      xaxis = bvn_axis("x", c(-lim, lim), -lim:lim),
+      yaxis = bvn_axis("y", c(-lim, lim), -lim:lim),
+      zaxis = bvn_axis("", c(0, ztop_3d), seq(0.1, 0.4, 0.1)),
+      aspectmode = "manual",
+      aspectratio = list(x = cam_zoom, y = cam_zoom, z = 0.7 * cam_zoom),
+      camera = list(eye = list(x = 1.25 * cos(cam_el) * cos(cam_az),
+                               y = 1.25 * cos(cam_el) * sin(cam_az),
+                               z = 1.25 * sin(cam_el)),
+                    projection = list(type = "orthographic")),
+      dragmode = "turntable", hovermode = FALSE,
+      annotations = list(
+        c(bvn_label(1.25, wall, "f<sub>X</sub>(x)", "#c5050c"), opacity = quiet$label),
+        c(bvn_label(-wall, 1.2, "f<sub>Y</sub>(y)", "#0479a8"), opacity = quiet$label)
+      )
+    )
+  ) |>
+  config(displayModeBar = FALSE, doubleClick = FALSE)
+```
+
+## Covariance and correlation
+
+::: {.incremental}
+
+- When we have multiple random variables, we may want a **summary** of how the two quantities vary *together*.
+  - In the same way we wanted a summary of *central tendency* (**expectation**) or *variability* (**variance**)
+- The **covariance** between two random variables $X$ and $Y$ is defined as
+
+  $$ \Cov(X, Y) = \mathbb{E}[(X - \mathbb{E}[X])(Y - \mathbb{E}[Y])] $$
+
+- We can factor and apply linearity of expectations to get another way of writing the covariance
+
+  $$
+  \begin{aligned}
+  \Cov(X, Y) &= \mathbb{E}[(X - \mathbb{E}[X])(Y - \mathbb{E}[Y])] \\
+  &= \mathbb{E}\big[XY - X\,\mathbb{E}[Y] - \mathbb{E}[X]\,Y + \mathbb{E}[X]\,\mathbb{E}[Y]\big] \\
+  &= \mathbb{E}[XY] - \mathbb{E}[X]\,\mathbb{E}[Y] - \mathbb{E}[X]\,\mathbb{E}[Y] + \mathbb{E}[X]\,\mathbb{E}[Y] \\
+  &= \mathbb{E}[XY] - \mathbb{E}[X]\,\mathbb{E}[Y]
+  \end{aligned}
+  $$
+
+:::
+
+## Covariance and correlation
+
+::: {.incremental}
+
+- Covariance is **scale dependent** - the units in which $X$ and $Y$ are measured matter for the overall magnitude of the covariance.
+  - Sometimes we want a **scale free** measure of association as a summary.
+
+- The **correlation** is constructed by normalizing the covariance between $X$ and $Y$ by their respective *standard deviations*
+
+  $$\rho_{X,Y} = \Corr(X, Y) = \frac{\Cov(X, Y)}{\sqrt{\Var(X) \Var(Y)}} = \frac{\Cov(X, Y)}{\sqrt{\Var(X)} \sqrt{\Var(Y)}} $$
+
+- The correlation coefficient lies between $[-1, 1]$
+  - These bounds come from an application of the **Cauchy-Schwarz** inequality!
+
+    $$\Cov(X, Y)^2 \le \Var(X) \Var(Y)$$
+
+:::
+
+## Correlation {.bvn-slide}
+
+```{r}
+#| echo: false
+
+# A reprise of the opening animation's correlation steps: the same widget and
+# script, opened straight onto the joint density at rho = 0, with the current
+# rho in the slide title
+p_rho <- htmlwidgets::onRender(
+  bvn_base,
+  paste(readLines("bvn-anim/bivariate_normal.js"), collapse = "\n"),
+  data = list(grid = g, rhos = bvn_rhos, walk = lapply(bvn_walk, as.list),
+              ztop2d = ztop_2d, ztop3d = ztop_3d,
+              start = length(bvn_walk) + 1, title = "Correlation: ρ = {rho}")
+)
+
+# One empty fragment per correlation after the first
+htmltools::tagList(
+  p_rho,
+  lapply(seq_len(length(bvn_rhos) - 1),
+         function(i) htmltools::span(class = "fragment bvn-step"))
+)
+```
+
+## Properties of variance
+
+::: {.incremental}
+
+- The **covariance** appears when we want to take the variance of a **sum** or **difference** in two random variables.
+
+- The variance of the **sum** of two random variables is:
+
+  $$ \Var(X + Y) = \Var(X) + \Var(Y) + 2\Cov(X, Y) $$
+
+- The variance of the **difference** of two random variables is:
+
+  $$ \Var(X - Y) = \Var(X) + \Var(Y) - 2\Cov(X, Y) $$
+
+- **Intuitively**:
+  - If I add two random variables together, I'm going to get something *noisier* unless $X$ tends to be high when $Y$ is low (and vice-versa)
+  - If I subtract two random variables, I'm *also* going to get something *noisier* unless $X$ is high when $Y$ is high (and vice-versa)
+
+:::
+
+## Conditional distributions
+
+::: {.incremental}
+
+- We often want to ask how the distribution of one variable $Y$ **changes** if we were to set $X$ to a particular value
+  - As we did before with conditional probabilities, we can define the **conditional distribution** of $Y \mid X$ 
+
+- For **discrete** random variables, the definition is exactly what we had before: joint over marginal
+
+  $$p_{Y \mid X}(y \mid x) = P(Y = y \mid X = x) = \frac{p_{XY}(x, y)}{p_X(x)} $$
+- For **continuous** random variables it's a bit tricky (since $X = x$ has probability zero), but we use the same approach to define a conditional density
+
+  $$f_{Y \mid X}(y \mid x) = \frac{f_{XY}(x, y)}{f_X(x)} $$
+
+- Think of conditioning on $X = x$ as conditioning on a **tiny window** around $x$: that window appears in the numerator and denominator and cancels, leaving the ratio of densities.
+
+:::
+
+## Factoring joint PMFs/PDFs
+
+::: {.incremental}
+
+- As we did before with the probabilities of intersections of events, we can **factor** joint PMFs and PDFs into the product of conditionals
+
+- For two discrete random variables $X$ and $Y$
+
+  $$ p_{XY}(x, y) = p_{Y \mid X}(y \mid x) \cdot p_{X}(x) = p_{X \mid Y}(x \mid y) \cdot p_Y(y)$$
+
+- For two continuous random variables $X$ and $Y$
+
+  $$ f_{XY}(x, y) = f_{Y \mid X}(y \mid x) \cdot f_{X}(x) = f_{X \mid Y}(x \mid y) \cdot f_Y(y)$$
+
+:::
+
+## Factoring joint PMFs/PDFs
+
+::: {.incremental}
+
+- This generalizes to **many** random variables:
+
+  - For discrete random variables $X_1, \dotsc, X_N$
+
+    $$
+    \begin{aligned}
+    p_{X_1, \dotsc, X_N}(x_1, \dotsc, x_N) &= p_{X_1}(x_1) \cdot p_{X_2 \mid X_1}(x_2 \mid x_1) \cdot p_{X_3 \mid X_1, X_2}(x_3 \mid x_1, x_2) \\
+    &\quad \cdots p_{X_N \mid X_1, \dotsc, X_{N-1}}(x_N \mid x_1, \dotsc, x_{N-1}) \\
+    &= \prod_{i=1}^{N} p_{X_i \mid X_1, \dotsc, X_{i-1}}(x_i \mid x_1, \dotsc, x_{i-1})
+    \end{aligned}
+    $$
+
+:::
+
+## Factoring joint PMFs/PDFs
+
+::: {.incremental}
+
+- For continuous random variables $X_1, \dotsc, X_N$
+
+  $$
+  \begin{aligned}
+  f_{X_1, \dotsc, X_N}(x_1, \dotsc, x_N) &= f_{X_1}(x_1) \cdot f_{X_2 \mid X_1}(x_2 \mid x_1) \cdot f_{X_3 \mid X_1, X_2}(x_3 \mid x_1, x_2) \\
+  &\quad \cdots f_{X_N \mid X_1, \dotsc, X_{N-1}}(x_N \mid x_1, \dotsc, x_{N-1}) \\
+  &= \prod_{i=1}^{N} f_{X_i \mid X_1, \dotsc, X_{i-1}}(x_i \mid x_1, \dotsc, x_{i-1})
+  \end{aligned}
+  $$
+
+- **Intuitively**, we can think of a draw from a joint distribution as a sequence of draws from **univariate** distributions, each conditioning on the realizations of the previously drawn random variables
+
+
+:::
+
+## Marginalizing joint distributions
+
+::: {.incremental}
+
+- We can recover a **marginal** distribution from a joint distribution by summing/integrating over whichever variable we want to get rid of
+- To get the intuition, we can **factor** the joint density into a conditional and the marginal we care about
+
+  $$f_Y(y) = \int_{-\infty}^{\infty} f_{XY}(x, y) dx = \int_{-\infty}^{\infty} f_{X \mid Y}(x \mid y) f_Y(y) dx $$
+- Pull $f_Y(y)$ out of the integral (it doesn't depend on $x$)
+
+  $$f_Y(y) = f_Y(y) \int_{-\infty}^{\infty} f_{X \mid Y}(x \mid y) dx $$
+
+- And all densities integrate to $1$ (including conditional densities)
+
+  $$f_Y(y) = f_Y(y) \times 1$$
+
+:::
+
+
+## Visualizing conditional distributions {.app-slide}
 
 ::: {.app-frame data-app="bivariate_normal_app.html" data-title="Slicing a bivariate normal"}
 :::
@@ -201,15 +664,514 @@ htmltools::tagList(
 </script>
 ```
 
+## Independence
+
+::: {.incremental}
+
+- Two random variables $X$ and $Y$ are **independent** if and only if their joint CDF factors into the product of their **marginal** CDFs
+  - Essentially the same definition as before for events!
+
+  $$ X \indep Y \iff F_{XY}(x, y) = F_X(x) \, F_Y(y) \quad \text{for all } x, y $$
+
+- This also implies that their joint PMFs/PDFs factor as well
+
+  $$ p_{XY}(x, y) = p_X(x) \, p_Y(y) \qquad f_{XY}(x, y) = f_X(x) \, f_Y(y) $$
+
+- Conditioning on one doesn't change the distribution of the other - the marginal and conditional distributions are the same
+
+  $$ p_{Y \mid X}(y \mid x)  = p_Y(y) \qquad  p_{X \mid Y}(x \mid y) = p_{X}(x)$$
+  $$ f_{Y \mid X}(y \mid x)  = f_Y(y) \qquad  f_{X \mid Y}(x \mid y) = f_{X}(x)$$
+
+:::
+
+## Independence and Covariance
+
+::: {.incremental}
+
+- Independence implies zero covariance
+
+- First, let's write $\mathbb{E}[XY]$ as a double sum over the joint PMF using the law of the unconscious statistician.
+
+  $$ \mathbb{E}[XY] = \sum_{x} \sum_{y} xy \cdot  p_{XY}(x, y) $$
+
+- Independence means the joint distribution factors into the marginals
+
+  $$ \mathbb{E}[XY] = \sum_{x} \sum_{y} xy \cdot  p_{X}(x) p_{Y}(y) $$
+
+- $x p_X(x)$ factors out of our sum over $y$
+
+  $$ \mathbb{E}[XY] = \sum_{x}x \cdot p_{X}(x) \sum_{y} y \cdot  p_{Y}(y) $$
+
+:::
+
+## Independence and Covariance
+
+::: {.incremental}
+
+- Plugging in our definitions of expected value
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[XY] &= \sum_{x} x \cdot p_{X}(x) \sum_{y} y \cdot p_{Y}(y) \\
+  &= \sum_{x} x \cdot p_{X}(x) \, \mathbb{E}[Y] \\
+  &= \mathbb{E}[Y] \sum_{x} x \cdot p_{X}(x) \\
+  &= \mathbb{E}[X] \, \mathbb{E}[Y]
+  \end{aligned}
+  $$
+
+- So the covariance is zero
+
+  $$ \Cov(X, Y) = \mathbb{E}[XY] - \mathbb{E}[X] \, \mathbb{E}[Y] = \mathbb{E}[X] \, \mathbb{E}[Y] - \mathbb{E}[X] \, \mathbb{E}[Y] = 0 $$
+
+:::
+
+
+## Conditional expectations
+
+::: {.incremental}
+
+- We often want a **summary** of the conditional distribution of $Y$ given a particular value of $X$.
+  - What is a good "prediction" for $Y$ if I know $X$?
+- The **regression function** or **conditional expectation function** (CEF) is one such quantity
+
+  $$
+  \mu(x) = \mathbb{E}[Y \mid X = x] =
+  \begin{cases}
+  \displaystyle \sum_{y} y \cdot p_{Y \mid X}(y \mid x) & \text{discrete } Y \\[1em]
+  \displaystyle \int_{-\infty}^{\infty} y \cdot f_{Y \mid X}(y \mid x) \, dy & \text{continuous } Y
+  \end{cases}
+  $$
+
+- The CEF is a **function** of $X$
+  - I give it a value of $X$, it outputs me what the expected value of $Y$ is for that value of $X$
+- Learning about CEFs is at the heart of many social science questions!
+
+:::
+
+## How does Clinton's 2016 vote share vary by county demographics? {.cef-slide}
+
+```{r}
+#| echo: false
+
+# County-level 2016 presidential returns
+election <- read.csv("data/prez_election_2016_vote.csv")
+election$voteshare <- 100 * election$candidatevotes / election$totalvotes
+election <- subset(election, !is.na(voteshare) & !is.na(pctWhiteNH))
+cx <- election$pctWhiteNH
+cy <- election$voteshare
+
+# Joint density by a Gaussian kernel density estimate. Both variables live in
+# [0, 100], and a plain KDE would leak mass past the edges (most counties sit
+# just under 100% white), so every county is mirrored across 0 and 100 on each
+# axis and the estimate is kept on [0, 100]^2 only.
+mirror <- function(v) cbind(v, -v, 200 - v)
+kx <- as.vector(mirror(cx)[, rep(1:3, 3)])
+ky <- as.vector(mirror(cy)[, rep(1:3, each = 3)])
+cg <- 0:100
+f_xy <- MASS::kde2d(kx, ky, n = length(cg), lims = c(0, 100, 0, 100),
+                    h = c(MASS::bandwidth.nrd(cx), MASS::bandwidth.nrd(cy)))$z
+f_xy <- f_xy / sum(f_xy)   # f_xy[i, j] is the density at (x = cg[i], y = cg[j])
+
+# Contours at the highest-density regions holding 10%, 20%, ..., 90% of the
+# mass. Evenly spaced heights would all bunch up in the peak.
+f_sorted <- sort(f_xy, decreasing = TRUE)
+cef_levels <- sapply(seq(0.9, 0.1, -0.1),
+                     function(p) f_sorted[which(cumsum(f_sorted) >= p)[1]])
+cef_contours <- lapply(cef_levels, function(l) {
+  segs <- contourLines(cg, cg, f_xy, levels = l)
+  # one trace per level, separate rings split by NA gaps
+  list(x = unlist(lapply(segs, function(s) c(s$x, NA))),
+       y = unlist(lapply(segs, function(s) c(s$y, NA))))
+})
+level_cols <- colorRampPalette(c("#b89bd3", "#4a1766"))(length(cef_levels))
+
+# The CEF of this joint density, E[Y | X = x] = sum_y y f(x, y) / sum_y f(x, y),
+# and the BLP (the OLS line), each with the density's height along its path so
+# it can ride on the surface. Drawn over the range of the data.
+on_surface <- function(y_at) {
+  keep <- cg >= floor(min(cx)) & cg <= ceiling(max(cx))
+  z <- sapply(seq_along(cg), function(i) approx(cg, f_xy[i, ], y_at[i])$y)
+  list(x = cg[keep], y = y_at[keep], z = z[keep])
+}
+cef_curve <- on_surface(as.vector(f_xy %*% cg) / rowSums(f_xy))
+blp_fit <- coef(lm(voteshare ~ pctWhiteNH, data = election))
+blp_curve <- on_surface(blp_fit[1] + blp_fit[2] * cg)
+
+f_top <- max(f_xy)
+cef_lift <- 0.012 * f_top   # keeps the lines just above the surface
+
+# Slide title at each stage of the animation
+# ("" keeps the slide's own heading)
+cef_titles <- c("",
+                "An empirical joint distribution",
+                "An empirical joint distribution",
+                "The conditional expectation function",
+                "The conditional expectation function",
+                "The CEF and the best linear predictor")
+
+cef_axis <- function(title, ...) {
+  list(title = list(text = title), gridcolor = "#d9d9d9", zeroline = FALSE,
+       showspikes = FALSE, showbackground = TRUE, backgroundcolor = "#EFEFEF",
+       tickfont = list(size = 12), tickangle = 0, ...)
+}
+
+cef_label <- function(x, y, text, colour) {
+  list(x = x, y = y, z = cef_lift, text = text, showarrow = FALSE, xanchor = "left",
+       font = list(size = 18, color = colour), visible = FALSE)
+}
+
+# Trace order matters: cef_joint.js addresses traces by index
+p_cef <- plot_ly(width = 1000, height = 560) |>
+  add_surface(x = cg, y = cg, z = t(f_xy), visible = FALSE,
+              cmin = 0, cmax = f_top, showscale = FALSE, hoverinfo = "skip",
+              # pale, so the contour lines and curves on it carry the picture
+              colorscale = list(c(0, "#f4f0f8"), c(1, "#d6c4e6")),
+              # mostly ambient light, so from overhead the surface stays pale
+              # like a page rather than shading grey
+              lighting = list(ambient = 1, diffuse = 0.12, specular = 0,
+                              roughness = 1, fresnel = 0),
+              contours = list(x = list(highlight = FALSE), y = list(highlight = FALSE),
+                              z = list(highlight = FALSE))) |>
+  add_trace(type = "scatter3d", mode = "markers", x = cx, y = cy, z = rep(0, length(cx)),
+            marker = list(size = 2, color = "#333333"), hoverinfo = "skip")
+
+for (j in seq_along(cef_contours)) {
+  p_cef <- p_cef |>
+    add_trace(type = "scatter3d", mode = "lines", x = cef_contours[[j]]$x,
+              y = cef_contours[[j]]$y, z = rep(0, length(cef_contours[[j]]$x)),
+              line = list(color = level_cols[j], width = 3), connectgaps = FALSE,
+              hoverinfo = "skip", visible = FALSE)
+}
+
+p_cef <- p_cef |>
+  add_trace(type = "scatter3d", mode = "lines", x = cef_curve$x, y = cef_curve$y,
+            z = cef_curve$z, line = list(color = "#c5050c", width = 8),
+            hoverinfo = "skip", visible = FALSE) |>
+  add_trace(type = "scatter3d", mode = "lines", x = blp_curve$x, y = blp_curve$y,
+            z = blp_curve$z, line = list(color = "#0479a8", width = 8),
+            hoverinfo = "skip", visible = FALSE) |>
+  layout(
+    showlegend = FALSE,
+    paper_bgcolor = "#F7F7F7",
+    margin = list(l = 0, r = 0, t = 0, b = 0),
+    font = list(family = "Red Hat Text, sans-serif", color = "#333333"),
+    scene = list(
+      xaxis = cef_axis("% non-Hispanic white", range = c(0, 100)),
+      yaxis = cef_axis("Clinton vote share (%)", range = c(0, 100)),
+      zaxis = cef_axis("", range = c(0, 1.05 * f_top), showticklabels = FALSE),
+      aspectmode = "manual", aspectratio = list(x = 1, y = 1, z = 0.6),
+      camera = list(projection = list(type = "orthographic")),   # set by the animation
+      dragmode = "turntable", hovermode = FALSE,
+      annotations = list(
+        cef_label(3, 84, "CEF", "#c5050c"),
+        cef_label(3, 58, "BLP", "#0479a8")
+      )
+    )
+  ) |>
+  config(displayModeBar = FALSE, doubleClick = FALSE)
+
+p_cef <- htmlwidgets::onRender(
+  p_cef,
+  paste(readLines("cef-anim/cef_joint.js"), collapse = "\n"),
+  data = list(grid = cg, density = t(f_xy), levels = cef_levels, lift = cef_lift,
+              contours = cef_contours, cef = cef_curve, blp = blp_curve,
+              points = list(x = cx, y = cy), titles = cef_titles, zaspect = 0.6)
+)
+
+# One empty fragment per animation step after the first
+htmltools::tagList(
+  p_cef,
+  lapply(seq_len(length(cef_titles) - 1),
+         function(i) htmltools::span(class = "fragment cef-step"))
+)
+```
+
+## Law of Iterated Expectations
+
+::: {.incremental}
+
+- We can recover the marginal expectation $\mathbb{E}[Y]$ just by applying the expectation operator to $\mathbb{E}[Y \mid X]$
+  - But what distribution are we taking that expectation over?
+  - The distribution of $X$. Remember $\mathbb{E}[Y \mid X]$ is a function of $X$
+
+- Applying the **law of the unconscious statistician**
+
+  $$
+  \mathbb{E}[Y] = \mathbb{E}\big[\mathbb{E}[Y \mid X]\big] =
+  \begin{cases}
+  \displaystyle \sum_{x} \mathbb{E}[Y \mid X = x] \cdot p_X(x) & \text{discrete } X \\[1em]
+  \displaystyle \int_{-\infty}^{\infty} \mathbb{E}[Y \mid X = x] \cdot f_X(x) \, dx & \text{continuous } X
+  \end{cases}
+  $$
+
+- This is known as the **law of total expectation** or **law of iterated expectation**
+
+:::
+
+## Law of Iterated Expectations
+
+::: {.incremental}
+
+- Let's complete the proof for the discrete case. Substitute in the definition of conditional expectation
+
+  $$ \mathbb{E}\big[\mathbb{E}[Y \mid X]\big] =  \sum_{x} \sum_{y} y \cdot p_{Y \mid X}(y \mid x) \cdot p_X(x) $$
+- That conditional times marginal is just the joint distribution of $X$ and $Y$ 
+
+  $$ \mathbb{E}\big[\mathbb{E}[Y \mid X]\big] =  \sum_{x} \sum_{y} y \cdot p_{XY}(x,y)  $$
+
+- Pull out the $y$ from the sum over $x$ (remember, we can swap order of summation)
+  $$ \mathbb{E}\big[\mathbb{E}[Y \mid X]\big] =   \sum_{y} y \sum_{x} p_{XY}(x,y) $$
+
+:::
+
+## Law of Iterated Expectations
+
+::: {.incremental}
+
+- The sum over $x$ is just marginalizing out $x$ from the joint distribution of $X$ and $Y$
+  $$
+  \begin{aligned}
+  \mathbb{E}\big[\mathbb{E}[Y \mid X]\big] &= \sum_{y} y \sum_{x} p_{XY}(x,y) \\
+  &= \sum_{y} y \sum_{x} p_{X \mid Y}(x \mid y) \cdot p_Y(y) \\
+  &= \sum_{y} y \cdot p_Y(y) \underbrace{\sum_{x} p_{X \mid Y}(x \mid y)}_{= 1} \\
+  &= \sum_{y} y \cdot p_Y(y) = \mathbb{E}[Y]
+  \end{aligned}
+  $$
+
+:::
+
+## Law of Iterated Expectations
+
+![](assets/lie_slices.svg){.nostretch fig-align="center" width="84%"}
+
+## Example: Survey weighting to recalled vote
+
+::: {.incremental}
+
+- We want to predict the 2026 midterm elections.
+  - **Problem**: Surveys aren't representative and we don't have a perfect way of dealing with **non-response bias**
+- A recent strategy used by some polling firms is to **weight by recalled vote**
+  - Imagine that the voters in 2026 are similar to 2024
+  - We have a **known** 2024 benchmark: the observed Trump-Harris vote totals.
+  - Calculate average vote choice **conditional** on recalled vote and average using the known 2024 distribution
+
+:::
+
+## Example: Weighting to recalled vote
+
+::: {.incremental}
+
+- **Recent example**: The Economist/YouGov poll (September 25–28, 2026) asks respondents 
+  - $X$: the respondent's **recalled** 2024 vote: Trump or Harris
+  - $Y_D$: 1 if they intend to vote for the **Democratic** House candidate in 2026, 0 otherwise
+  - $Y_R$: 1 if they intend to vote for the **Republican** House candidate in 2026, 0 otherwise
+
+- For each party's share:
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[Y_D] &= \mathbb{E}[Y_D \mid \text{Trump}] \, P(\text{Trump}) + \mathbb{E}[Y_D \mid \text{Harris}] \, P(\text{Harris}) \\
+  \mathbb{E}[Y_R] &= \mathbb{E}[Y_R \mid \text{Trump}] \, P(\text{Trump}) + \mathbb{E}[Y_R \mid \text{Harris}] \, P(\text{Harris})
+  \end{aligned}
+  $$
+:::
+
+## Example: Weighting to recalled vote
+
+```{r}
+#| echo: false
+
+# Economist/YouGov poll, September 25-28, 2026, registered voters, question 46
+# ("In the elections for U.S. Congress in November, who will you vote for in
+# the district where you live?"), crosstab by 2024 vote:
+#   - dem, rep: shares choosing "The Democratic candidate" and "The Republican
+#     candidate" (weighted, within each 2024 vote column)
+#   - raw: unweighted respondents in each column (545 Trump, 586 Harris), as
+#     shares of the two
+#   - bench: YouGov's weighting target for 2024 presidential vote (48% Harris,
+#     50% Trump, the actual result), rescaled to the two candidates
+recall <- data.frame(
+  x     = c("Trump", "Harris"),
+  dem   = c(0.07, 0.90),
+  rep   = c(0.80, 0.01),
+  raw   = c(545, 586) / (545 + 586),
+  bench = c(50, 48) / (50 + 48)
+)
+ey <- function(y, p) sum(recall[[y]] * recall[[p]])
+f2 <- function(v) sprintf("%.2f", v)   # table cells, to two decimals
+f3 <- function(v) sprintf("%.3f", v)
+# The weighted average written out, e.g. 0.07 (0.51) + 0.90 (0.49)
+terms <- function(y, p) paste0(f2(recall[[y]]), " (", f2(recall[[p]]), ")", collapse = " + ")
+```
+
+::: {.incremental}
+
+- The Economist/YouGov crosstabs report:
+
+  | 2024 vote ($x$) | $\mathbb{E}[Y_D \mid X = x]$ | $\mathbb{E}[Y_R \mid X = x]$ | $P(X = x)$, raw sample | $P(X = x)$, 2024 result |
+  |:--|:-:|:-:|:-:|:-:|
+  | `r recall$x[1]` | `r f2(recall$dem[1])` | `r f2(recall$rep[1])` | `r f2(recall$raw[1])` | `r f2(recall$bench[1])` |
+  | `r recall$x[2]` | `r f2(recall$dem[2])` | `r f2(recall$rep[2])` | `r f2(recall$raw[2])` | `r f2(recall$bench[2])` |
+
+- There are differences in how well each party is holding their voters in 2026
+  - `r f2(recall$dem[2])` of Harris voters back the Democratic house candiate, but only `r f2(recall$rep[1])` of Trump voters back the Republican house candidate
+  - Trump voters defect to the Democratic candidate (`r f2(recall$dem[1])`) far more than Harris voters defect to the Republican (`r f2(recall$rep[2])`)
+
+- But the raw sample **over-represents** Harris voters (`r f2(recall$raw[2])` vs. `r f2(recall$bench[2])` in the actual result)
+
+:::
+
+## Example: Weighting to recalled vote
+
+::: {.incremental}
+
+- Averaging over the **2024 result**
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[Y_D] &= `r terms("dem", "bench")` = `r f3(ey("dem", "bench"))` \\
+  \mathbb{E}[Y_R] &= `r terms("rep", "bench")` = `r f3(ey("rep", "bench"))`
+  \end{aligned}
+  $$
+
+- The **raw gap**, $\mathbb{E}[Y_D] - \mathbb{E}[Y_R]$: the Democratic candidate leads by `r round(100 * (ey("dem", "bench") - ey("rep", "bench")))` points (respondents who pick neither party count toward neither share)
+
+- **Survey weighting** is just choosing which distribution of $X$ to average over. 
+  - In Week 13, we'll talk about how to *estimate* these pieces (stratification, post-stratification)
+
+:::
+
 ## Next week
 
 ::: {.incremental}
 
-- Estimands as features of distributions
-  - Defining estimands as statistical functionals
-  - Connecting theory to empirical targets
+- What is your **estimand**?
+  - How should we connect theory to empirical questions?
+  - Thinking of estimands as features of distributions.
+- **Midterm** exam
+  - Probability questions in the *context* of actual research settings.
+  - Focus on properties of conditional probability, properties of expectations. 
 
 :::
+
+
+## Bonus: The law of total variance
+
+```{r}
+#| echo: false
+
+# The recalled vote example again: Y_D is binary, so each conditional variance
+# is mu(x) (1 - mu(x)), averaged over the 2024 result
+mu_d    <- recall$dem
+p_x     <- recall$bench
+ey_d    <- sum(mu_d * p_x)
+within  <- sum(mu_d * (1 - mu_d) * p_x)   # E[Var(Y_D | X)]
+between <- sum((mu_d - ey_d)^2 * p_x)     # Var(E[Y_D | X])
+```
+
+::: {.incremental}
+
+- We can also decompose the variance of $Y$ by conditioning on $X$
+
+  $$ \Var(Y) = \underbrace{\mathbb{E}\big[\Var(Y \mid X)\big]}_{\text{within}} + \underbrace{\Var\big(\mathbb{E}[Y \mid X]\big)}_{\text{between}} $$
+
+- **Within**: the average spread of $Y$ around the CEF *inside* each slice of $X$
+- **Between**: how much the CEF itself moves as $X$ changes. The part of the variation in $Y$ "explained" by $X$
+
+- In the recalled vote example ($Y_D$ is binary, so $\Var(Y_D \mid X = x) = \mu(x)(1 - \mu(x))$)
+  - Within: `r f3(within)`, between: `r f3(between)`, total: $\Var(Y_D) =$ `r f3(within + between)`
+  - Recalled 2024 vote accounts for about `r round(100 * between / (within + between))`% of the variance in 2026 House vote preference
+
+:::
+
+## Bonus: The law of total variance
+
+::: {.incremental}
+
+- Start from $\Var(Y \mid X) = \mathbb{E}[Y^2 \mid X] - \mathbb{E}[Y \mid X]^2$ and take expectations of each piece, using the **law of iterated expectations**
+
+  $$
+  \begin{aligned}
+  \mathbb{E}\big[\Var(Y \mid X)\big] &= \mathbb{E}\big[\mathbb{E}[Y^2 \mid X]\big] - \mathbb{E}\big[\mathbb{E}[Y \mid X]^2\big] = \mathbb{E}[Y^2] - \mathbb{E}\big[\mathbb{E}[Y \mid X]^2\big] \\
+  \Var\big(\mathbb{E}[Y \mid X]\big) &= \mathbb{E}\big[\mathbb{E}[Y \mid X]^2\big] - \mathbb{E}\big[\mathbb{E}[Y \mid X]\big]^2 = \mathbb{E}\big[\mathbb{E}[Y \mid X]^2\big] - \mathbb{E}[Y]^2
+  \end{aligned}
+  $$
+
+- Add the two lines: the $\mathbb{E}\big[\mathbb{E}[Y \mid X]^2\big]$ terms cancel
+
+  $$ \mathbb{E}\big[\Var(Y \mid X)\big] + \Var\big(\mathbb{E}[Y \mid X]\big) = \mathbb{E}[Y^2] - \mathbb{E}[Y]^2 = \Var(Y) $$
+
+- Since both pieces are non-negative, conditioning never *adds* variance: $\Var\big(\mathbb{E}[Y \mid X]\big) \le \Var(Y)$
+
+:::
+
+## Bonus: The mean minimizes mean squared error
+
+::: {.incremental}
+
+- Why do we focus so much on the **expected value** when thinking about prediction - why is it our "best guess"?
+  - It turns out we can formalize the notion of "best guess" with respect to a particular error: the **mean squared error** (MSE)
+
+- Let $c$ be our single guess. The mean squared error between $Y$ and $c$ is defined as $\mathbb{E}[(Y - c)^2]$
+  - We want to find the value of $c$ that **minimizes** this quantity.
+
+:::
+
+## Bonus: The mean minimizes mean squared error
+
+::: {.incremental}
+
+- Add and subtract $\mathbb{E}[Y]$ and expand the square
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[(Y - c)^2] &= \mathbb{E}\big[\big((Y - \mathbb{E}[Y]) + (\mathbb{E}[Y] - c)\big)^2\big] \\
+  &= \mathbb{E}[(Y - \mathbb{E}[Y])^2] + 2(\mathbb{E}[Y] - c)\,\mathbb{E}[Y - \mathbb{E}[Y]] + (\mathbb{E}[Y] - c)^2 \\
+  &= \Var(Y) + (\mathbb{E}[Y] - c)^2
+  \end{aligned}
+  $$
+
+- The middle term drops out because $\mathbb{E}[Y - \mathbb{E}[Y]] = 0$
+
+- $\Var(Y)$ doesn't depend on $c$, and $(\mathbb{E}[Y] - c)^2 \ge 0$, so the MSE is smallest at $c = \mathbb{E}[Y]$
+  - The best constant prediction with respect to MSE is the **mean**, and the smallest achievable MSE is the **variance**
+
+:::
+
+## Bonus: The CEF minimizes the MSE
+
+::: {.incremental}
+
+- Now, instead of a single constant $c$, we can plug in a **function** of $X$, $g(X)$
+  - We can show that the function $g(X)$ that does the **best** job is the CEF. 
+- The MSE between $Y$ and our function is $\mathbb{E}[(Y - g(X))^2]$ and we're searching over the space of all possible functions $g()$
+- We'll use a similar trick from before: add and subtract the CEF $\mu(X) = \mathbb{E}[Y \mid X]$ and expand the square:
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[(Y - g(X))^2] &= \mathbb{E}[(Y - \mu(X))^2] + 2\,\mathbb{E}[(Y - \mu(X))(\mu(X) - g(X))] \\
+  &\quad + \mathbb{E}[(\mu(X) - g(X))^2]
+  \end{aligned}
+  $$
+
+:::
+
+## Bonus: The CEF minimizes the MSE
+
+::: {.incremental}
+
+- The middle term is zero: by the **law of total expectation**, condition on $X = x$ first. Given $X = x$, $\mu(x) - g(x)$ is just a constant
+
+  $$ \mathbb{E}[(Y - \mu(x))(\mu(x) - g(x)) \mid X = x] = (\mu(x) - g(x))\big(\mathbb{E}[Y \mid X = x] - \mu(x)\big) = 0 $$
+
+- So for any $g$
+
+  $$ \mathbb{E}[(Y - g(X))^2] = \mathbb{E}[(Y - \mu(X))^2] + \underbrace{\mathbb{E}[(\mu(X) - g(X))^2]}_{\ge 0} \ge \mathbb{E}[(Y - \mu(X))^2] $$
+
+- The CEF is the **best predictor** of $Y$ given $X$ in MSE. 
+
+:::
+
 
 ## References {.refs-slide}
 

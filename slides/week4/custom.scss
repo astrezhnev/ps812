@@ -110,3 +110,22 @@ strong {
 .reveal .bvn-slide h2 {
   margin-bottom: 0.1em;
 }
+
+// 3D widgets: the joint density and CEF animation (cef-anim/cef_joint.js)
+// and the joint PMF, PDF and CDF slides
+
+.reveal .cef-slide h2,
+.reveal .pmf-slide h2,
+.reveal .pdf-slide h2,
+.reveal .cdf-slide h2 {
+  margin-bottom: 0.1em;
+}
+
+// Reveal sizes lists to their widest item, so on a slide of short bullets the
+// display math centers on a narrow list rather than on the slide. Full-width
+// lists keep every equation centered the same way.
+
+.reveal .slides ul,
+.reveal .slides ol {
+  display: block;
+}
