@@ -76,6 +76,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -233,7 +262,11 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="week-4-joint-distributions-and-expectation" class="level3">
 <h3 class="anchored" data-anchor-id="week-4-joint-distributions-and-expectation">Week 4: Joint Distributions and Expectation</h3>
-<p><em>To be posted</em></p>
+<ul>
+<li><a href="https://github.com/astrezhnev/ps812/tree/main/slides/week4/">Week 4 Github Repository</a></li>
+<li><a href="https://www.antonstrezhnev.com/ps812/slides/week4/week4_joint_distributions.html">Week 4 <code>.html</code> slides</a></li>
+<li><a href="https://www.antonstrezhnev.com/ps812/slides/week4/bivariate_normal_app.html">Slicing a bivariate normal</a> - How does the conditional distribution of <span class="math inline">\(Y\)</span> change as you slice a bivariate normal at different values of <span class="math inline">\(X\)</span> and vary the correlation? (RShiny app)</li>
+</ul>
 </section>
 <section id="week-5-variance-covariance-and-conditional-expectation" class="level3">
 <h3 class="anchored" data-anchor-id="week-5-variance-covariance-and-conditional-expectation">Week 5: Variance, Covariance, and Conditional Expectation</h3>
