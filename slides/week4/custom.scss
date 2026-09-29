@@ -105,35 +105,8 @@ strong {
   }
 }
 
-// Bivariate normal animation (bvn-anim/bivariate_normal.js). The caption is
-// laid over the top-left corner of the plotly widget and updated as it steps.
+// Bivariate normal animation (bvn-anim/bivariate_normal.js)
 
 .reveal .bvn-slide h2 {
   margin-bottom: 0.1em;
-}
-
-.reveal .bvn-caption {
-  position: absolute;
-  top: 6px;
-  left: 10px;
-  z-index: 10;
-  pointer-events: none;
-  text-align: left;
-  line-height: 1.3;
-
-  .bvn-main {
-    font-size: 0.8em;
-  }
-
-  .bvn-rho {
-    font-size: 0.8em;
-    font-weight: 700;
-    color: $accent-red;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .bvn-note {
-    font-size: 0.55em;
-    color: $text-muted;
-  }
 }

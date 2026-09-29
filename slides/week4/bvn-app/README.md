@@ -1,10 +1,10 @@
 # Bivariate normal slicing widget (week 4)
 
 An R Shiny app for the bivariate normal. Sliders set the two means, the two
-SDs and the correlation ρ. A 3D panel draws the joint density with each
-marginal standing on a back wall, and a vertical slice at X = x (or Y = y)
-cuts through the surface. The lower panel rescales that cross-section to area 1
-and plots it against the marginal of the other variable. It also reports the
+SDs and the correlation ρ. A 3D panel draws the joint density, with each
+marginal on a back wall (faint, so the surface stays the focus), and a vertical slice at X = x cuts through the surface. The lower panel
+rescales that cross-section to area 1 and plots it against the marginal of Y.
+It also reports the
 conditional SD against the marginal SD: their ratio is √(1 − ρ²), so a highly
 correlated pair gives a much tighter conditional distribution. An optional
 dashed line on the floor traces the conditional mean E[Y | X = x], and the

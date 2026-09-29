@@ -2,11 +2,12 @@
 # Slicing a bivariate normal.
 #
 # (X, Y) is bivariate normal with means mu_X, mu_Y, SDs sigma_X, sigma_Y and
-# correlation rho, all on sliders. The 3D panel draws the joint density with
-# the two marginals standing on the back walls; a vertical slice at X = x (or
-# Y = y) cuts the surface, and the cross-section is the joint density along
-# that line. Rescaled to area 1, that cross-section is the conditional density,
-# which the lower panel sets against the marginal of the other variable:
+# correlation rho, all on sliders. The 3D panel draws the joint density, with
+# the two marginals kept faint on the back walls so the surface stays the
+# focus. A vertical slice at X = x cuts the surface, and the
+# cross-section is the joint density along that line. Rescaled to area 1, that
+# cross-section is the conditional density of Y, which the lower panel sets
+# against Y's marginal:
 #
 #   Y | X = x  ~  N( mu_Y + rho * sigma_Y / sigma_X * (x - mu_X),
 #                    sigma_Y^2 * (1 - rho^2) )
@@ -22,8 +23,12 @@
 
 library(shiny)
 
-LIM <- 5                                  # both axes run over [-LIM, LIM]
-G   <- seq(-LIM, LIM, length.out = 101)   # fine enough for the rho = 0.95 ridge
+# The 3D box is kept tight around the density so it isn't mostly flat floor;
+# the mean and SD sliders are limited to what fits in it. The 2D panel has
+# room to show the tails, so it runs wider.
+LIM    <- 3                                 # 3D x and y run over [-LIM, LIM]
+G      <- seq(-LIM, LIM, length.out = 61)   # 0.1 steps, fine enough for the rho = 0.95 ridge
+LIM_2D <- 5
 
 COLS     <- c(X = "#c5050c", Y = "#0479A8")
 COND_COL <- "#C77400"
@@ -38,18 +43,11 @@ dbvn <- function(x, y, p) {
   exp(-(zx^2 - 2 * p$rho * zx * zy + zy^2) / (2 * q)) / (2 * pi * p$sx * p$sy * sqrt(q))
 }
 
-# The slice, written in terms of the variable conditioned on ("by") and the
-# other one ("of"), so conditioning on X and on Y share one code path.
-slice_of <- function(p, by, at) {
-  if (by == "X") {
-    mb <- p$mx; sb <- p$sx; mo <- p$my; so <- p$sy; of <- "Y"
-  } else {
-    mb <- p$my; sb <- p$sy; mo <- p$mx; so <- p$sx; of <- "X"
-  }
-  slope <- p$rho * so / sb
-  list(by = by, of = of, at = at, mb = mb, mo = mo, slope = slope,
-       m_marg = mo, s_marg = so,
-       m_cond = mo + slope * (at - mb), s_cond = so * sqrt(1 - p$rho^2))
+# Y | X = at, and the conditional-mean line E[Y | X = x] = my + slope * (x - mx)
+slice_of <- function(p, at) {
+  slope <- p$rho * p$sy / p$sx
+  list(at = at, slope = slope, m_marg = p$my, s_marg = p$sy,
+       m_cond = p$my + slope * (at - p$mx), s_cond = p$sy * sqrt(1 - p$rho^2))
 }
 
 css <- "
@@ -78,14 +76,13 @@ body > .container-fluid { height:100%; padding:0; }
 .hdr .checkbox { margin:0; }
 .hdr a { color:#0479A8; cursor:pointer; }
 .model { font-size:12.5px; color:#666; }
-.hdr h4 .m, .fit .m { color:var(--mc); }
+.hdr h4 .m, .fit .m { color:#0479A8; }
 .hdr h4 .c, .fit .c { color:#C77400; }
 #bvn3d { flex:1 1 auto; min-height:0; }
 #bvn3d .nojs { color:#999; margin:40px; text-align:center; }
 .plot2d { flex:1 1 auto; min-height:0; }
 .form-group { margin-bottom:0; }
 .control-label { font-weight:500; white-space:nowrap; font-size:13px; margin-bottom:0; }
-.radio-inline { font-size:13px; }
 .irs--shiny .irs-bar { border-color:var(--gc); background:var(--gc); }
 .irs--shiny .irs-single { background:var(--gc); }
 .irs--shiny .irs-handle { border-color:var(--gc); }
@@ -102,15 +99,17 @@ body > .container-fluid { height:100%; padding:0; }
 # Draws the 3D panel from the arrays the server sends as a `bvn` message.
 js <- r"---(
 (function () {
-  var LIM = 5, WALL = LIM - 0.02;   // curves sit just off the walls so they don't z-fight
+  var LIM = 3, WALL = LIM - 0.02;   // curves sit just off the walls so they don't z-fight
   var COL = { X: '#c5050c', Y: '#0479A8', slice: '#C77400', cef: '#333333' };
   var FLAT = { ambient: 1, diffuse: 0, specular: 0, fresnel: 0 };
-  // Home views face the slice: from the +x side when slicing at X = x (so the
-  // cross-section and Y's marginal on the back wall are seen head-on), from
-  // the -y side when slicing at Y = y.
-  var HOME = { X: { az: -30, el: 26 }, Y: { az: -62, el: 26 } };
+  // The marginals are backdrop, thin and faint, so the joint surface and the
+  // slice carry the picture
+  var MARG = { width: 3.5, line: 0.45, fill: 0.06, label: 0.6 };
+  // The home view faces the slice from the +x side, so the cross-section and
+  // Y's marginal on the back wall are both seen head-on
+  var HOME = { az: -30, el: 26 };
   var EYE_R = 1.25, ZOOM = 1.45, Z_ASPECT = 0.7;
-  var last = null, reset = false, lastBy = null, near = null, hooked = false;
+  var last = null, reset = false, near = null, hooked = false;
 
   function arr(v) { return [].concat(v); }
   function rep(v, n) { var a = []; for (var i = 0; i < n; i++) a.push(v); return a; }
@@ -124,43 +123,46 @@ js <- r"---(
     return { type: 'mesh3d', x: X, y: Y, z: Z, i: I, j: J, k: K, color: color, opacity: opacity,
              flatshading: true, lighting: FLAT, hoverinfo: 'skip', visible: visible };
   }
-  function curve(xs, ys, zs, color, width, visible, dash) {
+  function curve(xs, ys, zs, color, width, visible, dash, opacity) {
     return { type: 'scatter3d', mode: 'lines', x: xs, y: ys, z: zs, visible: visible,
-             line: { color: color, width: width, dash: dash || 'solid' }, hoverinfo: 'skip' };
+             line: { color: color, width: width, dash: dash || 'solid' }, hoverinfo: 'skip',
+             opacity: opacity === undefined ? 1 : opacity };
   }
   function axis(title, range) {
     return { title: { text: title }, range: range, gridcolor: '#dddddd', zeroline: false,
              showspikes: false, showbackground: true, backgroundcolor: '#F4F4F4',
              tickfont: { size: 11 }, tickangle: 0, nticks: 6 };
   }
-  // A marginal's label, placed just right of its peak at about one SD out
+  // A marginal's label, about one SD out from its peak. Y's goes on the low-y
+  // side, which from the home view is away from the surface.
   function label(g, f, onX, color, text) {
     var i = f.indexOf(Math.max.apply(null, f)), peak = f[i], sd = 0.3989 / peak;
-    var at = Math.min(g[i] + 1.1 * sd, LIM - 0.8);
+    var at = onX ? Math.max(g[i] - 1.1 * sd, -LIM + 0.6) : Math.min(g[i] + 1.1 * sd, LIM - 0.6);
     return { x: onX ? -WALL : at, y: onX ? at : WALL, z: 0.8 * peak, text: text,
-             showarrow: false, xanchor: 'left', font: { size: 14, color: color } };
+             showarrow: false, xanchor: onX ? 'right' : 'left', opacity: MARG.label,
+             font: { size: 14, color: color } };
   }
-  function homeCamera(by) {
-    var a = HOME[by].az * Math.PI / 180, e = HOME[by].el * Math.PI / 180;
+  function homeCamera() {
+    var a = HOME.az * Math.PI / 180, e = HOME.el * Math.PI / 180;
     return { eye: { x: EYE_R * Math.cos(e) * Math.cos(a), y: EYE_R * Math.cos(e) * Math.sin(a),
                     z: EYE_R * Math.sin(e) },
              up: { x: 0, y: 0, z: 1 }, center: { x: 0, y: 0, z: -0.05 },
              projection: { type: 'orthographic' } };
   }
 
-  // Which side of the slice the camera is on (true = the high side)
-  function nearSide(camera, byX) { return byX ? camera.eye.x > 0 : camera.eye.y > 0; }
+  // Which side of the slice the camera is on (true = the high-x side)
+  function nearSide(camera) { return camera.eye.x > 0; }
 
   // Split the surface at the slice into the part behind it, drawn solid, and
   // the part between the slice and the camera, ghosted so the cut face shows.
   // The grid and the slice slider share a 0.1 step, so the cut falls on a
-  // grid line, which both halves keep.
-  function cut(z, g, byX, at, nearHigh) {
+  // grid line, which both halves keep. Rows of z are y, columns x.
+  function cut(z, g, at, nearHigh) {
     var solid = [], ghost = [];
     for (var i = 0; i < g.length; i++) {
       var zs = [], zg = [];
       for (var j = 0; j < g.length; j++) {
-        var d = (byX ? g[j] : g[i]) - at;
+        var d = g[j] - at;
         var edge = Math.abs(d) < 1e-6, inFront = !edge && (nearHigh ? d > 0 : d < 0);
         zs.push(inFront ? null : z[i][j]);
         zg.push(inFront || edge ? z[i][j] : null);
@@ -179,32 +181,28 @@ js <- r"---(
     last = m;
     var g = arr(m.grid), n = g.length, s = m.slice, c = m.cef, zmax = m.zmax;
     var margX = arr(m.margX), margY = arr(m.margY), sz = arr(s.z);
-    var byX = s.by === 'X';
-    var sx = byX ? rep(s.at, n) : g, sy = byX ? g : rep(s.at, n);
-    var ct = arr(c.t), co = arr(c.o);
-    // The cutting plane, as two triangles
-    var px = byX ? rep(s.at, 4) : [-LIM, LIM, LIM, -LIM];
-    var py = byX ? [-LIM, LIM, LIM, -LIM] : rep(s.at, 4);
+    var slx = rep(s.at, n);
 
     // Keep wherever the viewer has rotated / zoomed to. Read the live scene:
     // plotly writes a drag back to the layout only after a delay, so a slider
     // moved straight after a drag would otherwise snap the camera back.
-    // Switching the conditioning variable goes back to that variable's home.
     var sc = el._fullLayout && el._fullLayout.scene && el._fullLayout.scene._scene;
-    var camera = homeCamera(s.by), aspect = { x: ZOOM, y: ZOOM, z: Z_ASPECT * ZOOM };
-    if (sc && !reset && s.by === lastBy) {
+    var camera = homeCamera(), aspect = { x: ZOOM, y: ZOOM, z: Z_ASPECT * ZOOM };
+    if (sc && !reset) {
       camera = sc.getCamera();
       camera.projection = { type: 'orthographic' };
       aspect = sc.glplot.getAspectratio();
     }
     reset = false;
-    lastBy = s.by;
-    near = nearSide(camera, byX);
-    var z = s.show ? cut(m.z, g, byX, s.at, near) : { solid: m.z, ghost: [[null]] };
+    near = nearSide(camera);
+    var z = s.show ? cut(m.z, g, s.at, near) : { solid: m.z, ghost: [[null]] };
 
-    var SURF = { type: 'surface', x: g, y: g, cmin: 0, cmax: zmax, showscale: false,
-                 hoverinfo: 'skip', colorscale: [[0, '#f7eded'], [0.4, '#e0676c'], [1, '#9b0000']],
-                 lighting: { ambient: 0.85, diffuse: 0.35, specular: 0.05, roughness: 0.9, fresnel: 0.05 } };
+    // The colour scale spans the surface's own height, so its peak is always
+    // the darkest purple on screen. Purple: the red of X mixed with the blue of Y
+    var SURF = { type: 'surface', x: g, y: g, cmin: 0, cmax: m.peak, showscale: false,
+                 hoverinfo: 'skip',
+                 colorscale: [[0, '#e9dff1'], [0.35, '#9b6cc2'], [1, '#4a1766']],
+                 lighting: { ambient: 0.7, diffuse: 0.5, specular: 0.1, roughness: 0.8, fresnel: 0.05 } };
     var traces = [
       Object.assign({}, SURF, { z: z.solid,
         contours: { x: { highlight: false }, y: { highlight: false },
@@ -212,22 +210,22 @@ js <- r"---(
                          color: '#ffffff', width: 1, highlight: false } } }),
       Object.assign({}, SURF, { z: z.ghost, opacity: 0.2, visible: s.show,
         contours: { x: { highlight: false }, y: { highlight: false }, z: { highlight: false } } }),
-      area(g, rep(WALL, n), margX, COL.X, 0.15, true),
-      curve(g, rep(WALL, n), margX, COL.X, 6, true),
-      area(rep(-WALL, n), g, margY, COL.Y, 0.15, true),
-      curve(rep(-WALL, n), g, margY, COL.Y, 6, true),
-      { type: 'mesh3d', x: px, y: py, z: [0, 0, zmax, zmax], i: [0, 0], j: [1, 2], k: [2, 3],
+      area(g, rep(WALL, n), margX, COL.X, MARG.fill, true),
+      curve(g, rep(WALL, n), margX, COL.X, MARG.width, true, 'solid', MARG.line),
+      area(rep(-WALL, n), g, margY, COL.Y, MARG.fill, true),
+      curve(rep(-WALL, n), g, margY, COL.Y, MARG.width, true, 'solid', MARG.line),
+      // the cutting plane, as two triangles
+      { type: 'mesh3d', x: rep(s.at, 4), y: [-LIM, LIM, LIM, -LIM], z: [0, 0, zmax, zmax],
+        i: [0, 0], j: [1, 2], k: [2, 3],
         color: '#777777', opacity: 0.1, flatshading: true, lighting: FLAT, hoverinfo: 'skip',
         visible: s.show },
-      area(sx, sy, sz, COL.slice, 0.5, s.show),
-      curve(sx, sy, sz, COL.slice, 9, s.show),
-      curve(c.by === 'X' ? ct : co, c.by === 'X' ? co : ct, rep(0, ct.length),
-            COL.cef, 5, c.show, 'dash'),
-      { type: 'scatter3d', mode: 'markers', x: [byX ? s.at : s.mean], y: [byX ? s.mean : s.at],
+      area(slx, g, sz, COL.slice, 0.5, s.show),
+      curve(slx, g, sz, COL.slice, 9, s.show),
+      curve(arr(c.x), arr(c.y), rep(0, arr(c.x).length), COL.cef, 5, c.show, 'dash'),
+      { type: 'scatter3d', mode: 'markers', x: [s.at], y: [s.mean],
         z: [0], marker: { size: 5, color: COL.slice, symbol: 'diamond' }, hoverinfo: 'skip',
         visible: s.show }
     ];
-
 
     var layout = {
       paper_bgcolor: '#ffffff', margin: { l: 0, r: 0, t: 0, b: 0 }, showlegend: false,
@@ -247,7 +245,7 @@ js <- r"---(
       hooked = true;
       el.on('plotly_relayout', function () {
         var sc = el._fullLayout.scene._scene;
-        if (last && nearSide(sc.getCamera(), last.slice.by === 'X') !== near) render(last);
+        if (last && nearSide(sc.getCamera()) !== near) render(last);
       });
     }
   }
@@ -274,15 +272,14 @@ ui <- fluidPage(
   div(class = "wrap",
     div(class = "card side",
       h5("Joint distribution"),
-      slider("rho", "ρ &ndash; correlation", -0.95, 0.95, 0.8, 0.05, INK),
-      slider("sx", "σ<sub>X</sub> &ndash; SD of X", 0.5, 2, 1, 0.1, COLS[["X"]]),
-      slider("sy", "σ<sub>Y</sub> &ndash; SD of Y", 0.5, 2, 1, 0.1, COLS[["Y"]]),
-      slider("mx", "μ<sub>X</sub> &ndash; mean of X", -2, 2, 0, 0.1, COLS[["X"]]),
-      slider("my", "μ<sub>Y</sub> &ndash; mean of Y", -2, 2, 0, 0.1, COLS[["Y"]]),
+      slider("rho", "ρ &ndash; correlation", -0.95, 0.95, 0, 0.05, INK),
+      slider("sx", "σ<sub>X</sub> &ndash; SD of X", 0.5, 1.5, 1, 0.1, COLS[["X"]]),
+      slider("sy", "σ<sub>Y</sub> &ndash; SD of Y", 0.5, 1.5, 1, 0.1, COLS[["Y"]]),
+      slider("mx", "μ<sub>X</sub> &ndash; mean of X", -1, 1, 0, 0.1, COLS[["X"]]),
+      slider("my", "μ<sub>Y</sub> &ndash; mean of Y", -1, 1, 0, 0.1, COLS[["Y"]]),
       tags$hr(),
-      h5("Slice"),
-      radioButtons("by", NULL, c("Condition on X" = "X", "Condition on Y" = "Y"), inline = TRUE),
-      slider("at", "Slice at X =", -3, 3, 1, 0.1, COND_COL,
+      h5("Condition on X"),
+      slider("at", "Slice at X =", -2.5, 2.5, 0, 0.1, COND_COL,
              animate = animationOptions(interval = 400, loop = TRUE))
     ),
     div(class = "main",
@@ -310,14 +307,14 @@ ui <- fluidPage(
 )
 
 draw_cond <- function(s) {
-  u  <- seq(-LIM, LIM, length.out = 500)
+  u  <- seq(-LIM_2D, LIM_2D, length.out = 500)
   fm <- dnorm(u, s$m_marg, s$s_marg)
   fc <- dnorm(u, s$m_cond, s$s_cond)
-  mc <- COLS[[s$of]]
+  mc <- COLS[["Y"]]
   par(mar = c(2.7, 3.4, 0.5, 0.6), mgp = c(1.6, 0.5, 0), tcl = -0.25, las = 1,
       col.axis = "#555", family = "sans")
-  plot(NA, xlim = c(-LIM, LIM), ylim = c(0, 1.15 * max(fm, fc)), xaxs = "i", yaxs = "i",
-       xlab = tolower(s$of), ylab = "density", bty = "l", fg = "#999")
+  plot(NA, xlim = c(-LIM_2D, LIM_2D), ylim = c(0, 1.15 * max(fm, fc)), xaxs = "i", yaxs = "i",
+       xlab = "y", ylab = "density", bty = "l", fg = "#999")
   polygon(c(u, rev(u)), c(fm, 0 * u), col = adjustcolor(mc, 0.15), border = NA)
   polygon(c(u, rev(u)), c(fc, 0 * u), col = adjustcolor(COND_COL, 0.25), border = NA)
   segments(s$m_marg, 0, s$m_marg, max(fm), col = mc, lty = 3)
@@ -329,54 +326,48 @@ draw_cond <- function(s) {
 server <- function(input, output, session) {
   pars <- reactive(list(mx = input$mx, my = input$my, sx = input$sx, sy = input$sy,
                         rho = input$rho))
-  sl <- reactive(slice_of(pars(), input$by, input$at))
-
-  observeEvent(input$by, {
-    of <- setdiff(c("X", "Y"), input$by)
-    updateSliderInput(session, "at", label = sprintf("Slice at %s =", input$by))
-    updateCheckboxInput(session, "show_cef",
-                        label = sprintf("E[%s | %s = %s] line", of, input$by, tolower(input$by)))
-  }, ignoreInit = TRUE)
+  sl <- reactive(slice_of(pars(), input$at))
 
   observe({
     p <- pars()
     s <- sl()
     z <- outer(G, G, function(y, x) dbvn(x, y, p))    # rows are y, as plotly wants
-    along <- if (s$by == "X") dbvn(s$at, G, p) else dbvn(G, s$at, p)
-    # Conditional-mean line E[of | by = t] across the floor, kept inside the box
-    cef <- s$mo + s$slope * (G - s$mb)
+    peak <- 1 / (2 * pi * p$sx * p$sy * sqrt(1 - p$rho^2))
+    # Conditional-mean line E[Y | X = x] across the floor, kept inside the box
+    cef <- p$my + s$slope * (G - p$mx)
     keep <- abs(cef) <= LIM
     session$sendCustomMessage("bvn", list(
       grid  = G,
       z     = signif(z, 4),
+      peak  = peak,
       margX = dnorm(G, p$mx, p$sx),
       margY = dnorm(G, p$my, p$sy),
-      zmax  = max(0.45, 1.08 * max(z, dnorm(0) / p$sx, dnorm(0) / p$sy)),
-      slice = list(show = input$show_slice, by = s$by, at = s$at, z = along, mean = s$m_cond),
-      cef   = list(show = input$show_cef, by = s$by, t = G[keep], o = cef[keep])
+      # The box fits the surface and the marginals, with a floor so it holds
+      # still over the usual range of the sliders
+      zmax  = max(0.45, 1.08 * max(peak, dnorm(0) / min(p$sx, p$sy))),
+      slice = list(show = input$show_slice, at = s$at, z = dbvn(s$at, G, p), mean = s$m_cond),
+      cef   = list(show = input$show_cef, x = G[keep], y = cef[keep])
     ))
   })
 
   # The title doubles as the plot's legend: conditional in orange, marginal in
-  # the other variable's colour
+  # Y's blue
   output$cond_title <- renderUI({
-    s <- sl()
-    h4(style = paste0("--mc:", COLS[[s$of]]),
-       span(class = "c", sprintf("%s given %s = %.1f", s$of, s$by, s$at)), " against ",
-       span(class = "m", sprintf("%s on its own", s$of)))
+    h4(span(class = "c", sprintf("Y given X = %.1f", sl()$at)), " against ",
+       span(class = "m", "Y on its own"))
   })
 
   output$stats <- renderUI({
     s <- sl()
     r <- s$s_cond / s$s_marg
-    div(class = "fit", style = paste0("--mc:", COLS[[s$of]]),
-      span(class = "m", sprintf("SD(%s) ", s$of), tags$b(sprintf("%.2f", s$s_marg))),
-      span(class = "c", sprintf("SD(%s | %s = %.1f) ", s$of, s$by, s$at),
+    div(class = "fit",
+      span(class = "m", "SD(Y) ", tags$b(sprintf("%.2f", s$s_marg))),
+      span(class = "c", sprintf("SD(Y | X = %.1f) ", s$at),
            tags$b(sprintf("%.2f", s$s_cond)),
            span(class = "meter",
                 div(style = sprintf("width:%.1f%%;background:%s", 100 * r, COND_COL)))),
       span("ratio √(1 − ρ²) ", tags$b(sprintf("%.2f", r))),
-      span(class = "c", sprintf("E[%s | %s = %.1f] ", s$of, s$by, s$at),
+      span(class = "c", sprintf("E[Y | X = %.1f] ", s$at),
            tags$b(sprintf("%.2f", s$m_cond)))
     )
   })

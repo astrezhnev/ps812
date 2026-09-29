@@ -64,18 +64,28 @@ $$
 
 :::
 
-## From one random variable to two {.bvn-slide}
+## From one random variable... {.bvn-slide}
 
 ```{r}
 #| echo: false
 
 library(plotly)
 
+# The 2D warm-up, one click per row: the mean moves up, down, and back to 0,
+# then the SD widens, narrows, and returns to 1
+bvn_walk <- list(c(mu = 0, sd = 1),
+                 c(mu = 1, sd = 1), c(mu = -1, sd = 1), c(mu = 0, sd = 1),
+                 c(mu = 0, sd = 1.5), c(mu = 0, sd = 0.7), c(mu = 0, sd = 1))
+
 # Correlations the joint density steps through, one per click once it's up
 bvn_rhos <- c(0, 0.5, 0.9, -0.5, -0.9)
 
-lim <- 4
-g <- seq(-lim, lim, length.out = 101)
+# Top of the density axis: the 2D stages need room for the SD = 0.7 peak (0.57)
+ztop_2d <- 0.6
+ztop_3d <- 0.42
+
+lim <- 3   # x and y run over [-lim, lim]
+g <- seq(-lim, lim, length.out = 61)
 n <- length(g)
 phi <- dnorm(g)
 wall <- lim - 0.02   # just in front of the axis walls, so the curves don't z-fight them
@@ -104,9 +114,10 @@ bvn_label <- function(x, y, text, colour, visible = TRUE) {
 p_bvn <- plot_ly(width = 1000, height = 560) |>
   add_surface(x = g, y = g, z = matrix(0, n, n), visible = FALSE,
               cmin = 0, cmax = 0.37, showscale = FALSE, hoverinfo = "skip",
-              colorscale = list(c(0, "#f7eded"), c(0.4, "#e0676c"), c(1, "#9b0000")),
-              lighting = list(ambient = 0.85, diffuse = 0.35, specular = 0.05,
-                              roughness = 0.9, fresnel = 0.05),
+              # purple: the red of X mixed with the blue of Y
+              colorscale = list(c(0, "#e9dff1"), c(0.35, "#9b6cc2"), c(1, "#4a1766")),
+              lighting = list(ambient = 0.7, diffuse = 0.5, specular = 0.1,
+                              roughness = 0.8, fresnel = 0.05),
               contours = list(x = list(highlight = FALSE), y = list(highlight = FALSE),
                               z = list(show = TRUE, start = 0.02, end = 0.4, size = 0.04,
                                        color = "#ffffff", width = 1, highlight = FALSE))) |>
@@ -128,9 +139,9 @@ p_bvn <- plot_ly(width = 1000, height = 560) |>
     margin = list(l = 0, r = 0, t = 0, b = 0),
     font = list(family = "Red Hat Text, sans-serif", color = "#333333"),
     scene = list(
-      xaxis = bvn_axis("x", c(-lim, lim), seq(-lim, lim, 2)),
-      yaxis = bvn_axis("", c(-lim, lim), seq(-lim, lim, 2), showticklabels = FALSE),
-      zaxis = bvn_axis("", c(0, 0.42), seq(0.1, 0.4, 0.1)),
+      xaxis = bvn_axis("x", c(-lim, lim), -lim:lim),
+      yaxis = bvn_axis("", c(-lim, lim), -lim:lim, showticklabels = FALSE),
+      zaxis = bvn_axis("", c(0, ztop_2d), seq(0.1, 0.6, 0.1)),
       aspectmode = "manual", aspectratio = list(x = 1, y = 1, z = 0.7),
       camera = list(projection = list(type = "orthographic")),   # set by the animation
       dragmode = "turntable", hovermode = FALSE,
@@ -145,17 +156,20 @@ p_bvn <- plot_ly(width = 1000, height = 560) |>
 p_bvn <- htmlwidgets::onRender(
   p_bvn,
   paste(readLines("bvn-anim/bivariate_normal.js"), collapse = "\n"),
-  data = list(grid = g, rhos = bvn_rhos)
+  data = list(grid = g, rhos = bvn_rhos, walk = lapply(bvn_walk, as.list),
+              ztop2d = ztop_2d, ztop3d = ztop_3d)
 )
 
-# One empty fragment per animation step after the first
+# One empty fragment per animation step after the first: the rest of the
+# walk, the swing into 3D, and one per correlation
 htmltools::tagList(
   p_bvn,
-  lapply(seq_len(1 + length(bvn_rhos)), function(i) htmltools::span(class = "fragment bvn-step"))
+  lapply(seq_len(length(bvn_walk) + length(bvn_rhos)),
+         function(i) htmltools::span(class = "fragment bvn-step"))
 )
 ```
 
-## Slicing the bivariate normal {.app-slide}
+## Joint distributions {.app-slide}
 
 ::: {.app-frame data-app="bivariate_normal_app.html" data-title="Slicing a bivariate normal"}
 :::
