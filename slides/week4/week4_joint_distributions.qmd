@@ -1124,7 +1124,7 @@ terms <- function(y, p) paste0(f2(recall[[y]]), " (", f2(recall[[p]]), ")", coll
 
 - The middle term is zero: by the **law of total expectation**, condition on $X = x$ first. Given $X = x$, $\mu(x) - g(x)$ is just a constant
 
-  $$ \mathbb{E}[(Y - \mu(x))(\mu(x) - g(x)) \mid X = x] = (\mu(x) - g(x))\big(\mathbb{E}[Y \mid X = x] - \mu(x)\big) = 0 $$
+  $$ \mathbb{E}[(Y - \mu(x))(\mu(x) - g(x)) \mid X = x] = (\mu(x) - g(x))\underbrace{\big(\mathbb{E}[Y \mid X = x] - \mu(x)\big)}_{=0} = 0 $$
 
 - So for any $g$
 
@@ -1287,7 +1287,7 @@ ggplot(election, aes(pctWhiteNH, voteshare)) +
 ::: {.incremental}
 
 - Let's solve this optimization problem by taking the derivatives with respect to $a$ and $b$ and solving for $0$
-- The derivative passes inside the expectation, then the chain rule: the outer square yields $2(Y - a - bX)$ and the inner function yields $-1$ for $a$ and $-X$ for $b$
+- Derivative passes inside the expectation. Then applying the chain rule...
 
   $$
   \begin{aligned}
