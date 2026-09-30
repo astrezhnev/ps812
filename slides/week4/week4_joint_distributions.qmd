@@ -480,6 +480,28 @@ plot_ly(width = 1000, height = 560) |>
 
 :::
 
+## Properties of covariance
+
+::: {.incremental}
+
+- We can pull out constants out of the covariance. Let $a$ and $b$ be constants and $X$ and $Y$ random variables:
+
+  $$ \Cov(aX, bY) = ab\Cov(X, Y) $$
+
+- Adding a constant doesn't change the covariance (just as it doesn't change the variance)
+
+  $$ \Cov(X + a, Y + b) = \Cov(X, Y) $$
+
+- The covariance of any random variable with a constant is $0$
+
+  $$ \Cov(X, a) = 0 $$
+
+- Covariances have the distributive property
+
+  $$ \Cov(X + Z, Y) = \Cov(X, Y) + \Cov(Z, Y) $$
+
+:::
+
 ## Covariance and correlation
 
 ::: {.incremental}
@@ -741,7 +763,7 @@ htmltools::tagList(
 
 :::
 
-## How does Clinton's 2016 vote share vary by county demographics? {.cef-slide}
+## How does Clinton's 2016 vote share vary by county? {.cef-slide}
 
 ```{r}
 #| echo: false
@@ -879,6 +901,7 @@ htmltools::tagList(
 )
 ```
 
+
 ## Law of Iterated Expectations
 
 ::: {.incremental}
@@ -936,7 +959,15 @@ htmltools::tagList(
 
 ## Law of Iterated Expectations
 
-![](assets/lie_slices.svg){.nostretch fig-align="center" width="84%"}
+```{r}
+#| echo: false
+#| output: asis
+
+# Inlined rather than linked so reveal.js sees the fragment groups inside
+# (see assets/make_lie_slices.R): scatterplot, then slices, conditional means,
+# shaded areas, the areas added, and the rearranged E[Y] rectangle
+cat("```{=html}", readLines("assets/lie_slices.svg"), "```", sep = "\n")
+```
 
 ## Example: Survey weighting to recalled vote
 
@@ -1036,18 +1067,254 @@ terms <- function(y, p) paste0(f2(recall[[y]]), " (", f2(recall[[p]]), ")", coll
 
 :::
 
-## Next week
+## The mean minimizes mean squared error
 
 ::: {.incremental}
 
-- What is your **estimand**?
-  - How should we connect theory to empirical questions?
-  - Thinking of estimands as features of distributions.
-- **Midterm** exam
-  - Probability questions in the *context* of actual research settings.
-  - Focus on properties of conditional probability, properties of expectations. 
+- Why do we focus so much on the **expected value** when thinking about prediction - why is it our "best guess"?
+  - It turns out we can formalize the notion of "best guess" with respect to a particular error: the **mean squared error** (MSE)
+
+- Let $c$ be our single guess. The mean squared error between $Y$ and $c$ is defined as $\mathbb{E}[(Y - c)^2]$
+  - We want to find the value of $c$ that **minimizes** this quantity.
 
 :::
+
+## The mean minimizes mean squared error
+
+::: {.incremental}
+
+- Add and subtract $\mathbb{E}[Y]$ and expand the square
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[(Y - c)^2] &= \mathbb{E}\big[\big((Y - \mathbb{E}[Y]) + (\mathbb{E}[Y] - c)\big)^2\big] \\
+  &= \mathbb{E}[(Y - \mathbb{E}[Y])^2] + 2(\mathbb{E}[Y] - c)\,\mathbb{E}[Y - \mathbb{E}[Y]] + (\mathbb{E}[Y] - c)^2 \\
+  &= \Var(Y) + (\mathbb{E}[Y] - c)^2
+  \end{aligned}
+  $$
+
+- The middle term drops out because $\mathbb{E}[Y - \mathbb{E}[Y]] = 0$
+
+- $\Var(Y)$ doesn't depend on $c$, and $(\mathbb{E}[Y] - c)^2 \ge 0$, so the MSE is smallest at $c = \mathbb{E}[Y]$
+  - The best constant prediction with respect to MSE is the **mean**, and the smallest achievable MSE is the **variance**
+
+:::
+
+## The CEF minimizes the MSE
+
+::: {.incremental}
+
+- Now, instead of a single constant $c$, we can plug in a **function** of $X$, $g(X)$
+  - We can show that the function $g(X)$ that does the **best** job is the CEF. 
+- The MSE between $Y$ and our function is $\mathbb{E}[(Y - g(X))^2]$ and we're searching over the space of all possible functions $g()$
+- We'll use a similar trick from before: add and subtract the CEF $\mu(X) = \mathbb{E}[Y \mid X]$ and expand the square:
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[(Y - g(X))^2] &= \mathbb{E}[(Y - \mu(X))^2] + 2\,\mathbb{E}[(Y - \mu(X))(\mu(X) - g(X))] \\
+  &\quad + \mathbb{E}[(\mu(X) - g(X))^2]
+  \end{aligned}
+  $$
+
+:::
+
+## The CEF minimizes the MSE
+
+::: {.incremental}
+
+- The middle term is zero: by the **law of total expectation**, condition on $X = x$ first. Given $X = x$, $\mu(x) - g(x)$ is just a constant
+
+  $$ \mathbb{E}[(Y - \mu(x))(\mu(x) - g(x)) \mid X = x] = (\mu(x) - g(x))\big(\mathbb{E}[Y \mid X = x] - \mu(x)\big) = 0 $$
+
+- So for any $g$
+
+  $$ \mathbb{E}[(Y - g(X))^2] = \mathbb{E}[(Y - \mu(X))^2] + \underbrace{\mathbb{E}[(\mu(X) - g(X))^2]}_{\ge 0} \ge \mathbb{E}[(Y - \mu(X))^2] $$
+
+- The CEF is the **best predictor** of $Y$ given $X$ in MSE.
+
+:::
+
+## Estimating the CEF: Clinton's 2016 vote share {.nostretch}
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 5
+#| fig-align: center
+
+library(ggplot2)
+
+# Binned scatterplot: 20 equal-count bins of % non-Hispanic white, with the
+# mean of each variable within the bin (reuses `election` from the 3D slide)
+election$bin <- cut(election$pctWhiteNH,
+                    quantile(election$pctWhiteNH, seq(0, 1, length.out = 21)),
+                    include.lowest = TRUE)
+binned <- aggregate(cbind(pctWhiteNH, voteshare) ~ bin, data = election, FUN = mean)
+
+cef_theme <- theme_minimal(base_size = 15) +
+  theme(panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "#F7F7F7", colour = NA),
+        panel.background = element_rect(fill = "#F7F7F7", colour = NA))
+
+# The CEF, estimated by a locally weighted average (loess) over all counties
+p_binned <- ggplot(election, aes(pctWhiteNH, voteshare)) +
+  geom_point(data = binned, size = 3, colour = "#333333") +
+  geom_smooth(method = "loess", formula = y ~ x, se = FALSE,
+              colour = "#c5050c", linewidth = 1.4) +
+  annotate("text", x = 8, y = 80, label = "CEF (loess)", colour = "#c5050c",
+           hjust = 0, size = 5.5) +
+  scale_x_continuous(limits = c(0, 100), expand = c(0.01, 0)) +
+  scale_y_continuous(limits = c(0, 90), expand = c(0.01, 0)) +
+  labs(x = "% non-Hispanic white",
+       y = "Clinton vote share (%)") +
+  cef_theme
+
+p_binned
+```
+
+## How fast does the CEF change? {.nostretch}
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 3.6
+#| fig-align: center
+
+# The same loess fit geom_smooth draws (span 0.75, degree 2), so its slopes can
+# be read off: a centered difference at a handful of points
+cef_fit <- loess(voteshare ~ pctWhiteNH, data = election)
+at <- c(20, 40, 60, 80, 95)
+mu_at <- function(x) predict(cef_fit, data.frame(pctWhiteNH = x))
+slopes <- data.frame(x = at, y = mu_at(at), s = (mu_at(at + 1) - mu_at(at - 1)) / 2)
+half <- 9   # half-width of each tangent segment, in points of % white
+minus <- function(v, d = 2) sub("^-", "−", sprintf(paste0("%.", d, "f"), v))
+
+# Tangents drawn heavier than the curve so they read as separate lines
+ggplot(election, aes(pctWhiteNH, voteshare)) +
+  geom_point(data = binned, size = 2.5, colour = "#333333", alpha = 0.35) +
+  geom_smooth(method = "loess", formula = y ~ x, se = FALSE,
+              colour = "#c5050c", linewidth = 0.9) +
+  geom_segment(data = slopes, aes(x = x - half, xend = x + half,
+                                  y = y - s * half, yend = y + s * half),
+               colour = "#333333", linewidth = 2) +
+  geom_point(data = slopes, aes(x, y), colour = "#333333", size = 3.5) +
+  geom_text(data = slopes, aes(x, y + 11, label = minus(s)), size = 5.5,
+            colour = "#333333") +
+  scale_x_continuous(limits = c(0, 100), expand = c(0.01, 0)) +
+  scale_y_continuous(limits = c(0, 90), expand = c(0.01, 0)) +
+  labs(x = "% non-Hispanic white", y = "Clinton vote share (%)") +
+  cef_theme
+```
+
+::: {.incremental}
+
+- Hypotheses are often about **rates of change**: how much does $\mathbb{E}[Y \mid X = x]$ move when $X$ goes up by one point?
+
+:::
+
+## The best linear predictor
+
+::: {.incremental}
+
+- The CEF can take **any** shape, which makes it hard to summarize when $X$ is continuous or high-dimensional.
+  - Often we have hypotheses about a **rate of change** in an outcome as an independent variable increases or decreases
+- What if we **restrict** $g(X)$ to be a line, $g(X) = a + bX$?
+- The **best linear predictor** (BLP) is the line with the smallest MSE
+
+  $$ (\alpha, \beta) = \arg\min_{a,\, b} \ \mathbb{E}\big[(Y - a - bX)^2\big] $$
+
+- We are searching over a **smaller** space of options
+  - CEF: the best of **all** functions $g(X)$
+  - BLP: the best of all **lines** $a + bX$
+- Every line is a function, so the BLP can never beat the CEF
+
+  $$ \mathbb{E}\big[(Y - \mu(X))^2\big] \le \mathbb{E}\big[(Y - \alpha - \beta X)^2\big] $$
+
+:::
+
+## The best linear predictor
+
+::: {.incremental}
+
+- Let's solve this optimization problem by taking the derivatives with respect to $a$ and $b$ and solving for $0$
+  - The derivative passes inside the expectation, then the chain rule: the outer square yields $2(Y - a - bX)$ and the inner function yields $-1$ for $a$ and $-X$ for $b$
+
+  $$
+  \begin{aligned}
+  \frac{\partial}{\partial a} \mathbb{E}\big[(Y - a - bX)^2\big] &= \mathbb{E}\big[2(Y - a - bX) \cdot (-1)\big] = -2\,\mathbb{E}[Y - a - bX] \\
+  \frac{\partial}{\partial b} \mathbb{E}\big[(Y - a - bX)^2\big] &= \mathbb{E}\big[2(Y - a - bX) \cdot (-X)\big] = -2\,\mathbb{E}\big[X(Y - a - bX)\big]
+  \end{aligned}
+  $$
+
+- Set both to $0$ at $(a, b) = (\alpha, \beta)$ and divide by $-2$
+
+  $$ \mathbb{E}[Y - \alpha - \beta X] = 0 \qquad \mathbb{E}\big[X(Y - \alpha - \beta X)\big] = 0 $$
+
+:::
+
+## The best linear predictor
+
+::: {.incremental}
+
+- This gives the **first-order conditions** for the optimization problem
+
+  $$ \mathbb{E}[Y - \alpha - \beta X] = 0 \qquad \mathbb{E}\big[X(Y - \alpha - \beta X)\big] = 0 $$
+
+- The first gives the intercept: $\alpha = \mathbb{E}[Y] - \beta\,\mathbb{E}[X]$
+- Plug it into the second
+
+  $$
+  \begin{aligned}
+  0 &= \mathbb{E}[XY] - \alpha\,\mathbb{E}[X] - \beta\,\mathbb{E}[X^2] \\
+  &= \mathbb{E}[XY] - \mathbb{E}[X]\,\mathbb{E}[Y] - \beta\big(\mathbb{E}[X^2] - \mathbb{E}[X]^2\big) \\
+  &= \Cov(X, Y) - \beta \Var(X)
+  \end{aligned}
+  $$
+
+- So the BLP is
+
+  $$ \beta = \frac{\Cov(X, Y)}{\Var(X)} \qquad \alpha = \mathbb{E}[Y] - \beta\,\mathbb{E}[X] $$
+
+:::
+
+## The best linear predictor
+
+::: {.incremental}
+
+- Recall that for **any** function $g$
+
+  $$ \mathbb{E}[(Y - g(X))^2] = \mathbb{E}[(Y - \mu(X))^2] + \mathbb{E}[(\mu(X) - g(X))^2] $$
+
+- The first term doesn't depend on $g$. So among lines, minimizing the MSE for $Y$ is the same as minimizing the distance to the CEF
+
+  $$ (\alpha, \beta) = \arg\min_{a,\, b} \ \mathbb{E}\big[(\mu(X) - a - bX)^2\big] $$
+
+  - The BLP is the best **linear approximation to the CEF**
+  - If the CEF is linear, the BLP **is** the CEF
+- Like the CEF, the BLP is a feature of the joint distribution: an **estimand**
+- For Clinton's vote share: $\beta \approx `r sprintf("%.2f", coef(lm(voteshare ~ pctWhiteNH, data = election))[2])`$. 
+  - Each additional increase in county % non-Hispanic white is associated with about half a point reduction in Clinton vote share
+
+:::
+
+## Estimating the BLP: Clinton's 2016 vote share {.nostretch}
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 5
+#| fig-align: center
+
+# The same plot with the BLP (the OLS line) on top
+p_binned +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE,
+              colour = "#0479a8", linewidth = 1.4) +
+  annotate("text", x = 8, y = 58, label = "BLP", colour = "#0479a8",
+           hjust = 0, size = 5.5)
+```
+
+
+
 
 
 ## Bonus: The law of total variance
@@ -1100,72 +1367,21 @@ between <- sum((mu_d - ey_d)^2 * p_x)     # Var(E[Y_D | X])
 
 :::
 
-## Bonus: The mean minimizes mean squared error
+## Next week
 
 ::: {.incremental}
 
-- Why do we focus so much on the **expected value** when thinking about prediction - why is it our "best guess"?
-  - It turns out we can formalize the notion of "best guess" with respect to a particular error: the **mean squared error** (MSE)
-
-- Let $c$ be our single guess. The mean squared error between $Y$ and $c$ is defined as $\mathbb{E}[(Y - c)^2]$
-  - We want to find the value of $c$ that **minimizes** this quantity.
-
-:::
-
-## Bonus: The mean minimizes mean squared error
-
-::: {.incremental}
-
-- Add and subtract $\mathbb{E}[Y]$ and expand the square
-
-  $$
-  \begin{aligned}
-  \mathbb{E}[(Y - c)^2] &= \mathbb{E}\big[\big((Y - \mathbb{E}[Y]) + (\mathbb{E}[Y] - c)\big)^2\big] \\
-  &= \mathbb{E}[(Y - \mathbb{E}[Y])^2] + 2(\mathbb{E}[Y] - c)\,\mathbb{E}[Y - \mathbb{E}[Y]] + (\mathbb{E}[Y] - c)^2 \\
-  &= \Var(Y) + (\mathbb{E}[Y] - c)^2
-  \end{aligned}
-  $$
-
-- The middle term drops out because $\mathbb{E}[Y - \mathbb{E}[Y]] = 0$
-
-- $\Var(Y)$ doesn't depend on $c$, and $(\mathbb{E}[Y] - c)^2 \ge 0$, so the MSE is smallest at $c = \mathbb{E}[Y]$
-  - The best constant prediction with respect to MSE is the **mean**, and the smallest achievable MSE is the **variance**
+- What is your **estimand**?
+  - How should we connect theory to empirical questions?
+  - Thinking of estimands as features of distributions.
+  - Preview of *descriptive* versus *causal* estimands
+- **Midterm** exam
+  - Probability questions in the *context* of actual research settings.
+  - Focus on properties of conditional probability, properties of expectations. 
 
 :::
 
-## Bonus: The CEF minimizes the MSE
 
-::: {.incremental}
-
-- Now, instead of a single constant $c$, we can plug in a **function** of $X$, $g(X)$
-  - We can show that the function $g(X)$ that does the **best** job is the CEF. 
-- The MSE between $Y$ and our function is $\mathbb{E}[(Y - g(X))^2]$ and we're searching over the space of all possible functions $g()$
-- We'll use a similar trick from before: add and subtract the CEF $\mu(X) = \mathbb{E}[Y \mid X]$ and expand the square:
-
-  $$
-  \begin{aligned}
-  \mathbb{E}[(Y - g(X))^2] &= \mathbb{E}[(Y - \mu(X))^2] + 2\,\mathbb{E}[(Y - \mu(X))(\mu(X) - g(X))] \\
-  &\quad + \mathbb{E}[(\mu(X) - g(X))^2]
-  \end{aligned}
-  $$
-
-:::
-
-## Bonus: The CEF minimizes the MSE
-
-::: {.incremental}
-
-- The middle term is zero: by the **law of total expectation**, condition on $X = x$ first. Given $X = x$, $\mu(x) - g(x)$ is just a constant
-
-  $$ \mathbb{E}[(Y - \mu(x))(\mu(x) - g(x)) \mid X = x] = (\mu(x) - g(x))\big(\mathbb{E}[Y \mid X = x] - \mu(x)\big) = 0 $$
-
-- So for any $g$
-
-  $$ \mathbb{E}[(Y - g(X))^2] = \mathbb{E}[(Y - \mu(X))^2] + \underbrace{\mathbb{E}[(\mu(X) - g(X))^2]}_{\ge 0} \ge \mathbb{E}[(Y - \mu(X))^2] $$
-
-- The CEF is the **best predictor** of $Y$ given $X$ in MSE. 
-
-:::
 
 
 ## References {.refs-slide}
