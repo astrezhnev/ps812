@@ -147,6 +147,13 @@
     "text": "Covariance and correlation\n\nWhen we have multiple random variables, we may want a summary of how the two quantities vary together.\n\nIn the same way we wanted a summary of central tendency (expectation) or variability (variance)\n\nThe covariance between two random variables \\(X\\) and \\(Y\\) is defined as\n\\[ \\Cov(X, Y) = \\mathbb{E}[(X - \\mathbb{E}[X])(Y - \\mathbb{E}[Y])] \\]\nWe can factor and apply linearity of expectations to get another way of writing the covariance\n\\[\n\\begin{aligned}\n\\Cov(X, Y) &= \\mathbb{E}[(X - \\mathbb{E}[X])(Y - \\mathbb{E}[Y])] \\\\\n&= \\mathbb{E}\\big[XY - X\\,\\mathbb{E}[Y] - \\mathbb{E}[X]\\,Y + \\mathbb{E}[X]\\,\\mathbb{E}[Y]\\big] \\\\\n&= \\mathbb{E}[XY] - \\mathbb{E}[X]\\,\\mathbb{E}[Y] - \\mathbb{E}[X]\\,\\mathbb{E}[Y] + \\mathbb{E}[X]\\,\\mathbb{E}[Y] \\\\\n&= \\mathbb{E}[XY] - \\mathbb{E}[X]\\,\\mathbb{E}[Y]\n\\end{aligned}\n\\]"
   },
   {
+    "objectID": "slides/week4/week4_joint_distributions.html#properties-of-covariance",
+    "href": "slides/week4/week4_joint_distributions.html#properties-of-covariance",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "Properties of covariance",
+    "text": "Properties of covariance\n\nWe can pull out constants out of the covariance. Let \\(a\\) and \\(b\\) be constants and \\(X\\) and \\(Y\\) random variables:\n\\[ \\Cov(aX, bY) = ab\\Cov(X, Y) \\]\nAdding a constant doesn’t change the covariance (just as it doesn’t change the variance)\n\\[ \\Cov(X + a, Y + b) = \\Cov(X, Y) \\]\nThe covariance of any random variable with a constant is \\(0\\)\n\\[ \\Cov(X, a) = 0 \\]\nCovariances have the distributive property\n\\[ \\Cov(X + Z, Y) = \\Cov(X, Y) + \\Cov(Z, Y) \\]"
+  },
+  {
     "objectID": "slides/week4/week4_joint_distributions.html#covariance-and-correlation-1",
     "href": "slides/week4/week4_joint_distributions.html#covariance-and-correlation-1",
     "title": "Week 4: Joint and Conditional Distributions",
@@ -231,11 +238,11 @@
     "text": "Conditional expectations\n\nWe often want a summary of the conditional distribution of \\(Y\\) given a particular value of \\(X\\).\n\nWhat is a good “prediction” for \\(Y\\) if I know \\(X\\)?\n\nThe regression function or conditional expectation function (CEF) is one such quantity\n\\[\n\\mu(x) = \\mathbb{E}[Y \\mid X = x] =\n\\begin{cases}\n\\displaystyle \\sum_{y} y \\cdot p_{Y \\mid X}(y \\mid x) & \\text{discrete } Y \\\\[1em]\n\\displaystyle \\int_{-\\infty}^{\\infty} y \\cdot f_{Y \\mid X}(y \\mid x) \\, dy & \\text{continuous } Y\n\\end{cases}\n\\]\nThe CEF is a function of \\(X\\)\n\nI give it a value of \\(X\\), it outputs me what the expected value of \\(Y\\) is for that value of \\(X\\)\n\nLearning about CEFs is at the heart of many social science questions!"
   },
   {
-    "objectID": "slides/week4/week4_joint_distributions.html#how-does-clintons-2016-vote-share-vary-by-county-demographics",
-    "href": "slides/week4/week4_joint_distributions.html#how-does-clintons-2016-vote-share-vary-by-county-demographics",
+    "objectID": "slides/week4/week4_joint_distributions.html#how-does-clintons-2016-vote-share-vary-by-county",
+    "href": "slides/week4/week4_joint_distributions.html#how-does-clintons-2016-vote-share-vary-by-county",
     "title": "Week 4: Joint and Conditional Distributions",
-    "section": "How does Clinton’s 2016 vote share vary by county demographics?",
-    "text": "How does Clinton’s 2016 vote share vary by county demographics?"
+    "section": "How does Clinton’s 2016 vote share vary by county?",
+    "text": "How does Clinton’s 2016 vote share vary by county?"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#law-of-iterated-expectations",
@@ -263,7 +270,7 @@
     "href": "slides/week4/week4_joint_distributions.html#law-of-iterated-expectations-3",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "Law of Iterated Expectations",
-    "text": "Law of Iterated Expectations"
+    "text": "Law of Iterated Expectations\n\nLaw of iterated expectations\n\nY\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nP(X = x1)\nP(X = x2)\nP(X = x3)\n\n\n\nE[Y | X = x1]\n\nE[Y | X = x2]\n\nE[Y | X = x3]\n\n\n\n0.30 × 0.30\n+\n\n0.70 × 0.45\n+\n\n0.40 × 0.25\n\n\n=\n\n\n\n\nE[Y] = 0.505\nwidth 1\n\nE[Y]"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#example-survey-weighting-to-recalled-vote",
@@ -294,11 +301,81 @@
     "text": "Example: Weighting to recalled vote\n\nAveraging over the 2024 result\n\\[\n\\begin{aligned}\n\\mathbb{E}[Y_D] &= 0.07 (0.51) + 0.90 (0.49) = 0.477 \\\\\n\\mathbb{E}[Y_R] &= 0.80 (0.51) + 0.01 (0.49) = 0.413\n\\end{aligned}\n\\]\nThe margin, \\(\\mathbb{E}[Y_D] - \\mathbb{E}[Y_R]\\): the Democratic candidate leads by 6 points\n\nThe actual poll has it at \\(45\\%\\) to \\(37\\%\\) because they’re also including 2024 non-voters who are leaning Democratic.\n\nSurvey weighting is just the art of figuring out which distribution of \\(X\\) to average over.\n\nIn Week 13, we’ll talk about how to actually do estimation"
   },
   {
-    "objectID": "slides/week4/week4_joint_distributions.html#next-week",
-    "href": "slides/week4/week4_joint_distributions.html#next-week",
+    "objectID": "slides/week4/week4_joint_distributions.html#the-mean-minimizes-mean-squared-error",
+    "href": "slides/week4/week4_joint_distributions.html#the-mean-minimizes-mean-squared-error",
     "title": "Week 4: Joint and Conditional Distributions",
-    "section": "Next week",
-    "text": "Next week\n\nWhat is your estimand?\n\nHow should we connect theory to empirical questions?\nThinking of estimands as features of distributions.\n\nMidterm exam\n\nProbability questions in the context of actual research settings.\nFocus on properties of conditional probability, properties of expectations."
+    "section": "The mean minimizes mean squared error",
+    "text": "The mean minimizes mean squared error\n\nWhy do we focus so much on the expected value when thinking about prediction - why is it our “best guess”?\n\nIt turns out we can formalize the notion of “best guess” with respect to a particular error: the mean squared error (MSE)\n\nLet \\(c\\) be our single guess. The mean squared error between \\(Y\\) and \\(c\\) is defined as \\(\\mathbb{E}[(Y - c)^2]\\)\n\nWe want to find the value of \\(c\\) that minimizes this quantity."
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#the-mean-minimizes-mean-squared-error-1",
+    "href": "slides/week4/week4_joint_distributions.html#the-mean-minimizes-mean-squared-error-1",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "The mean minimizes mean squared error",
+    "text": "The mean minimizes mean squared error\n\nAdd and subtract \\(\\mathbb{E}[Y]\\) and expand the square\n\\[\n\\begin{aligned}\n\\mathbb{E}[(Y - c)^2] &= \\mathbb{E}\\big[\\big((Y - \\mathbb{E}[Y]) + (\\mathbb{E}[Y] - c)\\big)^2\\big] \\\\\n&= \\mathbb{E}[(Y - \\mathbb{E}[Y])^2] + 2(\\mathbb{E}[Y] - c)\\,\\mathbb{E}[Y - \\mathbb{E}[Y]] + (\\mathbb{E}[Y] - c)^2 \\\\\n&= \\Var(Y) + (\\mathbb{E}[Y] - c)^2\n\\end{aligned}\n\\]\nThe middle term drops out because \\(\\mathbb{E}[Y - \\mathbb{E}[Y]] = 0\\)\n\\(\\Var(Y)\\) doesn’t depend on \\(c\\), and \\((\\mathbb{E}[Y] - c)^2 \\ge 0\\), so the MSE is smallest at \\(c = \\mathbb{E}[Y]\\)\n\nThe best constant prediction with respect to MSE is the mean, and the smallest achievable MSE is the variance"
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#the-cef-minimizes-the-mse",
+    "href": "slides/week4/week4_joint_distributions.html#the-cef-minimizes-the-mse",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "The CEF minimizes the MSE",
+    "text": "The CEF minimizes the MSE\n\nNow, instead of a single constant \\(c\\), we can plug in a function of \\(X\\), \\(g(X)\\)\n\nWe can show that the function \\(g(X)\\) that does the best job is the CEF.\n\nThe MSE between \\(Y\\) and our function is \\(\\mathbb{E}[(Y - g(X))^2]\\) and we’re searching over the space of all possible functions \\(g()\\)\nWe’ll use a similar trick from before: add and subtract the CEF \\(\\mu(X) = \\mathbb{E}[Y \\mid X]\\) and expand the square:\n\\[\n\\begin{aligned}\n\\mathbb{E}[(Y - g(X))^2] &= \\mathbb{E}[(Y - \\mu(X))^2] + 2\\,\\mathbb{E}[(Y - \\mu(X))(\\mu(X) - g(X))] \\\\\n&\\quad + \\mathbb{E}[(\\mu(X) - g(X))^2]\n\\end{aligned}\n\\]"
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#the-cef-minimizes-the-mse-1",
+    "href": "slides/week4/week4_joint_distributions.html#the-cef-minimizes-the-mse-1",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "The CEF minimizes the MSE",
+    "text": "The CEF minimizes the MSE\n\nThe middle term is zero: by the law of total expectation, condition on \\(X = x\\) first. Given \\(X = x\\), \\(\\mu(x) - g(x)\\) is just a constant\n\\[ \\mathbb{E}[(Y - \\mu(x))(\\mu(x) - g(x)) \\mid X = x] = (\\mu(x) - g(x))\\big(\\mathbb{E}[Y \\mid X = x] - \\mu(x)\\big) = 0 \\]\nSo for any \\(g\\)\n\\[ \\mathbb{E}[(Y - g(X))^2] = \\mathbb{E}[(Y - \\mu(X))^2] + \\underbrace{\\mathbb{E}[(\\mu(X) - g(X))^2]}_{\\ge 0} \\ge \\mathbb{E}[(Y - \\mu(X))^2] \\]\nThe CEF is the best predictor of \\(Y\\) given \\(X\\) in MSE."
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#estimating-the-cef-clintons-2016-vote-share",
+    "href": "slides/week4/week4_joint_distributions.html#estimating-the-cef-clintons-2016-vote-share",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "Estimating the CEF: Clinton’s 2016 vote share",
+    "text": "Estimating the CEF: Clinton’s 2016 vote share"
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#how-fast-does-the-cef-change",
+    "href": "slides/week4/week4_joint_distributions.html#how-fast-does-the-cef-change",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "How fast does the CEF change?",
+    "text": "How fast does the CEF change?\n\n\n\n\n\n\n\n\n\n\nHypotheses are often about rates of change: how much does \\(\\mathbb{E}[Y \\mid X = x]\\) move when \\(X\\) goes up by one point?"
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor",
+    "href": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "The best linear predictor",
+    "text": "The best linear predictor\n\nThe CEF can take any shape, which makes it hard to summarize when \\(X\\) is continuous or high-dimensional.\n\nOften we have hypotheses about a rate of change in an outcome as an independent variable increases or decreases\n\nWhat if we restrict \\(g(X)\\) to be a line, \\(g(X) = a + bX\\)?\nThe best linear predictor (BLP) is the line with the smallest MSE\n\\[ (\\alpha, \\beta) = \\arg\\min_{a,\\, b} \\ \\mathbb{E}\\big[(Y - a - bX)^2\\big] \\]\nWe are searching over a smaller space of options\n\nCEF: the best of all functions \\(g(X)\\)\nBLP: the best of all lines \\(a + bX\\)\n\nEvery line is a function, so the BLP can never beat the CEF\n\\[ \\mathbb{E}\\big[(Y - \\mu(X))^2\\big] \\le \\mathbb{E}\\big[(Y - \\alpha - \\beta X)^2\\big] \\]"
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-1",
+    "href": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-1",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "The best linear predictor",
+    "text": "The best linear predictor\n\nLet’s solve this optimization problem by taking the derivatives with respect to \\(a\\) and \\(b\\) and solving for \\(0\\)\n\nThe derivative passes inside the expectation, then the chain rule: the outer square yields \\(2(Y - a - bX)\\) and the inner function yields \\(-1\\) for \\(a\\) and \\(-X\\) for \\(b\\)\n\n\\[\n\\begin{aligned}\n\\frac{\\partial}{\\partial a} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-1)\\big] = -2\\,\\mathbb{E}[Y - a - bX] \\\\\n\\frac{\\partial}{\\partial b} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-X)\\big] = -2\\,\\mathbb{E}\\big[X(Y - a - bX)\\big]\n\\end{aligned}\n\\]\nSet both to \\(0\\) at \\((a, b) = (\\alpha, \\beta)\\) and divide by \\(-2\\)\n\\[ \\mathbb{E}[Y - \\alpha - \\beta X] = 0 \\qquad \\mathbb{E}\\big[X(Y - \\alpha - \\beta X)\\big] = 0 \\]"
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-2",
+    "href": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-2",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "The best linear predictor",
+    "text": "The best linear predictor\n\nThis gives the first-order conditions for the optimization problem\n\\[ \\mathbb{E}[Y - \\alpha - \\beta X] = 0 \\qquad \\mathbb{E}\\big[X(Y - \\alpha - \\beta X)\\big] = 0 \\]\nThe first gives the intercept: \\(\\alpha = \\mathbb{E}[Y] - \\beta\\,\\mathbb{E}[X]\\)\nPlug it into the second\n\\[\n\\begin{aligned}\n0 &= \\mathbb{E}[XY] - \\alpha\\,\\mathbb{E}[X] - \\beta\\,\\mathbb{E}[X^2] \\\\\n&= \\mathbb{E}[XY] - \\mathbb{E}[X]\\,\\mathbb{E}[Y] - \\beta\\big(\\mathbb{E}[X^2] - \\mathbb{E}[X]^2\\big) \\\\\n&= \\Cov(X, Y) - \\beta \\Var(X)\n\\end{aligned}\n\\]\nSo the BLP is\n\\[ \\beta = \\frac{\\Cov(X, Y)}{\\Var(X)} \\qquad \\alpha = \\mathbb{E}[Y] - \\beta\\,\\mathbb{E}[X] \\]"
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-3",
+    "href": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-3",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "The best linear predictor",
+    "text": "The best linear predictor\n\nRecall that for any function \\(g\\)\n\\[ \\mathbb{E}[(Y - g(X))^2] = \\mathbb{E}[(Y - \\mu(X))^2] + \\mathbb{E}[(\\mu(X) - g(X))^2] \\]\nThe first term doesn’t depend on \\(g\\). So among lines, minimizing the MSE for \\(Y\\) is the same as minimizing the distance to the CEF\n\\[ (\\alpha, \\beta) = \\arg\\min_{a,\\, b} \\ \\mathbb{E}\\big[(\\mu(X) - a - bX)^2\\big] \\]\n\nThe BLP is the best linear approximation to the CEF\nIf the CEF is linear, the BLP is the CEF\n\nLike the CEF, the BLP is a feature of the joint distribution: an estimand\nFor Clinton’s vote share: \\(\\beta \\approx -0.46\\).\n\nEach additional increase in county % non-Hispanic white is associated with about half a point reduction in Clinton vote share"
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#estimating-the-blp-clintons-2016-vote-share",
+    "href": "slides/week4/week4_joint_distributions.html#estimating-the-blp-clintons-2016-vote-share",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "Estimating the BLP: Clinton’s 2016 vote share",
+    "text": "Estimating the BLP: Clinton’s 2016 vote share"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#bonus-the-law-of-total-variance",
@@ -315,32 +392,11 @@
     "text": "Bonus: The law of total variance\n\nStart from \\(\\Var(Y \\mid X) = \\mathbb{E}[Y^2 \\mid X] - \\mathbb{E}[Y \\mid X]^2\\) and take expectations of each piece, using the law of iterated expectations\n\\[\n\\begin{aligned}\n\\mathbb{E}\\big[\\Var(Y \\mid X)\\big] &= \\mathbb{E}\\big[\\mathbb{E}[Y^2 \\mid X]\\big] - \\mathbb{E}\\big[\\mathbb{E}[Y \\mid X]^2\\big] = \\mathbb{E}[Y^2] - \\mathbb{E}\\big[\\mathbb{E}[Y \\mid X]^2\\big] \\\\\n\\Var\\big(\\mathbb{E}[Y \\mid X]\\big) &= \\mathbb{E}\\big[\\mathbb{E}[Y \\mid X]^2\\big] - \\mathbb{E}\\big[\\mathbb{E}[Y \\mid X]\\big]^2 = \\mathbb{E}\\big[\\mathbb{E}[Y \\mid X]^2\\big] - \\mathbb{E}[Y]^2\n\\end{aligned}\n\\]\nAdd the two lines: the \\(\\mathbb{E}\\big[\\mathbb{E}[Y \\mid X]^2\\big]\\) terms cancel\n\\[ \\mathbb{E}\\big[\\Var(Y \\mid X)\\big] + \\Var\\big(\\mathbb{E}[Y \\mid X]\\big) = \\mathbb{E}[Y^2] - \\mathbb{E}[Y]^2 = \\Var(Y) \\]\nSince both pieces are non-negative, conditioning never adds variance: \\(\\Var\\big(\\mathbb{E}[Y \\mid X]\\big) \\le \\Var(Y)\\)"
   },
   {
-    "objectID": "slides/week4/week4_joint_distributions.html#bonus-the-mean-minimizes-mean-squared-error",
-    "href": "slides/week4/week4_joint_distributions.html#bonus-the-mean-minimizes-mean-squared-error",
+    "objectID": "slides/week4/week4_joint_distributions.html#next-week",
+    "href": "slides/week4/week4_joint_distributions.html#next-week",
     "title": "Week 4: Joint and Conditional Distributions",
-    "section": "Bonus: The mean minimizes mean squared error",
-    "text": "Bonus: The mean minimizes mean squared error\n\nWhy do we focus so much on the expected value when thinking about prediction - why is it our “best guess”?\n\nIt turns out we can formalize the notion of “best guess” with respect to a particular error: the mean squared error (MSE)\n\nLet \\(c\\) be our single guess. The mean squared error between \\(Y\\) and \\(c\\) is defined as \\(\\mathbb{E}[(Y - c)^2]\\)\n\nWe want to find the value of \\(c\\) that minimizes this quantity."
-  },
-  {
-    "objectID": "slides/week4/week4_joint_distributions.html#bonus-the-mean-minimizes-mean-squared-error-1",
-    "href": "slides/week4/week4_joint_distributions.html#bonus-the-mean-minimizes-mean-squared-error-1",
-    "title": "Week 4: Joint and Conditional Distributions",
-    "section": "Bonus: The mean minimizes mean squared error",
-    "text": "Bonus: The mean minimizes mean squared error\n\nAdd and subtract \\(\\mathbb{E}[Y]\\) and expand the square\n\\[\n\\begin{aligned}\n\\mathbb{E}[(Y - c)^2] &= \\mathbb{E}\\big[\\big((Y - \\mathbb{E}[Y]) + (\\mathbb{E}[Y] - c)\\big)^2\\big] \\\\\n&= \\mathbb{E}[(Y - \\mathbb{E}[Y])^2] + 2(\\mathbb{E}[Y] - c)\\,\\mathbb{E}[Y - \\mathbb{E}[Y]] + (\\mathbb{E}[Y] - c)^2 \\\\\n&= \\Var(Y) + (\\mathbb{E}[Y] - c)^2\n\\end{aligned}\n\\]\nThe middle term drops out because \\(\\mathbb{E}[Y - \\mathbb{E}[Y]] = 0\\)\n\\(\\Var(Y)\\) doesn’t depend on \\(c\\), and \\((\\mathbb{E}[Y] - c)^2 \\ge 0\\), so the MSE is smallest at \\(c = \\mathbb{E}[Y]\\)\n\nThe best constant prediction with respect to MSE is the mean, and the smallest achievable MSE is the variance"
-  },
-  {
-    "objectID": "slides/week4/week4_joint_distributions.html#bonus-the-cef-minimizes-the-mse",
-    "href": "slides/week4/week4_joint_distributions.html#bonus-the-cef-minimizes-the-mse",
-    "title": "Week 4: Joint and Conditional Distributions",
-    "section": "Bonus: The CEF minimizes the MSE",
-    "text": "Bonus: The CEF minimizes the MSE\n\nNow, instead of a single constant \\(c\\), we can plug in a function of \\(X\\), \\(g(X)\\)\n\nWe can show that the function \\(g(X)\\) that does the best job is the CEF.\n\nThe MSE between \\(Y\\) and our function is \\(\\mathbb{E}[(Y - g(X))^2]\\) and we’re searching over the space of all possible functions \\(g()\\)\nWe’ll use a similar trick from before: add and subtract the CEF \\(\\mu(X) = \\mathbb{E}[Y \\mid X]\\) and expand the square:\n\\[\n\\begin{aligned}\n\\mathbb{E}[(Y - g(X))^2] &= \\mathbb{E}[(Y - \\mu(X))^2] + 2\\,\\mathbb{E}[(Y - \\mu(X))(\\mu(X) - g(X))] \\\\\n&\\quad + \\mathbb{E}[(\\mu(X) - g(X))^2]\n\\end{aligned}\n\\]"
-  },
-  {
-    "objectID": "slides/week4/week4_joint_distributions.html#bonus-the-cef-minimizes-the-mse-1",
-    "href": "slides/week4/week4_joint_distributions.html#bonus-the-cef-minimizes-the-mse-1",
-    "title": "Week 4: Joint and Conditional Distributions",
-    "section": "Bonus: The CEF minimizes the MSE",
-    "text": "Bonus: The CEF minimizes the MSE\n\nThe middle term is zero: by the law of total expectation, condition on \\(X = x\\) first. Given \\(X = x\\), \\(\\mu(x) - g(x)\\) is just a constant\n\\[ \\mathbb{E}[(Y - \\mu(x))(\\mu(x) - g(x)) \\mid X = x] = (\\mu(x) - g(x))\\big(\\mathbb{E}[Y \\mid X = x] - \\mu(x)\\big) = 0 \\]\nSo for any \\(g\\)\n\\[ \\mathbb{E}[(Y - g(X))^2] = \\mathbb{E}[(Y - \\mu(X))^2] + \\underbrace{\\mathbb{E}[(\\mu(X) - g(X))^2]}_{\\ge 0} \\ge \\mathbb{E}[(Y - \\mu(X))^2] \\]\nThe CEF is the best predictor of \\(Y\\) given \\(X\\) in MSE."
+    "section": "Next week",
+    "text": "Next week\n\nWhat is your estimand?\n\nHow should we connect theory to empirical questions?\nThinking of estimands as features of distributions.\nPreview of descriptive versus causal estimands\n\nMidterm exam\n\nProbability questions in the context of actual research settings.\nFocus on properties of conditional probability, properties of expectations."
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#references",
