@@ -326,7 +326,7 @@
     "href": "slides/week4/week4_joint_distributions.html#the-cef-minimizes-the-mse-1",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "The CEF minimizes the MSE",
-    "text": "The CEF minimizes the MSE\n\nThe middle term is zero: by the law of total expectation, condition on \\(X = x\\) first. Given \\(X = x\\), \\(\\mu(x) - g(x)\\) is just a constant\n\\[ \\mathbb{E}[(Y - \\mu(x))(\\mu(x) - g(x)) \\mid X = x] = (\\mu(x) - g(x))\\big(\\mathbb{E}[Y \\mid X = x] - \\mu(x)\\big) = 0 \\]\nSo for any \\(g\\)\n\\[ \\mathbb{E}[(Y - g(X))^2] = \\mathbb{E}[(Y - \\mu(X))^2] + \\underbrace{\\mathbb{E}[(\\mu(X) - g(X))^2]}_{\\ge 0} \\ge \\mathbb{E}[(Y - \\mu(X))^2] \\]\nThe CEF is the best predictor of \\(Y\\) given \\(X\\) in MSE."
+    "text": "The CEF minimizes the MSE\n\nThe middle term is zero: by the law of total expectation, condition on \\(X = x\\) first. Given \\(X = x\\), \\(\\mu(x) - g(x)\\) is just a constant\n\\[ \\mathbb{E}[(Y - \\mu(x))(\\mu(x) - g(x)) \\mid X = x] = (\\mu(x) - g(x))\\underbrace{\\big(\\mathbb{E}[Y \\mid X = x] - \\mu(x)\\big)}_{=0} = 0 \\]\nSo for any \\(g\\)\n\\[ \\mathbb{E}[(Y - g(X))^2] = \\mathbb{E}[(Y - \\mu(X))^2] + \\underbrace{\\mathbb{E}[(\\mu(X) - g(X))^2]}_{\\ge 0} \\ge \\mathbb{E}[(Y - \\mu(X))^2] \\]\nThe CEF is the best predictor of \\(Y\\) given \\(X\\) in MSE."
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#estimating-the-cef-clintons-2016-vote-share",
@@ -361,7 +361,7 @@
     "href": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-1",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "The best linear predictor",
-    "text": "The best linear predictor\n\nLet’s solve this optimization problem by taking the derivatives with respect to \\(a\\) and \\(b\\) and solving for \\(0\\)\nThe derivative passes inside the expectation, then the chain rule: the outer square yields \\(2(Y - a - bX)\\) and the inner function yields \\(-1\\) for \\(a\\) and \\(-X\\) for \\(b\\)\n\\[\n\\begin{aligned}\n\\frac{\\partial}{\\partial a} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-1)\\big] = -2\\,\\mathbb{E}[Y - a - bX] \\\\\n\\frac{\\partial}{\\partial b} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-X)\\big] = -2\\,\\mathbb{E}\\big[X(Y - a - bX)\\big]\n\\end{aligned}\n\\]\nSet both to \\(0\\) at \\((a, b) = (\\alpha, \\beta)\\) and divide both sides by \\(-2\\)\n\\[ \\mathbb{E}[Y - \\alpha - \\beta X] = 0 \\qquad \\mathbb{E}\\big[X(Y - \\alpha - \\beta X)\\big] = 0 \\]"
+    "text": "The best linear predictor\n\nLet’s solve this optimization problem by taking the derivatives with respect to \\(a\\) and \\(b\\) and solving for \\(0\\)\nDerivative passes inside the expectation. Then applying the chain rule…\n\\[\n\\begin{aligned}\n\\frac{\\partial}{\\partial a} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-1)\\big] = -2\\,\\mathbb{E}[Y - a - bX] \\\\\n\\frac{\\partial}{\\partial b} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-X)\\big] = -2\\,\\mathbb{E}\\big[X(Y - a - bX)\\big]\n\\end{aligned}\n\\]\nSet both to \\(0\\) at \\((a, b) = (\\alpha, \\beta)\\) and divide both sides by \\(-2\\)\n\\[ \\mathbb{E}[Y - \\alpha - \\beta X] = 0 \\qquad \\mathbb{E}\\big[X(Y - \\alpha - \\beta X)\\big] = 0 \\]"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-2",
