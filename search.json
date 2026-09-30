@@ -336,25 +336,32 @@
     "text": "Estimating the CEF: Clinton’s 2016 vote share"
   },
   {
+    "objectID": "slides/week4/week4_joint_distributions.html#estimating-the-cef-clintons-2016-vote-share-1",
+    "href": "slides/week4/week4_joint_distributions.html#estimating-the-cef-clintons-2016-vote-share-1",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "Estimating the CEF: Clinton’s 2016 vote share",
+    "text": "Estimating the CEF: Clinton’s 2016 vote share"
+  },
+  {
     "objectID": "slides/week4/week4_joint_distributions.html#how-fast-does-the-cef-change",
     "href": "slides/week4/week4_joint_distributions.html#how-fast-does-the-cef-change",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "How fast does the CEF change?",
-    "text": "How fast does the CEF change?\n\n\n\n\n\n\n\n\n\n\nHypotheses are often about rates of change: how much does \\(\\mathbb{E}[Y \\mid X = x]\\) move when \\(X\\) goes up by one point?"
+    "text": "How fast does the CEF change?"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor",
     "href": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "The best linear predictor",
-    "text": "The best linear predictor\n\nThe CEF can take any shape, which makes it hard to summarize when \\(X\\) is continuous or high-dimensional.\n\nOften we have hypotheses about a rate of change in an outcome as an independent variable increases or decreases\n\nWhat if we restrict \\(g(X)\\) to be a line, \\(g(X) = a + bX\\)?\nThe best linear predictor (BLP) is the line with the smallest MSE\n\\[ (\\alpha, \\beta) = \\arg\\min_{a,\\, b} \\ \\mathbb{E}\\big[(Y - a - bX)^2\\big] \\]\nWe are searching over a smaller space of options\n\nCEF: the best of all functions \\(g(X)\\)\nBLP: the best of all lines \\(a + bX\\)\n\nEvery line is a function, so the BLP can never beat the CEF\n\\[ \\mathbb{E}\\big[(Y - \\mu(X))^2\\big] \\le \\mathbb{E}\\big[(Y - \\alpha - \\beta X)^2\\big] \\]"
+    "text": "The best linear predictor\n\nThe CEF can take any shape, which makes it hard to summarize when \\(X\\) is continuous or high-dimensional.\n\nOften we have hypotheses about a rate of change in an outcome as an independent variable increases or decreases\nWe want to estimate a single number to summarize an (average) rate of change.\n\nWhat if we restrict \\(g(X)\\) to be a line, \\(g(X) = a + bX\\)?\nThe best linear predictor (BLP) is the line with the smallest MSE\n\\[ (\\alpha, \\beta) = \\arg\\min_{a,\\, b} \\ \\mathbb{E}\\big[(Y - a - bX)^2\\big] \\]\nWe are searching over a smaller space of options\n\\[ \\mathbb{E}\\big[(Y - \\mu(X))^2\\big] \\le \\mathbb{E}\\big[(Y - \\alpha - \\beta X)^2\\big] \\]"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-1",
     "href": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-1",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "The best linear predictor",
-    "text": "The best linear predictor\n\nLet’s solve this optimization problem by taking the derivatives with respect to \\(a\\) and \\(b\\) and solving for \\(0\\)\n\nThe derivative passes inside the expectation, then the chain rule: the outer square yields \\(2(Y - a - bX)\\) and the inner function yields \\(-1\\) for \\(a\\) and \\(-X\\) for \\(b\\)\n\n\\[\n\\begin{aligned}\n\\frac{\\partial}{\\partial a} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-1)\\big] = -2\\,\\mathbb{E}[Y - a - bX] \\\\\n\\frac{\\partial}{\\partial b} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-X)\\big] = -2\\,\\mathbb{E}\\big[X(Y - a - bX)\\big]\n\\end{aligned}\n\\]\nSet both to \\(0\\) at \\((a, b) = (\\alpha, \\beta)\\) and divide by \\(-2\\)\n\\[ \\mathbb{E}[Y - \\alpha - \\beta X] = 0 \\qquad \\mathbb{E}\\big[X(Y - \\alpha - \\beta X)\\big] = 0 \\]"
+    "text": "The best linear predictor\n\nLet’s solve this optimization problem by taking the derivatives with respect to \\(a\\) and \\(b\\) and solving for \\(0\\)\nThe derivative passes inside the expectation, then the chain rule: the outer square yields \\(2(Y - a - bX)\\) and the inner function yields \\(-1\\) for \\(a\\) and \\(-X\\) for \\(b\\)\n\\[\n\\begin{aligned}\n\\frac{\\partial}{\\partial a} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-1)\\big] = -2\\,\\mathbb{E}[Y - a - bX] \\\\\n\\frac{\\partial}{\\partial b} \\mathbb{E}\\big[(Y - a - bX)^2\\big] &= \\mathbb{E}\\big[2(Y - a - bX) \\cdot (-X)\\big] = -2\\,\\mathbb{E}\\big[X(Y - a - bX)\\big]\n\\end{aligned}\n\\]\nSet both to \\(0\\) at \\((a, b) = (\\alpha, \\beta)\\) and divide both sides by \\(-2\\)\n\\[ \\mathbb{E}[Y - \\alpha - \\beta X] = 0 \\qquad \\mathbb{E}\\big[X(Y - \\alpha - \\beta X)\\big] = 0 \\]"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-2",
@@ -368,7 +375,7 @@
     "href": "slides/week4/week4_joint_distributions.html#the-best-linear-predictor-3",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "The best linear predictor",
-    "text": "The best linear predictor\n\nRecall that for any function \\(g\\)\n\\[ \\mathbb{E}[(Y - g(X))^2] = \\mathbb{E}[(Y - \\mu(X))^2] + \\mathbb{E}[(\\mu(X) - g(X))^2] \\]\nThe first term doesn’t depend on \\(g\\). So among lines, minimizing the MSE for \\(Y\\) is the same as minimizing the distance to the CEF\n\\[ (\\alpha, \\beta) = \\arg\\min_{a,\\, b} \\ \\mathbb{E}\\big[(\\mu(X) - a - bX)^2\\big] \\]\n\nThe BLP is the best linear approximation to the CEF\nIf the CEF is linear, the BLP is the CEF\n\nLike the CEF, the BLP is a feature of the joint distribution: an estimand\nFor Clinton’s vote share: \\(\\beta \\approx -0.46\\).\n\nEach additional increase in county % non-Hispanic white is associated with about half a point reduction in Clinton vote share"
+    "text": "The best linear predictor\n\nRecall that for any function \\(g\\)\n\\[ \\mathbb{E}[(Y - g(X))^2] = \\mathbb{E}[(Y - \\mu(X))^2] + \\mathbb{E}[(\\mu(X) - g(X))^2] \\]\nThe first term doesn’t depend on \\(g\\). So among lines, minimizing the MSE for \\(Y\\) is the same as minimizing the distance to the CEF\n\\[ (\\alpha, \\beta) = \\arg\\min_{a,\\, b} \\ \\mathbb{E}\\big[(\\mu(X) - a - bX)^2\\big] \\]\n\nThe BLP is the best linear approximation to the CEF\nIf the CEF is linear, the BLP is the CEF\n\nLike the CEF, the BLP is a feature of the joint distribution: an estimand\nFor our Clinton vote share example: \\(\\beta \\approx -0.46\\).\n\nEach additional increase in county % non-Hispanic white is associated with about half a point reduction in Clinton vote share"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#estimating-the-blp-clintons-2016-vote-share",
@@ -376,6 +383,13 @@
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "Estimating the BLP: Clinton’s 2016 vote share",
     "text": "Estimating the BLP: Clinton’s 2016 vote share"
+  },
+  {
+    "objectID": "slides/week4/week4_joint_distributions.html#the-blp-is-a-summary",
+    "href": "slides/week4/week4_joint_distributions.html#the-blp-is-a-summary",
+    "title": "Week 4: Joint and Conditional Distributions",
+    "section": "The BLP is a summary",
+    "text": "The BLP is a summary\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnscombe’s quartet from Anscombe (1973); the Datasaurus dozen from Matejka and Fitzmaurice (2017)"
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#bonus-the-law-of-total-variance",
@@ -403,7 +417,7 @@
     "href": "slides/week4/week4_joint_distributions.html#references",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "References",
-    "text": "References"
+    "text": "References\n\n\nAnscombe, F. J. 1973. “Graphs in Statistical Analysis.” The American Statistician 27 (1): 17–21. https://doi.org/10.1080/00031305.1973.10478966.\n\n\nMatejka, Justin, and George Fitzmaurice. 2017. “Same Stats, Different Graphs: Generating Datasets with Varied Appearance and Identical Statistics Through Simulated Annealing.” Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems, 1290–94. https://doi.org/10.1145/3025453.3025912."
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#welcome-back",
