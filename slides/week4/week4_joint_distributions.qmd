@@ -1138,9 +1138,6 @@ terms <- function(y, p) paste0(f2(recall[[y]]), " (", f2(recall[[p]]), ")", coll
 
 ```{r}
 #| echo: false
-#| fig-width: 9
-#| fig-height: 5
-#| fig-align: center
 
 library(ggplot2)
 
@@ -1156,28 +1153,87 @@ cef_theme <- theme_minimal(base_size = 15) +
         plot.background = element_rect(fill = "#F7F7F7", colour = NA),
         panel.background = element_rect(fill = "#F7F7F7", colour = NA))
 
-# The CEF, estimated by a locally weighted average (loess) over all counties
-p_binned <- ggplot(election, aes(pctWhiteNH, voteshare)) +
-  geom_point(data = binned, size = 3, colour = "#333333") +
-  geom_smooth(method = "loess", formula = y ~ x, se = FALSE,
-              colour = "#c5050c", linewidth = 1.4) +
-  annotate("text", x = 8, y = 80, label = "CEF (loess)", colour = "#c5050c",
-           hjust = 0, size = 5.5) +
-  scale_x_continuous(limits = c(0, 100), expand = c(0.01, 0)) +
-  scale_y_continuous(limits = c(0, 90), expand = c(0.01, 0)) +
-  labs(x = "% non-Hispanic white",
-       y = "Clinton vote share (%)") +
-  cef_theme
-
-p_binned
+# The figure built up over the next few slides, one layer per step:
+#   "counties"  the data, one point per county
+#   "bins"      counties fade back; the bin means, an estimate of the CEF
+#   "loess"     a second estimate of the same CEF, in the same red
+#   "blp"       the BLP on top
+# Each step's figure is a full plot on an opaque background, so stacking them
+# as fragments (.r-stack) reads as one figure gaining layers.
+cef_steps <- c("counties", "bins", "loess", "blp")
+cef_plot <- function(step) {
+  k <- match(step, cef_steps)
+  p <- ggplot(election, aes(pctWhiteNH, voteshare)) +
+    geom_point(size = 1, colour = "#333333", alpha = if (k == 1) 0.45 else 0.12)
+  if (k >= 2) p <- p + geom_point(data = binned, size = 3, colour = "#c5050c")
+  if (k >= 3) p <- p + geom_smooth(method = "loess", formula = y ~ x, se = FALSE,
+                                   colour = "#c5050c", linewidth = 1.4)
+  if (k >= 4) p <- p + geom_smooth(method = "lm", formula = y ~ x, se = FALSE,
+                                   colour = "#0479a8", linewidth = 1.4)
+  p +
+    scale_x_continuous(limits = c(0, 101), expand = c(0.01, 0)) +
+    scale_y_continuous(limits = c(0, 101), expand = c(0.01, 0)) +
+    labs(x = "% non-Hispanic white", y = "Clinton vote share (%)") +
+    cef_theme
+}
 ```
+
+::: {.r-stack}
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 5
+#| fig-align: center
+cef_plot("counties")
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 5
+#| fig-align: center
+cef_plot("bins")
+```
+
+:::
+
+:::
+
+## Estimating the CEF: Clinton's 2016 vote share {.nostretch}
+
+::: {.r-stack}
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 5
+#| fig-align: center
+cef_plot("bins")
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 5
+#| fig-align: center
+cef_plot("loess")
+```
+
+:::
+
+:::
 
 ## How fast does the CEF change? {.nostretch}
 
 ```{r}
 #| echo: false
 #| fig-width: 9
-#| fig-height: 3.6
+#| fig-height: 5
 #| fig-align: center
 
 # The same loess fit geom_smooth draws (span 0.75, degree 2), so its slopes can
@@ -1186,31 +1242,27 @@ cef_fit <- loess(voteshare ~ pctWhiteNH, data = election)
 at <- c(20, 40, 60, 80, 95)
 mu_at <- function(x) predict(cef_fit, data.frame(pctWhiteNH = x))
 slopes <- data.frame(x = at, y = mu_at(at), s = (mu_at(at + 1) - mu_at(at - 1)) / 2)
-half <- 9   # half-width of each tangent segment, in points of % white
+slopes$h <- pmin(9, 100 - at)   # half-width of each tangent, in points of % white;
+                                # narrower near 100 so it stays on the axis
 minus <- function(v, d = 2) sub("^-", "−", sprintf(paste0("%.", d, "f"), v))
 
 # Tangents drawn heavier than the curve so they read as separate lines
 ggplot(election, aes(pctWhiteNH, voteshare)) +
-  geom_point(data = binned, size = 2.5, colour = "#333333", alpha = 0.35) +
+  geom_point(data = binned, size = 2.5, colour = "#c5050c", alpha = 0.35) +
   geom_smooth(method = "loess", formula = y ~ x, se = FALSE,
               colour = "#c5050c", linewidth = 0.9) +
-  geom_segment(data = slopes, aes(x = x - half, xend = x + half,
-                                  y = y - s * half, yend = y + s * half),
+  geom_segment(data = slopes, aes(x = x - h, xend = x + h,
+                                  y = y - s * h, yend = y + s * h),
                colour = "#333333", linewidth = 2) +
   geom_point(data = slopes, aes(x, y), colour = "#333333", size = 3.5) +
   geom_text(data = slopes, aes(x, y + 11, label = minus(s)), size = 5.5,
             colour = "#333333") +
-  scale_x_continuous(limits = c(0, 100), expand = c(0.01, 0)) +
-  scale_y_continuous(limits = c(0, 90), expand = c(0.01, 0)) +
+  scale_x_continuous(limits = c(0, 101), expand = c(0.01, 0)) +
+  scale_y_continuous(limits = c(0, 101), expand = c(0.01, 0)) +
   labs(x = "% non-Hispanic white", y = "Clinton vote share (%)") +
   cef_theme
 ```
 
-::: {.incremental}
-
-- Hypotheses are often about **rates of change**: how much does $\mathbb{E}[Y \mid X = x]$ move when $X$ goes up by one point?
-
-:::
 
 ## The best linear predictor
 
@@ -1218,15 +1270,13 @@ ggplot(election, aes(pctWhiteNH, voteshare)) +
 
 - The CEF can take **any** shape, which makes it hard to summarize when $X$ is continuous or high-dimensional.
   - Often we have hypotheses about a **rate of change** in an outcome as an independent variable increases or decreases
+  - We want to estimate a **single number** to summarize an (average) rate of change.
 - What if we **restrict** $g(X)$ to be a line, $g(X) = a + bX$?
 - The **best linear predictor** (BLP) is the line with the smallest MSE
 
   $$ (\alpha, \beta) = \arg\min_{a,\, b} \ \mathbb{E}\big[(Y - a - bX)^2\big] $$
 
 - We are searching over a **smaller** space of options
-  - CEF: the best of **all** functions $g(X)$
-  - BLP: the best of all **lines** $a + bX$
-- Every line is a function, so the BLP can never beat the CEF
 
   $$ \mathbb{E}\big[(Y - \mu(X))^2\big] \le \mathbb{E}\big[(Y - \alpha - \beta X)^2\big] $$
 
@@ -1237,7 +1287,7 @@ ggplot(election, aes(pctWhiteNH, voteshare)) +
 ::: {.incremental}
 
 - Let's solve this optimization problem by taking the derivatives with respect to $a$ and $b$ and solving for $0$
-  - The derivative passes inside the expectation, then the chain rule: the outer square yields $2(Y - a - bX)$ and the inner function yields $-1$ for $a$ and $-X$ for $b$
+- The derivative passes inside the expectation, then the chain rule: the outer square yields $2(Y - a - bX)$ and the inner function yields $-1$ for $a$ and $-X$ for $b$
 
   $$
   \begin{aligned}
@@ -1246,7 +1296,7 @@ ggplot(election, aes(pctWhiteNH, voteshare)) +
   \end{aligned}
   $$
 
-- Set both to $0$ at $(a, b) = (\alpha, \beta)$ and divide by $-2$
+- Set both to $0$ at $(a, b) = (\alpha, \beta)$ and divide both sides by $-2$
 
   $$ \mathbb{E}[Y - \alpha - \beta X] = 0 \qquad \mathbb{E}\big[X(Y - \alpha - \beta X)\big] = 0 $$
 
@@ -1292,30 +1342,62 @@ ggplot(election, aes(pctWhiteNH, voteshare)) +
   - The BLP is the best **linear approximation to the CEF**
   - If the CEF is linear, the BLP **is** the CEF
 - Like the CEF, the BLP is a feature of the joint distribution: an **estimand**
-- For Clinton's vote share: $\beta \approx `r sprintf("%.2f", coef(lm(voteshare ~ pctWhiteNH, data = election))[2])`$. 
+- For our Clinton vote share example: $\beta \approx `r sprintf("%.2f", coef(lm(voteshare ~ pctWhiteNH, data = election))[2])`$. 
   - Each additional increase in county % non-Hispanic white is associated with about half a point reduction in Clinton vote share
 
 :::
 
 ## Estimating the BLP: Clinton's 2016 vote share {.nostretch}
 
+::: {.r-stack}
+
 ```{r}
 #| echo: false
 #| fig-width: 9
 #| fig-height: 5
 #| fig-align: center
-
-# The same plot with the BLP (the OLS line) on top
-p_binned +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE,
-              colour = "#0479a8", linewidth = 1.4) +
-  annotate("text", x = 8, y = 58, label = "BLP", colour = "#0479a8",
-           hjust = 0, size = 5.5)
+cef_plot("loess")
 ```
 
+::: {.fragment}
 
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 5
+#| fig-align: center
+cef_plot("blp")
+```
 
+:::
 
+:::
+
+## The BLP is a summary
+
+```{r}
+#| echo: false
+#| output: asis
+
+# Datasets that share a BLP, stepped through on each click: Anscombe's quartet,
+# the Datasaurus, then made-up shapes on the dinosaur's means and BLP. Data
+# from datasaurus-anim/make_datasaurus.R; drawn by datasaurus.js.
+ds_cfg <- readLines("datasaurus-anim/datasaurus.json", warn = FALSE)
+ds_js  <- readLines("datasaurus-anim/datasaurus.js")
+n_ds   <- length(jsonlite::fromJSON(ds_cfg)$stages$name)
+cat("```{=html}",
+    '<div class="ds-anim"></div>',
+    "<script>",
+    "(", ds_js, ")(document.currentScript.previousElementSibling,", ds_cfg, ");",
+    "</script>",
+    # One empty fragment per animation step after the first
+    rep('<span class="fragment ds-step"></span>', n_ds - 1),
+    "```", sep = "\n")
+```
+
+::: {.attribution}
+Anscombe's quartet from @anscombe1973graphs; the Datasaurus dozen from @matejka2017same
+:::
 
 ## Bonus: The law of total variance
 

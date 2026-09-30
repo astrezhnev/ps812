@@ -85,6 +85,20 @@ strong {
   margin-top: 0.4em;
 }
 
+// Figures built up in layers: each fragment is a full plot stacked on the one
+// before. Reveal centres .r-stack children with margin: auto, which shrinks a
+// figure to its content, and its images' max-height: 95% resolves against the
+// stack's own height, shrinking them again; make each layer as wide as the
+// slide and let the image keep its size.
+
+.reveal .r-stack > * {
+  width: 100%;
+}
+
+.reveal .r-stack img {
+  max-height: none;
+}
+
 // Full-bleed slide for the embedded shinylive widget. The app is a separate
 // page (bivariate_normal_app.qmd) framed here, so it needs the whole slide.
 
