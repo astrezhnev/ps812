@@ -1,0 +1,608 @@
+---
+title: "PS 812: Section 4 Exercise Solutions"
+subtitle: "Midterm review, weeks 1-4"
+date: "10-2-2026"
+format:
+  html:
+    embed-resources: true
+---
+
+Standard normal values used below: $\Phi(1) = 0.841$, $\Phi(1.5) = 0.933$, $\Phi(1.96) = 0.975$, $\Phi(2) = 0.977$.
+
+# Part 1: Probability
+
+## Task 1: from the axioms
+
+Using only the three axioms and results derived from them in lecture, prove:
+
+a. $P(A \cap B^c) = P(A) - P(A \cap B)$
+b. If $P(A) = 1$, then $P(A \cap B) = P(B)$ for any event $B$
+c. Inclusion/exclusion for three events:
+
+$$
+P(A \cup B \cup C) = P(A) + P(B) + P(C) - P(A \cap B) - P(A \cap C) - P(B \cap C) + P(A \cap B \cap C)
+$$
+
+**a.** Split $A$ into the part inside $B$ and the part outside it:
+
+$$
+A = (A \cap B) \cup (A \cap B^c)
+$$
+
+The two pieces are disjoint, so by additivity $P(A) = P(A \cap B) + P(A \cap B^c)$. Rearrange.
+
+**b.** By the complement rule, $P(A^c) = 0$. Split $B$ using $A$: $P(B) = P(B \cap A) + P(B \cap A^c)$. Since $B \cap A^c \subseteq A^c$, monotonicity gives $P(B \cap A^c) \le P(A^c) = 0$, and non-negativity gives $P(B \cap A^c) \ge 0$. So $P(B \cap A^c) = 0$ and $P(A \cap B) = P(B)$.
+
+**c.** Apply the two-event rule to the events $A \cup B$ and $C$:
+
+$$
+P\big((A \cup B) \cup C\big) = P(A \cup B) + P(C) - P\big((A \cup B) \cap C\big)
+$$
+
+Expand the first term with the two-event rule again: $P(A \cup B) = P(A) + P(B) - P(A \cap B)$.
+
+For the last term, intersection distributes over union: $(A \cup B) \cap C = (A \cap C) \cup (B \cap C)$. Apply the two-event rule a third time, noting that $(A \cap C) \cap (B \cap C) = A \cap B \cap C$:
+
+$$
+P\big((A \cap C) \cup (B \cap C)\big) = P(A \cap C) + P(B \cap C) - P(A \cap B \cap C)
+$$
+
+Substitute both back in:
+
+$$
+P(A \cup B \cup C) = P(A) + P(B) - P(A \cap B) + P(C) - P(A \cap C) - P(B \cap C) + P(A \cap B \cap C)
+$$
+
+## Task 2: trade agreements
+
+In a sample of countries, 80% are WTO members ($W$) and 35% have a bilateral investment treaty with the United States ($T$).
+
+a. Without any other information, give the tightest bounds on $P(W \cap T)$ and on $P(W \cup T)$.
+b. Suppose you learn that $P(W \cap T) = 0.30$. What share of countries are in neither? Which rules did you use?
+c. Are $W$ and $T$ independent under (b)?
+
+**a.** By the Fréchet bounds,
+
+$$
+\max\{0,\, 0.80 + 0.35 - 1\} = 0.15 \;\le\; P(W \cap T) \;\le\; \min\{0.80,\, 0.35\} = 0.35
+$$
+
+$$
+\max\{0.80,\, 0.35\} = 0.80 \;\le\; P(W \cup T) \;\le\; \min\{1,\, 1.15\} = 1
+$$
+
+At least 15% of countries must be in both, because the two groups together cover 115% of the sample. At most 35% can be in both, which happens if every treaty country is also a WTO member.
+
+**b.** "Neither" is $W^c \cap T^c$. By De Morgan's law this equals $(W \cup T)^c$. By inclusion/exclusion,
+
+$$
+P(W \cup T) = 0.80 + 0.35 - 0.30 = 0.85
+$$
+
+and by the complement rule, $P(\text{neither}) = 1 - 0.85 = 0.15$.
+
+**c.** No. $P(W)P(T) = 0.80 \times 0.35 = 0.28 \ne 0.30 = P(W \cap T)$. Treaty countries are slightly more likely to be WTO members than countries overall: $P(W \mid T) = 0.30 / 0.35 = 0.857 > 0.80$.
+
+# Part 2: Conditional probability and independence
+
+## Task 3: independence and complements
+
+Prove that if $A \perp\!\!\!\perp B$, then $A \perp\!\!\!\perp B^c$.
+
+Using Task 1a, then independence, then the complement rule:
+
+$$
+P(A \cap B^c) = P(A) - P(A \cap B) = P(A) - P(A)P(B) = P(A)\big(1 - P(B)\big) = P(A)P(B^c)
+$$
+
+So the joint probability factors and $A \perp\!\!\!\perp B^c$. If knowing $B$ tells you nothing about $A$, knowing "not $B$" can't either.
+
+## Task 4: committee assignment
+
+A 12-member legislature has 7 members from the governing coalition and 5 from the opposition. A 4-member committee is drawn at random.
+
+a. Which of the four counting cases applies here, and why?
+b. What is the probability the governing coalition holds a majority (3 or 4 seats) on the committee?
+c. What is the probability the committee has at least one opposition member? Use the complement rule.
+
+**a.** Sampling **without replacement** (a legislator can't hold two seats) where **order doesn't matter** (a committee is a set). So there are $\binom{12}{4} = 495$ equally likely committees.
+
+**b.** Count the committees with exactly 3 coalition members (choose 3 of 7, and 1 of the 5 opposition members) and with exactly 4 (choose 4 of 7, and none of the opposition):
+
+$$
+P(\text{majority}) = \frac{\binom{7}{3}\binom{5}{1} + \binom{7}{4}\binom{5}{0}}{\binom{12}{4}} = \frac{35 \cdot 5 + 35 \cdot 1}{495} = \frac{210}{495} \approx 0.424
+$$
+
+**c.** The complement of "at least one opposition member" is "all four from the coalition":
+
+$$
+P(\text{at least one opposition}) = 1 - \frac{\binom{7}{4}}{\binom{12}{4}} = 1 - \frac{35}{495} \approx 0.929
+$$
+
+## Task 5: coup early warning
+
+Suppose 4% of regimes experience a coup attempt in a given year ($C$). An early-warning signal ($S_1$, e.g. unusual troop movements) fires in 90% of coup years and in 10% of non-coup years.
+
+a. Find $P(S_1)$.
+b. Find $P(C \mid S_1)$. Why is it so much lower than 0.9?
+c. A second signal $S_2$ (e.g. purges of senior officers) has the same accuracy, and $S_1 \perp\!\!\!\perp S_2 \mid C$ and $S_1 \perp\!\!\!\perp S_2 \mid C^c$. Find $P(C \mid S_1 \cap S_2)$.
+d. Are $S_1$ and $S_2$ independent (unconditionally)? Show it, and explain why or why not.
+
+**a.** Law of total probability over $C$ and $C^c$:
+
+$$
+P(S_1) = P(S_1 \mid C)P(C) + P(S_1 \mid C^c)P(C^c) = 0.9(0.04) + 0.1(0.96) = 0.036 + 0.096 = 0.132
+$$
+
+**b.** Bayes' rule:
+
+$$
+P(C \mid S_1) = \frac{P(S_1 \mid C)P(C)}{P(S_1)} = \frac{0.036}{0.132} \approx 0.273
+$$
+
+The prior is low: coups are rare. There are 24 non-coup years for every coup year, so even a 10% false-alarm rate produces far more false alarms (0.096) than true alarms (0.036). $P(S_1 \mid C) = 0.9$ is not $P(C \mid S_1)$.
+
+**c.** By conditional independence, the joint probability of both signals factors within each case:
+
+$$
+P(S_1 \cap S_2 \mid C) = 0.9^2 = 0.81 \qquad P(S_1 \cap S_2 \mid C^c) = 0.1^2 = 0.01
+$$
+
+Then Bayes' rule, with the law of total probability in the denominator:
+
+$$
+P(C \mid S_1 \cap S_2) = \frac{0.81(0.04)}{0.81(0.04) + 0.01(0.96)} = \frac{0.0324}{0.0324 + 0.0096} = \frac{0.0324}{0.042} \approx 0.771
+$$
+
+A second, conditionally independent signal moves the posterior from 0.27 to 0.77.
+
+**d.** No. From (c), $P(S_1 \cap S_2) = 0.042$, but $P(S_1)P(S_2) = 0.132^2 \approx 0.017$. Equivalently, $P(S_2 \mid S_1) = 0.042 / 0.132 \approx 0.32 \ne 0.132 = P(S_2)$.
+
+The signals share a common cause, the coup. When one fires, a coup becomes more likely, which makes the other more likely to fire. They are independent **given** $C$, but not unconditionally. Conditional independence does not imply independence.
+
+## Task 6: IMF programs and default
+
+Suppose 30% of countries in a given year are under an IMF program ($M$). The probability of sovereign default ($D$) is 0.15 for countries in a program and 0.05 for countries not in one.
+
+a. Use the law of total probability to find $P(D)$.
+b. Find $P(M \mid D)$, the share of defaulters that were in a program.
+c. A commentator concludes that IMF programs cause default. Give a reason the data in this task can't tell you that, using the idea of a common cause.
+
+**a.**
+
+$$
+P(D) = P(D \mid M)P(M) + P(D \mid M^c)P(M^c) = 0.15(0.3) + 0.05(0.7) = 0.045 + 0.035 = 0.08
+$$
+
+**b.** Bayes' rule:
+
+$$
+P(M \mid D) = \frac{P(D \mid M)P(M)}{P(D)} = \frac{0.045}{0.08} = 0.5625
+$$
+
+Programs cover 30% of countries but 56% of defaulters.
+
+**c.** Countries don't enter IMF programs at random. They turn to the IMF when they are already in a balance-of-payments or debt crisis, and a crisis also makes default more likely. A crisis is a common cause of both $M$ and $D$, so $M$ and $D$ are associated even if the program itself does nothing (or even reduces default risk). These probabilities describe association. To learn about causation, we would need to compare countries in similar economic conditions, i.e. condition on the common cause.
+
+## Task 7: selecting on protest
+
+An economic crisis ($E$) and a fraudulent election ($F$) each happen in a country-year with probability 0.2, independently. Large protests ($M$) happen if and only if there is a crisis or a fraudulent election (or both).
+
+a. Find $P(M)$.
+b. Find $P(F \mid M)$ and $P(F \mid M \cap E)$.
+c. A researcher studies only country-years with large protests and finds that crises and fraudulent elections rarely occur together. What is going on?
+
+**a.** $M = E \cup F$. By the complement rule and independence,
+
+$$
+P(M) = 1 - P(E^c \cap F^c) = 1 - 0.8 \times 0.8 = 0.36
+$$
+
+**b.** Fraud always produces protests, so $F \subseteq M$ and $P(F \cap M) = P(F) = 0.2$:
+
+$$
+P(F \mid M) = \frac{0.2}{0.36} \approx 0.556
+$$
+
+A crisis also always produces protests, so $M \cap E = E$, and
+
+$$
+P(F \mid M \cap E) = \frac{P(F \cap E)}{P(E)} = \frac{0.2 \times 0.2}{0.2} = 0.2
+$$
+
+**c.** Protests are a common effect (a collider) of crises and fraud. In the full population, $E$ and $F$ are independent. Among protest years they are negatively associated: once you know there was a crisis, the crisis "explains" the protests, and fraud is no more likely than usual (0.2). Without that knowledge, fraud is much more likely (0.556). By selecting on protests, the researcher has created a negative relationship that doesn't exist in the population. This is collider bias, the same structure as the rain and sprinkler example.
+
+# Part 3: Random variables
+
+## Task 8: variance proofs
+
+Using the definition of variance and linearity of expectations, show:
+
+a. $\text{Var}(aX + b) = a^2 \text{Var}(X)$
+b. $\mathbb{E}[(X - c)^2] = \text{Var}(X) + (\mathbb{E}[X] - c)^2$ for any constant $c$. What value of $c$ minimizes the left-hand side?
+
+**a.** By linearity, $\mathbb{E}[aX + b] = a\mathbb{E}[X] + b$. So
+
+$$
+\text{Var}(aX + b) = \mathbb{E}\big[(aX + b - a\mathbb{E}[X] - b)^2\big] = \mathbb{E}\big[a^2 (X - \mathbb{E}[X])^2\big] = a^2 \text{Var}(X)
+$$
+
+The constant $b$ cancels: shifting a variable doesn't change its spread.
+
+**b.** Add and subtract $\mathbb{E}[X]$, then expand the square:
+
+$$
+\begin{aligned}
+\mathbb{E}[(X - c)^2] &= \mathbb{E}\big[\big((X - \mathbb{E}[X]) + (\mathbb{E}[X] - c)\big)^2\big] \\
+&= \mathbb{E}[(X - \mathbb{E}[X])^2] + 2(\mathbb{E}[X] - c)\,\mathbb{E}[X - \mathbb{E}[X]] + (\mathbb{E}[X] - c)^2 \\
+&= \text{Var}(X) + (\mathbb{E}[X] - c)^2
+\end{aligned}
+$$
+
+The middle term is zero because $\mathbb{E}[X - \mathbb{E}[X]] = 0$; $(\mathbb{E}[X] - c)$ is a constant, so it comes out of the expectation. $\text{Var}(X)$ doesn't depend on $c$, and the second term is non-negative and equals zero at $c = \mathbb{E}[X]$. So $c = \mathbb{E}[X]$ minimizes the mean squared error.
+
+## Task 9: coalition size
+
+Let $X$ be the number of parties in a newly formed cabinet, with PMF
+
+| $x$ | 1 | 2 | 3 | 4 |
+|---|:---:|:---:|:---:|:---:|
+| $P(X = x)$ | 0.30 | 0.40 | 0.20 | 0.10 |
+
+a. Find $F_X(2)$ and $P(X \ge 3)$.
+b. Find $\mathbb{E}[X]$ and $\text{Var}(X)$.
+c. Use LOTUS to find $\mathbb{E}[1/X]$. Compare it to $1/\mathbb{E}[X]$.
+
+**a.** $F_X(2) = P(X \le 2) = 0.30 + 0.40 = 0.70$. By the complement rule, $P(X \ge 3) = 1 - F_X(2) = 0.30$.
+
+**b.**
+
+$$
+\mathbb{E}[X] = 1(0.3) + 2(0.4) + 3(0.2) + 4(0.1) = 0.3 + 0.8 + 0.6 + 0.4 = 2.1
+$$
+
+$$
+\mathbb{E}[X^2] = 1(0.3) + 4(0.4) + 9(0.2) + 16(0.1) = 0.3 + 1.6 + 1.8 + 1.6 = 5.3
+$$
+
+$$
+\text{Var}(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = 5.3 - 4.41 = 0.89
+$$
+
+**c.** LOTUS with $g(x) = 1/x$:
+
+$$
+\mathbb{E}[1/X] = 1(0.3) + \tfrac{1}{2}(0.4) + \tfrac{1}{3}(0.2) + \tfrac{1}{4}(0.1) = 0.3 + 0.2 + 0.067 + 0.025 \approx 0.592
+$$
+
+while $1/\mathbb{E}[X] = 1/2.1 \approx 0.476$. They differ because $g(x) = 1/x$ isn't linear: in general $\mathbb{E}[g(X)] \ne g(\mathbb{E}[X])$.
+
+## Task 10: bribery list experiment
+
+A survey of exporting firms uses a list experiment to measure bribery of customs officials. The control list has 3 innocuous items. The treated list adds "made an informal payment to a customs official in the last year." The average count is 1.42 in the control group and 1.61 in the treated group.
+
+a. Write down the data-generating process and estimate the share of firms paying bribes. Where does linearity of expectations come in?
+b. What assumption does the estimate rely on? Give one way it could fail.
+c. When asked directly, 6% of firms admit to paying a bribe. What might explain the difference?
+d. Why does the estimate not require that the control count be Binomial, or that it be independent of bribery?
+
+**a.** Let $C_i$ be firm $i$'s count of the 3 baseline items, $Z_i \sim \text{Bernoulli}(\theta)$ an indicator for bribery, and $T_i$ its count on the treated list. The data-generating process is
+
+$$
+T_i = C_i + Z_i
+$$
+
+Taking expectations and using linearity, $\mathbb{E}[T_i] = \mathbb{E}[C_i] + \mathbb{E}[Z_i] = \mathbb{E}[C_i] + \theta$, since the expectation of an indicator is its probability. So $\theta = \mathbb{E}[T_i] - \mathbb{E}[C_i]$. Treatment is randomly assigned, so each group's average estimates its expectation:
+
+$$
+\hat\theta = 1.61 - 1.42 = 0.19
+$$
+
+About 19% of firms paid a bribe.
+
+**b.** That seeing the sensitive item doesn't change how firms answer the three baseline items (no design effect). It can fail through:
+
+- **Ceiling effects**: a firm that did all three baseline items and paid a bribe would have to answer 4, which reveals it, so it may answer 3 instead. This biases $\hat\theta$ down.
+- **Floor effects**: a firm that did none of the baseline items and paid a bribe would have to answer 1, which some may avoid for the same reason.
+- **Design effects**: the sensitive item could make respondents more guarded about the other items too.
+
+**c.** Social desirability bias, or fear of legal consequences. When asked directly, many firms that paid bribes won't admit it, so the direct question under-reports. The list experiment hides individual answers, so it should be less affected. (Some of the gap could also be sampling noise: the list estimate is a difference of two sample means and is imprecise.)
+
+**d.** Linearity of expectations holds for any random variables, whatever their distributions and whether or not they are independent. The estimate only needs $\mathbb{E}[T_i] = \mathbb{E}[C_i] + \mathbb{E}[Z_i]$, which follows from $T_i = C_i + Z_i$ alone. The Binomial model and independence would matter if we wanted the whole distribution of counts, but not for the mean.
+
+## Task 11: a continuous random variable
+
+Let $X$ have density $f_X(x) = 2x$ for $0 \le x \le 1$ and 0 otherwise.
+
+a. Show that $f_X$ is a valid density.
+b. Find the CDF $F_X(x)$, and use it to find $P(X \le 1/2)$.
+c. Find $\mathbb{E}[X]$ and $\text{Var}(X)$.
+
+**a.** It's non-negative, and it integrates to 1:
+
+$$
+\int_0^1 2x \, dx = \big[x^2\big]_0^1 = 1
+$$
+
+**b.** For $0 \le x \le 1$, $F_X(x) = \int_0^x 2t \, dt = x^2$. So
+
+$$
+F_X(x) = \begin{cases} 0 & x < 0 \\ x^2 & 0 \le x \le 1 \\ 1 & x > 1 \end{cases}
+$$
+
+and $P(X \le 1/2) = F_X(1/2) = 1/4$. Most of the mass is near 1, so less than half of it is below the midpoint.
+
+**c.**
+
+$$
+\mathbb{E}[X] = \int_0^1 x \cdot 2x \, dx = \Big[\tfrac{2}{3}x^3\Big]_0^1 = \frac{2}{3}
+\qquad
+\mathbb{E}[X^2] = \int_0^1 x^2 \cdot 2x \, dx = \Big[\tfrac{1}{2}x^4\Big]_0^1 = \frac{1}{2}
+$$
+
+$$
+\text{Var}(X) = \frac{1}{2} - \left(\frac{2}{3}\right)^2 = \frac{1}{2} - \frac{4}{9} = \frac{1}{18}
+$$
+
+## Task 12: exchange rate shocks
+
+Suppose the daily percentage change in an exchange rate is $X \sim \mathcal{N}(0, 0.8^2)$.
+
+a. Standardize $X$. What is the distribution of $Z = X / 0.8$?
+b. Find $P(|X| > 1.6)$.
+c. Find $P(X < -1.2)$.
+d. A central bank intervenes on any day the currency falls by more than $c$ percent. Find $c$ so that it intervenes on 2.5% of days.
+
+**a.** $Z = (X - 0)/0.8 \sim \mathcal{N}(0, 1)$. The mean is $\mathbb{E}[X]/0.8 = 0$ and the variance is $\text{Var}(X)/0.8^2 = 1$ (Task 8a).
+
+**b.** $1.6 / 0.8 = 2$, so this is the probability a standard normal is more than 2 SDs from 0. By symmetry,
+
+$$
+P(|X| > 1.6) = P(|Z| > 2) = 2\big(1 - \Phi(2)\big) = 2(0.023) = 0.046
+$$
+
+**c.** $-1.2 / 0.8 = -1.5$, so by symmetry
+
+$$
+P(X < -1.2) = P(Z < -1.5) = 1 - \Phi(1.5) = 1 - 0.933 = 0.067
+$$
+
+**d.** We need $P(X < -c) = 0.025$, i.e. $P(Z < -c/0.8) = 0.025$. Since $\Phi(1.96) = 0.975$, $P(Z < -1.96) = 0.025$, so $c / 0.8 = 1.96$ and
+
+$$
+c = 1.96 \times 0.8 \approx 1.57
+$$
+
+The bank intervenes when the currency falls by more than about 1.57% in a day.
+
+# Part 4: Joint distributions
+
+## Task 13: covariance proofs
+
+a. Show that $\text{Cov}(X, Y) = \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]$.
+b. Show that $\text{Var}(X - Y) = \text{Var}(X) + \text{Var}(Y) - 2\text{Cov}(X, Y)$.
+c. Write down the matching formula for $\text{Var}(X + Y)$. Use it to derive the variance of a Binomial($N$, $p$), treating it as a sum of $N$ independent Bernoullis.
+d. Let $X$ take the values $-1$, $0$ and $1$ with equal probability, and $Y = X^2$. Show $\text{Cov}(X, Y) = 0$ but $X$ and $Y$ are not independent.
+
+**a.** Expand the product and apply linearity, treating $\mathbb{E}[X]$ and $\mathbb{E}[Y]$ as constants:
+
+$$
+\begin{aligned}
+\text{Cov}(X, Y) &= \mathbb{E}\big[XY - X\mathbb{E}[Y] - \mathbb{E}[X]Y + \mathbb{E}[X]\mathbb{E}[Y]\big] \\
+&= \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y] - \mathbb{E}[X]\mathbb{E}[Y] + \mathbb{E}[X]\mathbb{E}[Y] \\
+&= \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]
+\end{aligned}
+$$
+
+**b.** By linearity, $\mathbb{E}[X - Y] = \mathbb{E}[X] - \mathbb{E}[Y]$. Write $\tilde X = X - \mathbb{E}[X]$ and $\tilde Y = Y - \mathbb{E}[Y]$. Then
+
+$$
+\text{Var}(X - Y) = \mathbb{E}\big[(\tilde X - \tilde Y)^2\big] = \mathbb{E}[\tilde X^2] + \mathbb{E}[\tilde Y^2] - 2\mathbb{E}[\tilde X \tilde Y] = \text{Var}(X) + \text{Var}(Y) - 2\text{Cov}(X, Y)
+$$
+
+**c.** The same steps with a plus sign give
+
+$$
+\text{Var}(X + Y) = \text{Var}(X) + \text{Var}(Y) + 2\text{Cov}(X, Y)
+$$
+
+and for many variables, $\text{Var}\big(\sum_i X_i\big) = \sum_i \text{Var}(X_i) + \sum_{i \ne j} \text{Cov}(X_i, X_j)$. If $X = \sum_{i=1}^N X_i$ with independent $X_i \sim \text{Bernoulli}(p)$, every covariance is zero (independence implies zero covariance), so
+
+$$
+\text{Var}(X) = \sum_{i=1}^N \text{Var}(X_i) = Np(1 - p)
+$$
+
+**d.** $\mathbb{E}[X] = \frac{1}{3}(-1 + 0 + 1) = 0$, and $XY = X^3$, so $\mathbb{E}[XY] = \frac{1}{3}(-1 + 0 + 1) = 0$. Then $\text{Cov}(X, Y) = 0 - 0 \cdot \mathbb{E}[Y] = 0$.
+
+But they aren't independent: $P(X = 0, Y = 0) = P(X = 0) = 1/3$, while $P(X = 0)P(Y = 0) = \frac{1}{3} \times \frac{1}{3} = \frac{1}{9}$. Knowing $X$ tells you $Y$ exactly. Covariance only measures linear association, and the relationship here is a parabola, symmetric around zero.
+
+## Task 14: regime type and trade agreements
+
+Let $X = 1$ if a country-year is a democracy and 0 otherwise, and let $Y$ be the number of preferential trade agreements (PTAs) it signs that year. Their joint PMF is
+
+| | $Y = 0$ | $Y = 1$ | $Y = 2$ |
+|---|:---:|:---:|:---:|
+| $X = 0$ | 0.25 | 0.10 | 0.05 |
+| $X = 1$ | 0.20 | 0.25 | 0.15 |
+
+a. Find the marginal PMFs of $X$ and $Y$.
+b. Find the conditional PMF of $Y$ given $X = 1$.
+c. Are $X$ and $Y$ independent?
+d. Find the CEF, $\mathbb{E}[Y \mid X = x]$, for $x = 0, 1$.
+e. Verify the law of iterated expectations: compute $\mathbb{E}[Y]$ two ways.
+f. Find $\text{Cov}(X, Y)$ and $\text{Corr}(X, Y)$.
+g. Find the BLP of $Y$ given $X$. How does it compare to the CEF, and why?
+h. Decompose $\text{Var}(Y)$ into within and between pieces with the law of total variance.
+
+**a.** Sum across rows and columns:
+
+- $P(X = 0) = 0.40$, $P(X = 1) = 0.60$
+- $P(Y = 0) = 0.45$, $P(Y = 1) = 0.35$, $P(Y = 2) = 0.20$
+
+**b.** Divide the $X = 1$ row by $P(X = 1) = 0.60$:
+
+$$
+P(Y = 0 \mid X = 1) = \frac{0.20}{0.60} = \frac{1}{3}, \quad
+P(Y = 1 \mid X = 1) = \frac{0.25}{0.60} = \frac{5}{12}, \quad
+P(Y = 2 \mid X = 1) = \frac{0.15}{0.60} = \frac{1}{4}
+$$
+
+**c.** No. One failing cell is enough: $P(X = 1, Y = 0) = 0.20$, but $P(X = 1)P(Y = 0) = 0.60 \times 0.45 = 0.27$. Equivalently, the conditional PMF in (b) differs from the marginal of $Y$.
+
+**d.**
+
+$$
+\mathbb{E}[Y \mid X = 0] = \frac{0(0.25) + 1(0.10) + 2(0.05)}{0.40} = \frac{0.20}{0.40} = 0.5
+$$
+
+$$
+\mathbb{E}[Y \mid X = 1] = \frac{0(0.20) + 1(0.25) + 2(0.15)}{0.60} = \frac{0.55}{0.60} = \frac{11}{12} \approx 0.917
+$$
+
+Democracies sign about 0.42 more PTAs per year on average.
+
+**e.** Directly from the marginal of $Y$: $\mathbb{E}[Y] = 0(0.45) + 1(0.35) + 2(0.20) = 0.75$.
+
+By iterated expectations, averaging the CEF over the distribution of $X$:
+
+$$
+\mathbb{E}[Y] = 0.5(0.40) + \tfrac{11}{12}(0.60) = 0.20 + 0.55 = 0.75
+$$
+
+**f.** $\mathbb{E}[XY]$ only picks up the $X = 1$ row: $\mathbb{E}[XY] = 1(0.25) + 2(0.15) = 0.55$. With $\mathbb{E}[X] = 0.60$,
+
+$$
+\text{Cov}(X, Y) = 0.55 - 0.60(0.75) = 0.10
+$$
+
+For the correlation: $X$ is Bernoulli, so $\text{Var}(X) = 0.6(0.4) = 0.24$. $\mathbb{E}[Y^2] = 1(0.35) + 4(0.20) = 1.15$, so $\text{Var}(Y) = 1.15 - 0.75^2 = 0.5875$.
+
+$$
+\text{Corr}(X, Y) = \frac{0.10}{\sqrt{0.24 \times 0.5875}} \approx \frac{0.10}{0.375} \approx 0.27
+$$
+
+**g.**
+
+$$
+\beta = \frac{\text{Cov}(X, Y)}{\text{Var}(X)} = \frac{0.10}{0.24} = \frac{5}{12} \approx 0.417 \qquad \alpha = \mathbb{E}[Y] - \beta\mathbb{E}[X] = 0.75 - \tfrac{5}{12}(0.60) = 0.50
+$$
+
+The BLP predicts $0.5$ at $X = 0$ and $0.5 + 0.417 = 0.917$ at $X = 1$: exactly the CEF. When $X$ is binary, the CEF only takes two values, and a line can always pass through two points, so the CEF is linear. If the CEF is linear, the BLP is the CEF. The slope is the difference in conditional means, $\mathbb{E}[Y \mid X = 1] - \mathbb{E}[Y \mid X = 0]$.
+
+**h.** Conditional variances, from $\text{Var}(Y \mid X = x) = \mathbb{E}[Y^2 \mid X = x] - \mathbb{E}[Y \mid X = x]^2$:
+
+$$
+\mathbb{E}[Y^2 \mid X = 0] = \frac{1(0.10) + 4(0.05)}{0.40} = 0.75 \;\Rightarrow\; \text{Var}(Y \mid X = 0) = 0.75 - 0.5^2 = 0.5
+$$
+
+$$
+\mathbb{E}[Y^2 \mid X = 1] = \frac{1(0.25) + 4(0.15)}{0.60} = \frac{17}{12} \;\Rightarrow\; \text{Var}(Y \mid X = 1) = \frac{17}{12} - \left(\frac{11}{12}\right)^2 \approx 0.576
+$$
+
+Within (the average conditional variance):
+
+$$
+\mathbb{E}[\text{Var}(Y \mid X)] = 0.40(0.5) + 0.60(0.576) \approx 0.546
+$$
+
+Between (the variance of the CEF around $\mathbb{E}[Y] = 0.75$):
+
+$$
+\text{Var}(\mathbb{E}[Y \mid X]) = 0.40(0.5 - 0.75)^2 + 0.60(0.917 - 0.75)^2 = 0.025 + 0.0167 \approx 0.042
+$$
+
+Total: $0.546 + 0.042 = 0.5875 = \text{Var}(Y)$. Regime type accounts for only about 7% of the variance in PTA signing; most of the variation is within regime types.
+
+## Task 15: the CEF residual
+
+Let $\mu(X) = \mathbb{E}[Y \mid X]$ and $e = Y - \mu(X)$. Using the law of iterated expectations, show:
+
+a. $\mathbb{E}[e] = 0$
+b. $\mathbb{E}[e \mid X] = 0$
+c. $\text{Cov}(X, e) = 0$
+
+Start with (b), since the others follow from it.
+
+**b.** Conditional on $X$, $\mu(X)$ is a known constant, so
+
+$$
+\mathbb{E}[e \mid X] = \mathbb{E}[Y \mid X] - \mu(X) = \mu(X) - \mu(X) = 0
+$$
+
+**a.** By iterated expectations and (b): $\mathbb{E}[e] = \mathbb{E}\big[\mathbb{E}[e \mid X]\big] = \mathbb{E}[0] = 0$.
+
+**c.** $\text{Cov}(X, e) = \mathbb{E}[Xe] - \mathbb{E}[X]\mathbb{E}[e] = \mathbb{E}[Xe]$ by (a). Then by iterated expectations, pulling $X$ out because it is a constant given $X$:
+
+$$
+\mathbb{E}[Xe] = \mathbb{E}\big[\mathbb{E}[Xe \mid X]\big] = \mathbb{E}\big[X\,\mathbb{E}[e \mid X]\big] = \mathbb{E}[X \cdot 0] = 0
+$$
+
+The CEF uses up everything $X$ can tell you about the mean of $Y$: what's left over has mean zero at every value of $X$, so it can't be correlated with $X$ (or with any function of $X$).
+
+## Task 16: reweighting a survey
+
+A pre-election survey in Germany finds that 75% of university graduates and 55% of non-graduates plan to vote. Graduates are 60% of the sample but 35% of the adult population.
+
+a. What is the unweighted estimate of turnout intention?
+b. Use the law of iterated expectations to reweight to the population. What is the new estimate?
+c. What assumption makes the reweighted estimate better than the unweighted one?
+
+**a.** The raw sample average weights each group by its share of the **sample**:
+
+$$
+0.75(0.60) + 0.55(0.40) = 0.45 + 0.22 = 0.67
+$$
+
+**b.** Average the same conditional means over the **population** distribution of education:
+
+$$
+\mathbb{E}[Y] = \mathbb{E}[Y \mid \text{grad}]P(\text{grad}) + \mathbb{E}[Y \mid \text{non-grad}]P(\text{non-grad}) = 0.75(0.35) + 0.55(0.65) = 0.2625 + 0.3575 = 0.62
+$$
+
+The raw estimate is too high because it over-represents graduates, who are more likely to vote.
+
+**c.** That within each education group, the people who answered the survey have the same turnout intention, on average, as everyone in that group. The survey's conditional means must equal the population conditional means; only the distribution of education is off. If, say, the non-graduates who answer surveys are more politically engaged than non-graduates in general, reweighting on education alone won't fix the bias. (It also assumes the population shares, 35% and 65%, are known.)
+
+## Task 17: trade openness and government size
+
+Rodrik's compensation hypothesis says more open economies have larger governments. Let $X$ be trade openness (trade as % of GDP) and $Y$ government spending (% of GDP) across countries, with
+
+$$
+\mathbb{E}[X] = 80, \quad \text{Var}(X) = 900, \quad \mathbb{E}[Y] = 25, \quad \text{Cov}(X, Y) = 72, \quad \text{Var}(Y) = 36
+$$
+
+a. Find the BLP of $Y$ given $X$. Interpret the slope.
+b. What does the BLP predict for a country with openness 50? With openness 150?
+c. Find $\text{Corr}(X, Y)$.
+d. Suppose openness is instead measured as a share of GDP, $X' = X / 100$. What are the new slope and intercept? Show it using properties of covariance and variance.
+e. Suppose the true CEF is concave: government spending rises quickly with openness among closed economies and flattens out among very open ones. Sketch the CEF and the BLP. Where does the BLP over-predict and where does it under-predict? Is the BLP slope still a useful summary?
+
+**a.**
+
+$$
+\beta = \frac{\text{Cov}(X, Y)}{\text{Var}(X)} = \frac{72}{900} = 0.08 \qquad \alpha = \mathbb{E}[Y] - \beta\mathbb{E}[X] = 25 - 0.08(80) = 18.6
+$$
+
+So the BLP is $18.6 + 0.08X$. Countries whose trade is 10 percentage points of GDP higher are predicted to have government spending about 0.8 percentage points of GDP higher. This is an association across countries, the best linear summary of the CEF, not the effect of opening up a given economy.
+
+**b.** $18.6 + 0.08(50) = 22.6$ and $18.6 + 0.08(150) = 30.6$ (% of GDP).
+
+**c.**
+
+$$
+\text{Corr}(X, Y) = \frac{72}{\sqrt{900 \times 36}} = \frac{72}{30 \times 6} = 0.4
+$$
+
+**d.** Constants pull out of covariance once and out of variance squared:
+
+$$
+\text{Cov}(X/100, Y) = \frac{72}{100} = 0.72 \qquad \text{Var}(X/100) = \frac{900}{100^2} = 0.09
+$$
+
+$$
+\beta' = \frac{0.72}{0.09} = 8 \qquad \alpha' = 25 - 8(0.8) = 18.6
+$$
+
+The slope scales up by 100 (a one-unit change in $X'$ is a 100-point change in $X$), and the intercept and predictions are unchanged. The correlation is also unchanged, since it is scale-free.
+
+**e.** A concave CEF bends downward, so the best-fitting line crosses it twice. The line lies **above** the CEF at both ends, so it over-predicts spending for very closed and very open economies, and **below** it in the middle, where it under-predicts. The slope is still the best linear summary: roughly the average rate at which spending rises with openness, weighted toward where the countries are. But it hides that the relationship is steep for closed economies and nearly flat for open ones. The BLP is a summary of the CEF, not the CEF itself, so it's worth looking at the data before relying on a single slope.
