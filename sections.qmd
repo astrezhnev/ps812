@@ -38,7 +38,7 @@ Links become active as the materials for each week are posted.
 
 *Friday, October 2*
 
-*To be posted*
+- [Week 4 GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/sections/week4/)
 
 ### Week 5: Variance, Covariance, and Conditional Expectation
 

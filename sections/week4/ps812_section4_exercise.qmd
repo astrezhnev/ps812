@@ -1,0 +1,180 @@
+---
+title: "PS 812: Section 4 Exercise"
+subtitle: "Midterm review, weeks 1-4"
+author: "YOUR NAME"
+date: "10-2-2026"
+format:
+  html:
+    embed-resources: true
+---
+
+All problems are pen-and-paper, like the midterm. Show your work. All numbers in the applied problems are hypothetical.
+
+Where a problem needs the standard normal CDF, use: $\Phi(1) = 0.841$, $\Phi(1.5) = 0.933$, $\Phi(1.96) = 0.975$, $\Phi(2) = 0.977$.
+
+# Part 1: Probability
+
+## Task 1: from the axioms
+
+Using only the three axioms and results derived from them in lecture, prove:
+
+a. $P(A \cap B^c) = P(A) - P(A \cap B)$
+b. If $P(A) = 1$, then $P(A \cap B) = P(B)$ for any event $B$
+c. Inclusion/exclusion for three events:
+
+$$
+P(A \cup B \cup C) = P(A) + P(B) + P(C) - P(A \cap B) - P(A \cap C) - P(B \cap C) + P(A \cap B \cap C)
+$$
+
+Hint for (c): apply the two-event version to $A \cup B$ and $C$.
+
+## Task 2: trade agreements
+
+In a sample of countries, 80% are WTO members ($W$) and 35% have a bilateral investment treaty with the United States ($T$).
+
+a. Without any other information, give the tightest bounds on $P(W \cap T)$ and on $P(W \cup T)$.
+b. Suppose you learn that $P(W \cap T) = 0.30$. What share of countries are in neither? Which rules did you use?
+c. Are $W$ and $T$ independent under (b)?
+
+# Part 2: Conditional probability and independence
+
+## Task 3: independence and complements
+
+Prove that if $A \perp\!\!\!\perp B$, then $A \perp\!\!\!\perp B^c$. (Task 1a helps.)
+
+## Task 4: committee assignment
+
+A 12-member legislature has 7 members from the governing coalition and 5 from the opposition. A 4-member committee is drawn at random.
+
+a. Which of the four counting cases applies here, and why?
+b. What is the probability the governing coalition holds a majority (3 or 4 seats) on the committee?
+c. What is the probability the committee has at least one opposition member? Use the complement rule.
+
+## Task 5: coup early warning
+
+Suppose 4% of regimes experience a coup attempt in a given year ($C$). An early-warning signal ($S_1$, e.g. unusual troop movements) fires in 90% of coup years and in 10% of non-coup years.
+
+a. Find $P(S_1)$.
+b. Find $P(C \mid S_1)$. Why is it so much lower than 0.9?
+c. A second signal $S_2$ (e.g. purges of senior officers) has the same accuracy, and $S_1 \perp\!\!\!\perp S_2 \mid C$ and $S_1 \perp\!\!\!\perp S_2 \mid C^c$. Find $P(C \mid S_1 \cap S_2)$.
+d. Are $S_1$ and $S_2$ independent (unconditionally)? Show it, and explain why or why not.
+
+## Task 6: IMF programs and default
+
+Suppose 30% of countries in a given year are under an IMF program ($M$). The probability of sovereign default ($D$) is 0.15 for countries in a program and 0.05 for countries not in one.
+
+a. Use the law of total probability to find $P(D)$.
+b. Find $P(M \mid D)$, the share of defaulters that were in a program.
+c. A commentator concludes that IMF programs cause default. Give a reason the data in this task can't tell you that, using the idea of a common cause.
+
+## Task 7: selecting on protest
+
+An economic crisis ($E$) and a fraudulent election ($F$) each happen in a country-year with probability 0.2, independently. Large protests ($M$) happen if and only if there is a crisis or a fraudulent election (or both).
+
+a. Find $P(M)$.
+b. Find $P(F \mid M)$ and $P(F \mid M \cap E)$.
+c. A researcher studies only country-years with large protests and finds that crises and fraudulent elections rarely occur together. What is going on?
+
+# Part 3: Random variables
+
+## Task 8: variance proofs
+
+Using the definition of variance and linearity of expectations, show:
+
+a. $\text{Var}(aX + b) = a^2 \text{Var}(X)$
+b. $\mathbb{E}[(X - c)^2] = \text{Var}(X) + (\mathbb{E}[X] - c)^2$ for any constant $c$. What value of $c$ minimizes the left-hand side?
+
+## Task 9: coalition size
+
+Let $X$ be the number of parties in a newly formed cabinet, with PMF
+
+| $x$ | 1 | 2 | 3 | 4 |
+|---|:---:|:---:|:---:|:---:|
+| $P(X = x)$ | 0.30 | 0.40 | 0.20 | 0.10 |
+
+a. Find $F_X(2)$ and $P(X \ge 3)$.
+b. Find $\mathbb{E}[X]$ and $\text{Var}(X)$.
+c. Use LOTUS to find $\mathbb{E}[1/X]$. Compare it to $1/\mathbb{E}[X]$.
+
+## Task 10: bribery list experiment
+
+A survey of exporting firms uses a list experiment to measure bribery of customs officials. The control list has 3 innocuous items. The treated list adds "made an informal payment to a customs official in the last year." The average count is 1.42 in the control group and 1.61 in the treated group.
+
+a. Write down the data-generating process and estimate the share of firms paying bribes. Where does linearity of expectations come in?
+b. What assumption does the estimate rely on? Give one way it could fail.
+c. When asked directly, 6% of firms admit to paying a bribe. What might explain the difference?
+d. Why does the estimate not require that the control count be Binomial, or that it be independent of bribery?
+
+## Task 11: a continuous random variable
+
+Let $X$ have density $f_X(x) = 2x$ for $0 \le x \le 1$ and 0 otherwise.
+
+a. Show that $f_X$ is a valid density.
+b. Find the CDF $F_X(x)$, and use it to find $P(X \le 1/2)$.
+c. Find $\mathbb{E}[X]$ and $\text{Var}(X)$.
+
+## Task 12: exchange rate shocks
+
+Suppose the daily percentage change in an exchange rate is $X \sim \mathcal{N}(0, 0.8^2)$.
+
+a. Standardize $X$. What is the distribution of $Z = X / 0.8$?
+b. Find $P(|X| > 1.6)$.
+c. Find $P(X < -1.2)$.
+d. A central bank intervenes on any day the currency falls by more than $c$ percent. Find $c$ so that it intervenes on 2.5% of days.
+
+# Part 4: Joint distributions
+
+## Task 13: covariance proofs
+
+a. Show that $\text{Cov}(X, Y) = \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]$.
+b. Show that $\text{Var}(X - Y) = \text{Var}(X) + \text{Var}(Y) - 2\text{Cov}(X, Y)$.
+c. Write down the matching formula for $\text{Var}(X + Y)$. Use it to derive the variance of a Binomial($N$, $p$), treating it as a sum of $N$ independent Bernoullis.
+d. Let $X$ take the values $-1$, $0$ and $1$ with equal probability, and $Y = X^2$. Show $\text{Cov}(X, Y) = 0$ but $X$ and $Y$ are not independent.
+
+## Task 14: regime type and trade agreements
+
+Let $X = 1$ if a country-year is a democracy and 0 otherwise, and let $Y$ be the number of preferential trade agreements (PTAs) it signs that year. Their joint PMF is
+
+| | $Y = 0$ | $Y = 1$ | $Y = 2$ |
+|---|:---:|:---:|:---:|
+| $X = 0$ | 0.25 | 0.10 | 0.05 |
+| $X = 1$ | 0.20 | 0.25 | 0.15 |
+
+a. Find the marginal PMFs of $X$ and $Y$.
+b. Find the conditional PMF of $Y$ given $X = 1$.
+c. Are $X$ and $Y$ independent?
+d. Find the CEF, $\mathbb{E}[Y \mid X = x]$, for $x = 0, 1$.
+e. Verify the law of iterated expectations: compute $\mathbb{E}[Y]$ two ways.
+f. Find $\text{Cov}(X, Y)$ and $\text{Corr}(X, Y)$.
+g. Find the BLP of $Y$ given $X$. How does it compare to the CEF, and why?
+h. Decompose $\text{Var}(Y)$ into within and between pieces with the law of total variance.
+
+## Task 15: the CEF residual
+
+Let $\mu(X) = \mathbb{E}[Y \mid X]$ and $e = Y - \mu(X)$. Using the law of iterated expectations, show:
+
+a. $\mathbb{E}[e] = 0$
+b. $\mathbb{E}[e \mid X] = 0$
+c. $\text{Cov}(X, e) = 0$
+
+## Task 16: reweighting a survey
+
+A pre-election survey in Germany finds that 75% of university graduates and 55% of non-graduates plan to vote. Graduates are 60% of the sample but 35% of the adult population.
+
+a. What is the unweighted estimate of turnout intention?
+b. Use the law of iterated expectations to reweight to the population. What is the new estimate?
+c. What assumption makes the reweighted estimate better than the unweighted one?
+
+## Task 17: trade openness and government size
+
+Rodrik's compensation hypothesis says more open economies have larger governments. Let $X$ be trade openness (trade as % of GDP) and $Y$ government spending (% of GDP) across countries, with
+
+$$
+\mathbb{E}[X] = 80, \quad \text{Var}(X) = 900, \quad \mathbb{E}[Y] = 25, \quad \text{Cov}(X, Y) = 72, \quad \text{Var}(Y) = 36
+$$
+
+a. Find the BLP of $Y$ given $X$. Interpret the slope.
+b. What does the BLP predict for a country with openness 50? With openness 150?
+c. Find $\text{Corr}(X, Y)$.
+d. Suppose openness is instead measured as a share of GDP, $X' = X / 100$. What are the new slope and intercept? Show it using properties of covariance and variance.
+e. Suppose the true CEF is concave: government spending rises quickly with openness among closed economies and flattens out among very open ones. Sketch the CEF and the BLP. Where does the BLP over-predict and where does it under-predict? Is the BLP slope still a useful summary?

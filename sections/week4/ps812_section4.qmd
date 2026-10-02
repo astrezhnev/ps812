@@ -1,0 +1,569 @@
+---
+title: "PS 812"
+subtitle: "Section 4: Review of Weeks 1-4"
+author: "John Hicks"
+institute: "Dept. of Political Science, UW-Madison"
+date: "10-2-2026"
+
+format:
+  revealjs:
+    embed-resources: true
+    theme: default
+    slide-number: true
+    transition: none
+    chalkboard: false
+    width: 1600
+    height: 900
+    incremental: true
+---
+
+<style>
+
+.reveal {
+  font-family: Arial, sans-serif;
+}
+
+/* ---------------------------------
+   Headings
+   --------------------------------- */
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #8B0000;
+}
+
+.reveal h2 {
+  background-color: #eeeeee;
+  padding: 10px 20px;
+}
+
+/* ---------------------------------
+   Slide numbers
+   --------------------------------- */
+
+.reveal .slide-number {
+  color: #666666;
+  font-size: 0.7em;
+}
+
+/* ---------------------------------
+   Cascade / incremental reveals
+   --------------------------------- */
+
+.reveal .fragment {
+  transition: opacity 0.35s ease-in-out;
+}
+
+.reveal .fragment.visible {
+  opacity: 1;
+}
+
+/* ---------------------------------
+   Lists
+   --------------------------------- */
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.35em;
+}
+
+</style>
+
+# Announcements
+
+## Announcements
+
+1. **Problem Set 2 is due Oct 6 at 11:59pm.**
+2. **Midterm 1 is Wednesday, Oct 7.** It covers weeks 1-4.
+
+---
+
+# Today
+
+## Today
+
+::: {.fragment}
+**1. Probability**
+
+Sample spaces, events, the axioms and what follows from them
+:::
+
+::: {.fragment}
+**2. Conditional probability and independence**
+
+Counting, conditioning, total probability, Bayes' rule
+:::
+
+::: {.fragment}
+**3. Random variables**
+
+CDFs, PMFs, PDFs, expectation and variance
+:::
+
+::: {.fragment}
+**4. Joint distributions**
+
+Covariance, conditioning, the CEF and the BLP
+:::
+
+---
+
+# Week 1: Probability
+
+## Sample spaces and events
+
+- **Sample space** $\Omega$: the set of all possible outcomes of an experiment
+- **Event**: a subset of $\Omega$
+- **Complement** $A^c$: everything in $\Omega$ not in $A$
+- **Union** $A \cup B$: in $A$ **or** $B$
+- **Intersection** $A \cap B$: in $A$ **and** $B$
+- **Disjoint**: $A \cap B = \emptyset$
+
+---
+
+## De Morgan's laws
+
+$$
+(A \cup B)^c = A^c \cap B^c \qquad\qquad (A \cap B)^c = A^c \cup B^c
+$$
+
+- Not in either means in neither
+- Not in both means missing from at least one
+
+---
+
+## Kolmogorov's axioms
+
+$P$ maps events to real numbers and satisfies:
+
+1. **Non-negativity**: $P(A) \ge 0$
+2. **Normalization**: $P(\Omega) = 1$
+3. **Countable additivity**: for pairwise disjoint $A_1, A_2, \dots$
+
+$$
+P\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} P(A_i)
+$$
+
+::: {.fragment}
+Everything else this week is derived from these three.
+:::
+
+---
+
+## Consequences of the axioms
+
+- **Monotonicity**: if $A \subseteq B$, then $P(A) \le P(B)$
+  - Split $B = A \cup (B \cap A^c)$ and use additivity and non-negativity
+  - This is why the conjunction fallacy is a fallacy
+- **Complement rule**: $P(A) = 1 - P(A^c)$
+  - Use it for "at least one" problems
+- **Inclusion/exclusion**:
+
+$$
+P(A \cup B) = P(A) + P(B) - P(A \cap B)
+$$
+
+---
+
+## Fréchet bounds
+
+For **any** two events:
+
+$$
+\max\{0,\, P(A) + P(B) - 1\} \;\le\; P(A \cap B) \;\le\; \min\{P(A),\, P(B)\}
+$$
+
+$$
+\max\{P(A),\, P(B)\} \;\le\; P(A \cup B) \;\le\; \min\{1,\, P(A) + P(B)\}
+$$
+
+- Every bound comes from inclusion/exclusion plus $0 \le P(\cdot) \le 1$
+- Know how to derive them, not just state them
+
+---
+
+# Week 2: Conditional Probability and Independence
+
+## Probability as counting
+
+With a finite $\Omega$ and equally likely outcomes:
+
+$$
+P(A) = \frac{\text{number of outcomes in } A}{\text{number of outcomes in } \Omega}
+$$
+
+::: {.fragment}
+Sampling $k$ from $n$:
+
+| | Order matters | Order doesn't matter |
+|---|:---:|:---:|
+| **With replacement** | $n^k$ | $\binom{n + k - 1}{k}$ |
+| **Without replacement** | $\frac{n!}{(n-k)!}$ | $\binom{n}{k}$ |
+:::
+
+---
+
+## The birthday problem
+
+Compute the complement: everyone has a different birthday.
+
+$$
+P(\text{at least one shared birthday}) = 1 - \frac{365!/(365 - k)!}{365^k}
+$$
+
+- Denominator: with replacement, order matters
+- Numerator: without replacement, order matters
+
+---
+
+## Conditional probability
+
+$$
+P(A \mid B) = \frac{P(A \cap B)}{P(B)}, \qquad P(B) > 0
+$$
+
+- Conditioning **restricts the sample space** to $B$
+- Rearranging gives the factorization
+
+$$
+P(A \cap B) = P(A \mid B)\, P(B) = P(B \mid A)\, P(A)
+$$
+
+---
+
+## Law of total probability
+
+If $A_1, \dots, A_n$ partition $\Omega$:
+
+$$
+P(B) = \sum_{i=1}^{n} P(B \mid A_i)\, P(A_i)
+$$
+
+- Split $B$ into the disjoint pieces $B \cap A_i$
+- Add them up, then factor each one
+
+---
+
+## Bayes' rule
+
+$$
+P(A \mid B) = \frac{P(B \mid A)\, P(A)}{P(B)} = \frac{P(B \mid A)\, P(A)}{P(B \mid A)\, P(A) + P(B \mid A^c)\, P(A^c)}
+$$
+
+- $P(A)$: prior
+- $P(A \mid B)$: posterior
+- The denominator is the law of total probability
+
+---
+
+## Monty Hall
+
+You pick door 1. The host opens door 3 and shows a goat.
+
+$$
+P(\text{car}_1 \mid \text{door}_3) = \frac{\frac{1}{2} \cdot \frac{1}{3}}{\frac{1}{2} \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} + 0 \cdot \frac{1}{3}} = \frac{1}{3}
+$$
+
+- The denominator conditions on where the car is: doors 1, 2, 3
+- So $P(\text{car}_2 \mid \text{door}_3) = 2/3$. Switch.
+
+---
+
+## Independence
+
+$$
+A \perp\!\!\!\perp B \iff P(A \cap B) = P(A)\, P(B)
+$$
+
+- Equivalently, $P(A \mid B) = P(A)$: knowing $B$ tells you nothing about $A$
+- **Conditional independence**:
+
+$$
+A \perp\!\!\!\perp B \mid C \iff P(A \cap B \mid C) = P(A \mid C)\, P(B \mid C)
+$$
+
+---
+
+## Neither implies the other
+
+- **Dependent, but conditionally independent**: condition on a common cause
+  - Conflict and ethnic diversity, conditional on development
+- **Independent, but conditionally dependent**: condition on a common effect
+  - Rain and the sprinkler are independent
+  - Given wet grass: $P(R \mid W) = 2/3$, but $P(R \mid S, W) = 1/2$
+- BISG assumes $S \perp\!\!\!\perp G \mid H$: given race, surname is independent of location
+
+---
+
+# Week 3: Random Variables
+
+## Random variables
+
+- A **random variable** is a function from $\Omega$ to $\mathbb{R}$
+- Notation: $X$ is the random variable, $x$ a realization, $\mathcal{X}$ the support
+- Functions of random variables are random variables: $Y = R \times X$
+
+---
+
+## CDFs
+
+$$
+F_X(x) = P(X \le x)
+$$
+
+- Range is $[0, 1]$
+- Non-decreasing
+- $F_X(x) \to 0$ as $x \to -\infty$ and $F_X(x) \to 1$ as $x \to \infty$
+- Probabilities of intervals:
+
+$$
+P(a < X \le b) = F_X(b) - F_X(a)
+$$
+
+---
+
+## Discrete random variables: PMFs
+
+$$
+p_X(x) = P(X = x)
+$$
+
+- $p_X(x) \ge 0$ and $\sum_{x \in \mathcal{X}} p_X(x) = 1$
+- Sum the PMF to get the CDF: $F_X(x) = \sum_{t \le x} p_X(t)$
+- **Bernoulli**($p$): $P(X = 1) = p$, $P(X = 0) = 1 - p$
+- **Binomial**($N, p$): the sum of $N$ iid Bernoulli($p$)
+
+$$
+P(X = x) = \binom{N}{x} p^x (1 - p)^{N - x}, \qquad x = 0, 1, \dots, N
+$$
+
+---
+
+## Expectation
+
+$$
+\mathbb{E}[X] = \sum_{x \in \mathcal{X}} x \cdot P(X = x)
+$$
+
+- **LOTUS**: $\mathbb{E}[g(X)] = \sum_{x} g(x)\, P(X = x)$
+- In general, $\mathbb{E}[g(X)] \ne g(\mathbb{E}[X])$
+- **Linearity**, for any $X$ and $Y$, independent or not:
+
+$$
+\mathbb{E}[aX + bY] = a\,\mathbb{E}[X] + b\,\mathbb{E}[Y]
+$$
+
+---
+
+## Using linearity
+
+- Bernoulli: $\mathbb{E}[X] = 0 \cdot (1 - p) + 1 \cdot p = p$
+  - The expectation of an indicator is a probability: $\mathbb{E}[\mathbf{1}(A)] = P(A)$
+- Binomial: write $X = \sum_{i=1}^{N} X_i$, so $\mathbb{E}[X] = Np$
+- List experiment: $T_i = C_i + Z_i$, so
+
+$$
+\theta = P(Z_i = 1) = \mathbb{E}[T_i] - \mathbb{E}[C_i]
+$$
+
+---
+
+## Variance
+
+$$
+\text{Var}(X) = \mathbb{E}\big[(X - \mathbb{E}[X])^2\big] = \mathbb{E}[X^2] - \mathbb{E}[X]^2
+$$
+
+- $\text{Var}(X) \ge 0$
+- $\text{Var}(aX + b) = a^2\, \text{Var}(X)$
+- Bernoulli: $\mathbb{E}[X^2] = \mathbb{E}[X]$ because $X \in \{0, 1\}$, so
+
+$$
+\text{Var}(X) = p - p^2 = p(1 - p)
+$$
+
+---
+
+## Continuous random variables: PDFs
+
+$$
+f_X(x) = \frac{d}{dx} F_X(x)
+$$
+
+- $P(X = x) = 0$ for every $x$. A density is not a probability
+- Integrate it to get probabilities:
+
+$$
+P(a < X \le b) = \int_a^b f_X(x)\, dx, \qquad \int_{-\infty}^{\infty} f_X(x)\, dx = 1
+$$
+
+- Expectation is an integral instead of a sum:
+
+$$
+\mathbb{E}[X] = \int x\, f_X(x)\, dx
+$$
+
+---
+
+## The normal distribution
+
+$X \sim \mathcal{N}(\mu, \sigma^2)$, with $\mathbb{E}[X] = \mu$ and $\text{Var}(X) = \sigma^2$
+
+$$
+f_X(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left\{-\frac{(x - \mu)^2}{2\sigma^2}\right\}
+$$
+
+- Standardize: $Z = \frac{X - \mu}{\sigma} \sim \mathcal{N}(0, 1)$, with PDF $\phi$ and CDF $\Phi$
+- $\Phi$ has no closed form. Use `pnorm()`
+- About 68% of the mass is within 1 SD, 95% within 2 (1.96), 99.7% within 3
+
+---
+
+# Week 4: Joint Distributions
+
+## Joint distributions
+
+| | Discrete | Continuous |
+|---|:---:|:---:|
+| **CDF** | $F_{XY}(x, y) = P(X \le x, Y \le y)$ | same |
+| **Mass / density** | $p_{XY}(x, y) = P(X = x, Y = y)$ | $f_{XY}(x, y) = \frac{\partial^2 F_{XY}(x, y)}{\partial x\, \partial y}$ |
+
+---
+
+## Marginal and conditional distributions
+
+- **Marginalize** by summing or integrating out the other variable:
+
+$$
+p_Y(y) = \sum_x p_{XY}(x, y) \qquad f_Y(y) = \int f_{XY}(x, y)\, dx
+$$
+
+- **Condition** with joint over marginal:
+
+$$
+p_{Y \mid X}(y \mid x) = \frac{p_{XY}(x, y)}{p_X(x)} \qquad f_{Y \mid X}(y \mid x) = \frac{f_{XY}(x, y)}{f_X(x)}
+$$
+
+- **Factor** the joint into conditional times marginal: $f_{XY}(x, y) = f_{Y \mid X}(y \mid x)\, f_X(x)$
+
+---
+
+## Independence of random variables
+
+$$
+X \perp\!\!\!\perp Y \iff F_{XY}(x, y) = F_X(x)\, F_Y(y) \text{ for all } x, y
+$$
+
+- The joint PMF/PDF factors into the marginals
+- The conditional equals the marginal: $f_{Y \mid X}(y \mid x) = f_Y(y)$
+- Independence implies $\mathbb{E}[XY] = \mathbb{E}[X]\,\mathbb{E}[Y]$, so $\text{Cov}(X, Y) = 0$
+- The converse fails: zero covariance does not imply independence
+
+---
+
+## Covariance
+
+$$
+\text{Cov}(X, Y) = \mathbb{E}\big[(X - \mathbb{E}[X])(Y - \mathbb{E}[Y])\big] = \mathbb{E}[XY] - \mathbb{E}[X]\,\mathbb{E}[Y]
+$$
+
+- $\text{Cov}(aX, bY) = ab\, \text{Cov}(X, Y)$
+- $\text{Cov}(X + a, Y + b) = \text{Cov}(X, Y)$
+- $\text{Cov}(X, a) = 0$
+- $\text{Cov}(X + Z, Y) = \text{Cov}(X, Y) + \text{Cov}(Z, Y)$
+- $\text{Cov}(X, X) = \text{Var}(X)$
+
+---
+
+## Correlation and sums
+
+$$
+\rho_{XY} = \frac{\text{Cov}(X, Y)}{\sqrt{\text{Var}(X)\, \text{Var}(Y)}} \in [-1, 1]
+$$
+
+- Scale free. The bounds come from Cauchy-Schwarz
+- Variance of a sum or difference:
+
+$$
+\text{Var}(X \pm Y) = \text{Var}(X) + \text{Var}(Y) \pm 2\, \text{Cov}(X, Y)
+$$
+
+- If $X \perp\!\!\!\perp Y$, both are $\text{Var}(X) + \text{Var}(Y)$
+
+---
+
+## The conditional expectation function
+
+$$
+\mu(x) = \mathbb{E}[Y \mid X = x] = \sum_y y \cdot p_{Y \mid X}(y \mid x)
+$$
+
+- A **function** of $x$: give it a value of $X$, it returns the mean of $Y$ at that value
+- $\mathbb{E}[Y \mid X]$ is a random variable, because $X$ is
+
+---
+
+## Law of iterated expectations
+
+$$
+\mathbb{E}[Y] = \mathbb{E}\big[\mathbb{E}[Y \mid X]\big] = \sum_x \mathbb{E}[Y \mid X = x]\, p_X(x)
+$$
+
+- The outer expectation is over the distribution of $X$
+- Recalled vote weighting:
+
+$$
+\mathbb{E}[Y_D] = \mathbb{E}[Y_D \mid \text{Trump}]\, P(\text{Trump}) + \mathbb{E}[Y_D \mid \text{Harris}]\, P(\text{Harris})
+$$
+
+- Weighting chooses which distribution of $X$ to average over
+
+---
+
+## Best predictors under MSE
+
+- The best constant guess for $Y$ is $c = \mathbb{E}[Y]$:
+
+$$
+\mathbb{E}[(Y - c)^2] = \text{Var}(Y) + (\mathbb{E}[Y] - c)^2
+$$
+
+- The best function of $X$ is the CEF. For any $g$:
+
+$$
+\mathbb{E}[(Y - g(X))^2] = \mathbb{E}[(Y - \mu(X))^2] + \mathbb{E}[(\mu(X) - g(X))^2]
+$$
+
+- Both proofs: add and subtract the mean, expand, and show the cross term is zero
+
+---
+
+## The best linear predictor
+
+Restrict $g(X) = a + bX$ and minimize $\mathbb{E}[(Y - a - bX)^2]$:
+
+$$
+\beta = \frac{\text{Cov}(X, Y)}{\text{Var}(X)} \qquad \alpha = \mathbb{E}[Y] - \beta\, \mathbb{E}[X]
+$$
+
+- From the first-order conditions: $\mathbb{E}[Y - \alpha - \beta X] = 0$ and $\mathbb{E}[X(Y - \alpha - \beta X)] = 0$
+- The BLP is the best linear approximation to the CEF
+- If the CEF is linear, the BLP is the CEF
+- It's a summary: very different joint distributions can share the same BLP
+
+---
+
+## Law of total variance
+
+$$
+\text{Var}(Y) = \underbrace{\mathbb{E}\big[\text{Var}(Y \mid X)\big]}_{\text{within}} + \underbrace{\text{Var}\big(\mathbb{E}[Y \mid X]\big)}_{\text{between}}
+$$
+
+- Within: the spread of $Y$ around the CEF
+- Between: how much the CEF moves with $X$
+- So $\text{Var}\big(\mathbb{E}[Y \mid X]\big) \le \text{Var}(Y)$
+
+---
+
+# Questions?
