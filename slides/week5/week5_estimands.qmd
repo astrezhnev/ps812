@@ -323,7 +323,7 @@ Adapted from @lundberg2021estimand, Fig. 1
 
 ::: {.incremental}
 
-- We need a language for talking about **what if?** questions - how do we articulate an estimand for a **causal** quantity?
+- We need a language for talking about **"What if?"** questions - How do we articulate an estimand for a **causal** quantity?
   - Causation is about manipulation: If a treatment $D$ were changed, what would happen to $Y$?
 - The **potential outcomes** framework [@rubin1974estimating]
   - Units $i$ in some population
@@ -391,7 +391,7 @@ Adapted from @lundberg2021estimand, Fig. 1
 
 - The **theoretical** estimand is defined in terms of potential outcomes: $\tau = \mathbb{E}[Y_i(1)] - \mathbb{E}[Y_i(0)]$
 - An **empirical** estimand is defined on things we observe. 
-- One choice: The difference in conditional expectations between treated and control
+- One choice: The **difference** in **conditional expectations** between treated and control
 
   $$\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0]$$
 
@@ -410,19 +410,13 @@ Adapted from @lundberg2021estimand, Fig. 1
 - And so the empirical estimand is equal to the treated group's $Y_i(1)$ minus the control group's $Y_i(0)$
   - This is a comparison of two causal quantities but it's **not on the same set** of units!
 
-:::
-
-## Selection bias
-
-::: {.incremental}
-
 - One way to think about the discrepancy is in terms of how the **difference-in-means** differs from the average treatment effect **on the treated**
 
   ::: {style="font-size: 0.85em"}
-  $$\underbrace{\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0]}_{\text{difference in means}} = \underbrace{\mathbb{E}[Y_i(1) - Y_i(0) \mid D_i = 1]}_{\text{ATT}} + \underbrace{\mathbb{E}[Y_i(0) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0]}_{\text{selection bias}}$$
+  $$\underbrace{\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0]}_{\text{difference in means}} = \underbrace{\mathbb{E}[Y_i(1) - Y_i(0) \mid D_i = 1]}_{\text{ATT}} + \underbrace{\mathbb{E}[Y_i(0) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0]}_{\text{selection into treatment bias}}$$
   :::
 
-- **Selection bias**: How different are the treated and control groups' outcomes **even without** treatment?
+- **Selection into treatment bias**: How different are the treated and control groups' outcomes **even without** treatment?
 
 :::
 
@@ -459,7 +453,7 @@ Adapted from @lundberg2021estimand, Fig. 1
   $$\tau = \mathbb{E}_X\Big[\, \mathbb{E}[Y_i \mid D_i = 1, X_i] - \mathbb{E}[Y_i \mid D_i = 0, X_i] \,\Big]$$
 
 - This is what **assumptions** get us!
-  - Which $X_i$? That's where we need theory and prior evidence to guide our 
+  - Which $X_i$? That's where we need theory and prior evidence to guide our choices.
 
 :::
 
@@ -472,7 +466,7 @@ Adapted from @lundberg2021estimand, Fig. 1
   - Determined by argument, research design and **substantive knowledge**
 - **Estimation** assumptions: what we need to learn that observable quantity from a **finite sample**
   - $\mathbb{E}[Y_i \mid D_i = 1, X_i]$ is a population quantity. We have $N$ observations, and maybe few at each value of $X_i$
-  - Linearity, functional form, smoothness, etc... - this is where the statistics comes in
+  - This is where the statistical models come in.
 - Incorrect estimation assumptions add bias **even if** identification holds. 
   - But getting identification wrong means no amount of fancy stats can save you.
 
