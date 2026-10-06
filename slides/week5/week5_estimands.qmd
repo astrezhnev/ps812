@@ -246,7 +246,7 @@ Adapted from @lundberg2021estimand, Fig. 1
 
 ::: {.incremental}
 
-- One answer: an explanation tells you what **made the difference**
+- One answer: explanation by **manipulation**
   - To explain is to answer "**what if things had been different?**" [@woodward2003making]
   - Would this country have gone to war if it were a democracy? Would turnout have been higher under same-day registration?
   - These are **causal** questions
