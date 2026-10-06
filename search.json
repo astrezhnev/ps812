@@ -242,7 +242,7 @@
     "href": "slides/week5/week5_estimands.html#defining-causal-estimands",
     "title": "Week 5: Estimands",
     "section": "Defining causal estimands",
-    "text": "Defining causal estimands\n\nWe need a language for talking about what if? questions - how do we articulate an estimand for a causal quantity?\n\nCausation is about manipulation: If a treatment \\(D\\) were changed, what would happen to \\(Y\\)?\n\nThe potential outcomes framework (Rubin 1974)\n\nUnits \\(i\\) in some population\nA binary treatment \\(D_i \\in \\{0, 1\\}\\)\nAn observed outcome \\(Y_i\\)\n\nThe potential outcome \\(Y_i(d)\\) is the value \\(Y_i\\) would take if \\(D_i\\) were set to \\(d\\)\n\n\\(Y_i(1)\\): the outcome if unit \\(i\\) were treated\n\\(Y_i(0)\\): the outcome if unit \\(i\\) were under control\nEach unit has both. They are fixed attributes.\n“Potential” because we only get to see one."
+    "text": "Defining causal estimands\n\nWe need a language for talking about “What if?” questions - How do we articulate an estimand for a causal quantity?\n\nCausation is about manipulation: If a treatment \\(D\\) were changed, what would happen to \\(Y\\)?\n\nThe potential outcomes framework (Rubin 1974)\n\nUnits \\(i\\) in some population\nA binary treatment \\(D_i \\in \\{0, 1\\}\\)\nAn observed outcome \\(Y_i\\)\n\nThe potential outcome \\(Y_i(d)\\) is the value \\(Y_i\\) would take if \\(D_i\\) were set to \\(d\\)\n\n\\(Y_i(1)\\): the outcome if unit \\(i\\) were treated\n\\(Y_i(0)\\): the outcome if unit \\(i\\) were under control\nEach unit has both. They are fixed attributes.\n“Potential” because we only get to see one."
   },
   {
     "objectID": "slides/week5/week5_estimands.html#causal-effects-are-contrasts-in-potential-outcomes",
@@ -277,14 +277,7 @@
     "href": "slides/week5/week5_estimands.html#causal-identification-1",
     "title": "Week 5: Estimands",
     "section": "Causal Identification",
-    "text": "Causal Identification\n\nWe assume that \\(Y_i = Y_i(1)\\) when \\(D_i = 1\\) and \\(Y_i = Y_i(0)\\) when \\(D_i = 0\\):\n\\[\\mathbb{E}[Y_i \\mid D_i = 1] - \\mathbb{E}[Y_i \\mid D_i = 0] = \\mathbb{E}[Y_i(1) \\mid D_i = 1] - \\mathbb{E}[Y_i(0) \\mid D_i = 0]\\]\nAnd so the empirical estimand is equal to the treated group’s \\(Y_i(1)\\) minus the control group’s \\(Y_i(0)\\)\n\nThis is a comparison of two causal quantities but it’s not on the same set of units!"
-  },
-  {
-    "objectID": "slides/week5/week5_estimands.html#selection-bias",
-    "href": "slides/week5/week5_estimands.html#selection-bias",
-    "title": "Week 5: Estimands",
-    "section": "Selection bias",
-    "text": "Selection bias\n\nOne way to think about the discrepancy is in terms of how the difference-in-means differs from the average treatment effect on the treated\n\n\\[\\underbrace{\\mathbb{E}[Y_i \\mid D_i = 1] - \\mathbb{E}[Y_i \\mid D_i = 0]}_{\\text{difference in means}} = \\underbrace{\\mathbb{E}[Y_i(1) - Y_i(0) \\mid D_i = 1]}_{\\text{ATT}} + \\underbrace{\\mathbb{E}[Y_i(0) \\mid D_i = 1] - \\mathbb{E}[Y_i(0) \\mid D_i = 0]}_{\\text{selection bias}}\\]\n\nSelection bias: How different are the treated and control groups’ outcomes even without treatment?"
+    "text": "Causal Identification\n\nWe assume that \\(Y_i = Y_i(1)\\) when \\(D_i = 1\\) and \\(Y_i = Y_i(0)\\) when \\(D_i = 0\\):\n\\[\\mathbb{E}[Y_i \\mid D_i = 1] - \\mathbb{E}[Y_i \\mid D_i = 0] = \\mathbb{E}[Y_i(1) \\mid D_i = 1] - \\mathbb{E}[Y_i(0) \\mid D_i = 0]\\]\nAnd so the empirical estimand is equal to the treated group’s \\(Y_i(1)\\) minus the control group’s \\(Y_i(0)\\)\n\nThis is a comparison of two causal quantities but it’s not on the same set of units!\n\nOne way to think about the discrepancy is in terms of how the difference-in-means differs from the average treatment effect on the treated\n\n\\[\\underbrace{\\mathbb{E}[Y_i \\mid D_i = 1] - \\mathbb{E}[Y_i \\mid D_i = 0]}_{\\text{difference in means}} = \\underbrace{\\mathbb{E}[Y_i(1) - Y_i(0) \\mid D_i = 1]}_{\\text{ATT}} + \\underbrace{\\mathbb{E}[Y_i(0) \\mid D_i = 1] - \\mathbb{E}[Y_i(0) \\mid D_i = 0]}_{\\text{selection into treatment bias}}\\]\n\nSelection into treatment bias: How different are the treated and control groups’ outcomes even without treatment?"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#ignorability",
@@ -298,14 +291,14 @@
     "href": "slides/week5/week5_estimands.html#conditional-ignorability",
     "title": "Week 5: Estimands",
     "section": "Conditional ignorability",
-    "text": "Conditional ignorability\n\nA weaker assumption states that treatment is as-if random within groups defined by observed covariates \\(X_i\\)\n\\[\\{Y_i(1), Y_i(0)\\} \\indep D_i \\mid X_i \\qquad\\qquad 0 &lt; P(D_i = 1 \\mid X_i) &lt; 1\\]\n\n“Selection on observables”, “no unmeasured confounders”\n\nThen the empirical estimand is the average, over \\(X\\), of the within-\\(X_i\\) differences in means\n\\[\\tau = \\mathbb{E}_X\\Big[\\, \\mathbb{E}[Y_i \\mid D_i = 1, X_i] - \\mathbb{E}[Y_i \\mid D_i = 0, X_i] \\,\\Big]\\]\nThis is what assumptions get us!\n\nWhich \\(X_i\\)? That’s where we need theory and prior evidence to guide our"
+    "text": "Conditional ignorability\n\nA weaker assumption states that treatment is as-if random within groups defined by observed covariates \\(X_i\\)\n\\[\\{Y_i(1), Y_i(0)\\} \\indep D_i \\mid X_i \\qquad\\qquad 0 &lt; P(D_i = 1 \\mid X_i) &lt; 1\\]\n\n“Selection on observables”, “no unmeasured confounders”\n\nThen the empirical estimand is the average, over \\(X\\), of the within-\\(X_i\\) differences in means\n\\[\\tau = \\mathbb{E}_X\\Big[\\, \\mathbb{E}[Y_i \\mid D_i = 1, X_i] - \\mathbb{E}[Y_i \\mid D_i = 0, X_i] \\,\\Big]\\]\nThis is what assumptions get us!\n\nWhich \\(X_i\\)? That’s where we need theory and prior evidence to guide our choices."
   },
   {
     "objectID": "slides/week5/week5_estimands.html#identification-vs.-estimation",
     "href": "slides/week5/week5_estimands.html#identification-vs.-estimation",
     "title": "Week 5: Estimands",
     "section": "Identification vs. estimation",
-    "text": "Identification vs. estimation\n\nIdentification assumptions: what must be true of the world for an observable quantity to equal the estimand\n\nIgnorability, conditional ignorability, consistency, positivity\nDetermined by argument, research design and substantive knowledge\n\nEstimation assumptions: what we need to learn that observable quantity from a finite sample\n\n\\(\\mathbb{E}[Y_i \\mid D_i = 1, X_i]\\) is a population quantity. We have \\(N\\) observations, and maybe few at each value of \\(X_i\\)\nLinearity, functional form, smoothness, etc… - this is where the statistics comes in\n\nIncorrect estimation assumptions add bias even if identification holds.\n\nBut getting identification wrong means no amount of fancy stats can save you."
+    "text": "Identification vs. estimation\n\nIdentification assumptions: what must be true of the world for an observable quantity to equal the estimand\n\nIgnorability, conditional ignorability, consistency, positivity\nDetermined by argument, research design and substantive knowledge\n\nEstimation assumptions: what we need to learn that observable quantity from a finite sample\n\n\\(\\mathbb{E}[Y_i \\mid D_i = 1, X_i]\\) is a population quantity. We have \\(N\\) observations, and maybe few at each value of \\(X_i\\)\nThis is where the statistical models come in.\n\nIncorrect estimation assumptions add bias even if identification holds.\n\nBut getting identification wrong means no amount of fancy stats can save you."
   },
   {
     "objectID": "slides/week5/week5_estimands.html#step-3-learn-from-data",

@@ -1498,7 +1498,7 @@ Anton Strezhnev
 <section id="defining-causal-estimands" class="slide level2">
 <h2>Defining causal estimands</h2>
 <ul>
-<li class="fragment">We need a language for talking about <strong>what if?</strong> questions - how do we articulate an estimand for a <strong>causal</strong> quantity?
+<li class="fragment">We need a language for talking about <strong>“What if?”</strong> questions - How do we articulate an estimand for a <strong>causal</strong> quantity?
 <ul>
 <li class="fragment">Causation is about manipulation: If a treatment <span class="math inline">\(D\)</span> were changed, what would happen to <span class="math inline">\(Y\)</span>?</li>
 </ul></li>
@@ -1694,7 +1694,7 @@ Anton Strezhnev
 <ul>
 <li class="fragment"><p>The <strong>theoretical</strong> estimand is defined in terms of potential outcomes: <span class="math inline">\(\tau = \mathbb{E}[Y_i(1)] - \mathbb{E}[Y_i(0)]\)</span></p></li>
 <li class="fragment"><p>An <strong>empirical</strong> estimand is defined on things we observe.</p></li>
-<li class="fragment"><p>One choice: The difference in conditional expectations between treated and control</p>
+<li class="fragment"><p>One choice: The <strong>difference</strong> in <strong>conditional expectations</strong> between treated and control</p>
 <p><span class="math display">\[\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0]\]</span></p></li>
 <li class="fragment"><p><strong>Identification</strong>: under what assumptions about the world are these two the <strong>same number</strong>?</p>
 <ul>
@@ -1711,16 +1711,11 @@ Anton Strezhnev
 <ul>
 <li class="fragment">This is a comparison of two causal quantities but it’s <strong>not on the same set</strong> of units!</li>
 </ul></li>
-</ul>
-</section>
-<section id="selection-bias" class="slide level2">
-<h2>Selection bias</h2>
-<ul>
 <li class="fragment"><p>One way to think about the discrepancy is in terms of how the <strong>difference-in-means</strong> differs from the average treatment effect <strong>on the treated</strong></p>
 <div style="font-size: 0.85em">
-<p><span class="math display">\[\underbrace{\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0]}_{\text{difference in means}} = \underbrace{\mathbb{E}[Y_i(1) - Y_i(0) \mid D_i = 1]}_{\text{ATT}} + \underbrace{\mathbb{E}[Y_i(0) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0]}_{\text{selection bias}}\]</span></p>
+<p><span class="math display">\[\underbrace{\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0]}_{\text{difference in means}} = \underbrace{\mathbb{E}[Y_i(1) - Y_i(0) \mid D_i = 1]}_{\text{ATT}} + \underbrace{\mathbb{E}[Y_i(0) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0]}_{\text{selection into treatment bias}}\]</span></p>
 </div></li>
-<li class="fragment"><p><strong>Selection bias</strong>: How different are the treated and control groups’ outcomes <strong>even without</strong> treatment?</p></li>
+<li class="fragment"><p><strong>Selection into treatment bias</strong>: How different are the treated and control groups’ outcomes <strong>even without</strong> treatment?</p></li>
 </ul>
 </section>
 <section id="ignorability" class="slide level2">
@@ -1752,7 +1747,7 @@ Anton Strezhnev
 <p><span class="math display">\[\tau = \mathbb{E}_X\Big[\, \mathbb{E}[Y_i \mid D_i = 1, X_i] - \mathbb{E}[Y_i \mid D_i = 0, X_i] \,\Big]\]</span></p></li>
 <li class="fragment"><p>This is what <strong>assumptions</strong> get us!</p>
 <ul>
-<li class="fragment">Which <span class="math inline">\(X_i\)</span>? That’s where we need theory and prior evidence to guide our</li>
+<li class="fragment">Which <span class="math inline">\(X_i\)</span>? That’s where we need theory and prior evidence to guide our choices.</li>
 </ul></li>
 </ul>
 </section>
@@ -1767,7 +1762,7 @@ Anton Strezhnev
 <li class="fragment"><strong>Estimation</strong> assumptions: what we need to learn that observable quantity from a <strong>finite sample</strong>
 <ul>
 <li class="fragment"><span class="math inline">\(\mathbb{E}[Y_i \mid D_i = 1, X_i]\)</span> is a population quantity. We have <span class="math inline">\(N\)</span> observations, and maybe few at each value of <span class="math inline">\(X_i\)</span></li>
-<li class="fragment">Linearity, functional form, smoothness, etc… - this is where the statistics comes in</li>
+<li class="fragment">This is where the statistical models come in.</li>
 </ul></li>
 <li class="fragment">Incorrect estimation assumptions add bias <strong>even if</strong> identification holds.
 <ul>
