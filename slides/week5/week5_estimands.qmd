@@ -121,7 +121,7 @@ Adapted from @lundberg2021estimand, Fig. 1
 4. If the implications hold, keep the theory. If they don't, change the theory.
 
    ::: {.fragment}
-   - ...passing doesn't prove it; failing doesn't tell you *which* part to change
+   - ...passing doesn't prove the theory is true and failing doesn't tell you what to change
    :::
 
 
@@ -138,7 +138,7 @@ Adapted from @lundberg2021estimand, Fig. 1
 
   > "In so far as a scientific statement speaks about reality, it must be falsifiable; and in so far as it is not falsifiable, it does not speak about reality." [@popper1959logic]
 
-- A scientific statement **sets the conditions** under which it could be demonstrated wrong
+- A scientific statement **sets the conditions** under which it could be demonstrated wrong.
   - Is there an experimental finding that would **contradict** a theory's predictions?
   
 :::
@@ -148,10 +148,10 @@ Adapted from @lundberg2021estimand, Fig. 1
 ::: {.incremental}
 
 - Let's consider a classic **political science** theory: **Duverger's Law** [@duverger1954political]
-  - This is a theory about how an **electoral system** affects the **number of parties** in that system.
+  - **Electoral systems** affect the **number of parties** in that system.
 
-- With **plurality rule** in **single member district** elections, it predicts **two parties**
-- **Proportional** systems lead to **many parties**
+- **Plurality rule** in **single member district** elections $\leadsto$ **two parties**
+  - **Proportional** systems lead to **many parties**
 
 - What's the logic?
   - Voters don't want to waste their vote on a third party that has no chance of winning.
