@@ -1,0 +1,85 @@
+<!-- Lundberg, Johnson and Stewart (2021), Fig. 1, redrawn. Included inside a
+     ::: {.estimand-flow .hl-N} div; the CSS in custom.scss dims every .part
+     that is not tagged sN and colors the highlighted step. Nodes shared by two
+     steps carry both tags. With no hl- class the chart is drawn in full. -->
+```{=html}
+<svg viewBox="0 55 1000 475" role="img" aria-label="Theory or general goal leads to theoretical estimands (set a specific target, by argument), which lead to empirical estimands (link to observable data, by assumption), which lead to estimation strategies (learn how to estimate from data we observe, by data). Evidence points back to new questions." fill="currentColor" stroke="none">
+
+  <!-- Feedback arc -->
+  <g class="part feedback">
+    <path d="M 880 180 Q 555 -15 232 182" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 4"/>
+    <polygon points="232,182 244.0,180.6 238.8,172.0"/>
+    <text x="555" y="112" text-anchor="middle" font-size="16">Evidence points</text>
+    <text x="555" y="132" text-anchor="middle" font-size="16">to new questions</text>
+  </g>
+
+  <!-- Nodes -->
+  <g class="part node s1">
+    <path d="M 216.1 222.5 A 14.1 14.1 0 0 1 201.5 242.0 A 17.9 17.9 0 0 1 174.4 256.9 A 21.0 21.0 0 0 1 139.1 265.0 A 22.2 22.2 0 0 1 100.9 265.0 A 21.0 21.0 0 0 1 65.6 256.9 A 17.9 17.9 0 0 1 38.5 242.0 A 14.1 14.1 0 0 1 23.9 222.5 A 12.2 12.2 0 0 1 23.9 201.5 A 14.1 14.1 0 0 1 38.5 182.0 A 17.9 17.9 0 0 1 65.6 167.1 A 21.0 21.0 0 0 1 100.9 159.0 A 22.2 22.2 0 0 1 139.1 159.0 A 21.0 21.0 0 0 1 174.4 167.1 A 17.9 17.9 0 0 1 201.5 182.0 A 14.1 14.1 0 0 1 216.1 201.5 A 12.2 12.2 0 0 1 216.1 222.5 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    <text x="120" y="204" text-anchor="middle" font-size="22">Theory or</text>
+    <text x="120" y="231" text-anchor="middle" font-size="22">general goal</text>
+  </g>
+  <g class="part node s1 s2">
+    <text x="400" y="203" text-anchor="middle" font-size="24">Theoretical</text>
+    <text x="400" y="231" text-anchor="middle" font-size="24">estimands</text>
+  </g>
+  <g class="part node s2 s3">
+    <text x="655" y="203" text-anchor="middle" font-size="24">Empirical</text>
+    <text x="655" y="231" text-anchor="middle" font-size="24">estimands</text>
+  </g>
+  <g class="part node s3">
+    <text x="905" y="203" text-anchor="middle" font-size="24">Estimation</text>
+    <text x="905" y="231" text-anchor="middle" font-size="24">strategies</text>
+  </g>
+
+  <!-- Step 1: set a target -->
+  <g class="part step s1">
+    <line x1="222" y1="212" x2="318" y2="212" stroke="currentColor" stroke-width="1.8"/>
+    <polygon points="330,212 318,206 318,218"/>
+    <line x1="276" y1="290" x2="276" y2="246" stroke="currentColor" stroke-width="1.8"/>
+    <polygon points="276,234 270,246 282,246"/>
+    <text x="276" y="314" text-anchor="middle" font-size="19" font-weight="700">Set</text>
+    <text x="276" y="336" text-anchor="middle" font-size="19">a specific</text>
+    <text x="276" y="358" text-anchor="middle" font-size="19">target</text>
+    <line x1="276" y1="374" x2="276" y2="402" stroke="currentColor" stroke-width="1.4"/>
+    <text x="276" y="426" text-anchor="middle" font-size="19">By argument</text>
+    <line x1="276" y1="440" x2="276" y2="468" stroke="currentColor" stroke-width="1.4"/>
+    <text x="276" y="492" text-anchor="middle" font-size="15">Unit-specific quantity,</text>
+    <text x="276" y="512" text-anchor="middle" font-size="15">Target population</text>
+  </g>
+
+  <!-- Step 2: link to observable data -->
+  <g class="part step s2">
+    <line x1="470" y1="212" x2="580" y2="212" stroke="currentColor" stroke-width="1.8"/>
+    <polygon points="592,212 580,206 580,218"/>
+    <line x1="531" y1="290" x2="531" y2="246" stroke="currentColor" stroke-width="1.8"/>
+    <polygon points="531,234 525,246 537,246"/>
+    <text x="531" y="314" text-anchor="middle" font-size="19" font-weight="700">Link</text>
+    <text x="531" y="336" text-anchor="middle" font-size="19">to observable</text>
+    <text x="531" y="358" text-anchor="middle" font-size="19">data</text>
+    <line x1="531" y1="374" x2="531" y2="402" stroke="currentColor" stroke-width="1.4"/>
+    <text x="531" y="426" text-anchor="middle" font-size="19">By assumption</text>
+    <line x1="531" y1="440" x2="531" y2="468" stroke="currentColor" stroke-width="1.4"/>
+    <text x="531" y="492" text-anchor="middle" font-size="15">Directed Acyclic Graphs,</text>
+    <text x="531" y="512" text-anchor="middle" font-size="15">Potential outcomes</text>
+  </g>
+
+  <!-- Step 3: learn from data -->
+  <g class="part step s3">
+    <line x1="718" y1="212" x2="828" y2="212" stroke="currentColor" stroke-width="1.8"/>
+    <polygon points="840,212 828,206 828,218"/>
+    <line x1="778" y1="290" x2="778" y2="246" stroke="currentColor" stroke-width="1.8"/>
+    <polygon points="778,234 772,246 784,246"/>
+    <text x="778" y="314" text-anchor="middle" font-size="19" font-weight="700">Learn</text>
+    <text x="778" y="336" text-anchor="middle" font-size="19">how to estimate from</text>
+    <text x="778" y="358" text-anchor="middle" font-size="19">data we observe</text>
+    <line x1="778" y1="374" x2="778" y2="402" stroke="currentColor" stroke-width="1.4"/>
+    <text x="778" y="426" text-anchor="middle" font-size="19">By data</text>
+    <line x1="778" y1="440" x2="778" y2="468" stroke="currentColor" stroke-width="1.4"/>
+    <text x="778" y="492" text-anchor="middle" font-size="15">OLS regression,</text>
+    <text x="778" y="512" text-anchor="middle" font-size="15">Machine learning</text>
+  </g>
+
+  <text x="20" y="502" font-size="15" font-weight="700">Example tools:</text>
+</svg>
+```

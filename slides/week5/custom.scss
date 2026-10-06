@@ -143,3 +143,33 @@ strong {
 .reveal .slides ol {
   display: block;
 }
+
+// Lundberg et al. (2021) Fig. 1 as a section divider (_estimand_flow.qmd).
+// .hl-1, .hl-2 and .hl-3 on the wrapper fade every part of the chart outside
+// that step and color the step itself. The fade is a light color rather than
+// opacity: group opacity gives each part its own layer, and Chrome painted
+// some of that text at a stale scale on the first divider.
+
+.reveal .estimand-flow {
+  color: $text-grey;
+
+  svg {
+    display: block;
+    width: 100%;
+    max-height: 500px;
+    margin: 0.4em auto 0;
+    text-rendering: geometricPrecision;
+  }
+}
+
+@each $n in 1, 2, 3 {
+  .reveal .estimand-flow.hl-#{$n} {
+    .part:not(.s#{$n}) {
+      color: mix($text-grey, $background-grey, 18%);
+    }
+
+    .step.s#{$n} {
+      color: $primary-color;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 ---
-title: "Week 5: Theory and Estimands"
+title: "Week 5: Estimands"
 subtitle: "PS 812 - Introduction to Statistical Methods in Political Science"
 author:
   - name: "Anton Strezhnev"
@@ -59,6 +59,7 @@ $$
   - Conditional expectations and the best linear predictor
 - This week
   - **What is a scientific theory for?**
+  - What counts as an **explanation**? Models, interventions, mechanisms
   - **Asking a research question**: What is your estimand?
   - **Descriptive** versus **causal** questions
   - Connecting the theoretical estimand to an **empirical** estimand
@@ -66,25 +67,27 @@ $$
 
 :::
 
-## Why theory?
+## From theory to empirics
 
-::: {.incremental}
-
-- What makes science distinct from pseudoscience?
-
+::: {.estimand-flow}
+{{< include _estimand_flow.qmd >}}
 :::
 
-## What is a scientific theory for?
+::: {.attribution}
+Adapted from @lundberg2021estimand, Fig. 1
+:::
+
+## One view of scientific theory
 
 ::: {.incremental}
 
 - A theory consists of a set of **assumptions**...
 - ...from which we deductively derive **propositions**...
-- ...which have **implications** for what we observe in the world.
+- ...which have **testable implications**.
 
 :::
 
-## The stylized scientific method
+## The hypothetico-deductive model
 
 ::: {.incremental}
 
@@ -95,6 +98,33 @@ $$
 
 :::
 
+## The hypothetico-deductive model is a lie
+
+1. Formulate a theory
+
+   ::: {.fragment}
+   - ...often *after* seeing the data.
+   :::
+
+2. Derive empirical implications
+
+   ::: {.fragment}
+   - ...which never follow from the theory alone
+   :::
+
+3. Test those implications
+
+   ::: {.fragment}
+   - ...with noisy data and probabilistic predictions
+   :::
+
+4. If the implications hold, keep the theory. If they don't, change the theory.
+
+   ::: {.fragment}
+   - ...passing doesn't prove it; failing doesn't tell you *which* part to change
+   :::
+
+
 ## The principle of "falsification"
 
 ![](assets/Karl_Popper.jpg){fig-align="center" width=500px}
@@ -104,9 +134,9 @@ $$
 
 ::: {.incremental}
 
-- **Popper (1935)** Theories cannot be proven **true** but they can be demonstrated to be **false**
+- **Popper** [-@popper1959logic]: Theories cannot be proven **true** but they can be demonstrated to be **false**
 
-  > "In so far as a scientific statement speaks about reality, it must be falsifiable; and in so far as it is not falsifiable, it does not speak about reality." (Popper, 1935)
+  > "In so far as a scientific statement speaks about reality, it must be falsifiable; and in so far as it is not falsifiable, it does not speak about reality." [@popper1959logic]
 
 - A scientific statement **sets the conditions** under which it could be demonstrated wrong
   - Is there an experimental finding that would **contradict** a theory's predictions?
@@ -117,7 +147,7 @@ $$
 
 ::: {.incremental}
 
-- Let's consider a classic **political science** theory: **Duverger's Law**
+- Let's consider a classic **political science** theory: **Duverger's Law** [@duverger1954political]
   - This is a theory about how an **electoral system** affects the **number of parties** in that system.
 
 - With **plurality rule** in **single member district** elections, it predicts **two parties**
@@ -128,33 +158,10 @@ $$
 
 :::
 
-## The problems with falsification
+## The problems with falsification alone
 
-![Politico.eu polling average of UK Parliament Voting Intention](assets/british_election_2026.jpg){fig-align="center" width=800}
+![Politico.eu polling average of UK Parliament Voting Intention](assets/british_election_2026.png){fig-align="center" width=800}
 
-
-## Scientific "revolutions"
-
-![](assets/Thomas_Kuhn.jpg){fig-align="center" width=500}
-
-## Scientific "revolutions"
-
-::: {.incremental}
-
-- **Kuhn (1962)**: Scientists work in **paradigms**
-  - A set of theories, research tools, and values describing a particular scientific field.
-- **Normal science**
-  - Scientists accumulate empirical findings that fit the paradigm
-  - Anomalies are discarded until...
-- **Scientific revolutions**
-  - The anomalies are too many!
-  - The community develops a new paradigm to explain the anomalies.
-  - How?  `¯\_(ツ)_/¯`
-- Many unanswered questions!
-  - Can we say that any theory is meaningfully "more true" compared to another?
-  - Is there progress in science?
-
-:::
 
 ## Research programmes
 
@@ -164,7 +171,7 @@ $$
 
 ::: {.incremental}
 
-- **Lakatos (1970)**: A **middle ground** between falsificationism and methodological anarchy
+- **Lakatos** [-@lakatos1970falsification]: A **middle ground** between falsificationism and methodological anarchy
 - Science is not interested in just a single **theory** - science is built around research **programmes**
   - Democracy and autocracy
   - Voters and elections
@@ -188,21 +195,6 @@ $$
 
 :::
 
-## Science is social
-
-::: {.incremental}
-
-- **Scientists** are human beings
-  - They interact with one another - a community of **peers**
-  - They are motivated by **incentives**
-- Ideally, these incentives are aligned with the goal of a productive research programme!
-  - Finding evidence that discredits old ways of thinking.
-  - Inventing new ways of thinking that explain both new and old evidence
-  - But the process isn't perfect...
-- **Science is what scientists do.**
-
-:::
-
 ## Back to Duverger's Law
 
 ::: {.incremental}
@@ -219,65 +211,85 @@ $$
 
 ## Explaining the UK
 
-![Politico.eu polling average of UK Parliament Voting Intention](assets/british_election_2026.jpg){fig-align="center" width=800}
+![Politico.eu polling average of UK Parliament Voting Intention](assets/british_election_2026.png){fig-align="center" width=800}
 
-## What's the point of theory
-
-::: {.incremental}
-
-- "All models are wrong, but some are useful"
-- Scientific theory is a **guide** to generating new questions to ask about the world
-- A way of **structuring** our thinking and simplifying complex phenomena
-- Theory **synthesizes** lots of disparate studies - a tool for building **knowledge**
-
-:::
-
-## Using theory
+## Models don't have to be true
 
 ::: {.incremental}
 
-- **Theories** generate **implications** - predictions that we can connect to empirical tests
-  - Duverger's Law is an **observable implication** of a model of voter behavior
-  - What are some observable implications of "modernization theory" and democratization?
-- **Theories** have **scope conditions**
-  - What are the settings where a particular model "works" and when does it not?
-- **Theories** usually provide **mechanisms**
-  - Connected to **scope conditions** - if the mechanism is absent, the theory may not be useful.
-  
+- "All models are wrong, but some are useful" [@box1979robustness]. A model is a **representation**, for a purpose [@clarke2007modernizing; @clarke2012model]
+  - Models serve many purposes beyond prediction.
+  - They provide foundational **concepts**, they may articulate structural **constraints** on the world, they may try to **explain** some observed phenomenon.
+- Some of the most important models have **no empirical test at all!**
+  - **Arrow** [-@arrow1951social]: no voting rule satisfies Pareto efficiency, non-dictatorship, and independence of irrelevant alternatives
+  - **Fearon** [-@fearon1995rationalist]: war is costly, so why can't rational states find a bargain both prefer?
+  - What would it mean to "test" either of these? It's pointless: these are tools to **guide our thinking**
+
 :::
 
-## Some general principles of theory-building
+## "Why does this happen?"
 
 ::: {.incremental}
 
-- **Falsifiability** - With all of the caveats from before, it is still valuable for theories to generate predictions that can be evaluated with empirical evidence.
-- **Parsimony** - Theories with lots and lots of moving parts and factors are less compelling than those that are simpler **as long as they explain the same phenomena**.
-- **Novelty** - Good theories try to explain what has been previously unexplained.  Complexity is valuable **when it explains some new empirical phenomena**
+- As social scientists, we don't just want to **predict**, we want to **explain**.
+  - Why do wars happen?
+  - Why do democracies collapse?
+  - Why is American politics so polarized?
+- But what counts as an **answer** to a why-question?
+  - **Description** defines the terms of explanation, but it answers a "**What?**" question.
+  - **Prediction** is a step forward, but it's also a "What?" - A **What will?** question.
+  - A **model** gives us an interesting story, but why should we believe it?
 
 :::
 
-## Inference to the Best Explanation
+## From "why?" to "what if?"
 
 ::: {.incremental}
 
-- **Brainstorm** a *lot* of potential explanations for the world
-  - (e.g. what factors explain why voters vote the way they do?)
-- **Derive** the observable implications of those explanations
-- **Get the facts**
-  - This is the main point of this class
-- **Pick** the explanation consistent with most of the facts
+- One answer: an explanation tells you what **made the difference**
+  - To explain is to answer "**what if things had been different?**" [@woodward2003making]
+  - Would this country have gone to war if it were a democracy? Would turnout have been higher under same-day registration?
+  - These are **causal** questions
+- Causes are things you can **intervene** on
+  - Whether the story behind the effect is "true" is besides the point.
+  - "If you can spray them, then they are real" [@hacking1983representing]
+- The quantity of interest is **an effect**: the consequence of a manipulable 'treatment' on a defined population
+  - The theory's job is to **suggest** plausible manipulations to search over.
 
 :::
 
-## Asking a research question
+## Theory as mechanism-explaining
+
+::: {.incremental}
+
+- But how do we know whether an effect in one setting **generalizes** to other settings?
+  - This is often termed an "external validity" or "transportability" question.
+  - Is the effect the same if we did the intervention tomorrow? Or in Sweden? Or in the real world and not a survey?
+- The **empiricists'** answer: Just run more studies in more places!
+- The **theorists'** rebuttal: You can run all the experiments you want, you won't know the **mechanism**
+- **Theory and Credibility** [@ashworth2021theory] "'Why does this important thing happen?' has been replaced by 'What is the effect of $x$ on $y$?'" (p. 1)
+  - "The essence of formal theory is the crafting of models that **embody mechanisms** and reveal the **all else equal implications** of those mechanisms" (p. 7)
+  - "The essence of the credibility revolution is the crafting of research designs that make credible the claim to have **held all else equal**, at least on average" (p. 7)
+
+:::
+
+## Step 1: Set a target
+
+::: {.estimand-flow .hl-1}
+{{< include _estimand_flow.qmd >}}
+:::
+
+::: {.attribution}
+Adapted from @lundberg2021estimand, Fig. 1
+:::
 
 ## What's your estimand?
 
 >  Every quantitative study must be able to answer the question: **what is your estimand?** The estimand is the target quantity—the purpose of the statistical analysis. Much attention is already placed on how to do estimation; a similar degree of care should be given to defining the thing we are estimating. We advocate that authors **state the central quantity of each analysis**—the theoretical estimand—in precise terms that exist outside of any statistical model. In our framework, researchers do three things: (1) set a theoretical estimand, clearly connecting this quantity to theory; (2) **link to an empirical estimand**, which is informative about the theoretical estimand under some identification assumptions; and (3) **learn from data**. 
 
-Lundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. "What is your estimand? Defining the target quantity connects statistical evidence to theory." American Sociological Review 86.3 (2021): 532-565.
+--- @lundberg2021estimand
 
-## Types of research questions
+## Types of empirical questions
 
 ::: {.incremental}
 
@@ -291,231 +303,204 @@ Lundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. "What is your estimand? 
   - Does changing an individual's news diet change their attitudes?
   - Does giving someone a guaranteed income affect their willingness to search for employment?
   
-- **Explanatory** - **Why?** ("Causes of Effects")
-  - Why do states go to war?
-  - Why do political parties dissolve?
-  - Why do recessions occur?
-
-
-- **Descriptive** and **Causal** questions are tied to **empirical** analyses
-- **Explanatory** questions are typically about **theory**
-
 :::
 
-## Questions lead to more questions!
+## Estimands as population expectations
 
 ::: {.incremental}
 
-- **What?** questions lead to **What if?**
-  - How common is false information on Facebook? $\leadsto$ Does **banning** "disinfo" accounts reduce its spread?
-  - What share of voters think immigration is an important national issue? $\leadsto$ Does making people more **anxious** increase the perceived importance of immigration?
+- Many theoretical estimands in the social sciences can be articulated in terms of a **unit-specific quantity** plus a **target population** [@lundberg2021estimand]
+  - Stated in terms that "exist outside of any statistical model" rather than as regression coefficients
+- For **descriptive** estimands, a common target is the **expectation** of the individual level outcome measure $Y_i$ over some population distribution
+
+  $$ \underbrace{\mathbb{E}}_{\substack{\text{average over the} \\ \text{target population}}} \big[\, \underbrace{Y_i}_{\text{unit-specific quantity}} \,\big] $$
   
-- **Why?** questions lead to **What if?**
-  - Why do states go to war? $\leadsto$ If the U.S. withdraws as global hegemon, will that increase the risk of conflict?
-  - Why does poverty exist? $\leadsto$ Can expanding early childhood education increase children's future incomes?
-  
-:::
 
-## Turning "What?" into "What if?"
-
-::: {.incremental}
-
-- "Would you have a friendship with someone who disagrees with you politically?"
-  
-:::
-
-## "Why" questions are often not empirical!
-
-![Fearon, James D. "Rationalist explanations for war." International Organization 49.3 (1995): 379-414.](assets/fearon.png){fig-align='center' width=800}
-
-
-## Asking is one thing, answering is another
-
-::: {.incremental}
-
-- You don't just want to ask **a** question. You want to ask an **answerable** question.
-  - The **theoretical estimand** (the "question") needs to be linked to an **empirical estimand** (the answer)
-  - The quality of this link depends on what **assumptions** we're willing to make!
-- **Example**: **We want to know**:  What is the share of U.S. Hispanic voters who voted for Donald Trump in 2024?
-  - **Problem**: The ballot is secret, we can't interview everyone, and 2024 is in the past.
-  - **What do we actually have**: What is the share of respondents to our survey in 2025 who state that they are Hispanic and who state that they voted for Donald Trump in 2024?
-  - What do we need to assume to connect what we have to what we want to know?
-  
-:::
-
-## This is a problem in all sciences!
-
-![](assets/in_mice.png){fig-align='center' width=800}
-
-## Jon Snow and Cholera
-
-![](assets/jonsnow.png){fig-align='center' width=400}
-
-## John Snow and Cholera
-
-![](assets/johnsnow.png){fig-align='center' width=400}
-
-## John Snow and Cholera
-
-::: {.incremental}
-
-- In **1854**, there was an extreme outbreak of cholera in the area near Broad Street in London. 
-  - Physician John Snow hypothesized that cholera was transmitted through the water rather than through the air (this was **before germ theory** was developed).
-- Snow convinced the local authorities to remove the handle of the Broad Street water pump. Cholera deaths soon declined.
-  - However, **is this enough** to infer that cholera was transmitted through the water?
-- Even Snow didn't think so
-
-  > There is no doubt that the mortality was much diminished, as I said before, by the flight of the population, which commenced soon after the outbreak; but the attacks had so far diminished before the use of the water was stopped, that it is impossible to decide whether the well still contained the cholera poison in an active state, or whether, from some cause, the water had become free from it.
-
-- A before-and-after comparison might not be enough - other things are changing too!
-  - People were already leaving (because of the *cholera*) - Fewer people = fewer deaths!
-  
-:::
-
-## John Snow and Cholera
-
-::: {.incremental}
-
-- The **best** evidence for waterborne cholera came from a **later study** of Snow's
-  - **1865** - "Cholera and the water supply in the south districts of London in 1854"
-- Snow noticed that South London had two main water suppliers: **Lambeth Company** and **Southwark and Vauxhall Company**
-  - Snow also observed two cholera outbreaks - one in **1849** and one in **1853**
-  - Some time between those two years, **Lambeth Company** changed to a different, less-contaminated water source
-  
-    > Between the epidemics of 1849 and that of 1853, one of the water companies supplying the south districts of London changed its source of supply from the middle of the town, near the foot of the Hungerford Suspension Bridge, to Thames Ditton, at a part of the river which is beyond the influence of the tide, and, therefore, out of reach of the sewage of the metropolis.
 
 :::
 
-## John Snow and Cholera
-
-![](assets/john_snow_map.jpg){fig-align='center' width=800}
-
-## John Snow and Cholera
+## Defining causal estimands
 
 ::: {.incremental}
 
-- He looked at cholera deaths in the **Southwark and Vauxhall**-supplied areas compared to the **Lambeth**-supplied areas
-
-  > Taking into account the population supplied respectively by each company, the mortality was, at this period of the epidemic, **nearly eight times as great** in that supplied by the Southwark and Vauxhall Company as in that supplied by the Lambeth Company.
-  
-- But now, Snow could also look at **1849** when they both used the same source
-  - If **Southwark and Vauxhall** also had 8x death rates in **1849** then it wouldn't be because of the water
-  - It was the opposite! **Lambeth**-supplied areas were **worse off** before.
-  
-    > In the autumn of 1853 it was shown by Dr. Farr* that the districts partly supplied by this, the **Lambeth Water Company**, with improved water, suffered less than the districts supplied entirely by the Southwark and Vauxhall Company with the water from the river at Battersea Fields, although **in 1849 they had suffered rather more** than the latter districts
-  
-
-  
-:::
-
-## John Snow and Cholera
-
-
-What made this work?
-
-::: {.incremental}
-
-1. **Clear and well-defined intervention** 
-  - Snow was not vaguely learning about "water and cholera" - he was asking "What happens to cholera deaths if the main water supplier switches to a cleaner source?"
-2. **Clear and well-defended assumptions**
-  - Snow had already ruled out before-and-after comparisons (other things are changing!)
-  - Snow also was skeptical of just a **cross-sectional** comparison (**Lambeth** areas might just be different)
-  - **A more plausible assumption** - If there is **anything** different about the "treated" areas and the "control" areas that affects cholera deaths, then whatever that is should have the **same effect** in both 1849 and 1853
-  - One of the earliest "differences-in-differences"
-  
-:::
-
-## Be like John Snow
-
-What makes this a good model for coming up with a compelling and **answerable** research question?
-
-::: {.incremental}
-
-1. **Deep substantive knowledge** - The best designs come from understanding the nuances of a particular case to figure out what variation is most useful.
-2. **A story about the data generating process** - Why did Lambeth move to a different supplier?
-3. **Thinking about alternative explanations** - Is there any factor that affects who gets the intervention that would also affect the outcome? How do we account for those?
+- We need a language for talking about **what if?** questions - how do we articulate an estimand for a **causal** quantity?
+  - Causation is about manipulation: If a treatment $D$ were changed, what would happen to $Y$?
+- The **potential outcomes** framework [@rubin1974estimating]
+  - Units $i$ in some population
+  - A binary **treatment** $D_i \in \{0, 1\}$
+  - An observed **outcome** $Y_i$
+- The **potential outcome** $Y_i(d)$ is the value $Y_i$ would take if $D_i$ were **set** to $d$
+  - $Y_i(1)$: the outcome if unit $i$ were treated
+  - $Y_i(0)$: the outcome if unit $i$ were under control
+  - Each unit has **both**. They are fixed attributes. 
+  - "Potential" because we **only** get to see one.
 
 :::
 
-## Who comments on political YouTube?
-
-![Munger, Kevin M., et al. "Pressing play on politics: Quantitative description of YouTube." Journal of Quantitative Description: Digital Media (2025).](assets/youtube_1.png){fig-align='center' width=800}
-
-
-## Who comments on political YouTube?
-
-![](assets/youtube_2.png){fig-align='center' width=800}
-
-## Who comments on political YouTube?
-
-![](assets/youtube_3.png){fig-align='center' width=800}
-
-## Who comments on political YouTube?
-
-![](assets/youtube_4.png){fig-align='center' width=800}
-
-## Who comments on political YouTube?
-
-![](assets/youtube_5.png){fig-align='center' width=800}
-
-## "What" becomes "What if?"
-
-![Hoffman, David A., and Anton Strezhnev. "Longer trips to court cause evictions." Proceedings of the National Academy of Sciences 120.2 (2023): e2210467120.](assets/evictions_1.png){fig-align='center' width=800}
-
-## "What" becomes "What if?"
-
-![](assets/evictions_1.png){fig-align='center' width=800}
-
-
-## "What" becomes "What if?"
-
-![](assets/evictions_2.png){fig-align='center' width=800}
-
-
-## "What" becomes "What if?"
-
-![](assets/evictions_3.png){fig-align='center' width=800}
-
-
-## "What" becomes "What if?"
-
-![](assets/evictions_4.png){fig-align='center' width=800}
-
-## Tell the story of the data!
-
-- We tried to isolate as much as we could
-  - Comparing demographically similar regions
-  - Comparing places w/ similar *distance* but different *commuting times*
-  - Finding "no effect" during Covid (b/c of remote hearings) or in public housing cases (b/c attorneys told us they're less strict)
-- What **finally sold me** that this is real:
-  - We got data from **Harris County, TX** (Houston + suburbs)
-  - There's no good public transit here! Everyone drives!
-- But...there's more than one courthouse! Many districts!
-  - Each district has **two** courthouses.
-  - And sometimes landlords in the same building filed in **different** courthouses.
-  - So we compared tenants in the **same** building, **same** month, but different courthouses
-  - And the effect **was still there!**
-
-## Midterm exam
+## Causal effects are contrasts in potential outcomes
 
 ::: {.incremental}
 
-- **Wednesday, October 7**, in person during the class period
-  - Pen-and-paper, timed
-  - Covers the first five weeks: probability theory
-- Probability questions in the *context* of actual research settings
-  - Focus on properties of conditional probability and properties of expectations
-  - Expect both theory and practical analysis of sample code and results
+- The **individual** causal effect: $\tau_i = Y_i(1) - Y_i(0)$
+- The **average treatment effect** (ATE): the same unit-specific quantity, averaged over a target population
 
+  $$ \tau = \underbrace{\mathbb{E}}_{\substack{\text{average over the} \\ \text{target population}}} \big[\, \underbrace{Y_i(1) - Y_i(0)}_{\text{unit-specific causal effect}} \,\big] = \mathbb{E}[Y_i(1)] - \mathbb{E}[Y_i(0)]$$
+
+- Changing the **target population** changes the estimand.
+  - The **ATT**, the effect among those who were treated: $\mathbb{E}[Y_i(1) - Y_i(0) \mid D_i = 1]$
+  - Conditional effects among women vs. men, among those who would comply with treatment...
+- All of this exists **outside of any statistical model**. No regressions yet!
+
+:::
+
+## The fundamental problem of causal inference
+
+- We only ever observe the potential outcome for the treatment that was **actually** received
+
+  $$Y_i = Y_i(1)\, D_i + Y_i(0)\, (1 - D_i)$$
+
+Unit  $i$  | Treatment  $D_i$  | $Y_i(1)$ | $Y_i(0)$ | Observed $Y_i$   |
+:---------:|:-----------------:|:--------:|:--------:|:----------------:|
+ $1$       |  $1$              |  $5$     |   ?      |    $5$           |
+ $2$       |  $0$              |  ?       |  $-3$    |    $-3$          |
+ $3$       |  $1$              |  $9$     |   ?      |    $9$           |
+ $\vdots$  |   $\vdots$        |  $\vdots$| $\vdots$ |      $\vdots$    |
+ $N$       |  $0$              |   ?      |   $8$    |   $8$            |
+
+::: {.incremental}
+
+- Half the table is **missing**, by construction. No $\tau_i$ is ever observed [@holland1986statistics]
+- So the theoretical estimand $\mathbb{E}[Y_i(1)] - \mathbb{E}[Y_i(0)]$ is defined on quantities we **can't see**
+- What assumptions can we make on the way the data is generated so that we **can** see it?
+
+:::
+
+## Step 2: Link to observable data
+
+::: {.estimand-flow .hl-2}
+{{< include _estimand_flow.qmd >}}
+:::
+
+::: {.attribution}
+Adapted from @lundberg2021estimand, Fig. 1
+:::
+
+## Causal Identification
+
+::: {.incremental}
+
+- The **theoretical** estimand is defined in terms of potential outcomes: $\tau = \mathbb{E}[Y_i(1)] - \mathbb{E}[Y_i(0)]$
+- An **empirical** estimand is defined on things we observe. 
+- One choice: The difference in conditional expectations between treated and control
+
+  $$\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0]$$
+
+- **Identification**: under what assumptions about the world are these two the **same number**?
+  - This comes *before* any question about estimation.
+:::
+
+## Causal Identification
+
+::: {.incremental}
+
+- We assume that $Y_i = Y_i(1)$ when $D_i = 1$ and $Y_i = Y_i(0)$ when $D_i = 0$:
+
+  $$\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0] = \mathbb{E}[Y_i(1) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0]$$
+
+- And so the empirical estimand is equal to the treated group's $Y_i(1)$ minus the control group's $Y_i(0)$
+  - This is a comparison of two causal quantities but it's **not on the same set** of units!
+
+:::
+
+## Selection bias
+
+::: {.incremental}
+
+- One way to think about the discrepancy is in terms of how the **difference-in-means** differs from the average treatment effect **on the treated**
+
+  ::: {style="font-size: 0.85em"}
+  $$\underbrace{\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0]}_{\text{difference in means}} = \underbrace{\mathbb{E}[Y_i(1) - Y_i(0) \mid D_i = 1]}_{\text{ATT}} + \underbrace{\mathbb{E}[Y_i(0) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0]}_{\text{selection bias}}$$
+  :::
+
+- **Selection bias**: How different are the treated and control groups' outcomes **even without** treatment?
+
+:::
+
+## Ignorability
+
+::: {.incremental}
+
+- The assumption that makes the selection bias **zero**: treatment is independent of the potential outcomes
+
+  $$\{Y_i(1), Y_i(0)\} \indep D_i$$
+
+  - Also called **unconfoundedness**, **exogeneity**, "as-if random"
+  - In words: treatment is not systematically more likely for units with higher (or lower) potential outcomes
+- Then $\mathbb{E}[Y_i(0) \mid D_i = 1] = \mathbb{E}[Y_i(0) \mid D_i = 0]$, and the difference in means **identifies** the ATE
+
+  $$\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0] = \mathbb{E}[Y_i(1)] - \mathbb{E}[Y_i(0)]$$
+
+- **Randomized experiments** make this true by design. 
+  - In observational data it is an **assumption about the world**
+
+:::
+
+## Conditional ignorability
+
+::: {.incremental}
+
+- A weaker assumption states that treatment is as-if random **within** groups defined by observed covariates $X_i$
+
+  $$\{Y_i(1), Y_i(0)\} \indep D_i \mid X_i \qquad\qquad 0 < P(D_i = 1 \mid X_i) < 1$$
+
+  - "Selection on observables", "no unmeasured confounders"
+- Then the **empirical estimand** is the average, over $X$, of the within-$X_i$ differences in means
+
+  $$\tau = \mathbb{E}_X\Big[\, \mathbb{E}[Y_i \mid D_i = 1, X_i] - \mathbb{E}[Y_i \mid D_i = 0, X_i] \,\Big]$$
+
+- This is what **assumptions** get us!
+  - Which $X_i$? That's where we need theory and prior evidence to guide our 
+
+:::
+
+## Identification vs. estimation
+
+::: {.incremental}
+
+- **Identification** assumptions: what must be true of the **world** for an observable quantity to equal the estimand
+  - Ignorability, conditional ignorability, consistency, positivity
+  - Determined by argument, research design and **substantive knowledge**
+- **Estimation** assumptions: what we need to learn that observable quantity from a **finite sample**
+  - $\mathbb{E}[Y_i \mid D_i = 1, X_i]$ is a population quantity. We have $N$ observations, and maybe few at each value of $X_i$
+  - Linearity, functional form, smoothness, etc... - this is where the statistics comes in
+- Incorrect estimation assumptions add bias **even if** identification holds. 
+  - But getting identification wrong means no amount of fancy stats can save you.
+
+:::
+
+## Step 3: Learn from data
+
+::: {.estimand-flow .hl-3}
+{{< include _estimand_flow.qmd >}}
+:::
+
+::: {.attribution}
+Adapted from @lundberg2021estimand, Fig. 1
 :::
 
 ## Next week
 
 ::: {.incremental}
 
-- Estimation
-  - Estimators as functions of data: they are **random variables** too!
+- **Step 3**: Learning from the data!
+  - Where does the randomness come from?
+  - Estimators as functions of data: they are **random variables**!
   - Sampling distributions
-  - Bias, variance, and the mean squared error of an estimator
+  - Bias, variance and other properties of an estimator.
 
+:::
+
+## References {.refs-slide}
+
+::: {#refs}
 :::
