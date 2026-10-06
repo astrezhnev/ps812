@@ -116,7 +116,7 @@
     "href": "slides/week5/week5_estimands.html#the-hypothetico-deductive-model-is-a-lie",
     "title": "Week 5: Estimands",
     "section": "The hypothetico-deductive model is a lie",
-    "text": "The hypothetico-deductive model is a lie\n\nFormulate a theory\n\n\n…often after seeing the data.\n\n\nDerive empirical implications\n\n\n…which never follow from the theory alone\n\n\nTest those implications\n\n\n…with noisy data and probabilistic predictions\n\n\nIf the implications hold, keep the theory. If they don’t, change the theory.\n\n\n…passing doesn’t prove it; failing doesn’t tell you which part to change"
+    "text": "The hypothetico-deductive model is a lie\n\nFormulate a theory\n\n\n…often after seeing the data.\n\n\nDerive empirical implications\n\n\n…which never follow from the theory alone\n\n\nTest those implications\n\n\n…with noisy data and probabilistic predictions\n\n\nIf the implications hold, keep the theory. If they don’t, change the theory.\n\n\n…passing doesn’t prove the theory is true and failing doesn’t tell you what to change"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#the-principle-of-falsification",
@@ -130,14 +130,14 @@
     "href": "slides/week5/week5_estimands.html#the-principle-of-falsification-1",
     "title": "Week 5: Estimands",
     "section": "The principle of “falsification”",
-    "text": "The principle of “falsification”\n\nPopper ([1935] 1959): Theories cannot be proven true but they can be demonstrated to be false\n\n“In so far as a scientific statement speaks about reality, it must be falsifiable; and in so far as it is not falsifiable, it does not speak about reality.” (Popper [1935] 1959)\n\nA scientific statement sets the conditions under which it could be demonstrated wrong\n\nIs there an experimental finding that would contradict a theory’s predictions?"
+    "text": "The principle of “falsification”\n\nPopper ([1935] 1959): Theories cannot be proven true but they can be demonstrated to be false\n\n“In so far as a scientific statement speaks about reality, it must be falsifiable; and in so far as it is not falsifiable, it does not speak about reality.” (Popper [1935] 1959)\n\nA scientific statement sets the conditions under which it could be demonstrated wrong.\n\nIs there an experimental finding that would contradict a theory’s predictions?"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#the-problems-with-falsification-alone",
     "href": "slides/week5/week5_estimands.html#the-problems-with-falsification-alone",
     "title": "Week 5: Estimands",
     "section": "The problems with falsification alone",
-    "text": "The problems with falsification alone\n\nLet’s consider a classic political science theory: Duverger’s Law (Duverger 1954)\n\nThis is a theory about how an electoral system affects the number of parties in that system.\n\nWith plurality rule in single member district elections, it predicts two parties\nProportional systems lead to many parties\nWhat’s the logic?\n\nVoters don’t want to waste their vote on a third party that has no chance of winning."
+    "text": "The problems with falsification alone\n\nLet’s consider a classic political science theory: Duverger’s Law (Duverger 1954)\n\nElectoral systems affect the number of parties in that system.\n\nPlurality rule in single member district elections \\(\\leadsto\\) two parties\n\nProportional systems lead to many parties\n\nWhat’s the logic?\n\nVoters don’t want to waste their vote on a third party that has no chance of winning."
   },
   {
     "objectID": "slides/week5/week5_estimands.html#the-problems-with-falsification-alone-1",
