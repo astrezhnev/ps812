@@ -1,0 +1,120 @@
+---
+title: 'PS 812: Problem Set 3'
+author: "YOUR NAME"
+date: "October 6, 2026"
+output:
+  html_document:
+    df_print: paged
+code:
+  execute: 
+    - r
+    - python
+embed-resources: true
+bibliography: references.bib
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Useful packages
+library(tidyverse)
+library(haven)
+```
+
+
+> This problem set is due at 11:59pm on **Tuesday, October 20**. Please submit your solutions via [Gradescope](https://www.gradescope.com/). Upload both a rendered `.html` file saved as "Yourlastname_Yourfirstinitial_pset3.html" and the corresponding Quarto file saved as "Yourlastname_Yourfirstinitial_pset3.qmd". We recommend editing the provided `.qmd` file directly and writing your answers and code in line with the questions. We should be able to run your code without error messages. You are strongly encouraged to discuss the problems with other students, but each student must write up their own answers and code. In order to receive credit, homework submissions must be substantially started and all work must be shown.
+
+# Problem 1
+
+Simulation techniques are very helpful for examining properties of estimators. For this problem, we will use data on funds raised by a subset of incumbent Democrats in the US House of Representatives for the 2006 election cycle. Load in the dataset `house.csv` from the data folder (use the `read_csv()` function). You can consider the Democrats in this data to be our full population of interest. In the dataset, you will find the name of the representative (`candidate`) and the funds they raised in thousands of dollars (`receipts`). We will use this population data to examine how well different estimators recover the true population mean of funds raised. Our parade of estimators will involve drawing 10,000 random samples (without replacement) of size $n$ from the population. Let $X = \{X_1, \dots, X_n\}$ denote the vector of sample observations, so $X_i$ denotes the $i$-th observation drawn in each sample with $i = 1, \dots, n$. We consider the following estimators:
+
+- **The Sample Mean:** $\hat{\mu} = \frac{1}{n}\sum_{i=1}^{n} X_i$
+- **A Shrunken Mean:** $\hat{\mu} = \frac{1}{n + 2}\sum_{i=1}^{n} X_i$
+- **A Weighted Mean:** Order the sample observations such that $X_{(1)} \leq X_{(2)} \leq \dots \leq X_{(n)}$, and compute a weighted mean $\hat{\mu} = \frac{1}{n}\sum_{i=1}^{n} w_i X_{(i)}$, where $w_i = \frac{2}{i+1}$.
+- **A Deletion Estimator:** Order the sample observations such that $X_{(1)} \leq X_{(2)} \leq \dots \leq X_{(n)}$. Discard the two lowest values $\{X_{(1)}, X_{(2)}\}$ and two highest values $\{X_{(n-1)}, X_{(n)}\}$ from the sample, and compute the mean of the remaining observations $\hat{\mu} = \frac{1}{n-4}\sum_{i=3}^{n-2} X_{(i)}$
+
+## Part A
+
+First, plot a histogram of the `receipts` variable in the data and briefly describe the distribution of funds raised by members of the House of Representatives. Calculate the true population mean $\mu$ and overlay it on the histogram.
+
+## Part B
+
+Next, write functions that implement the estimators. Make sure your functions are working by evaluating the following sample: $X = \{1, 100, 2, 3, 4, 3, 2\}$. Verify that your functions return the following estimates:
+
+| **Estimator** | **Sample Mean** | **Shrunken Mean** | **Weighted Mean** | **Deletion Estimator** |
+|:-------------:|:---------------:|:--------------------:|:-----------------:|:----------------------:|
+| $\hat{\mu}$   | 16.429          | 12.778               | 4.525             | 2.667                  |
+
+: Estimates for the test sample $X = \{1, 100, 2, 3, 4, 3, 2\}$.
+
+## Part C
+
+Simulate the sampling distribution for all four estimators from Part B for the receipts variable. Your sample size in this case should be $n=100$, and you should conduct 10000 simulations. Set the seed to `53703`. Create histograms or density plots of the sampling distributions for these estimators in one graphic. Each plot should include: (1) a vertical line at the true population mean, (2) a vertical line showing the mean of the sampling distribution of the estimator, (3) appropriately labeled titles and axes, and (4) comparable x-axes (i.e., the range for the x-axis should be identical in all four plots). How do your various estimators perform?
+
+## Part D
+
+Repeat the simulation above using samples of size $n = 40$, $n = 15$, and $n = 7$. Create a summary table to easily compare our estimators using all the different sample sizes. The table should contain the mean and standard deviation of the sampling distribution for each estimator, at each sample size, along with each estimator's root mean squared error, $\text{RMSE} = \sqrt{E[(\hat{\mu} - \mu)^2]}$. Report all results to three decimal places (you can use the `round()` command in R for this, and `knitr::kable()` will display a data frame or matrix as a formatted table). How do the different estimators behave? How does the sample size affect the behavior of the estimators?
+
+{{< pagebreak >}}
+
+# Problem 2
+
+$X_1, \dots, X_n$ are random variables such that $E[X_i] = \mu$ for all $i = 1, 2, \dots, n$. Additionally, $c_1, c_2, \dots, c_n$ are constants.
+
+## Part A
+
+Derive the condition that must hold in order for $E\left[\sum_{i=1}^{n} c_i X_i\right] = \mu$.
+
+## Part B
+
+Suppose we further restrict $c_i$ such that $c_i \geq 0$ for all $i = 1, 2, \dots, n$. How do we interpret $\sum_{i=1}^{n} c_i$ under this restriction and the condition you found in Part A? What is our estimator doing to combine the observations?
+
+## Part C
+
+Now suppose that the $X_i$ are also independent, with $Var(X_i) = \sigma^2$ for all $i$. Derive $Var\left(\sum_{i=1}^n c_i X_i\right)$. Among all choices of $c_i$ that satisfy the condition from Part A, which one **minimizes** this variance? Hint: write $c_i = \frac{1}{n} + d_i$ and find what must be true about $\sum_{i=1}^n d_i$.
+
+{{< pagebreak >}}
+
+# Problem 3
+
+You toss a fair coin $n$ times, independently. Let $X_i$ be an indicator equal to 1 if the $i$-th toss comes up heads and 0 otherwise. Let $T = \sum_{i=1}^n X_i$ be the number of heads in the $n$ tosses, and let $\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i$ be the proportion of heads.
+
+We want to find how many times the coin must be tossed so that
+
+$$P(0.4 \leq \bar{X} \leq 0.6) \geq 0.7$$
+
+We will use Chebyshev's inequality to answer this question.
+
+::: {.callout-note}
+## Chebyshev's inequality
+
+For any random variable $Y$ with finite mean and variance, and any $t > 0$,
+
+$$P\left(|Y - E[Y]| \geq t\right) \leq \frac{Var(Y)}{t^2}$$
+
+Taking complements and using $P\left(|Y - E[Y]| \leq t\right) \geq P\left(|Y - E[Y]| < t\right)$ gives the lower bound: 
+
+$$P\left(|Y - E[Y]| \leq t\right) \geq 1 - \frac{Var(Y)}{t^2}$$
+
+:::
+
+## Part A
+
+Find $E[T]$ and $Var(T)$ as functions of $n$. Write $\bar{X}$ in terms of $T$, and use this to find $E[\bar{X}]$ and $Var(\bar{X})$.
+
+## Part B
+
+Rewrite the event $\{0.4 \leq \bar{X} \leq 0.6\}$ in the form $\{|\bar{X} - E[\bar{X}]| \leq t\}$. What is $t$?
+
+## Part C
+
+Apply Chebyshev's inequality to the event from Part B to get a lower bound on $P(0.4 \leq \bar{X} \leq 0.6)$ as a function of $n$.
+
+## Part D
+
+Use the bound from Part C to find the smallest number of tosses $n$ that guarantees $P(0.4 \leq \bar{X} \leq 0.6) \geq 0.7$.
+
+## Part E
+
+We can do better using the fact that we **know** the exact distribution of $T$ (Binomial). Calculate $P(0.4 \leq \bar{X} \leq 0.6)$ for every value of $n$ from $1$ to your answer from Part D (Hint: write a function, use `pbinom`).
+
+What is the smallest $n$ such that $P(0.4 \leq \bar{X} \leq 0.6) \geq 0.7$ for that $n$ and every larger $n$? Explain why you do not need to check values of $n$ larger than your answer from Part D.
