@@ -48,7 +48,9 @@ Links become active as each problem set is assigned.
 
 *Assigned Tuesday, October 6 -- due Tuesday, October 20*
 
-*To be posted*
+- [Problem Set 3 `.html`](https://www.antonstrezhnev.com/ps812/psets/ps3/ps812_problem_set_3.html)
+- [Problem Set 3 Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps3/)
+- [Problem Set 3 `.zip` archive](https://github.com/astrezhnev/ps812/raw/main/psets/ps3/ps812_problem_set_3.zip)
 
 ### Problem Set 4
 
