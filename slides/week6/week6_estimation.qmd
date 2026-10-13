@@ -491,8 +491,7 @@ pop_anim(list(
 
 - This requires us to talk about **sequences** of estimators indexed (typically) by sample size.
   - We'll typically denote this sequence with a subscript - for example, for the sample mean...
-
-  $$\bar{Y}_n = \{\bar{Y}_1, \bar{Y}_2, \bar{Y}_3, \dotsc\}$$
+    $$\bar{Y}_n = \{\bar{Y}_1, \bar{Y}_2, \bar{Y}_3, \dotsc\}$$
 
 - Can we characterize the **limit** of this sequence of estimators?
   - It's a **random variable**...so we need a slightly different language compared to deterministic series.
@@ -507,10 +506,8 @@ pop_anim(list(
 - First, we can talk about the convergence of a sequence to a single **value**
   - There are lots of different forms of convergence here, but the most common that we use is **convergence in probability**
 - **Convergence in probability**
-  - A sequence of random variables $\hat{\mu}_n$ is said to **converge in probability** to some value $\mu$ if for every $\epsilon > 0$,
-
+  - A sequence of random variables $\hat{\mu}_n$ is said to **converge in probability** to some value $\mu$ if for every $\epsilon > 0$, as $n \to \infty$
     $$\Pr(|\hat{\mu}_n - \mu| \ge \epsilon) \to 0$$
-  as $n \to \infty$.
 
 - We'll denote this as $\hat{\mu}_n \xrightarrow{p} \mu$. You'll see other texts use the term "plim"
 - An **estimator** that converges in probability to the target estimand is called **consistent**.
@@ -526,8 +523,7 @@ pop_anim(list(
   - Assuming finite population mean and variance
 
 - Let's prove this!
-
-  $$Pr(\bigg(\bar{Y}_n  - \mu \bigg| \ge \epsilon) \to 0 $$
+  $$Pr(|\bar{Y}_n  - \mu | \ge \epsilon) \to 0 $$
 
 - The trick will rely on a known **bound** on how far a random variable can fall from its mean: **Chebyshev's Inequality**
   - This bound depends on the **variance** of that random variable.
