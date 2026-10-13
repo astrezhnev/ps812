@@ -151,7 +151,8 @@ pop_anim(c("grey", "colored", "pie", "pieSmall"))
 >  "In 2020, you remember that Joe Biden ran for President on the Democratic ticket against Donald Trump for the Republicans. Do you remember for sure whether or not you voted in that election?"
 
 - Let $\mathbb{E}[Y]$ denote the **expected turnout** in the target population
-  - With a finite population, this is just the average of the response $Y_i$ of every member $i$ ($Y_i = 1$ if voted, $Y_i = 0$ otherwise)
+  - With a finite population, this is just the average of the response $Y_i$ of every member $i$ 
+  - $Y_i = 1$ if voted, $Y_i = 0$ otherwise
 
 $$ \mu = \mathbb{E}[Y] = \frac{1}{N} \sum_{i=1}^N Y_i $$
 
@@ -168,7 +169,7 @@ $$ \mu = \mathbb{E}[Y] = \frac{1}{N} \sum_{i=1}^N Y_i $$
 - A **simple random sample** is a design where each sample of size $n$ has equal probability of occurring.
   - Let $\mathbf{Z} = (Z_1, \dotsc, Z_N)$ be the collection of sampling indicators
 
-  $$P(\mathbf{Z}) = \begin{cases} \binom{N}{n}^{-1} & \text{if } \sum_{i=1}^N Z_i = n \\ 0 & \text{otherwise} \end{cases}$$
+  $$P(\mathbf{Z}) = \begin{cases} 1/\binom{N}{n} & \text{if } \sum_{i=1}^N Z_i = n \\ 0 & \text{otherwise} \end{cases}$$
 
 - $P(Z_i = 1) = \frac{n}{N}$ for all units.
 
@@ -182,11 +183,11 @@ $$ \mu = \mathbb{E}[Y] = \frac{1}{N} \sum_{i=1}^N Y_i $$
 
   $$ P(Z_i = 1) = p \quad \forall i \in \{1, 2, \dotsc, N\} $$
 
-- What's the difference
+- What's the difference?
   - Under a Bernoulli design, sample size $n$ is **random**. Under an SRS, it's **fixed**
   - Under a Bernoulli design, selection indicators are **independent**. Under an SRS, they're (slightly) **dependent**.
 
-- What's the difference **in practice**
+- What's the difference **in practice**?
   - None. If $N$ is **very large** relative to $n$, the two designs are indistinguishable
   - Under an SRS, learning that $i$ was sampled barely changes the chance that $j$ was: $P(Z_j = 1 \mid Z_i = 1) = \frac{n-1}{N-1} \approx \frac{n}{N} = P(Z_j = 1)$
   - Under a Bernoulli design, $n$ concentrates around $Np$. Conditional on $n$, a Bernoulli sample **is** an SRS.
@@ -198,12 +199,12 @@ $$ \mu = \mathbb{E}[Y] = \frac{1}{N} \sum_{i=1}^N Y_i $$
 
 ::: {.incremental}
 
-- Alternatively, we'll often describe our sampling design by characterizing the **distribution** from which the $Y_i$ in our sample are drawn.
+- Alternatively, we'll often describe our sampling design by characterizing the **distribution** from which the $Y_i$ observed in our sample are drawn.
   - (e.g.) $Y_i \sim ?(\mu, \sigma^2)$
   - Each $Y_i$ is a draw from some unknown distribution with finite mean $\mu$ and finite variance $\sigma^2$
-  - From here, we'll use $i$ to index observations in the **sample** of size $n$.
+  - From here, we'll use $i$ to index observations **in the sample** of size $n$.
 - A key assumption that we'll make is that observations in sample are **independently and identically distributed** (i.i.d.)
-  - **Identically** distributed: Our units are drawn from the **population distribution** of interest.
+  - **Identically** distributed: Our units are each drawn from the **population distribution** of interest.
   - **Independently** distributed: Knowing **who** shows up in one draw tells us nothing about the next.
 - If we sampled **with replacement**, we'd have *exactly* independent observations.
 - Under **SRS**/**Bernoulli** sampling, there's a slight dependence (drawing $j$ rules them out in the next draw).
@@ -222,7 +223,6 @@ $$ \mu = \mathbb{E}[Y] = \frac{1}{N} \sum_{i=1}^N Y_i $$
   3. Within segments, sample 13,900 **addresses** so that every housing unit has the same chance of selection
   4. Within each responding household, select **one adult** at random
 - This is **not** an SRS of adults
-  - **Unequal probabilities**: an adult in a three-adult household is 1/3 as likely to be selected as one who lives alone
   - How do they correct this? **Weights!**
 
 :::
@@ -323,9 +323,26 @@ pop_anim(list(
 ))
 ```
 
-## Estimation
+## Estimation {.nostretch}
 
-![](assets/estimation.jpeg){fig-align="center" height="500px"}
+<!-- The estimand / estimator / estimate cake, cut into its three panels
+     (assets/estimation_*.jpg, cropped from assets/estimation.jpeg) and
+     revealed one at a time; layout in custom.scss (.est-grid) -->
+::: {.est-grid}
+
+::: {.fragment .est-a}
+![](assets/estimation_estimand.jpg) [estimand]{.est-label}
+:::
+
+::: {.fragment .est-b}
+![](assets/estimation_estimator.jpg) [estimator]{.est-label}
+:::
+
+::: {.fragment .est-c}
+![](assets/estimation_estimate.jpg) [estimate]{.est-label}
+:::
+
+:::
 
 ## Estimation
 
@@ -353,7 +370,7 @@ pop_anim(list(
 
 - Assume that each of our observations in the sample $Y_i \sim ?(\mu, \sigma^2)$ come from the **same** population with a **finite** mean.
 - Can we show that this estimator has zero **bias**?
-  - In other words, is its **expected value** equal to the true parameter value.
+  - In other words, is its **expected value** equal to the true parameter value?
 - Start by writing down our estimator and taking the expectation
 
   $$\mathbb{E}[\hat{\mu}] = \mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n Y_i\right]$$
@@ -627,7 +644,8 @@ cat("```{=html}",
 
 ::: {.incremental}
 
-- Consider two sequences $X_n \xrightarrow{p} x$ and $Y_n \xrightarrow{p} y$ and continuous function $g()$. By the continuous mapping theorem
+- Consider two sequences $X_n \xrightarrow{p} x$ and $Y_n \xrightarrow{p} y$ and continuous function $g()$. 
+- By the continuous mapping theorem
 
 1. $X_n + Y_n \xrightarrow{p} x + y$
 2. $X_nY_n \xrightarrow{p} xy$
@@ -649,15 +667,15 @@ cat("```{=html}",
 
 - We can estimate the population **variance** in a similar manner (we'll spend more time on this next week): plug in the **sample variance**
 
-  $$s^2 = \frac{1}{n-1}\sum_{i=1}^n (Y_i - \bar{Y}_n)^2 = `r sprintf("%.3f", gss_se$s2)`$$
+  $$\hat{\sigma}^2 = \frac{1}{n-1}\sum_{i=1}^n (Y_i - \bar{Y}_n)^2 = `r sprintf("%.3f", gss_se$s2)`$$
 
 - So we computed a guess of $`r sprintf("%.3f", gss_se$ybar)`$
-  - And we think it came from a distribution centered on the **truth** with a **standard error** of $\sqrt{s^2/n} = `r sprintf("%.4f", gss_se$se)`$
+  - And we think it came from a distribution centered on the **truth** with a **standard error** of $\sqrt{\hat{\sigma}^2/n} = `r sprintf("%.4f", gss_se$se)`$
 
 - The Census reports that the true turnout rate in 2020 was $`r sprintf("%.3f", truth)`$ [@fabina2022voting]
 
 - What drives the error?
-  - **Sampling error**: What we're able to talk about
+  - **Sampling error**: Noise due to the fact that the sample isn't the same as the population - what we can talk about.
   - **Non-sampling error**: Our sample isn't drawn from a distribution with expected turnout $`r sprintf("%.3f", truth)`$ - it's coming from a *different* distribution.
 
 :::
@@ -691,7 +709,7 @@ library(survey)
 gss_des <- svydesign(ids = ~vpsu, strata = ~vstrat, weights = ~weight,
                      data = gss, nest = TRUE)
 se_w <- SE(svymean(~voted20, gss_des))[[1]]
-se_w
+#se_w
 ```
 
 ```{r}
