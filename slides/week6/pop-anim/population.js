@@ -62,10 +62,10 @@ function (el, pop, opts) {
   var NMAX = Math.max.apply(null, SETS.map(function (st) { return st.n; }));
   var PIE_BIG = { x: 800, y: 300, r: 150 }, PIE_SMALL = { x: 250, y: 62, r: 40 };
   var MAP_C = { x: 330, y: 300 };                  // where the arrows leave the map
-  var BOX0 = { x: 670, y: 170, s: 260 }, BOX1 = { x: 450, y: 200, s: 200 };   // sample box, before/after cmp
-  var WORLD1 = { s: 0.7, x: 6, y: 83 };            // map, population pie: shrunk left
-  var SPIE = { x: 790, y: 300, r: 85 };            // where each sample's pie forms
-  function slot(r) { return { x: 952, y: 40 + 52 * r, r: 21 }; }
+  var BOX0 = { x: 670, y: 170, s: 260 }, BOX1 = { x: 530, y: 250, s: 190 };   // sample box, before/after cmp
+  var WORLD1 = { s: 0.82, x: 3.6, y: 44 };         // map, population pie: shrunk left
+  var SPIE = { x: 745, y: 122, r: 72 };            // where each sample's pie forms: up and right of the box
+  function slot(r) { return { x: 912, y: 40 + 52 * r, r: 22 }; }
   var CENTER = { x: 500, y: 270, r: 130 };         // population pie, centre stage
   var AXIS = { y: 470, x0: 90, x1: 910, scale: 1680 };   // px per unit share, centred on mu
   var HPOP = { x: 500, y: 92, r: 60 }, HR = 26, HGAP = 56;  // one histogram: population pie, pies, stacking
@@ -222,17 +222,33 @@ function (el, pop, opts) {
     var h = mk('polygon', { fill: INK }, g);
     return { g: g, p: p, h: h };
   }
-  // Quadratic curve with an arrowhead at the end; drawn the fraction t of the way
-  function setArrow(a, P0, C, P1, t, alpha) {
+  // Arrow from P0 into a target, either a circle {x, y, r} or a rectangle
+  // {x, y, w, h}: a symmetric curve that bows by `bend` radians in the middle
+  // (positive bows to the left of the direction of travel) and ends heading
+  // straight at the target's centre, its tip just short of the edge. Drawn the
+  // fraction t of the way.
+  var HEAD = 24, HEADW = 17, GAP = 8;
+  function unit(dx, dy) { var L = Math.sqrt(dx * dx + dy * dy) || 1; return { x: dx / L, y: dy / L }; }
+  function rot(v, a) { var c = Math.cos(a), s = Math.sin(a); return { x: v.x * c - v.y * s, y: v.x * s + v.y * c }; }
+  function setArrow(a, P0, tgt, bend, t, alpha) {
+    var circ = tgt.r !== undefined;
+    var c = circ ? { x: tgt.x, y: tgt.y } : { x: tgt.x + tgt.w / 2, y: tgt.y + tgt.h / 2 };
+    var dEnd = rot(unit(c.x - P0.x, c.y - P0.y), bend);
+    var R = circ ? tgt.r : Math.min(tgt.w / 2 / (Math.abs(dEnd.x) || 1e-9), tgt.h / 2 / (Math.abs(dEnd.y) || 1e-9));
+    var P1 = { x: c.x - dEnd.x * (R + GAP + HEAD), y: c.y - dEnd.y * (R + GAP + HEAD) };
+    var L = Math.sqrt((P1.x - P0.x) * (P1.x - P0.x) + (P1.y - P0.y) * (P1.y - P0.y)) / 3;
+    var dStart = rot(unit(P1.x - P0.x, P1.y - P0.y), -bend);
+    var C1 = { x: P0.x + dStart.x * L, y: P0.y + dStart.y * L }, C2 = { x: P1.x - dEnd.x * L, y: P1.y - dEnd.y * L };
     a.g.setAttribute('opacity', t > 0 ? alpha : 0);
-    a.p.setAttribute('d', 'M' + P0.x + ' ' + P0.y + 'Q' + C.x + ' ' + C.y + ' ' + P1.x + ' ' + P1.y);
+    a.p.setAttribute('d', 'M' + P0.x.toFixed(1) + ' ' + P0.y.toFixed(1) + 'C' + C1.x.toFixed(1) + ' ' + C1.y.toFixed(1) + ' ' +
+                          C2.x.toFixed(1) + ' ' + C2.y.toFixed(1) + ' ' + P1.x.toFixed(1) + ' ' + P1.y.toFixed(1));
     a.p.setAttribute('stroke-dashoffset', 1 - t);
-    var u = t, x = (1 - u) * (1 - u) * P0.x + 2 * (1 - u) * u * C.x + u * u * P1.x,
-        y = (1 - u) * (1 - u) * P0.y + 2 * (1 - u) * u * C.y + u * u * P1.y,
-        dx = 2 * (1 - u) * (C.x - P0.x) + 2 * u * (P1.x - C.x),
-        dy = 2 * (1 - u) * (C.y - P0.y) + 2 * u * (P1.y - C.y),
-        L = Math.sqrt(dx * dx + dy * dy) || 1, ux = dx / L, uy = dy / L, s = 22;
-    a.h.setAttribute('points', [[x + ux * s, y + uy * s], [x - uy * s, y + ux * s], [x + uy * s, y - ux * s]]
+    var v = 1 - t, b0 = v * v * v, b1 = 3 * v * v * t, b2 = 3 * v * t * t, b3 = t * t * t;
+    var x = b0 * P0.x + b1 * C1.x + b2 * C2.x + b3 * P1.x, y = b0 * P0.y + b1 * C1.y + b2 * C2.y + b3 * P1.y;
+    var tan = unit(3 * v * v * (C1.x - P0.x) + 6 * v * t * (C2.x - C1.x) + 3 * t * t * (P1.x - C2.x),
+                   3 * v * v * (C1.y - P0.y) + 6 * v * t * (C2.y - C1.y) + 3 * t * t * (P1.y - C2.y));
+    a.h.setAttribute('points', [[x + tan.x * HEAD, y + tan.y * HEAD], [x - tan.y * HEADW, y + tan.x * HEADW],
+                                [x + tan.y * HEADW, y - tan.x * HEADW]]
       .map(function (q) { return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' '));
   }
   function wedge(c, r, a0, a1) {
@@ -402,8 +418,7 @@ function (el, pop, opts) {
         copies[i2].setAttribute('opacity', f > 0 ? 1 - pieOn : 0);
       }
     }
-    setArrow(arrPie, MAP_C, { x: 600, y: 120 }, { x: PIE_BIG.x - PIE_BIG.r - 30, y: PIE_BIG.y - 40 },
-             clamp(g('fly') * 1.3), 0.35 * (1 - sm));
+    setArrow(arrPie, MAP_C, PIE_BIG, 0.55, clamp(g('fly') * 1.3), 0.35 * (1 - sm));
 
     // Sample box: fades in with the first sample of each size and stays
     var smp = g('samp'), show = (1 - hf) * (1 - nobox);
@@ -425,8 +440,7 @@ function (el, pop, opts) {
         el2.setAttribute('opacity', f > 0 && gone < 1 ? 1 : 0);
       });
     }
-    var A0 = screen(MAP_C), A1 = { x: box.x - 26, y: box.y + box.h / 2 + 20 };
-    setArrow(arrSamp, A0, { x: A0.x + 0.73 * (A1.x - A0.x), y: A1.y + 150 }, A1, clamp(smp * 1.4),
+    setArrow(arrSamp, screen(MAP_C), { x: box.x, y: box.y, w: box.w, h: box.h }, -0.6, clamp(smp * 1.4),
              0.35 * (1 - gone) * show);
 
     // Copies of the boxed sample fly into a pie of the sample share
@@ -442,8 +456,7 @@ function (el, pop, opts) {
         el3.setAttribute('opacity', f > 0 ? 1 - solid : 0);
       });
     }
-    var B0 = { x: box.x + 0.7 * box.w, y: box.y - 12 }, B1 = { x: SPIE.x - 30, y: SPIE.y - SPIE.r - 22 };
-    setArrow(arrSpie, B0, { x: (B0.x + B1.x) / 2, y: B0.y - 110 }, B1, clamp(g('spie') * 1.4), 0.35 * (1 - sd));
+    setArrow(arrSpie, { x: box.x + 0.45 * box.w, y: box.y - 10 }, SPIE, 0.5, clamp(g('spie') * 1.4), 0.35 * (1 - sd));
 
     // Sample pies. Earlier sizes sit in their rows whenever the map is away.
     // For the current size, earlier samples sit in the column; the current

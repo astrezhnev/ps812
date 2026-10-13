@@ -89,17 +89,17 @@ Adapted from @blackwell2025users, Ch. 2
 
 ## Running Example: 2024 General Social Survey
 
+![](assets/gss-logo.png){fig-align="center" width="22%"}
+
 ::: {.incremental}
 
-- Our running example for today is the **General Social Survey** - a nationally representative survey of U.S. adults that has been conducting annual interviews since 1972.
+- Our running example for today is the **General Social Survey** - a nationally representative survey of U.S. adults that has been conducting regular interviews since 1972.
 - **Target population**: U.S. adults (18+) living in noninstitutional housing, April--December 2024
 - **Sampling frame**: the NORC 2020 National Sampling Frame
   - A list of housing units built mostly from the USPS delivery file 
   - Supplemented by NORC directly identifying addresses where USPS coverage is below 90%
 
 :::
-
-![](assets/gss-logo.png){fig-align="center" width="22%"}
 
 
 ## Defining the population
@@ -150,10 +150,10 @@ pop_anim(c("grey", "colored", "pie", "pieSmall"))
 
 >  "In 2020, you remember that Joe Biden ran for President on the Democratic ticket against Donald Trump for the Republicans. Do you remember for sure whether or not you voted in that election?"
 
-- Let $Y_i$ denote the response from population member $i$ ($Y_i = 1$ if voted, $Y_i = 0$ otherwise)
-  - We want to know the **expected turnout** $\mathbb{E}[Y_i]$
+- Let $\mathbb{E}[Y]$ denote the **expected turnout** in the target population
+  - With a finite population, this is just the average of the response $Y_i$ of every member $i$ ($Y_i = 1$ if voted, $Y_i = 0$ otherwise)
 
-$$ \mu = \mathbb{E}[Y_i] = \frac{1}{N} \sum_{i=1}^N Y_i $$
+$$ \mu = \mathbb{E}[Y] = \frac{1}{N} \sum_{i=1}^N Y_i $$
 
 
 ## Sampling design
@@ -201,11 +201,13 @@ $$ \mu = \mathbb{E}[Y_i] = \frac{1}{N} \sum_{i=1}^N Y_i $$
 - Alternatively, we'll often describe our sampling design by characterizing the **distribution** from which the $Y_i$ in our sample are drawn.
   - (e.g.) $Y_i \sim ?(\mu, \sigma^2)$
   - Each $Y_i$ is a draw from some unknown distribution with finite mean $\mu$ and finite variance $\sigma^2$
+  - From here, we'll use $i$ to index observations in the **sample** of size $n$.
 - A key assumption that we'll make is that observations in sample are **independently and identically distributed** (i.i.d.)
   - **Identically** distributed: Our units are drawn from the **population distribution** of interest.
-  - **Independently** distributed: Knowing one unit is included tells us nothing about the probability another is included.
-- Under **Bernoulli** sampling, observations in the sample are independent
-- Under a **simple random sample**, observations are approximately independent (as population size gets arbitrarily large relative to sample, $N \to \infty$)
+  - **Independently** distributed: Knowing **who** shows up in one draw tells us nothing about the next.
+- If we sampled **with replacement**, we'd have *exactly* independent observations.
+- Under **SRS**/**Bernoulli** sampling, there's a slight dependence (drawing $j$ rules them out in the next draw).
+  - But this *vanishes* as the **population size** becomes arbitrarily large relative to sample.
 
 :::
 
@@ -246,7 +248,7 @@ pop_anim(c("pieSmall", "selected", "sampled"))
 ::: {.incremental}
 
 - Once we have an **estimand** in mind, we want to figure out the *algorithm* to transform our sample of observations into a **best guess**.
-  - Consider a **sample** of size $n$ with observations indexed by $i = \{1,2, 3, \dotsc n\}$
+  - Consider a **sample** of size $n$ with observations indexed by $i \in \{1,2, 3, \dotsc n\}$
 - An **estimator** is a **function** of our sample.
   - It's a random variable too!
 - Since we're targeting the **population mean**, a natural choice for an estimator would be the **sample mean**
@@ -350,8 +352,8 @@ pop_anim(list(
 ::: {.incremental}
 
 - Assume that each of our observations in the sample $Y_i \sim ?(\mu, \sigma^2)$ come from the **same** population with a **finite** mean.
-- Can we show that this estimator has zero **bias**
-  - In other words, is it's **expected value** equal to the true parameter value.
+- Can we show that this estimator has zero **bias**?
+  - In other words, is its **expected value** equal to the true parameter value.
 - Start by writing down our estimator and taking the expectation
 
   $$\mathbb{E}[\hat{\mu}] = \mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n Y_i\right]$$
@@ -439,10 +441,11 @@ pop_anim(c("10:sdone", "hfade", "hist", "hlines", "havg"))
 
 ::: {.incremental}
 
-- So under i.i.d sampling, our **sampling variance** is
+- So under i.i.d. sampling, our **sampling variance** is
 
- $$\Var(\hat{\mu}) = \frac{\sigma^2}{n}$$
-- We'll often talk about the standard deviation (square root of the variance) of a sampling distribution
+  $$\Var(\hat{\mu}) = \frac{\sigma^2}{n}$$
+
+- We'll also often talk about the standard deviation (square root of the variance) of a sampling distribution
   - For estimators we refer to this particular standard deviation as a **standard error**
 
   $$ \text{SE}(\hat{\mu}) = \sqrt{\Var(\hat{\mu})} = \frac{\sigma}{\sqrt{n}} $$
@@ -480,6 +483,40 @@ pop_anim(list(
   "bands"
 ))
 ```
+
+## The sampling distribution of an estimator
+
+::: {.incremental}
+
+- Under i.i.d. $Y_i$, the **sampling distribution** of $\hat{\mu}$ has mean $\mu$ and variance $\sigma^2/n$
+- Is that enough to pin down its full **distribution**? Not quite yet!
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| output: asis
+
+# Densities that share a mean and variance, morphing from one to the next on a
+# loop (dist-anim/dists.js; densities from dist-anim/make_dists.R)
+cat("```{=html}",
+    '<div class="dist-anim"></div>',
+    "<script>",
+    "(", readLines("dist-anim/dists.js"), ")(document.currentScript.previousElementSibling,",
+    readLines("dist-anim/dists.json", warn = FALSE), ", { maxHeight: 320 });",
+    "</script>",
+    "```", sep = "\n")
+```
+
+:::
+
+::: {.incremental}
+
+- A **detour** into **large-sample approximations** gets us an answer *without* more assumptions on $Y_i \sim ?(\mu, \sigma^2)$
+
+:::
 
 ## Asymptotic properties
 
@@ -520,10 +557,10 @@ pop_anim(list(
 
 - The **weak law of large numbers** states that the sample means of independent and identically distributed random variables...
   - ... **converge in probability** to their population **expected value**
-  - Assuming finite population mean and variance
+  - Assuming that mean is finite.
 
-- Let's prove this!
-  $$Pr(|\bar{Y}_n  - \mu | \ge \epsilon) \to 0 $$
+- Let's prove this! We'll also assume finite variance to make it easier.
+  $$P(|\bar{Y}_n  - \mu | \ge \epsilon) \to 0 $$
 
 - The trick will rely on a known **bound** on how far a random variable can fall from its mean: **Chebyshev's Inequality**
   - This bound depends on the **variance** of that random variable.
@@ -531,7 +568,64 @@ pop_anim(list(
 
 :::
 
+
+## Chebyshev's Inequality
+
+::: {.incremental}
+
+- For any random variable $X$ with a finite mean and variance, and any $\epsilon > 0$, **Chebyshev's Inequality** states:
+
+  $$P(|X - \mathbb{E}[X]| \ge \epsilon) \le \frac{\Var(X)}{\epsilon^2}$$
+
+- The chance of landing far from the mean is **bounded** by the variance
+  - Holds for **any** distribution with a finite variance
+
+:::
+
+
+## Weak Law of Large Numbers
+
+::: {.incremental}
+
+- Apply Chebyshev's inequality to the sample mean, which has $\mathbb{E}[\bar{Y}_n] = \mu$ and $\Var(\bar{Y}_n) = \frac{\sigma^2}{n}$
+
+  $$P(|\bar{Y}_n - \mu| \ge \epsilon) \le \frac{\Var(\bar{Y}_n)}{\epsilon^2} = \frac{\sigma^2}{n\epsilon^2}$$
+
+- For any fixed $\epsilon > 0$, the right-hand side goes to zero as $n$ gets large
+
+  $$\lim_{n \to \infty} \frac{\sigma^2}{n\epsilon^2} = 0$$
+
+- A probability can't be negative, so it's squeezed between $0$ and something going to $0$
+
+  $$P(|\bar{Y}_n - \mu| \ge \epsilon) \to 0$$
+
+- Therefore, $\bar{Y}_n \xrightarrow{p} \mu$: the sample mean is **consistent** for the population mean
+
+:::
+
+## Weak Law of Large Numbers
+
+```{r}
+#| echo: false
+#| output: asis
+
+# Sample means at n = 10, 40, 160, 640 fall out of the population pie into
+# rows; an epsilon-band dims the ones inside it, grey bars measure the share
+# outside, gold outlines mark Chebyshev's bound, then epsilon halves
+# (wlln-anim/wlln.js; data from wlln-anim/make_wlln.R)
+cat("```{=html}",
+    '<div class="wl-anim"></div>',
+    "<script>",
+    "(", readLines("wlln-anim/wlln.js"), ")(document.currentScript.previousElementSibling,",
+    readLines("wlln-anim/wlln.json", warn = FALSE), ");",
+    "</script>",
+    rep('<span class="fragment wl-step"></span>', 6),
+    "```", sep = "\n")
+```
+
 ## Properties of convergence in probability
+
+::: {.incremental}
 
 - Consider two sequences $X_n \xrightarrow{p} x$ and $Y_n \xrightarrow{p} y$ and continuous function $g()$. By the continuous mapping theorem
 
@@ -539,6 +633,129 @@ pop_anim(list(
 2. $X_nY_n \xrightarrow{p} xy$
 3. $X_n/Y_n \xrightarrow{p} x/y$ if $y \neq 0$
 4. $g(X_n) \xrightarrow{p} g(x)$
+
+:::
+
+## Running Example: 2024 General Social Survey
+
+```{r}
+#| include: false
+#| ref.label: gss-se
+```
+
+::: {.incremental}
+
+- In our particular sample, the **sample mean** estimator gives an estimated turnout of $\hat{\mu} = `r sprintf("%.3f", gss_se$ybar)`$
+
+- We can estimate the population **variance** in a similar manner (we'll spend more time on this next week): plug in the **sample variance**
+
+  $$s^2 = \frac{1}{n-1}\sum_{i=1}^n (Y_i - \bar{Y}_n)^2 = `r sprintf("%.3f", gss_se$s2)`$$
+
+- So we computed a guess of $`r sprintf("%.3f", gss_se$ybar)`$
+  - And we think it came from a distribution centered on the **truth** with a **standard error** of $\sqrt{s^2/n} = `r sprintf("%.4f", gss_se$se)`$
+
+- The Census reports that the true turnout rate in 2020 was $`r sprintf("%.3f", truth)`$ [@fabina2022voting]
+
+- What drives the error?
+  - **Sampling error**: What we're able to talk about
+  - **Non-sampling error**: Our sample isn't drawn from a distribution with expected turnout $`r sprintf("%.3f", truth)`$ - it's coming from a *different* distribution.
+
+:::
+
+## Running Example: 2024 GSS in R
+
+```{r}
+#| label: gss-se
+#| echo: true
+
+truth <- 0.668   # Census CPS: share of citizens 18+ who voted in 2020
+
+gss_se <- gss |>
+  summarize(n = n(),
+            ybar = mean(voted20),
+            s2 = var(voted20),         
+            se = sqrt(s2 / n),
+            ybar_w = weighted.mean(voted20, weight))
+gss_se
+```
+
+```{r}
+#| label: gss-se-w
+#| echo: false
+#| message: false
+
+# The weighted mean's standard error has to account for the GSS design:
+# weights, plus the strata and clusters NORC provides for variance estimation
+library(survey)
+
+gss_des <- svydesign(ids = ~vpsu, strata = ~vstrat, weights = ~weight,
+                     data = gss, nest = TRUE)
+se_w <- SE(svymean(~voted20, gss_des))[[1]]
+se_w
+```
+
+```{r}
+#| label: gss-plot
+#| echo: false
+
+# Step 1: i.i.d. sampling distribution centered on the truth (dashed)
+# Step 2: add the sample mean (solid)
+# Step 3: swap in the weighted mean (gold) and its design-based sampling distribution
+se_plot <- function(step) {
+  sd_curve <- if (step < 3) gss_se$se else se_w
+  col <- if (step < 3) "#0479a8" else "#d9a21b"
+  p <- ggplot() +
+    stat_function(fun = dnorm, args = list(mean = truth, sd = sd_curve),
+                  geom = "area", n = 1000, xlim = c(0.64, 0.80),
+                  fill = col, alpha = 0.2, colour = col, linewidth = 1) +
+    geom_vline(xintercept = truth, linetype = "dashed", linewidth = 1)
+  if (step == 2) p <- p + geom_vline(xintercept = gss_se$ybar, linewidth = 1.6)
+  if (step == 3) p <- p + geom_vline(xintercept = gss_se$ybar_w, linewidth = 1.6, colour = col)
+  p + labs(x = NULL, y = NULL) +
+    theme_minimal(base_size = 18) +
+    theme(axis.text.y = element_blank(), panel.grid = element_blank(),
+          axis.line.x = element_line(colour = "#333333"),
+          plot.background = element_rect(fill = "#F7F7F7", colour = NA))
+}
+```
+
+## The challenges of inference! {.nostretch}
+
+::: {.r-stack}
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 5.2
+#| fig-align: center
+se_plot(1)
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 5.2
+#| fig-align: center
+se_plot(2)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 5.2
+#| fig-align: center
+se_plot(3)
+```
+
+:::
+
+:::
 
 ## Next week
 
