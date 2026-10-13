@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Schedule – PoliSci 812</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -32,15 +38,14 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e0f92233e851a9c04a4295667bbfc04b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-59285f19cc93ba41e7772f6fd9b25434.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -155,7 +160,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#week-2-conditional-probability-and-independence" id="toc-week-2-conditional-probability-and-independence" class="nav-link" data-scroll-target="#week-2-conditional-probability-and-independence">Week 2: Conditional Probability and Independence</a></li>
   <li><a href="#week-3-random-variables-expectations" id="toc-week-3-random-variables-expectations" class="nav-link" data-scroll-target="#week-3-random-variables-expectations">Week 3: Random Variables, Expectations</a></li>
   <li><a href="#week-4-joint-and-conditional-distributions" id="toc-week-4-joint-and-conditional-distributions" class="nav-link" data-scroll-target="#week-4-joint-and-conditional-distributions">Week 4: Joint and Conditional Distributions</a></li>
-  <li><a href="#week-5-estimands-as-features-of-distributions" id="toc-week-5-estimands-as-features-of-distributions" class="nav-link" data-scroll-target="#week-5-estimands-as-features-of-distributions">Week 5: Estimands as features of distributions</a></li>
+  <li><a href="#week-5-theory-and-estimands" id="toc-week-5-theory-and-estimands" class="nav-link" data-scroll-target="#week-5-theory-and-estimands">Week 5: Theory and Estimands</a></li>
   <li><a href="#week-6-estimation-part-1" id="toc-week-6-estimation-part-1" class="nav-link" data-scroll-target="#week-6-estimation-part-1">Week 6: Estimation: Part 1</a></li>
   <li><a href="#week-7-estimation-part-2" id="toc-week-7-estimation-part-2" class="nav-link" data-scroll-target="#week-7-estimation-part-2">Week 7: Estimation: Part 2</a></li>
   <li><a href="#week-8-confidence-intervals-and-hypothesis-testing" id="toc-week-8-confidence-intervals-and-hypothesis-testing" class="nav-link" data-scroll-target="#week-8-confidence-intervals-and-hypothesis-testing">Week 8: Confidence Intervals and Hypothesis Testing</a></li>
@@ -285,13 +290,13 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <hr>
 </section>
-<section id="week-5-estimands-as-features-of-distributions" class="level2">
-<h2 class="anchored" data-anchor-id="week-5-estimands-as-features-of-distributions">Week 5: Estimands as features of distributions</h2>
+<section id="week-5-theory-and-estimands" class="level2">
+<h2 class="anchored" data-anchor-id="week-5-theory-and-estimands">Week 5: Theory and Estimands</h2>
 <p><em>Tuesday, October 6 &amp; Wednesday, October 7</em></p>
 <p><strong>Topics:</strong></p>
 <ul>
-<li>Defining estimands as statistical functionals</li>
 <li>Connecting theory to empirical targets</li>
+<li>Defining causal and descriptive estimands</li>
 </ul>
 <p><strong>Readings:</strong></p>
 <ul>
@@ -341,7 +346,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Topics:</strong></p>
 <ul>
 <li>Convergence in distribution and the central limit theorem</li>
-<li>Plug-in estimators of statistical functionals</li>
+<li>Plug-in estimators</li>
 <li>Density estimation</li>
 </ul>
 <p><strong>Readings:</strong></p>
