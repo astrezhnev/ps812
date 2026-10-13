@@ -86,14 +86,14 @@ Textbook readings are from Aronow and Miller, *Foundations of Agnostic Statistic
 
 ---
 
-## Week 5: Estimands as features of distributions
+## Week 5: Theory and Estimands
 
 *Tuesday, October 6 & Wednesday, October 7*
 
 **Topics:**
 
-- Defining estimands as statistical functionals
 - Connecting theory to empirical targets
+- Defining causal and descriptive estimands
 
 **Readings:**
 
@@ -133,7 +133,7 @@ Textbook readings are from Aronow and Miller, *Foundations of Agnostic Statistic
 **Topics:**
 
 - Convergence in distribution and the central limit theorem
-- Plug-in estimators of statistical functionals
+- Plug-in estimators
 - Density estimation
 
 **Readings:**
