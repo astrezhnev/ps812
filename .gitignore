@@ -45,3 +45,7 @@ slides/week2/ces-app/CES25_Common.dta
 # Mexico 2012 Panel Study source file for week 3 (~6 MB). prepare_data.R
 # turns it into the small committed CSV extract.
 slides/week3/data/2012_stata.dta
+
+# 2024 GSS Cross-section source file for week 6 (~6 MB). prepare_data.R
+# turns it into the small committed CSV extract.
+slides/week6/data/GSS2024.dta
