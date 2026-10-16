@@ -1,0 +1,756 @@
+---
+title: "PS 812"
+subtitle: "Section 6: Visualizing Distributions and Conditional Means"
+author: "John Hicks"
+institute: "Dept. of Political Science, UW-Madison"
+date: "10-16-2026"
+
+format:
+  revealjs:
+    embed-resources: true
+    theme: default
+    slide-number: true
+    transition: none
+    code-fold: false
+    code-line-numbers: true
+    chalkboard: false
+    width: 1600
+    height: 900
+    incremental: true
+    fig-width: 10
+    fig-height: 4.5
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: false
+---
+
+<style>
+
+.reveal {
+  font-family: Arial, sans-serif;
+}
+
+/* ---------------------------------
+   Headings
+   --------------------------------- */
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #8B0000;
+}
+
+.reveal h2 {
+  background-color: #eeeeee;
+  padding: 10px 20px;
+}
+
+/* ---------------------------------
+   Slide numbers
+   --------------------------------- */
+
+.reveal .slide-number {
+  color: #666666;
+  font-size: 0.7em;
+}
+
+/* ---------------------------------
+   Code
+   --------------------------------- */
+
+.reveal pre {
+  font-size: 0.65em;
+}
+
+.reveal code {
+  font-family: "Fira Code", "Courier New", monospace;
+}
+
+/* ---------------------------------
+   Cascade / incremental reveals
+   --------------------------------- */
+
+.reveal .fragment {
+  transition: opacity 0.35s ease-in-out;
+}
+
+.reveal .fragment.visible {
+  opacity: 1;
+}
+
+/* ---------------------------------
+   Lists
+   --------------------------------- */
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.35em;
+}
+
+/* ---------------------------------
+   Images
+   --------------------------------- */
+
+.reveal img {
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+</style>
+
+```{r}
+#| include: false
+library(tidyverse)
+library(patchwork)
+theme_set(theme_minimal(base_size = 16))
+
+uw_red <- "#c5050c"
+```
+
+# Today
+
+## Today
+
+::: {.fragment}
+**1. One variable**
+
+Histograms, density plots, and ECDFs
+:::
+
+::: {.fragment}
+**2. Two variables**
+
+Scatterplots and overplotting
+:::
+
+::: {.fragment}
+**3. Conditional means**
+
+Binned scatterplots: an estimate of the CEF that is just a mean in bins
+:::
+
+::: {.fragment}
+**4. Putting lines on graphs**
+
+`geom_hline()`, `geom_abline()`, and `geom_segment()` for lines we compute ourselves
+:::
+
+---
+
+## Data
+
+Two datasets we've already seen:
+
+- **County returns, 2016** (week 4 lecture): Clinton's vote share and the % non-Hispanic white in each of ~3,100 counties
+- **CES 2025** (section 2): age, party ID, ideology, and Trump approval for 17,000 respondents
+
+::: {.fragment}
+```{r}
+election <- read_csv("data/prez_election_2016_vote.csv") |>
+  mutate(voteshare = 100 * candidatevotes / totalvotes) |>
+  filter(!is.na(voteshare), !is.na(pctWhiteNH))
+
+ces <- read_csv("data/ces25_viz.csv")
+```
+:::
+
+---
+
+## The grammar of ggplot
+
+Every plot is built from the same pieces:
+
+- **Data**: a data frame, one row per observation
+- **Aesthetics** (`aes()`): which columns map to `x`, `y`, `colour`, `fill`, ...
+- **Geoms**: what to draw (`geom_point()`, `geom_histogram()`, `geom_line()`, ...)
+- **Layers** are stacked with `+`. Each layer can bring **its own data**
+
+::: {.fragment}
+```{r}
+#| eval: false
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +                           # layer 1: the raw data
+  geom_point(data = other_data, ...) +     # layer 2: a different data frame
+  labs(x = "...", y = "...")
+```
+:::
+
+::: {.fragment}
+That last point is most of today: compute something with `dplyr`, then add it as a layer.
+:::
+
+---
+
+# One variable
+
+## Histograms
+
+```{r}
+#| fig-height: 4
+ggplot(election, aes(x = voteshare)) +
+  geom_histogram(binwidth = 2, boundary = 0, fill = "grey60", colour = "white") +
+  labs(x = "Clinton vote share (%)", y = "Counties")
+```
+
+- Cut the support into bins, **count** the observations in each
+- Most counties went heavily for Trump. A long right tail of Clinton counties
+
+---
+
+## The bin width is a choice
+
+```{r}
+#| echo: false
+#| fig-height: 4
+hist_bw <- function(bw) {
+  ggplot(election, aes(x = voteshare)) +
+    geom_histogram(binwidth = bw, boundary = 0, fill = "grey60", colour = "white") +
+    labs(title = paste("binwidth =", bw), x = "Clinton vote share (%)", y = NULL)
+}
+hist_bw(0.5) + hist_bw(2) + hist_bw(15)
+```
+
+- Too narrow: every bump is noise
+- Too wide: the shape disappears
+- Same data, three different pictures. Nothing here is "the" histogram
+
+---
+
+## Counts to densities
+
+Put the histogram on the **density** scale so the bars' area sums to 1:
+
+```{r}
+#| fig-height: 3.6
+ggplot(election, aes(x = voteshare)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 2, boundary = 0,
+                 fill = "grey80", colour = "white") +
+  geom_density(colour = uw_red, linewidth = 1.2) +
+  labs(x = "Clinton vote share (%)", y = "Density")
+```
+
+- `after_stat(density)`: height = share in bin / bin width
+- `geom_density()`: a **smoothed** histogram
+
+---
+
+## What a density plot does
+
+```{r}
+#| echo: false
+#| fig-height: 4.2
+pts <- c(18, 24, 27, 31, 44, 47, 49, 66)
+h   <- 5
+grid <- tibble(x = seq(0, 90, by = 0.25))
+bumps <- expand_grid(grid, pt = pts) |>
+  mutate(y = dnorm(x, mean = pt, sd = h) / length(pts))
+total <- bumps |> group_by(x) |> summarise(y = sum(y))
+
+ggplot() +
+  geom_line(data = bumps, aes(x, y, group = pt), colour = "grey55") +
+  geom_line(data = total, aes(x, y), colour = uw_red, linewidth = 1.3) +
+  geom_rug(data = tibble(x = pts), aes(x), linewidth = 1, length = unit(0.05, "npc")) +
+  labs(x = "x", y = "Density")
+```
+
+- Put a small normal bump on every observation, each with area $1/n$
+- Add up the bumps. The total still integrates to 1
+- The bump's width (the **bandwidth**) plays the role of the bin width
+
+---
+
+## The bandwidth is also a choice
+
+```{r}
+#| fig-height: 3.8
+ggplot(election, aes(x = voteshare)) +
+  geom_density(adjust = 0.2, colour = "grey60") +
+  geom_density(adjust = 1,   colour = uw_red, linewidth = 1.2) +
+  geom_density(adjust = 4,   colour = "black", linetype = "dashed") +
+  labs(x = "Clinton vote share (%)", y = "Density")
+```
+
+- `adjust` multiplies R's default bandwidth: 0.2 (grey), 1 (red), 4 (dashed)
+- Same tradeoff as bins: too wiggly vs. too smooth
+
+---
+
+## Comparing groups
+
+Overlapping histograms are hard to read. Overlapping densities are easy:
+
+```{r}
+#| fig-height: 3.6
+ces |>
+  filter(pid3 != "Independent/Other") |>
+  ggplot(aes(x = age, fill = pid3)) +
+  geom_density(alpha = 0.4, colour = NA) +
+  scale_fill_manual(values = c(Democrat = "#2166ac", Republican = "#b2182b")) +
+  labs(x = "Age", y = "Density", fill = NULL)
+```
+
+- Each density integrates to 1 **within its group**: it shows shape, not group size
+
+---
+
+## Survey weights
+
+The CES comes with weights. Pass them as an aesthetic:
+
+```{r}
+#| fig-height: 3.4
+ces |>
+  filter(pid3 != "Independent/Other") |>
+  ggplot(aes(x = age, colour = pid3)) +
+  geom_density(linetype = "dashed") +                       # unweighted
+  geom_density(aes(weight = weight / sum(weight)), linewidth = 1.2) +  # weighted
+  scale_colour_manual(values = c(Democrat = "#2166ac", Republican = "#b2182b")) +
+  labs(x = "Age", y = "Density", colour = NULL)
+```
+
+- `geom_density()` wants weights that sum to 1 within each group, or it warns. Normalizing over the full sample is close enough for a picture
+
+---
+
+## The empirical CDF
+
+$$
+\hat F(x) = \frac{1}{n} \sum_{i=1}^{n} \mathbf{1}(X_i \le x)
+$$
+
+::: {.fragment}
+```{r}
+#| fig-height: 3.2
+ces |>
+  filter(pid3 != "Independent/Other") |>
+  ggplot(aes(x = age, colour = pid3)) +
+  stat_ecdf(linewidth = 1.1) +
+  geom_hline(yintercept = 0.5, linetype = "dotted") +
+  scale_colour_manual(values = c(Democrat = "#2166ac", Republican = "#b2182b")) +
+  labs(x = "Age", y = "Share at or below", colour = NULL)
+```
+:::
+
+- No bins, no bandwidth: it's just a share. Read medians off the dotted line
+
+---
+
+# Two variables
+
+## Scatterplots
+
+```{r}
+#| fig-height: 4
+ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point() +
+  labs(x = "% non-Hispanic white", y = "Clinton vote share (%)")
+```
+
+- 3,000 points, most of them stacked on top of each other in the bottom right
+
+---
+
+## Fixing overplotting
+
+```{r}
+#| fig-height: 4
+ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point(size = 1, alpha = 0.2) +
+  labs(x = "% non-Hispanic white", y = "Clinton vote share (%)")
+```
+
+- Smaller, transparent points: dark regions are where the data are dense
+- The relationship is clearly negative. But **how** does the average change with $X$?
+
+---
+
+## Discrete outcomes are worse
+
+```{r}
+#| echo: false
+#| fig-height: 3.6
+p_raw <- ggplot(ces, aes(x = age, y = ideo7)) +
+  geom_point(alpha = 0.1) +
+  labs(title = "geom_point()", x = "Age", y = "Ideology (1 = very lib, 7 = very cons)")
+p_jit <- ggplot(ces, aes(x = age, y = ideo7)) +
+  geom_jitter(width = 0.4, height = 0.3, size = 0.4, alpha = 0.1) +
+  labs(title = "geom_jitter()", x = "Age", y = NULL)
+p_raw + p_jit
+```
+
+- With a 7-point $Y$, every point sits on one of seven lines
+- `geom_jitter()` adds a little noise so you can see the mass. Still hard to see the trend
+- The scatterplot shows the joint distribution. We want the **conditional mean**
+
+---
+
+# Conditional means
+
+## Back to the CEF
+
+From week 4:
+
+$$
+\mu(x) = \mathbb{E}[Y \mid X = x]
+$$
+
+- Give it a value of $X$, it returns the mean of $Y$ **among units with that value**
+- So the sample analog is just: **take the units with $X = x$, and average their $Y$**
+- No model, no line, no assumptions about shape
+
+---
+
+## Discrete $X$: a mean at each value
+
+```{r}
+ideo_by_pid <- ces |>
+  filter(!is.na(pid7), !is.na(ideo7)) |>
+  group_by(pid7) |>
+  summarise(ideo = mean(ideo7), n = n())
+```
+
+::: {.fragment}
+```{r}
+#| fig-height: 3.3
+ggplot(ideo_by_pid, aes(x = pid7, y = ideo)) +
+  geom_line(colour = "grey60") +
+  geom_point(aes(size = n), colour = uw_red) +
+  scale_x_continuous(breaks = 1:7) +
+  labs(x = "Party ID (1 = strong D, 7 = strong R)", y = "Mean ideology")
+```
+:::
+
+- Seven means, one per value of $X$. Point size is the number of respondents
+- Not even monotone: leaners (3, 5) are more ideological than weak partisans (2, 6). A line would miss this
+
+---
+
+## Continuous $X$: no two counties share a value
+
+- No two counties have exactly the same % white, so we can't average "at" $x$
+- Instead, **average near $x$**:
+  1. Cut $X$ into bins
+  2. Within each bin, average $X$ and average $Y$
+  3. Plot the bin averages
+
+::: {.fragment}
+```{r}
+binned <- election |>
+  mutate(bin = ntile(pctWhiteNH, 20)) |>          # 20 bins, equal counts
+  group_by(bin) |>
+  summarise(x_lo = min(pctWhiteNH), x_hi = max(pctWhiteNH),
+            x = mean(pctWhiteNH), y = mean(voteshare), n = n())
+```
+:::
+
+- That's a **binned scatterplot**
+
+---
+
+## Step 1: the data
+
+```{r}
+#| echo: false
+#| fig-height: 5.2
+base <- ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  labs(x = "% non-Hispanic white", y = "Clinton vote share (%)") +
+  coord_cartesian(xlim = c(0, 100), ylim = c(0, 95))
+
+base + geom_point(size = 1, alpha = 0.25)
+```
+
+---
+
+## Step 2: cut $X$ into bins
+
+```{r}
+#| echo: false
+#| fig-height: 5.2
+base +
+  geom_point(size = 1, alpha = 0.25) +
+  geom_vline(xintercept = binned$x_lo[-1], colour = "grey40", linewidth = 0.3)
+```
+
+- 20 bins with ~155 counties each. Bins are narrow where the data are dense
+
+---
+
+## Step 3: the mean of $Y$ in each bin
+
+```{r}
+#| echo: false
+#| fig-height: 5.2
+base +
+  geom_point(size = 1, alpha = 0.12) +
+  geom_vline(xintercept = binned$x_lo[-1], colour = "grey40", linewidth = 0.3) +
+  geom_segment(data = binned, aes(x = x_lo, xend = x_hi, y = y, yend = y),
+               colour = uw_red, linewidth = 1.4)
+```
+
+- A flat segment across each bin, at that bin's average Clinton share
+
+---
+
+## Step 4: one point per bin
+
+```{r}
+#| echo: false
+#| fig-height: 5.2
+base +
+  geom_point(size = 1, alpha = 0.12) +
+  geom_point(data = binned, aes(x = x, y = y), colour = uw_red, size = 3.5)
+```
+
+- Each point sits at $(\bar x_{\text{bin}}, \bar y_{\text{bin}})$. That's the whole binned scatterplot
+
+---
+
+## The code for steps 3 and 4
+
+```{r}
+#| eval: false
+ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point(size = 1, alpha = 0.12) +
+  # step 3: a segment we define ourselves, from the bin's min to its max
+  geom_segment(data = binned, aes(x = x_lo, xend = x_hi, y = y, yend = y),
+               colour = uw_red, linewidth = 1.4) +
+  # step 4: one point per bin
+  geom_point(data = binned, aes(x = x, y = y), colour = uw_red, size = 3.5)
+```
+
+- Two layers with a **different data frame** from the base plot
+- `geom_segment()` needs four aesthetics: `x`, `xend`, `y`, `yend`
+
+---
+
+## It's just a mean in bins
+
+The bin means average back to the overall mean (the law of iterated expectations):
+
+$$
+\bar Y = \sum_{b} \frac{n_b}{n}\, \bar Y_b
+$$
+
+::: {.fragment}
+```{r}
+mean(election$voteshare)
+sum(binned$n * binned$y) / sum(binned$n)
+```
+:::
+
+- Weight each bin by its share of the data, $n_b / n$, the sample analog of $P(X \in \text{bin } b)$
+- Equal-count bins make all the weights the same, so here a plain `mean(binned$y)` works too
+
+---
+
+## How many bins?
+
+```{r}
+#| echo: false
+#| fig-height: 4.4
+bin_means <- function(k) {
+  election |>
+    mutate(bin = ntile(pctWhiteNH, k)) |>
+    group_by(bin) |>
+    summarise(x = mean(pctWhiteNH), y = mean(voteshare)) |>
+    mutate(k = k)
+}
+by_k <- map(c(4, 20, 150), bin_means) |>
+  list_rbind() |>
+  mutate(k = factor(paste(k, "bins"), levels = paste(c(4, 20, 150), "bins")))
+
+ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point(size = 0.6, alpha = 0.08) +
+  geom_point(data = by_k, aes(x = x, y = y), colour = uw_red, size = 2) +
+  facet_wrap(~ k) +
+  labs(x = "% non-Hispanic white", y = "Clinton vote share (%)")
+```
+
+- Few bins: smooth, but each mean averages over very different counties
+- Many bins: follows the data closely, but each mean is based on ~20 counties, so it's noisy
+- The same tradeoff as the bin width and the bandwidth. More on this (**bias vs. variance**) in lecture this week
+
+---
+
+## Equal width or equal count?
+
+```{r}
+#| echo: false
+#| fig-height: 4.2
+eq_width <- election |>
+  mutate(bin = cut_width(pctWhiteNH, width = 5, boundary = 0)) |>
+  group_by(bin) |>
+  summarise(x = mean(pctWhiteNH), y = mean(voteshare), n = n())
+
+p_count <- ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point(size = 0.6, alpha = 0.08) +
+  geom_point(data = binned, aes(x = x, y = y), colour = uw_red, size = 2.5) +
+  labs(title = "ntile(): equal counts", x = "% non-Hispanic white", y = "Clinton vote share (%)")
+p_width <- ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point(size = 0.6, alpha = 0.08) +
+  geom_point(data = eq_width, aes(x = x, y = y, size = n), colour = uw_red) +
+  scale_size_area(max_size = 5, guide = "none") +
+  labs(title = "cut_width(): equal widths", x = "% non-Hispanic white", y = NULL)
+p_count + p_width
+```
+
+- Equal counts put more bins where the data are, so every mean is equally precise. But the first bin runs from 3% to 38% white: one mean for very different counties
+- Equal widths show the shape over all of $X$, but some bins have only a handful of counties (small points), so their means are noisy
+
+---
+
+## Binary $Y$: the bin mean is a share
+
+```{r}
+#| fig-height: 3.6
+approve_by_age <- ces |>
+  filter(!is.na(trump_approve)) |>
+  mutate(age_bin = cut_width(age, width = 5, boundary = 15)) |>
+  group_by(age_bin) |>
+  summarise(age = mean(age), approve = weighted.mean(trump_approve, weight))
+
+ggplot(approve_by_age, aes(x = age, y = approve)) +
+  geom_point(colour = uw_red, size = 3) +
+  labs(x = "Age", y = "Share approving of Trump")
+```
+
+- $\mathbb{E}[Y \mid X = x] = P(Y = 1 \mid X = x)$ when $Y$ is 0/1
+- `weighted.mean()` uses the survey weights inside each bin
+
+---
+
+# Putting lines on graphs
+
+## Lines we define ourselves
+
+| Geom | Draws | Needs |
+|---|---|---|
+| `geom_hline()` | a horizontal line | `yintercept` |
+| `geom_vline()` | a vertical line | `xintercept` |
+| `geom_abline()` | any straight line | `intercept`, `slope` |
+| `geom_segment()` | a segment between two points | `x`, `xend`, `y`, `yend` |
+
+- None of these fit anything. You compute the numbers, ggplot draws them
+- (`geom_smooth()` fits models for you. We'll hold off until we cover regression)
+
+---
+
+## The best constant and the best line
+
+From week 4: the best constant predictor is $\mathbb{E}[Y]$, and the best linear predictor is
+
+$$
+\beta = \frac{\text{Cov}(X, Y)}{\text{Var}(X)} \qquad \alpha = \mathbb{E}[Y] - \beta\, \mathbb{E}[X]
+$$
+
+::: {.fragment}
+Plug in sample means, variances, and covariances:
+
+```{r}
+b <- cov(election$pctWhiteNH, election$voteshare) / var(election$pctWhiteNH)
+a <- mean(election$voteshare) - b * mean(election$pctWhiteNH)
+c(intercept = a, slope = b)
+```
+:::
+
+---
+
+## Putting it together
+
+```{r}
+#| fig-height: 3.9
+ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point(size = 1, alpha = 0.1) +
+  geom_hline(yintercept = mean(election$voteshare), linetype = "dashed") +
+  geom_abline(intercept = a, slope = b, linewidth = 1.1) +
+  geom_point(data = binned, aes(x = x, y = y), colour = uw_red, size = 3) +
+  labs(x = "% non-Hispanic white", y = "Clinton vote share (%)")
+```
+
+- Dashed: the overall mean. Black: the line from `cov / var`. Red: the bin means
+- The line misses the curvature: it's below the bin means for the least-white counties and above them between about 55% and 80% white
+
+---
+
+## Annotating
+
+`annotate()` adds a single label or segment without a data frame:
+
+```{r}
+#| fig-height: 3.6
+ggplot(binned, aes(x = x, y = y)) +
+  geom_point(colour = uw_red, size = 3) +
+  geom_abline(intercept = a, slope = b) +
+  annotate("text", x = 30, y = 20, label = paste("slope =", round(b, 2)), size = 6) +
+  annotate("segment", x = 30, xend = 30, y = 23, yend = a + b * 30 - 1,
+           arrow = arrow(length = unit(0.3, "cm"))) +
+  labs(x = "% non-Hispanic white", y = "Clinton vote share (%)")
+```
+
+---
+
+## Recap
+
+- **Histograms and densities** both estimate the shape of a distribution. Bin width and bandwidth control how smooth
+- **ECDFs** need no tuning: the share of observations at or below each value
+- **Binned scatterplots** estimate the CEF with no model: cut $X$ into bins, average $Y$ in each
+- **More bins**: less averaging over different $x$'s, more noise in each mean
+- **Lines** (`geom_hline()`, `geom_abline()`, `geom_segment()`): compute it yourself, then draw it
+
+---
+
+## Flipping the axes: `coord_flip()`
+
+```{r}
+#| echo: false
+pid_labels <- c("Strong Democrat", "Not very strong Democrat", "Lean Democrat",
+                "Independent", "Lean Republican", "Not very strong Republican",
+                "Strong Republican")
+approve_by_pid <- ces |>
+  filter(!is.na(pid7), !is.na(trump_approve)) |>
+  group_by(pid7) |>
+  summarise(approve = weighted.mean(trump_approve, weight)) |>
+  mutate(party = factor(pid_labels[pid7], levels = pid_labels))
+```
+
+```{r}
+#| eval: false
+p <- ggplot(approve_by_pid, aes(x = party, y = approve)) +
+  geom_col(fill = uw_red) +
+  labs(x = NULL, y = "Share approving of Trump")
+
+p                  # left
+p + coord_flip()   # right
+```
+
+```{r}
+#| echo: false
+#| fig-height: 3.6
+p <- ggplot(approve_by_pid, aes(x = party, y = approve)) +
+  geom_col(fill = uw_red) +
+  labs(x = NULL, y = "Share approving of Trump")
+
+p + p + coord_flip()
+```
+
+- Swaps what's drawn on the horizontal and vertical axes. The `aes()` mapping doesn't change
+- Use it when category labels are long: horizontal bars leave room to read them
+- You can also just swap the mapping, `aes(x = approve, y = party)`. `coord_flip()` is handy for flipping a plot you've already built
+
+---
+
+# Exercise
+
+## Exercise
+
+Open `ps812_section6_exercise.qmd`.
+
+- Part 1: histograms, densities, and ECDFs
+- Part 2: binned scatterplots and lines
+
+---
+
+# Questions?

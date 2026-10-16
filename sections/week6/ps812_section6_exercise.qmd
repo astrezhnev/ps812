@@ -1,0 +1,161 @@
+---
+title: "PS 812: Section 6 Exercise"
+author: "YOUR NAME"
+date: "10-16-2026"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| eval: true
+library(tidyverse)
+theme_set(theme_minimal(base_size = 13))
+
+set.seed(812)
+
+election <- read_csv("data/prez_election_2016_vote.csv")
+ces <- read_csv("data/ces25_viz.csv")
+```
+
+Data:
+
+- `election`: 2016 presidential returns by county (the week 4 lecture data). One row per county with Clinton's votes (`candidatevotes`), total votes (`totalvotes`), and the percent of residents who are non-Hispanic white (`pctWhiteNH`).
+- `ces`: 2025 Cooperative Election Study, 17,000 respondents. `weight` (survey weight), `age`, `gender`, `college` (1 = 4-year degree or more), `pid3`, `pid7` (1 = strong Democrat, 7 = strong Republican), `ideo7` (1 = very liberal, 7 = very conservative), `trump_approve` (1 = approves of Trump), `state`.
+
+Today we draw only lines we compute ourselves (`geom_hline()`, `geom_vline()`, `geom_abline()`, `geom_segment()`). Don't use `geom_smooth()`.
+
+# Part 1: One variable
+
+## Task 1: setup
+
+Add a column `voteshare` to `election` with Clinton's share of the vote in percent (`candidatevotes / totalvotes`), and drop counties missing `voteshare` or `pctWhiteNH`. How many counties are left?
+
+```{r}
+
+```
+
+## Task 2: histograms
+
+Make a histogram of `voteshare` with `binwidth` set to 1, 5, and 20. What do you see in one that you can't see in the others?
+
+```{r}
+
+```
+
+## Task 3: densities
+
+Redraw the histogram on the density scale (`aes(y = after_stat(density))`) and add `geom_density()` on top. Then add two more density curves with `adjust = 0.25` and `adjust = 3`. Which one would you report?
+
+```{r}
+
+```
+
+## Task 4: comparing groups
+
+Using `ces`, plot the density of `age` for each value of `pid3`, filled by party (use `alpha` so all three show). Which group is oldest? Which is youngest?
+
+```{r}
+
+```
+
+## Task 5: survey weights
+
+Redo Task 4 for Democrats and Republicans only, with and without the survey weights (`aes(weight = weight / sum(weight))`). Do the weights change the picture?
+
+```{r}
+
+```
+
+## Task 6: ECDFs
+
+Plot the ECDF of `age` by `pid3` with `stat_ecdf()`. Add a horizontal line at 0.5 and read off each group's median. Check your answers with `median()`.
+
+```{r}
+
+```
+
+# Part 2: Conditional means
+
+## Task 7: scatterplot
+
+Plot `voteshare` against `pctWhiteNH`. Fix the overplotting.
+
+```{r}
+
+```
+
+## Task 8: discrete X
+
+Using `ces`, compute the average of `ideo7` at each value of `pid7` (drop missing values first) and the number of respondents at each. Plot the means as points connected by a line, sized by the count. Is the CEF linear in party ID?
+
+```{r}
+
+```
+
+## Task 9: a binned scatterplot by hand
+
+Cut `pctWhiteNH` into 20 equal-count bins with `ntile()`. For each bin compute the minimum, maximum, and mean of `pctWhiteNH`, the mean of `voteshare`, and the number of counties. Plot the bin means in red on top of a faded scatterplot.
+
+```{r}
+
+```
+
+## Task 10: steps
+
+Redraw Task 9 as a step function: a horizontal `geom_segment()` across each bin (from `x_lo` to `x_hi`) at the bin mean of `voteshare`. Add `geom_vline()`s at the bin edges.
+
+```{r}
+
+```
+
+## Task 11: it's just a mean
+
+a. Show that the overall mean of `voteshare` equals the average of the bin means, weighting each by its share of the counties. Which identity from week 4 is this?
+b. Redo it with 7 bins instead of 20. Why does the unweighted average of the bin means still match here? When would it not?
+
+```{r}
+
+```
+
+## Task 12: how many bins?
+
+Write a function `bin_means(k)` that returns the bin means of `pctWhiteNH` and `voteshare` for `k` equal-count bins, with a column `k`. Use `map()` and `list_rbind()` to stack the results for `k` = 3, 10, 30, and 300, and plot them with `facet_wrap(~ k)`. Describe the tradeoff.
+
+```{r}
+
+```
+
+## Task 13: lines
+
+a. Compute the slope and intercept of the best linear predictor of `voteshare` given `pctWhiteNH` using `cov()`, `var()`, and `mean()`. Interpret the slope.
+b. Plot the faded scatter, the 20 bin means from Task 9, a dashed `geom_hline()` at the mean of `voteshare`, and the line with `geom_abline()`.
+c. Where does the line over-predict relative to the bin means, and where does it under-predict?
+
+```{r}
+
+```
+
+## Task 14: a binary outcome
+
+a. Using `ces`, compute the share approving of Trump (`trump_approve`) at **each single year** of age, and plot it.
+b. Now cut age into 5-year bins (`cut_width(age, width = 5, boundary = 15)`) and plot the weighted share in each bin (`weighted.mean(trump_approve, weight)`) on the same plot.
+c. Why is (a) noisier than (b)? Where is it noisiest?
+
+```{r}
+
+```
+
+## Bonus: bins as an estimator
+
+Treat the 3,114 counties as a population. Draw a random sample of 300 counties, compute the binned means with 5 bins, and repeat 100 times. Plot all 100 sets of bin means on one graph (lines with `alpha = 0.2`, grouped by draw), with the population bin means (5 bins, all counties) on top. Then do the same with 30 bins. Which number of bins gives estimates that vary more from sample to sample? Which is further from the population CEF on average?
+
+```{r}
+
+```
+

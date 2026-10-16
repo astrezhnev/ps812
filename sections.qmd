@@ -50,7 +50,7 @@ Links become active as the materials for each week are posted.
 
 *Friday, October 16*
 
-*To be posted*
+- [Week 6 GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/sections/week6/)
 
 ### Week 7: Estimation: Part 2
 
