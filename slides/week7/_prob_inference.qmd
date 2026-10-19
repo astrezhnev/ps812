@@ -1,0 +1,34 @@
+<!-- Blackwell (2025), Ch. 2, redrawn. Included inside a
+     ::: {.prob-inf .hl-prob} or ::: {.prob-inf .hl-inf} div; the CSS in
+     custom.scss fades the other arrow and colors the highlighted one. With no
+     hl- class the figure is drawn in full. -->
+```{=html}
+<svg viewBox="0 10 1000 460" role="img" aria-label="Probability runs from the data generating process to the observed data; inference runs from the observed data back to the data generating process." fill="currentColor" stroke="none">
+
+  <!-- Nodes -->
+  <g class="part node">
+    <circle cx="220" cy="240" r="135" fill="none" stroke="currentColor" stroke-width="2.4"/>
+    <text x="220" y="205" text-anchor="middle" font-size="32">Data</text>
+    <text x="220" y="245" text-anchor="middle" font-size="32">generating</text>
+    <text x="220" y="285" text-anchor="middle" font-size="32">process</text>
+  </g>
+  <g class="part node">
+    <circle cx="780" cy="240" r="120" fill="none" stroke="currentColor" stroke-width="2.4"/>
+    <text x="780" y="251" text-anchor="middle" font-size="32">Observed data</text>
+  </g>
+
+  <!-- Probability: DGP to data -->
+  <g class="part arrow prob">
+    <path d="M 315.5 144.5 Q 505 10 679.2 143.0" fill="none" stroke="currentColor" stroke-width="2.4"/>
+    <polygon points="695.1,155.1 674.3,149.4 684.1,136.6"/>
+    <text x="505" y="55" text-anchor="middle" font-size="34">probability</text>
+  </g>
+
+  <!-- Inference: data to DGP -->
+  <g class="part arrow inf">
+    <path d="M 695.1 324.9 Q 505 470 331.8 347.1" fill="none" stroke="currentColor" stroke-width="2.4"/>
+    <polygon points="315.5,335.5 336.4,340.6 327.2,353.6"/>
+    <text x="505" y="452" text-anchor="middle" font-size="34">inference</text>
+  </g>
+</svg>
+```

@@ -1,0 +1,309 @@
+---
+title: "Week 7: Estimation, Part 2"
+subtitle: "PS 812 - Introduction to Statistical Methods in Political Science"
+author:
+  - name: "Anton Strezhnev"
+    affiliation: "University of Wisconsin-Madison"
+    email: strezhnev@wisc.edu
+date: "October 20, 2026"
+date-format: "MMMM D, YYYY"
+editor:
+  render-on-save: true
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    overview: true
+    navigation-mode: vertical
+    progress: false
+    controls: true
+    link-external-newwindow: true
+    footer: "PS 812 - University of Wisconsin-Madison"
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+execute:
+  cache: false
+code:
+  execute:
+    - r
+    - python
+embed-resources: true
+bibliography: ../ps812.bib
+link-citations: true
+
+---
+
+## Welcome back! {.title-slide}
+
+<!-- MathJax macros for the whole deck. The reveal math plugin overwrites
+     window.MathJax, so a header config would be clobbered; defining them in
+     the first slide registers them before any later slide is typeset. The
+     wrapper takes up no space and renders nothing. -->
+::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
+$$
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Corr}{\text{Corr}}
+\newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
+$$
+:::
+
+
+## Where we've been
+
+::: {.prob-inf .hl-inf}
+{{< include _prob_inference.qmd >}}
+:::
+
+::: {.attribution}
+Adapted from @blackwell2025users, Ch. 2
+:::
+
+## Where we've been
+
+- Under **i.i.d random sampling** from the target population, we've established that...
+
+<!-- Each row keeps its left-hand side fixed while the right-hand side steps
+     through the week 6 derivation in place (fade-in-then-out fragments in an
+     r-stack), with the assumption used at each step noted underneath. The
+     last step stays up. Layout in custom.scss (.recap-row). -->
+::: {.recap-row}
+
+$\mathbb{E}[\hat{\mu}] =$
+
+::: {.r-stack}
+::: {.fragment .fade-in-then-out fragment-index="1"}
+$\displaystyle \mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n Y_i\right]$
+:::
+::: {.fragment .fade-in-then-out fragment-index="2"}
+$\displaystyle \frac{1}{n}\sum_{i=1}^n \mathbb{E}[Y_i]$
+:::
+::: {.fragment .fade-in-then-out fragment-index="3"}
+$\displaystyle \frac{1}{n}\sum_{i=1}^n \mu$
+:::
+::: {.fragment fragment-index="4"}
+$\displaystyle \mu$
+:::
+:::
+
+::: {.r-stack .recap-note}
+::: {.fragment .fade-in-then-out fragment-index="2"}
+linearity of expectations
+:::
+::: {.fragment .fade-in-then-out fragment-index="3"}
+**identical**: $\mathbb{E}[Y_i] = \mu$
+:::
+::: {.fragment fragment-index="4"}
+unbiased
+:::
+:::
+
+:::
+
+::: {.recap-row}
+
+$\Var(\hat{\mu}) =$
+
+::: {.r-stack}
+::: {.fragment .fade-in-then-out fragment-index="5"}
+$\displaystyle \Var\left(\frac{1}{n}\sum_{i=1}^n Y_i\right)$
+:::
+::: {.fragment .fade-in-then-out fragment-index="6"}
+$\displaystyle \frac{1}{n^2}\left[\sum_{i=1}^n \Var(Y_i) + \sum_{i=1}^n \sum_{j \neq i} \Cov(Y_i, Y_j)\right]$
+:::
+::: {.fragment .fade-in-then-out fragment-index="7"}
+$\displaystyle \frac{1}{n^2}\sum_{i=1}^n \Var(Y_i)$
+:::
+::: {.fragment .fade-in-then-out fragment-index="8"}
+$\displaystyle \frac{1}{n^2}\sum_{i=1}^n \sigma^2$
+:::
+::: {.fragment fragment-index="9"}
+$\displaystyle \frac{\sigma^2}{n}$
+:::
+:::
+
+::: {.r-stack .recap-note}
+::: {.fragment .fade-in-then-out fragment-index="6"}
+constants out squared; variance of a sum
+:::
+::: {.fragment .fade-in-then-out fragment-index="7"}
+**independent**: $\Cov(Y_i, Y_j) = 0$
+:::
+::: {.fragment .fade-in-then-out fragment-index="8"}
+**identical**: $\Var(Y_i) = \sigma^2$
+:::
+::: {.fragment fragment-index="9"}
+sampling variance
+:::
+:::
+
+:::
+
+::: {.fragment .recap-result fragment-index="10"}
+$\hat{\mu} \sim \; {\color{#c5050c}{?}}\left(\mu, \dfrac{\sigma^2}{n}\right)$
+:::
+
+## Where we've been
+
+::: {.recap-result}
+$\hat{\mu} \sim \; {\color{#c5050c}{?}}\left(\mu, \dfrac{\sigma^2}{n}\right)$
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| output: asis
+
+# Densities that share a mean and variance, morphing from one to the next on a
+# loop (dist-anim/dists.js; densities from dist-anim/make_dists.R)
+cat("```{=html}",
+    '<div class="dist-anim"></div>',
+    "<script>",
+    "(", readLines("dist-anim/dists.js"), ")(document.currentScript.previousElementSibling,",
+    readLines("dist-anim/dists.json", warn = FALSE), ", { maxHeight: 360 });",
+    "</script>",
+    "```", sep = "\n")
+```
+
+:::
+
+## This week
+
+::: {.incremental}
+
+- **Convergence in distribution**
+  - As sample size $n$ becomes large, is the sampling distribution **well-approximated** by a known distribution?
+  - When a **central limit theorem** applies, the sampling distribution **converges in distribution** to a normal!
+
+- **Plug-in estimation**
+  - What if we want to learn other things about the **population** distribution?
+  - A population *variance*? A population *covariance*?
+  - Like the mean, these are all **functionals** of the population CDF
+  - Under i.i.d. sampling, plugging in the **sample** CDF usually gives a good estimator!
+
+- **Density estimation**
+  - Histograms and binning
+  - **Kernel** estimators (weighted averages w/ weights determined by *closeness*)
+
+:::
+
+## Convergence in distribution
+
+
+## Convergence in distribution
+
+
+## The Central Limit Theorem
+
+
+## The Central Limit Theorem
+
+
+## The Central Limit Theorem
+
+
+## Properties of convergence in distribution
+
+
+## Asymptotic normality
+
+
+## Running Example
+
+
+## Running Example in R
+
+
+## How good is the CLT approximation? {.app-slide}
+
+::: {.app-frame data-app="clt_app.html" data-title="How good is the CLT approximation?"}
+:::
+
+```{=html}
+<script>
+// The widget is a separate page framed here. The <iframe> is built at runtime
+// because `embed-resources: true` would otherwise inline the target into a
+// data: URI, breaking the app's relative asset paths and its service worker.
+// Mounting only once the slide is reached also delays the webR download.
+(function () {
+  function mount() {
+    document.querySelectorAll("section.present .app-frame[data-app]").forEach(function (el) {
+      if (el.dataset.mounted) return;
+      el.dataset.mounted = "1";
+      var f = document.createElement("iframe");
+      f.src = el.dataset.app;
+      f.title = el.dataset.title || "Interactive widget";
+      f.setAttribute("allow", "clipboard-write");
+      el.appendChild(f);
+    });
+  }
+  // Reveal is not defined while this script is parsed, so wire up after load.
+  window.addEventListener("load", function () {
+    if (window.Reveal && typeof Reveal.on === "function") Reveal.on("slidechanged", mount);
+    mount();
+  });
+})();
+</script>
+```
+
+
+<!-- ===== Plug-in estimators ===== -->
+
+## Plug-in estimators
+
+
+## The empirical CDF
+
+
+## The empirical CDF
+
+
+## The plug-in principle
+
+
+## The plug-in principle
+
+
+## Consistency of plug-in estimators
+
+
+## Running Example
+
+
+## Running Example in R
+
+
+<!-- ===== Density estimation ===== -->
+
+## Density estimation
+
+
+## Histograms
+
+
+## Kernel density estimation
+
+
+## Kernel density estimation
+
+
+## Choosing the bandwidth
+
+
+## Running Example
+
+
+## Running Example in R
+
+
+<!-- ===== Wrap-up ===== -->
+
+## Next week
+
+
+## References {.refs-slide}
+
+::: {#refs}
+:::

@@ -1,0 +1,568 @@
+# ---------------------------------------------------------------------------
+# How good is the CLT's normal approximation?
+#
+# Pick a population distribution and a sampling design: by default a simple
+# random sample of n i.i.d. draws; optionally a clustered sample of G clusters
+# of m units each (n = G * m), with intra-cluster correlation (ICC) rho
+# between the responses of any two units in the same cluster. The app repeats
+# the whole sampling procedure R times, takes the sample mean each time, and
+# sets the histogram of those R sample means against two normal curves:
+#
+#   cluster-adjusted CLT   N( mu, sigma^2 * (1 + (m - 1) * rho) / n )
+#   i.i.d. CLT             N( mu, sigma^2 / n )   -- what i.i.d. sampling would give
+#
+# The first has the sample mean's true variance under the design; the
+# second ignores the clustering. The two agree when rho = 0 or m = 1, so for
+# an i.i.d. sample the app draws just the one curve, the CLT normal. The
+# Kolmogorov-Smirnov distance (largest vertical gap between the simulated CDF
+# and the normal CDF) summarizes how far each is from the simulation. Since KS
+# mostly reflects the center, the app also reports tail coverage: how often
+# the interval Ybar +/- 1.96 SE covers mu, and how the misses split between
+# the two tails (2.5% each if the normal approximation holds). A Q-Q plot can
+# stand in for the CDF panel.
+#
+# Clustering. Every response keeps exactly the population distribution, and
+# two units in the same cluster have correlation exactly rho. Where the family
+# allows it, each response is a cluster-level component shared by everyone in
+# the cluster plus a unit-level component of its own:
+#
+#   Normal(mu, sigma^2)  mu + N(0, rho sigma^2) + N(0, (1 - rho) sigma^2)
+#   Poisson(lambda)      Pois(rho lambda) + Pois((1 - rho) lambda)
+#   Exponential(rate)    Gamma(rho, rate) + Gamma(1 - rho, rate)
+#   Gamma(k, rate)       Gamma(rho k, rate) + Gamma((1 - rho) k, rate)
+#   Bernoulli(p)         Bern(p_g), with the cluster's p_g ~ Beta and mean p
+#                        (the beta-binomial model; ICC = 1 / (a + b + 1))
+#   Log-normal           exp of a normal random-effects model on the log
+#                        scale, with its ICC r chosen so the correlation on
+#                        the original scale is rho:
+#                        r = log(1 + rho (e^{s^2} - 1)) / s^2
+#
+# The uniform and the Pareto have no such split. There each unit gives its
+# cluster's shared draw with probability sqrt(rho) and a draw of its own
+# otherwise (share_draws()), so two units share a draw with probability rho.
+#
+# Deliberately base R + shiny only. Every extra package is another wasm
+# download when this runs in the browser through shinylive.
+# ---------------------------------------------------------------------------
+
+library(shiny)
+
+COL_SIM   <- "#0479A8"
+COL_CLT   <- "#c5050c"
+COL_IID   <- "#C77400"
+INK       <- "#333333"
+
+R_DEFAULT <- 2000
+R_MAX     <- 10000
+BUDGET    <- 1e7     # most draws per simulation, so a run stays quick in the browser
+CHUNK     <- 1e6     # draws generated per pass
+
+`%||%` <- function(a, b) if (is.null(a) || length(a) == 0 || is.na(a)) b else a
+
+# How often Ybar +/- z SE covers mu, and the share of misses on each side:
+# `low` is Ybar more than z SEs below mu (the interval lies below mu), `high`
+# more than z SEs above it
+coverage <- function(x, mean, se, z = qnorm(0.975)) {
+  low <- mean(x < mean - z * se); high <- mean(x > mean + z * se)
+  list(cover = 1 - low - high, low = low, high = high)
+}
+
+fmt <- function(v) formatC(signif(v, 3), digits = 3, format = "fg", flag = "#")
+
+# Each population is set by its mean and variance. Bernoulli, Poisson and
+# exponential have a variance that is a function of the mean (`var_of`), and
+# the variance slider is locked to it; the rest have a free variance. `mean`
+# gives the mean slider's range, step and starting value; `var` the variance
+# slider's when it is free.
+DISTS <- list(
+  normal      = list(mean = c(-5, 5, 0.5, 0), var = c(0.25, 25, 0.25, 1)),
+  uniform     = list(mean = c(-5, 5, 0.5, 0), var = c(0.25, 25, 0.25, 1)),
+  bernoulli   = list(mean = c(0.01, 0.99, 0.01, 0.1), var_of = function(m) m * (1 - m),
+                     var_max = 0.25, var_step = 0.0001, rule = "μ(1 − μ)"),
+  poisson     = list(mean = c(0.1, 20, 0.1, 2), var_of = function(m) m,
+                     var_max = 20, var_step = 0.1, rule = "μ"),
+  exponential = list(mean = c(0.2, 5, 0.1, 1), var_of = function(m) m^2,
+                     var_max = 25, var_step = 0.01, rule = "μ²"),
+  gamma       = list(mean = c(0.5, 10, 0.1, 2), var = c(0.1, 25, 0.1, 2)),
+  lognormal   = list(mean = c(0.5, 10, 0.1, 1), var = c(0.1, 25, 0.1, 1)),
+  pareto      = list(mean = c(1, 10, 0.1, 2), var = c(0.1, 25, 0.1, 2))
+)
+DIST_DEFAULT <- "exponential"
+D0 <- DISTS[[DIST_DEFAULT]]
+
+# Clustering for a population with no convenient shared/own split: each unit
+# gives its cluster's shared draw with probability sqrt(icc), and a draw of
+# its own otherwise. Every response is still a draw from the population, and
+# two units in a cluster share a draw with probability icc, so their
+# correlation is exactly icc.
+share_draws <- function(r) function(nc, m, icc) {
+  y <- r(nc * m)
+  if (icc == 0) return(y)
+  take <- runif(nc * m) < sqrt(icc)
+  y[take] <- rep(r(nc), each = m)[take]
+  y
+}
+
+# The population from its mean and variance (the variance only where it is
+# free). Values are clamped to the distribution's range, since a switch of
+# distribution reaches the server a moment before the sliders' new ranges do.
+# `draw(nc, m, icc)` returns nc clusters of m responses, cluster by cluster.
+population <- function(dist, mean, var) {
+  d  <- DISTS[[dist]]
+  mu <- min(max(mean %||% d$mean[4], d$mean[1]), d$mean[2])
+  s2 <- if (is.null(d$var)) d$var_of(mu) else min(max(var %||% d$var[4], d$var[1]), d$var[2])
+  s  <- sqrt(s2)
+  base <- list(mean = mu, var = s2, discrete = dist %in% c("bernoulli", "poisson"))
+  c(base, switch(dist,
+    normal = list(
+      label = sprintf("Normal(μ = %g, σ² = %g)", mu, s2),
+      xlim = mu + c(-4, 4) * s, d = function(x) dnorm(x, mu, s),
+      draw = function(nc, m, icc)
+        mu + rep(rnorm(nc, 0, sqrt(icc) * s), each = m) + rnorm(nc * m, 0, sqrt(1 - icc) * s)),
+    uniform = {
+      a <- sqrt(3 * s2)      # half-width: Var = (2a)^2 / 12
+      list(label = sprintf("Uniform(%g, %g)", signif(mu - a, 3), signif(mu + a, 3)),
+           xlim = mu + c(-1.25, 1.25) * a, d = function(x) dunif(x, mu - a, mu + a),
+           draw = share_draws(function(k) runif(k, mu - a, mu + a)))
+    },
+    bernoulli = list(
+      label = sprintf("Bernoulli(p = %g)", mu),
+      xlim = c(0, 1), d = function(x) dbinom(x, 1, mu),
+      draw = function(nc, m, icc) {
+        pg <- if (icc == 0) rep(mu, nc)
+              else rbeta(nc, mu * (1 - icc) / icc, (1 - mu) * (1 - icc) / icc)
+        rbinom(nc * m, 1, rep(pg, each = m))
+      }),
+    poisson = list(
+      label = sprintf("Poisson(λ = %g)", mu),
+      xlim = c(0, qpois(0.999, mu)), d = function(x) dpois(x, mu),
+      draw = function(nc, m, icc)
+        rep(rpois(nc, icc * mu), each = m) + rpois(nc * m, (1 - icc) * mu)),
+    exponential = {
+      r <- 1 / mu
+      list(label = sprintf("Exponential(rate = %g)", signif(r, 3)),
+           xlim = c(0, qexp(0.995, r)), d = function(x) dexp(x, r),
+           draw = function(nc, m, icc) {
+             if (icc == 0) return(rexp(nc * m, r))
+             rep(rgamma(nc, shape = icc, rate = r), each = m) +
+               rgamma(nc * m, shape = 1 - icc, rate = r)
+           })
+    },
+    gamma = {
+      k <- mu^2 / s2; r <- mu / s2
+      list(label = sprintf("Gamma(shape = %g, rate = %g)", signif(k, 3), signif(r, 3)),
+           xlim = c(0, qgamma(0.995, k, r)), d = function(x) dgamma(x, k, r),
+           draw = function(nc, m, icc)
+             rep(rgamma(nc, shape = icc * k, rate = r), each = m) +
+               rgamma(nc * m, shape = (1 - icc) * k, rate = r))
+    },
+    lognormal = {
+      sl2 <- log(1 + s2 / mu^2); ml <- log(mu) - sl2 / 2
+      list(label = sprintf("Log-normal(μ_log = %g, σ²_log = %g)", signif(ml, 3), signif(sl2, 3)),
+           xlim = c(0, qlnorm(0.995, ml, sqrt(sl2))), d = function(x) dlnorm(x, ml, sqrt(sl2)),
+           draw = function(nc, m, icc) {
+             r <- log(1 + icc * expm1(sl2)) / sl2     # log-scale ICC giving icc here
+             exp(ml + rep(rnorm(nc, 0, sqrt(r * sl2)), each = m) +
+                   rnorm(nc * m, 0, sqrt((1 - r) * sl2)))
+           })
+    },
+    pareto = {
+      al <- 1 + sqrt(1 + mu^2 / s2)   # from CV^2 = 1 / (alpha (alpha - 2))
+      xm <- mu * (al - 1) / al
+      list(label = sprintf("Pareto(α = %g, xₘ = %g)", signif(al, 3), signif(xm, 3)),
+           xlim = c(0, xm * 0.005^(-1 / al)),
+           d = function(x) ifelse(x < xm, 0, al * xm^al / x^(al + 1)),
+           draw = share_draws(function(k) xm * runif(k)^(-1 / al)))
+    }))
+}
+
+# R sample means, each from a fresh clustered sample of G clusters of m.
+# Samples are drawn in passes of about CHUNK responses; each column of a
+# pass's matrix is one sample.
+simulate_means <- function(pop, G, m, icc, R) {
+  n <- G * m
+  per_pass <- max(1, floor(CHUNK / n))
+  out <- numeric(R)
+  done <- 0
+  while (done < R) {
+    k <- min(per_pass, R - done)
+    y <- pop$draw(k * G, m, icc)
+    out[done + seq_len(k)] <- colMeans(matrix(y, nrow = n))
+    done <- done + k
+  }
+  out
+}
+
+# Kolmogorov-Smirnov distance between the ECDF of x and a normal CDF, and
+# where it is attained: the ECDF value there (from the right or the left of a
+# jump) and the normal CDF value
+ks_normal <- function(x, mean, sd) {
+  x  <- sort(x)
+  R  <- length(x)
+  Fn <- pnorm(x, mean, sd)
+  up <- seq_len(R) / R - Fn
+  dn <- Fn - (seq_len(R) - 1) / R
+  i  <- which.max(pmax(up, dn))
+  list(D = max(up[i], dn[i]), at = x[i], Fn = Fn[i],
+       Fe = if (up[i] >= dn[i]) i / R else (i - 1) / R)
+}
+
+css <- "
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700&family=Red+Hat+Text:wght@400;500;700&display=swap');
+html, body { height:100%; }
+body { font-family:'Red Hat Text',system-ui,sans-serif; background:#F7F7F7; color:#333;
+       margin:0; padding:10px; font-size:14px; box-sizing:border-box; overflow:hidden; }
+h4 { font-family:'Red Hat Display',system-ui,sans-serif; margin:0; font-size:16px; }
+h5 { font-family:'Red Hat Display',system-ui,sans-serif; margin:2px 0 4px 0; font-size:14px;
+     font-weight:700; color:#666; }
+/* fluidPage() wraps the UI in an auto-height .container-fluid; it needs a
+   definite height for the panels below to size to the frame. */
+body > .container-fluid { height:100%; padding:0; }
+.wrap { display:flex; gap:12px; height:100%; }
+.card { display:flex; flex-direction:column; min-width:0; min-height:0;
+        background:#fff; border:1px solid #e2e2e2; border-radius:8px; padding:8px 12px;
+        box-sizing:border-box; }
+.side { width:232px; flex:none; overflow-y:auto; }
+.side hr { margin:6px 0 4px 0; border-color:#eee; }
+.main { flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:12px; }
+.top { flex:1.45 1 0; }
+.bottom { flex:1 1 0; display:flex; gap:12px; min-height:0; }
+.bottom .card { flex:1 1 0; }
+.hdr { display:flex; justify-content:space-between; align-items:baseline; min-height:22px; flex:none; }
+.hdr .form-group { width:auto !important; margin:0; }
+.hdr .checkbox { margin:0; font-size:12.5px; color:#666; }
+.hdr .shiny-options-group { font-size:12.5px; color:#666; }
+.hdr .radio-inline { padding-left:18px; margin-left:8px; }
+.hdr .radio-inline input { margin-left:-16px; margin-top:3px; }
+.model { font-size:12px; color:#777; }
+.sim { color:#0479A8; } .c { color:#c5050c; } .n0 { color:#C77400; }
+.plot { flex:1 1 auto; min-height:0; }
+.form-group { margin-bottom:2px; }
+.control-label { font-weight:500; white-space:nowrap; font-size:13px; margin-bottom:0; }
+select.form-control { height:30px; padding:2px 6px; font-size:13px; }
+input.form-control { height:30px; padding:2px 6px; font-size:13px; }
+.irs--shiny .irs-bar { border-color:var(--gc); background:var(--gc); }
+.irs--shiny .irs-single { background:var(--gc); }
+.irs--shiny .irs-handle { border-color:var(--gc); }
+.irs--shiny .irs-min, .irs--shiny .irs-max { display:none !important; }
+.run { display:flex; gap:8px; align-items:center; }
+.run .form-group { flex:1 1 0; margin:0; }
+#go { flex:1.3 1 0; height:30px; padding:0 6px; background:#c5050c; border-color:#c5050c; color:#fff;
+      font-weight:700; }
+/* the variance slider when the mean fixes it */
+.locked { opacity:0.45; pointer-events:none; }
+.note { font-size:12px; color:#777; margin-top:4px; line-height:1.3; }
+.stale { color:#c5050c; font-weight:500; }
+.fit { display:flex; flex-wrap:wrap; column-gap:18px; row-gap:0; font-size:12px; color:#777;
+       margin:2px 0 0 0; flex:none; align-items:center; }
+.fit b { font-family:'Red Hat Display',sans-serif; font-size:15px; color:#333; }
+"
+
+var_label <- function(dist) {
+  rule <- DISTS[[dist]]$rule
+  if (is.null(rule)) "σ² – variance" else paste0("σ² – variance (= ", rule, ")")
+}
+
+slider <- function(id, label, min, max, value, step, col = INK, class = NULL) {
+  div(id = paste0(id, "_wrap"), class = class, style = paste0("--gc:", col, ";"),
+      sliderInput(id, HTML(label), min = min, max = max, value = value, step = step,
+                  width = "100%", ticks = FALSE))
+}
+
+ui <- fluidPage(
+  tags$head(tags$style(HTML(css)), tags$script(HTML(
+    "Shiny.addCustomMessageHandler('lock', function (m) {
+       document.getElementById(m.id + '_wrap').classList.toggle('locked', m.locked);
+     });"))),
+  div(class = "wrap",
+    div(class = "card side",
+      h5("Population"),
+      selectInput("dist", NULL, width = "100%", selectize = FALSE, selected = DIST_DEFAULT,
+                  list("Discrete" = c("Bernoulli" = "bernoulli", "Poisson" = "poisson"),
+                       "Continuous" = c("Normal" = "normal", "Uniform" = "uniform",
+                                        "Exponential" = "exponential", "Gamma" = "gamma",
+                                        "Log-normal" = "lognormal", "Pareto" = "pareto"))),
+      slider("mean", "μ &ndash; mean", D0$mean[1], D0$mean[2], D0$mean[4], D0$mean[3]),
+      slider("var", var_label(DIST_DEFAULT), 0, D0$var_max, D0$var_of(D0$mean[4]), D0$var_step,
+             class = "locked"),
+      tags$hr(),
+      h5("Sampling design"),
+      selectInput("design", NULL, width = "100%", selectize = FALSE,
+                  c("Simple random sample (i.i.d.)" = "iid", "Clustered sample" = "cluster")),
+      conditionalPanel("input.design == 'iid'",
+        slider("n", "n &ndash; sample size", 1, 300, 30, 1)),
+      conditionalPanel("input.design == 'cluster'",
+        slider("G", "G &ndash; number of clusters", 1, 100, 10, 1),
+        slider("m", "m &ndash; units per cluster", 1, 25, 5, 1),
+        slider("icc", "ρ &ndash; intra-cluster correlation", 0, 0.9, 0.2, 0.05),
+        uiOutput("design_note")),
+      tags$hr(),
+      h5("Simulated samples"),
+      div(class = "run",
+        numericInput("R", NULL, R_DEFAULT, min = 100, max = R_MAX, step = 500, width = "100%"),
+        actionButton("go", "Simulate")),
+      uiOutput("run_note")
+    ),
+    div(class = "main",
+      div(class = "card top",
+        uiOutput("main_hdr"),
+        uiOutput("stats"),
+        div(class = "plot", plotOutput("hist", height = "100%"))
+      ),
+      div(class = "bottom",
+        div(class = "card",
+          div(class = "hdr", h4("Population distribution"),
+              span(class = "model", textOutput("pop_note", inline = TRUE))),
+          div(class = "plot", plotOutput("pop", height = "100%"))),
+        div(class = "card",
+          div(class = "hdr", h4(textOutput("shape_title", inline = TRUE)),
+              radioButtons("shape", NULL, c("CDF" = "cdf", "Q-Q" = "qq"), inline = TRUE)),
+          div(class = "plot", plotOutput("cdf", height = "100%")))
+      )
+    )
+  )
+)
+
+# `small` is for the two lower panels: fewer y ticks, a tighter margin
+par_base <- function(small = FALSE) {
+  par(mar = c(2.5, if (small) 3 else 3.4, 0.4, 0.6), mgp = c(1.5, 0.45, 0), tcl = -0.25,
+      las = 1, col.axis = "#555", family = "sans", cex.axis = 0.85, cex.lab = 0.9,
+      lab = c(5, if (small) 3 else 5, 7))
+}
+
+# Shared x-range for the histogram and the CDF panel: four CLT SDs either side
+# of mu, widened to take in all but the most extreme 0.2% of the simulated
+# means, so a few far outliers (Pareto) don't squash the picture
+x_range <- function(res)
+  range(c(quantile(res$means, c(0.001, 0.999)), res$pop$mean + c(-4, 4) * res$se))
+
+draw_hist <- function(res, show_iid) {
+  mu <- res$pop$mean
+  xl <- x_range(res)
+  x  <- res$means[res$means >= xl[1] & res$means <= xl[2]]
+  if (res$pop$discrete) {
+    # A discrete population puts the sample mean on a lattice with spacing
+    # 1/n; bins hold a whole number of lattice points, centered on them, so
+    # the histogram doesn't alias into a comb
+    step <- 1 / res$n
+    w    <- step * max(1, round(diff(range(x)) / step / 40))
+    br   <- seq(min(x) - step / 2, max(x) + w, by = w)
+  } else {
+    br <- pretty(range(x), 40)
+  }
+  h  <- hist(x, breaks = br, plot = FALSE)
+  h$density <- h$density * length(x) / length(res$means)   # still a density over all draws
+  u  <- seq(xl[1], xl[2], length.out = 500)
+  fc <- dnorm(u, mu, res$se)
+  # The i.i.d. curve is left to run off the top when it is much narrower
+  ymax <- 1.12 * max(h$density, fc)
+  par_base()
+  plot(NA, xlim = xl, ylim = c(0, ymax), xaxs = "i", yaxs = "i",
+       xlab = "sample mean", ylab = "density", bty = "l", fg = "#999")
+  rect(h$breaks[-length(h$breaks)], 0, h$breaks[-1], h$density,
+       col = adjustcolor(COL_SIM, 0.35), border = adjustcolor(COL_SIM, 0.6), lwd = 0.5)
+  segments(mu, 0, mu, ymax, col = INK, lty = 3)
+  if (res$clustered && show_iid) lines(u, dnorm(u, mu, res$se0), col = COL_IID, lwd = 2.5, lty = 2)
+  lines(u, fc, col = COL_CLT, lwd = 3)
+}
+
+draw_cdf <- function(res, show_iid) {
+  xs <- sort(unique(res$means))
+  Fe <- ecdf(res$means)(xs)
+  xl <- x_range(res)
+  u  <- seq(xl[1], xl[2], length.out = 500)
+  mu <- res$pop$mean
+  k  <- res$ks
+  par_base(small = TRUE)
+  plot(NA, xlim = xl, ylim = c(0, 1), xaxs = "i", yaxs = "i",
+       xlab = "sample mean", ylab = "CDF", bty = "l", fg = "#999")
+  if (res$clustered && show_iid) lines(u, pnorm(u, mu, res$se0), col = COL_IID, lwd = 2, lty = 2)
+  lines(u, pnorm(u, mu, res$se), col = COL_CLT, lwd = 2.5)
+  lines(c(xl[1], xs, xl[2]), c(0, Fe, 1), type = "s", col = COL_SIM, lwd = 2)
+  segments(k$at, k$Fe, k$at, k$Fn, col = INK, lwd = 3, lend = 1)
+  text(k$at, (k$Fe + k$Fn) / 2, sprintf(" D = %s", fmt(k$D)),
+       adj = if (k$at < mu) c(0, 0.5) else c(1.1, 0.5), cex = 0.85, col = INK, font = 2)
+}
+
+# Simulated quantiles of Ybar against the CLT normal's, both in CLT SEs from
+# mu, at 400 evenly spread probabilities. On the CLT normal the points follow
+# the solid line; the i.i.d. CLT normal, narrower by se0 / se, is the dashed
+# line. Guides at +/- 1.96 mark the tails the coverage numbers count.
+draw_qq <- function(res, show_iid) {
+  pr <- ppoints(400)
+  zt <- qnorm(pr)
+  zs <- (quantile(res$means, pr, names = FALSE) - res$pop$mean) / res$se
+  lim <- range(c(zt, zs, -4, 4))
+  par_base(small = TRUE)
+  plot(NA, xlim = range(zt), ylim = lim, xaxs = "i",
+       xlab = "CLT normal quantile (SEs)", ylab = "simulated (SEs)", bty = "l", fg = "#999")
+  abline(v = c(-1.96, 1.96), h = c(-1.96, 1.96), col = "#e4e4e4")
+  if (res$clustered && show_iid) abline(0, res$se0 / res$se, col = COL_IID, lwd = 2, lty = 2)
+  abline(0, 1, col = COL_CLT, lwd = 2.5)
+  points(zt, zs, pch = 16, cex = 0.45, col = adjustcolor(COL_SIM, 0.8))
+}
+
+draw_pop <- function(pop) {
+  par_base(small = TRUE)
+  if (pop$discrete) {
+    v <- seq(pop$xlim[1], pop$xlim[2])
+    f <- pop$d(v)
+    plot(NA, xlim = range(v) + c(-0.6, 0.6), ylim = c(0, 1.25 * max(f)), xaxs = "i", yaxs = "i",
+         xlab = "y", ylab = "probability", bty = "l", fg = "#999",
+         xaxt = if (length(v) <= 3) "n" else "s")
+    if (length(v) <= 3) axis(1, at = v, col = "#999")
+    segments(v, 0, v, f, col = INK, lwd = if (length(v) <= 12) 10 else 4, lend = 1)
+    ymax <- 1.25 * max(f)
+  } else {
+    u <- seq(pop$xlim[1], pop$xlim[2], length.out = 400)
+    f <- pop$d(u)
+    f[!is.finite(f)] <- NA
+    # Scale to the density away from the left edge, so one that blows up at 0
+    # (gamma with shape < 1) runs off the top rather than flattening the rest
+    ymax <- 1.25 * max(f[u >= pop$xlim[1] + 0.03 * diff(pop$xlim)], na.rm = TRUE)
+    plot(NA, xlim = pop$xlim, ylim = c(0, ymax), xaxs = "i", yaxs = "i",
+         xlab = "y", ylab = "density", bty = "l", fg = "#999")
+    ok <- !is.na(f)
+    polygon(c(u[ok], rev(u[ok])), c(f[ok], 0 * u[ok]), col = adjustcolor(INK, 0.12), border = NA)
+    lines(u, f, col = INK, lwd = 2.5)
+  }
+  segments(pop$mean, 0, pop$mean, ymax, col = INK, lty = 3)
+  mtext(pop$label, side = 3, line = -1.2, adj = 0.98, cex = 0.8, col = "#555")
+}
+
+server <- function(input, output, session) {
+  pop <- reactive(population(input$dist, input$mean, input$var))
+
+  # A new distribution resets the mean slider to its range, and frees the
+  # variance slider (normal) or locks it to the mean (the rest)
+  observeEvent(input$dist, {
+    d <- DISTS[[input$dist]]
+    updateSliderInput(session, "mean", min = d$mean[1], max = d$mean[2],
+                      step = d$mean[3], value = d$mean[4])
+    locked <- is.null(d$var)
+    if (locked)
+      updateSliderInput(session, "var", label = var_label(input$dist), min = 0,
+                        max = d$var_max, step = d$var_step, value = d$var_of(d$mean[4]))
+    else
+      updateSliderInput(session, "var", label = var_label(input$dist), min = d$var[1],
+                        max = d$var[2], step = d$var[3], value = d$var[4])
+    session$sendCustomMessage("lock", list(id = "var", locked = locked))
+  }, ignoreInit = TRUE)
+
+  observeEvent(input$mean, {
+    p <- pop()
+    if (is.null(DISTS[[input$dist]]$var)) updateSliderInput(session, "var", value = p$var)
+  })
+  # An i.i.d. sample of n is G = n clusters of one unit each
+  design <- reactive(
+    if (input$design == "cluster")
+      list(clustered = TRUE, G = input$G, m = input$m, icc = input$icc)
+    else list(clustered = FALSE, G = input$n, m = 1, icc = 0))
+  settings <- reactive(list(pop = pop()$label, design = design(), R = input$R))
+
+  res <- eventReactive(input$go, {
+    p <- pop()
+    d <- design()
+    n <- d$G * d$m
+    asked <- min(max(round(input$R %||% R_DEFAULT), 100), R_MAX)
+    R <- max(100, min(asked, floor(BUDGET / n)))
+    means <- simulate_means(p, d$G, d$m, d$icc, R)
+    deff <- 1 + (d$m - 1) * d$icc
+    se   <- sqrt(p$var * deff / n)
+    se0  <- sqrt(p$var / n)
+    list(means = means, pop = p, n = n, R = R, asked = asked, deff = deff,
+         clustered = d$clustered,
+         se = se, se0 = se0,
+         ks = ks_normal(means, p$mean, se), ks0 = ks_normal(means, p$mean, se0),
+         cov = coverage(means, p$mean, se), cov0 = coverage(means, p$mean, se0),
+         settings = settings())
+  }, ignoreNULL = FALSE)
+
+  output$design_note <- renderUI({
+    d <- design()
+    n <- d$G * d$m
+    div(class = "note",
+        if (d$m == 1) sprintf("n = %d. With m = 1, ρ has no effect.", n)
+        else sprintf("n = G × m = %d · design effect 1 + (m − 1)ρ = %s · effective n ≈ %s",
+                     n, fmt(1 + (d$m - 1) * d$icc), fmt(n / (1 + (d$m - 1) * d$icc))))
+  })
+
+  output$run_note <- renderUI({
+    r <- res()
+    div(class = "note",
+      if (!identical(settings(), r$settings))
+        div(class = "stale", "Settings changed: press Simulate."),
+      if (r$R < r$asked)
+        div(sprintf("Ran %s samples rather than %s to keep the run quick at n = %d.",
+                    format(r$R, big.mark = ","), format(r$asked, big.mark = ","), r$n)))
+  })
+
+  # The header doubles as the legend. The i.i.d. CLT curve only differs from
+  # the CLT curve under clustering, so it and its checkbox appear only then.
+  output$main_hdr <- renderUI({
+    r <- res()
+    title <- "Sampling distribution of Ȳ: "
+    if (!r$clustered)
+      return(div(class = "hdr",
+        h4(title, span(class = "sim", "simulated"), " vs. ", span(class = "c", "CLT normal"))))
+    div(class = "hdr",
+      h4(title, span(class = "sim", "simulated"), " vs. ",
+         span(class = "c", "cluster-adjusted CLT"), " vs. ", span(class = "n0", "i.i.d. CLT")),
+      checkboxInput("show_iid", "show i.i.d. CLT", isolate(input$show_iid) %||% TRUE))
+  })
+
+  output$pop_note <- renderText(
+    if (input$design == "cluster") "each response, whatever ρ is" else "each response")
+
+  output$stats <- renderUI({
+    r <- res()
+    noise <- 1.36 / sqrt(r$R)    # 95% point of the KS statistic under a perfect fit
+    # A KS distance read against the noise level: within it, or how many times it
+    verdict <- function(D)
+      if (D <= noise) " (within noise)" else sprintf(" (%.1f× noise)", D / noise)
+    runs  <- span(sprintf("%s samples of n = %d", format(r$R, big.mark = ","), r$n))
+    noise_note <- span("simulation noise level ", tags$b(fmt(noise)))
+    pct <- function(v) sprintf("%.1f%%", 100 * v)
+    cov_noise <- 1.96 * sqrt(0.05 * 0.95 / r$R)   # simulation noise in a 95% coverage rate
+    cov_span <- function(cv, cls, label)
+      span(class = cls, label, tags$b(pct(cv$cover)),
+           sprintf(" (misses low %s, high %s)", pct(cv$low), pct(cv$high)))
+    cov_note <- span(sprintf("target 95%% (2.5%%, 2.5%%) ± %.1f", 100 * cov_noise))
+    if (!r$clustered)
+      return(div(
+        div(class = "fit",
+          span(class = "sim", "SD of simulated Ȳ ", tags$b(fmt(sd(r$means)))),
+          span(class = "c", "CLT SE σ/√n ", tags$b(fmt(r$se))),
+          runs),
+        div(class = "fit",
+          span(class = "c", "KS distance to CLT normal ", tags$b(fmt(r$ks$D)), verdict(r$ks$D)),
+          noise_note),
+        div(class = "fit",
+          cov_span(r$cov, "c", "Ȳ ± 1.96 SE covers μ "), cov_note)))
+    div(
+      div(class = "fit",
+        span(class = "sim", "SD of simulated Ȳ ", tags$b(fmt(sd(r$means)))),
+        span(class = "c", "cluster-adjusted SE ", tags$b(fmt(r$se))),
+        span(class = "n0", "i.i.d. SE ", tags$b(fmt(r$se0))),
+        runs),
+      div(class = "fit",
+        span(class = "c", "KS distance to cluster-adjusted CLT ", tags$b(fmt(r$ks$D)), verdict(r$ks$D)),
+        span(class = "n0", "to i.i.d. CLT ", tags$b(fmt(r$ks0$D)), verdict(r$ks0$D)),
+        noise_note),
+      div(class = "fit",
+        cov_span(r$cov, "c", "Ȳ ± 1.96 SE covers μ: cluster-adjusted SE "),
+        cov_span(r$cov0, "n0", "i.i.d. SE "), cov_note)
+    )
+  })
+
+  output$hist <- renderPlot(draw_hist(res(), input$show_iid %||% TRUE), res = 96)
+  output$cdf  <- renderPlot({
+    draw <- if (identical(input$shape, "qq")) draw_qq else draw_cdf
+    draw(res(), input$show_iid %||% TRUE)
+  }, res = 96)
+  output$shape_title <- renderText(
+    if (identical(input$shape, "qq")) "Q-Q plot against the CLT normal" else "CDFs and the KS distance")
+  output$pop  <- renderPlot(draw_pop(pop()), res = 96)
+}
+
+shinyApp(ui, server)
