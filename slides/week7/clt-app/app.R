@@ -4,16 +4,26 @@
 # Pick a population distribution and a sampling design: by default a simple
 # random sample of n i.i.d. draws; optionally a clustered sample of G clusters
 # of m units each (n = G * m), with intra-cluster correlation (ICC) rho
-# between the responses of any two units in the same cluster. The app repeats
-# the whole sampling procedure R times, takes the sample mean each time, and
-# sets the histogram of those R sample means against two normal curves:
+# between the responses of any two units in the same cluster; or a serially
+# correlated sample of n units in a row (a time series, or units along a
+# line), with corr(Y_i, Y_j) = rho^|i - j|. The app repeats the whole sampling
+# procedure R times, takes the sample mean each time, and sets the histogram
+# of those R sample means against two normal curves:
 #
-#   cluster-adjusted CLT   N( mu, sigma^2 * (1 + (m - 1) * rho) / n )
-#   i.i.d. CLT             N( mu, sigma^2 / n )   -- what i.i.d. sampling would give
+#   adjusted CLT   N( mu, sigma^2 * deff / n )
+#   i.i.d. CLT     N( mu, sigma^2 / n )   -- what i.i.d. sampling would give
+#
+# with the design effect
+#
+#   clustered   deff = 1 + (m - 1) rho
+#   serial      deff = 1 + 2 sum_{k=1}^{n-1} (1 - k/n) rho^k  ->  (1 + rho) / (1 - rho)
 #
 # The first has the sample mean's true variance under the design; the
-# second ignores the clustering. The two agree when rho = 0 or m = 1, so for
-# an i.i.d. sample the app draws just the one curve, the CLT normal. The
+# second ignores the dependence. The two agree when rho = 0 (or m = 1), so for
+# an i.i.d. sample the app draws just the one curve, the CLT normal. Under
+# serial correlation the CLT still holds for any rho < 1, with the bounded
+# design effect slowing it down; at rho = 1 every unit equals the first, so
+# Ybar = Y_1 has the population's own shape whatever n is. The
 # Kolmogorov-Smirnov distance (largest vertical gap between the simulated CDF
 # and the normal CDF) summarizes how far each is from the simulation. Since KS
 # mostly reflects the center, the app also reports tail coverage: how often
@@ -40,6 +50,20 @@
 # The uniform and the Pareto have no such split. There each unit gives its
 # cluster's shared draw with probability sqrt(rho) and a draw of its own
 # otherwise (share_draws()), so two units share a draw with probability rho.
+#
+# Serial correlation. Again every response keeps exactly the population
+# distribution, and corr(Y_i, Y_j) = rho^|i - j| exactly. Each response is
+# built from the one before (markov()); where the family allows it, as a
+# thinned copy of it plus fresh noise:
+#
+#   Normal(mu, sigma^2)  mu + rho (Y_{i-1} - mu) + N(0, (1 - rho^2) sigma^2)
+#   Poisson(lambda)      Binomial(Y_{i-1}, rho) + Pois((1 - rho) lambda)
+#   Gamma(k, rate)       Beta(rho k, (1 - rho) k) Y_{i-1} + Gamma((1 - rho) k, rate)
+#                        (the exponential is the gamma with k = 1)
+#
+# The rest (Bernoulli, uniform, log-normal, Pareto) repeat the previous
+# response with probability rho and take a fresh draw otherwise (sticky()), so
+# Y_i and Y_j are the same draw with probability rho^|i - j|.
 #
 # Deliberately base R + shiny only. Every extra package is another wasm
 # download when this runs in the browser through shinylive.
@@ -103,10 +127,39 @@ share_draws <- function(r) function(nc, m, icc) {
   y
 }
 
+# Serial correlation: k samples of n responses in a row, as an n x k matrix
+# (one sample per column). The first response is a draw from the population
+# `r`; each one after comes from the one before through `step(prev, rho)`.
+markov <- function(r, step) function(n, k, rho) {
+  y <- matrix(0, n, k)
+  y[1, ] <- r(k)
+  if (n > 1) for (t in 2:n) y[t, ] <- if (rho == 0) r(k) else step(y[t - 1, ], rho)
+  y
+}
+
+# Serial correlation for a population with no convenient thinning: repeat the
+# previous response with probability rho, take a fresh draw otherwise
+sticky <- function(r) markov(r, function(prev, rho)
+  ifelse(runif(length(prev)) < rho, prev, r(length(prev))))
+
+# Gamma (and exponential) AR(1) by beta thinning: Beta(rho k, (1 - rho) k)
+# times a Gamma(k, rate) is Gamma(rho k, rate), and adding an independent
+# Gamma((1 - rho) k, rate) gives back Gamma(k, rate)
+gamma_chain <- function(k, r) markov(function(j) rgamma(j, k, r), function(prev, rho)
+  rbeta(length(prev), rho * k, (1 - rho) * k) * prev + rgamma(length(prev), (1 - rho) * k, r))
+
+# Design effect of serial correlation rho^|i - j| on the mean of n responses
+serial_deff <- function(n, rho) {
+  if (n == 1 || rho == 0) return(1)
+  k <- seq_len(n - 1)
+  1 + 2 * sum((1 - k / n) * rho^k)
+}
+
 # The population from its mean and variance (the variance only where it is
 # free). Values are clamped to the distribution's range, since a switch of
 # distribution reaches the server a moment before the sliders' new ranges do.
-# `draw(nc, m, icc)` returns nc clusters of m responses, cluster by cluster.
+# `draw(nc, m, icc)` returns nc clusters of m responses, cluster by cluster;
+# `chain(n, k, rho)` returns k serially correlated samples of n, one per column.
 population <- function(dist, mean, var) {
   d  <- DISTS[[dist]]
   mu <- min(max(mean %||% d$mean[4], d$mean[1]), d$mean[2])
@@ -118,12 +171,15 @@ population <- function(dist, mean, var) {
       label = sprintf("Normal(μ = %g, σ² = %g)", mu, s2),
       xlim = mu + c(-4, 4) * s, d = function(x) dnorm(x, mu, s),
       draw = function(nc, m, icc)
-        mu + rep(rnorm(nc, 0, sqrt(icc) * s), each = m) + rnorm(nc * m, 0, sqrt(1 - icc) * s)),
+        mu + rep(rnorm(nc, 0, sqrt(icc) * s), each = m) + rnorm(nc * m, 0, sqrt(1 - icc) * s),
+      chain = markov(function(k) rnorm(k, mu, s), function(prev, rho)
+        mu + rho * (prev - mu) + rnorm(length(prev), 0, sqrt(1 - rho^2) * s))),
     uniform = {
       a <- sqrt(3 * s2)      # half-width: Var = (2a)^2 / 12
       list(label = sprintf("Uniform(%g, %g)", signif(mu - a, 3), signif(mu + a, 3)),
            xlim = mu + c(-1.25, 1.25) * a, d = function(x) dunif(x, mu - a, mu + a),
-           draw = share_draws(function(k) runif(k, mu - a, mu + a)))
+           draw = share_draws(function(k) runif(k, mu - a, mu + a)),
+           chain = sticky(function(k) runif(k, mu - a, mu + a)))
     },
     bernoulli = list(
       label = sprintf("Bernoulli(p = %g)", mu),
@@ -132,12 +188,15 @@ population <- function(dist, mean, var) {
         pg <- if (icc == 0) rep(mu, nc)
               else rbeta(nc, mu * (1 - icc) / icc, (1 - mu) * (1 - icc) / icc)
         rbinom(nc * m, 1, rep(pg, each = m))
-      }),
+      },
+      chain = sticky(function(k) rbinom(k, 1, mu))),
     poisson = list(
       label = sprintf("Poisson(λ = %g)", mu),
       xlim = c(0, qpois(0.999, mu)), d = function(x) dpois(x, mu),
       draw = function(nc, m, icc)
-        rep(rpois(nc, icc * mu), each = m) + rpois(nc * m, (1 - icc) * mu)),
+        rep(rpois(nc, icc * mu), each = m) + rpois(nc * m, (1 - icc) * mu),
+      chain = markov(function(k) rpois(k, mu), function(prev, rho)
+        rbinom(length(prev), prev, rho) + rpois(length(prev), (1 - rho) * mu))),
     exponential = {
       r <- 1 / mu
       list(label = sprintf("Exponential(rate = %g)", signif(r, 3)),
@@ -146,7 +205,8 @@ population <- function(dist, mean, var) {
              if (icc == 0) return(rexp(nc * m, r))
              rep(rgamma(nc, shape = icc, rate = r), each = m) +
                rgamma(nc * m, shape = 1 - icc, rate = r)
-           })
+           },
+           chain = gamma_chain(1, r))
     },
     gamma = {
       k <- mu^2 / s2; r <- mu / s2
@@ -154,7 +214,8 @@ population <- function(dist, mean, var) {
            xlim = c(0, qgamma(0.995, k, r)), d = function(x) dgamma(x, k, r),
            draw = function(nc, m, icc)
              rep(rgamma(nc, shape = icc * k, rate = r), each = m) +
-               rgamma(nc * m, shape = (1 - icc) * k, rate = r))
+               rgamma(nc * m, shape = (1 - icc) * k, rate = r),
+           chain = gamma_chain(k, r))
     },
     lognormal = {
       sl2 <- log(1 + s2 / mu^2); ml <- log(mu) - sl2 / 2
@@ -164,7 +225,8 @@ population <- function(dist, mean, var) {
              r <- log(1 + icc * expm1(sl2)) / sl2     # log-scale ICC giving icc here
              exp(ml + rep(rnorm(nc, 0, sqrt(r * sl2)), each = m) +
                    rnorm(nc * m, 0, sqrt((1 - r) * sl2)))
-           })
+           },
+           chain = sticky(function(k) rlnorm(k, ml, sqrt(sl2))))
     },
     pareto = {
       al <- 1 + sqrt(1 + mu^2 / s2)   # from CV^2 = 1 / (alpha (alpha - 2))
@@ -172,21 +234,23 @@ population <- function(dist, mean, var) {
       list(label = sprintf("Pareto(α = %g, xₘ = %g)", signif(al, 3), signif(xm, 3)),
            xlim = c(0, xm * 0.005^(-1 / al)),
            d = function(x) ifelse(x < xm, 0, al * xm^al / x^(al + 1)),
-           draw = share_draws(function(k) xm * runif(k)^(-1 / al)))
+           draw = share_draws(function(k) xm * runif(k)^(-1 / al)),
+           chain = sticky(function(k) xm * runif(k)^(-1 / al)))
     }))
 }
 
-# R sample means, each from a fresh clustered sample of G clusters of m.
-# Samples are drawn in passes of about CHUNK responses; each column of a
+# R sample means, each from a fresh sample under design d: G clusters of m
+# (an i.i.d. sample is G = n clusters of one), or a serially correlated run of
+# n. Samples are drawn in passes of about CHUNK responses; each column of a
 # pass's matrix is one sample.
-simulate_means <- function(pop, G, m, icc, R) {
-  n <- G * m
+simulate_means <- function(pop, d, R) {
+  n <- d$n
   per_pass <- max(1, floor(CHUNK / n))
   out <- numeric(R)
   done <- 0
   while (done < R) {
     k <- min(per_pass, R - done)
-    y <- pop$draw(k * G, m, icc)
+    y <- if (d$type == "serial") pop$chain(n, k, d$rho) else pop$draw(k * d$G, d$m, d$icc)
     out[done + seq_len(k)] <- colMeans(matrix(y, nrow = n))
     done <- done + k
   }
@@ -288,9 +352,13 @@ ui <- fluidPage(
       tags$hr(),
       h5("Sampling design"),
       selectInput("design", NULL, width = "100%", selectize = FALSE,
-                  c("Simple random sample (i.i.d.)" = "iid", "Clustered sample" = "cluster")),
-      conditionalPanel("input.design == 'iid'",
+                  c("Simple random sample (i.i.d.)" = "iid", "Clustered sample" = "cluster",
+                    "Serially correlated sample" = "serial")),
+      conditionalPanel("input.design == 'iid' || input.design == 'serial'",
         slider("n", "n &ndash; sample size", 1, 300, 30, 1)),
+      conditionalPanel("input.design == 'serial'",
+        slider("rho", "ρ &ndash; correlation of neighbors", 0, 1, 0.5, 0.01),
+        uiOutput("serial_note")),
       conditionalPanel("input.design == 'cluster'",
         slider("G", "G &ndash; number of clusters", 1, 100, 10, 1),
         slider("m", "m &ndash; units per cluster", 1, 25, 5, 1),
@@ -362,7 +430,7 @@ draw_hist <- function(res, show_iid) {
   rect(h$breaks[-length(h$breaks)], 0, h$breaks[-1], h$density,
        col = adjustcolor(COL_SIM, 0.35), border = adjustcolor(COL_SIM, 0.6), lwd = 0.5)
   segments(mu, 0, mu, ymax, col = INK, lty = 3)
-  if (res$clustered && show_iid) lines(u, dnorm(u, mu, res$se0), col = COL_IID, lwd = 2.5, lty = 2)
+  if (res$dependent && show_iid) lines(u, dnorm(u, mu, res$se0), col = COL_IID, lwd = 2.5, lty = 2)
   lines(u, fc, col = COL_CLT, lwd = 3)
 }
 
@@ -376,7 +444,7 @@ draw_cdf <- function(res, show_iid) {
   par_base(small = TRUE)
   plot(NA, xlim = xl, ylim = c(0, 1), xaxs = "i", yaxs = "i",
        xlab = "sample mean", ylab = "CDF", bty = "l", fg = "#999")
-  if (res$clustered && show_iid) lines(u, pnorm(u, mu, res$se0), col = COL_IID, lwd = 2, lty = 2)
+  if (res$dependent && show_iid) lines(u, pnorm(u, mu, res$se0), col = COL_IID, lwd = 2, lty = 2)
   lines(u, pnorm(u, mu, res$se), col = COL_CLT, lwd = 2.5)
   lines(c(xl[1], xs, xl[2]), c(0, Fe, 1), type = "s", col = COL_SIM, lwd = 2)
   segments(k$at, k$Fe, k$at, k$Fn, col = INK, lwd = 3, lend = 1)
@@ -397,7 +465,7 @@ draw_qq <- function(res, show_iid) {
   plot(NA, xlim = range(zt), ylim = lim, xaxs = "i",
        xlab = "CLT normal quantile (SEs)", ylab = "simulated (SEs)", bty = "l", fg = "#999")
   abline(v = c(-1.96, 1.96), h = c(-1.96, 1.96), col = "#e4e4e4")
-  if (res$clustered && show_iid) abline(0, res$se0 / res$se, col = COL_IID, lwd = 2, lty = 2)
+  if (res$dependent && show_iid) abline(0, res$se0 / res$se, col = COL_IID, lwd = 2, lty = 2)
   abline(0, 1, col = COL_CLT, lwd = 2.5)
   points(zt, zs, pch = 16, cex = 0.45, col = adjustcolor(COL_SIM, 0.8))
 }
@@ -454,24 +522,26 @@ server <- function(input, output, session) {
     if (is.null(DISTS[[input$dist]]$var)) updateSliderInput(session, "var", value = p$var)
   })
   # An i.i.d. sample of n is G = n clusters of one unit each
-  design <- reactive(
-    if (input$design == "cluster")
-      list(clustered = TRUE, G = input$G, m = input$m, icc = input$icc)
-    else list(clustered = FALSE, G = input$n, m = 1, icc = 0))
+  design <- reactive(switch(input$design,
+    cluster = list(type = "cluster", n = input$G * input$m, G = input$G, m = input$m,
+                   icc = input$icc, deff = 1 + (input$m - 1) * input$icc),
+    serial  = list(type = "serial", n = input$n, rho = input$rho,
+                   deff = serial_deff(input$n, input$rho)),
+    list(type = "iid", n = input$n, G = input$n, m = 1, icc = 0, deff = 1)))
   settings <- reactive(list(pop = pop()$label, design = design(), R = input$R))
 
   res <- eventReactive(input$go, {
     p <- pop()
     d <- design()
-    n <- d$G * d$m
+    n <- d$n
     asked <- min(max(round(input$R %||% R_DEFAULT), 100), R_MAX)
     R <- max(100, min(asked, floor(BUDGET / n)))
-    means <- simulate_means(p, d$G, d$m, d$icc, R)
-    deff <- 1 + (d$m - 1) * d$icc
-    se   <- sqrt(p$var * deff / n)
+    means <- simulate_means(p, d, R)
+    se   <- sqrt(p$var * d$deff / n)
     se0  <- sqrt(p$var / n)
-    list(means = means, pop = p, n = n, R = R, asked = asked, deff = deff,
-         clustered = d$clustered,
+    list(means = means, pop = p, n = n, R = R, asked = asked, deff = d$deff,
+         dependent = d$type != "iid",
+         adj = if (d$type == "cluster") "cluster-adjusted" else "serial-adjusted",
          se = se, se0 = se0,
          ks = ks_normal(means, p$mean, se), ks0 = ks_normal(means, p$mean, se0),
          cov = coverage(means, p$mean, se), cov0 = coverage(means, p$mean, se0),
@@ -480,11 +550,22 @@ server <- function(input, output, session) {
 
   output$design_note <- renderUI({
     d <- design()
-    n <- d$G * d$m
+    req(d$type == "cluster")
+    n <- d$n
     div(class = "note",
         if (d$m == 1) sprintf("n = %d. With m = 1, ρ has no effect.", n)
         else sprintf("n = G × m = %d · design effect 1 + (m − 1)ρ = %s · effective n ≈ %s",
                      n, fmt(1 + (d$m - 1) * d$icc), fmt(n / (1 + (d$m - 1) * d$icc))))
+  })
+
+  output$serial_note <- renderUI({
+    d <- design()
+    req(d$type == "serial")
+    div(class = "note",
+      "corr(Yᵢ, Yⱼ) = ρ^|i − j|",
+      if (d$rho == 1) " · every unit equals the first, so Ȳ = Y₁ whatever n is"
+      else sprintf(" · design effect %s (→ (1 + ρ)/(1 − ρ) = %s as n grows) · effective n ≈ %s",
+                   fmt(d$deff), fmt((1 + d$rho) / (1 - d$rho)), fmt(d$n / d$deff)))
   })
 
   output$run_note <- renderUI({
@@ -498,21 +579,21 @@ server <- function(input, output, session) {
   })
 
   # The header doubles as the legend. The i.i.d. CLT curve only differs from
-  # the CLT curve under clustering, so it and its checkbox appear only then.
+  # the CLT curve under dependence, so it and its checkbox appear only then.
   output$main_hdr <- renderUI({
     r <- res()
     title <- "Sampling distribution of Ȳ: "
-    if (!r$clustered)
+    if (!r$dependent)
       return(div(class = "hdr",
         h4(title, span(class = "sim", "simulated"), " vs. ", span(class = "c", "CLT normal"))))
     div(class = "hdr",
       h4(title, span(class = "sim", "simulated"), " vs. ",
-         span(class = "c", "cluster-adjusted CLT"), " vs. ", span(class = "n0", "i.i.d. CLT")),
+         span(class = "c", paste(r$adj, "CLT")), " vs. ", span(class = "n0", "i.i.d. CLT")),
       checkboxInput("show_iid", "show i.i.d. CLT", isolate(input$show_iid) %||% TRUE))
   })
 
   output$pop_note <- renderText(
-    if (input$design == "cluster") "each response, whatever ρ is" else "each response")
+    if (input$design == "iid") "each response" else "each response, whatever ρ is")
 
   output$stats <- renderUI({
     r <- res()
@@ -528,7 +609,7 @@ server <- function(input, output, session) {
       span(class = cls, label, tags$b(pct(cv$cover)),
            sprintf(" (misses low %s, high %s)", pct(cv$low), pct(cv$high)))
     cov_note <- span(sprintf("target 95%% (2.5%%, 2.5%%) ± %.1f", 100 * cov_noise))
-    if (!r$clustered)
+    if (!r$dependent)
       return(div(
         div(class = "fit",
           span(class = "sim", "SD of simulated Ȳ ", tags$b(fmt(sd(r$means)))),
@@ -542,15 +623,15 @@ server <- function(input, output, session) {
     div(
       div(class = "fit",
         span(class = "sim", "SD of simulated Ȳ ", tags$b(fmt(sd(r$means)))),
-        span(class = "c", "cluster-adjusted SE ", tags$b(fmt(r$se))),
+        span(class = "c", paste(r$adj, "SE "), tags$b(fmt(r$se))),
         span(class = "n0", "i.i.d. SE ", tags$b(fmt(r$se0))),
         runs),
       div(class = "fit",
-        span(class = "c", "KS distance to cluster-adjusted CLT ", tags$b(fmt(r$ks$D)), verdict(r$ks$D)),
+        span(class = "c", paste0("KS distance to ", r$adj, " CLT "), tags$b(fmt(r$ks$D)), verdict(r$ks$D)),
         span(class = "n0", "to i.i.d. CLT ", tags$b(fmt(r$ks0$D)), verdict(r$ks0$D)),
         noise_note),
       div(class = "fit",
-        cov_span(r$cov, "c", "Ȳ ± 1.96 SE covers μ: cluster-adjusted SE "),
+        cov_span(r$cov, "c", paste0("Ȳ ± 1.96 SE covers μ: ", r$adj, " SE ")),
         cov_span(r$cov0, "n0", "i.i.d. SE "), cov_note)
     )
   })

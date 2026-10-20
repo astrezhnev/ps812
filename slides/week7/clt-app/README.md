@@ -13,15 +13,23 @@ approximation describes the sampling distribution of a sample mean.
   tail is heavy).
 - **Sampling design:** a simple random sample of n i.i.d. draws by default. A
   dropdown switches to a clustered sample of G clusters of m units
-  (n = G × m) with intra-cluster correlation ρ.
+  (n = G × m) with intra-cluster correlation ρ, or to a **serially
+  correlated** sample of n units in a row (a time series, or units along a
+  line) with corr(Yᵢ, Yⱼ) = ρ^|i−j|.
 
 Pressing **Simulate** repeats the sampling R times and plots the R sample
-means against the CLT normal, N(μ, σ²/n). Under a clustered design it plots
-two normal curves instead:
+means against the CLT normal, N(μ, σ²/n). Under a clustered or serially
+correlated design it plots two normal curves instead:
 
-- the **cluster-adjusted CLT** normal, N(μ, σ²[1 + (m − 1)ρ]/n), which has the
-  sample mean's true variance under the design, and
-- the **i.i.d. CLT** normal, N(μ, σ²/n), which ignores the clustering.
+- the **adjusted CLT** normal, N(μ, σ² · deff / n), which has the sample
+  mean's true variance under the design, and
+- the **i.i.d. CLT** normal, N(μ, σ²/n), which ignores the dependence.
+
+The design effect is deff = 1 + (m − 1)ρ under clustering and
+deff = 1 + 2 Σₖ (1 − k/n) ρᵏ under serial correlation. The serial one tends to
+(1 + ρ)/(1 − ρ) as n grows, so for any ρ < 1 the CLT still holds, just with
+fewer effective observations. At ρ = 1 every unit equals the first, so
+Ȳ = Y₁ has the population's own shape whatever n is: the CLT fails.
 
 Both use the true σ², so neither involves a t distribution.
 
@@ -65,6 +73,17 @@ cluster plus a unit component of its own:
 The uniform and the Pareto have no such split. There each unit gives its
 cluster's shared draw with probability √ρ and a draw of its own otherwise, so
 two units in a cluster share a draw (and so correlate) with probability ρ.
+
+Serial correlation likewise keeps each response's distribution equal to the
+population's, with corr(Yᵢ, Yⱼ) = ρ^|i−j| exactly. Each response is built from
+the one before:
+
+| Population | Yᵢ given Yᵢ₋₁ |
+| --- | --- |
+| Normal(μ, σ²) | μ + ρ(Yᵢ₋₁ − μ) + N(0, (1 − ρ²)σ²) |
+| Poisson(λ) | Binomial(Yᵢ₋₁, ρ) + Pois((1 − ρ)λ) |
+| Gamma(k, rate), exponential (k = 1) | Beta(ρk, (1 − ρ)k) · Yᵢ₋₁ + Gamma((1 − ρ)k, rate) |
+| Bernoulli, uniform, log-normal, Pareto | Yᵢ₋₁ with probability ρ, a fresh draw otherwise |
 
 A run is capped at 10⁷ draws, so for large n the app runs fewer samples than
 requested and says so.

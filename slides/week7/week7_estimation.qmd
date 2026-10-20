@@ -189,32 +189,291 @@ cat("```{=html}",
 
 :::
 
+## Big-$O$ and little-$o$ notation
+
+::: {.incremental}
+
+- Sometimes we'll want to use **shorthand** to characterize how fast a term **shrinks** (or grows)
+
+- Little-$o$ notation: $a_n = o(b_n)$ means $\dfrac{a_n}{b_n} \to 0$ as $n \to \infty$
+  - $a_n$ vanishes **faster** than $b_n$, e.g. $\frac{1}{n^2} = o\left(\frac{1}{n}\right)$
+  - Same idea for a function near $0$: $r(t) = o(t^2)$ means $\dfrac{r(t)}{t^2} \to 0$ as $t \to 0$
+
+- Big-$O$ notation: $a_n = O(b_n)$ means $\left|\dfrac{a_n}{b_n}\right|$ stays **bounded** as $n \to \infty$
+  - $a_n$ vanishes **no slower** than $b_n$, e.g. $\Var(\bar{Y}_n) = \frac{\sigma^2}{n} = O\left(\frac{1}{n}\right)$
+
+- So $o(1)$ is anything going to $0$, and $O(1)$ is anything that stays bounded
+
+:::
+
+## Big-$O_p$ and little-$o_p$ notation
+
+::: {.incremental}
+
+- For **random variables**, the same shorthand is stated in terms of **probabilities**
+
+- Little-$o_p$ notation denotes convergence (in probability) to **zero**
+  - $Y_n = o_p(1)$ means $\Pr(|Y_n| \ge \epsilon) \to 0$ as $n \to \infty$, for every $\epsilon > 0$
+  - e.g. by the WLLN, we can write $\bar{Y}_n = \mu + o_p(1)$
+
+- Big-$O_p$ notation denotes **boundedness** (in probability) of a sequence as $n \to \infty$
+  - $Y_n = O_p(1)$ means that for every $\epsilon > 0$ there's an $M$ with $\Pr(|Y_n| > M) < \epsilon$ for all sufficiently large $n$
+
+- The rest of the orders are defined by **rescaling**
+  - So $Y_n = O_p(a_n)$ means that $\frac{Y_n}{a_n} = O_p(1)$, and likewise for $o_p$
+
+:::
+
+## Big-$O_p$ and little-$o_p$ notation
+
+::: {.incremental}
+
+- Useful properties
+  - $o_p(1) + o_p(1) = o_p(1)$
+  - $o_p(1) + O_p(1) = O_p(1)$
+  - $O_p(1)o_p(1) = o_p(1)$
+  - If a sequence is $o_p(1)$, it is $O_p(1)$ but not vice-versa
+
+- Most common use: **convergence rates**. Not just **whether** $\bar{Y}_n$ converges to $\mu$, but **how quickly**?
+
+- By Chebyshev's inequality, for any $M > 0$
+  $$\Pr\left(\left|\sqrt{n}(\bar{Y}_n - \mu)\right| > M\right) \le \frac{\Var\left(\sqrt{n}(\bar{Y}_n - \mu)\right)}{M^2} = \frac{\sigma^2}{M^2}$$
+
+- So $\sqrt{n}(\bar{Y}_n - \mu) = O_p(1)$, or equivalently $\bar{Y}_n - \mu = O_p(1/\sqrt{n})$: the error shrinks at rate $1/\sqrt{n}$
+
+:::
+
 ## Convergence in distribution
 
+::: {.incremental}
+
+- By the Weak Law of Large Numbers (WLLN) $\bar{Y}_n \xrightarrow{p} \mu$
+  - Tells us how the sampling distribution **collapses** to the point we want...
+  - ...but says nothing about the **shape** of the sampling distribution for any given $n$
+
+- To approximate the sampling distribution in a large (but finite) sample, we need a notion of convergence to a **random variable**
+  - Not "does $X_n$ get close to a *value*?" but "does the *distribution* of $X_n$ get close to some known *distribution*?"
+
+- **Convergence in distribution**
+  - A sequence of random variables $X_n$ with CDFs $F_n$ is said to **converge in distribution** to a random variable $X$ with CDF $F$ if
+    $$\lim_{n \to \infty} F_n(x) = F(x)$$
+    at every $x$ where $F$ is continuous
+
+- We'll denote this as $X_n \xrightarrow{d} X$.
+
+:::
 
 ## Convergence in distribution
 
+::: {.incremental}
+
+- We want to approximate the sampling distribution of $\bar{Y}_n$. Does $\bar{Y}_n$ itself converge in distribution?
+  - Convergence in *probability* implies convergence in *distribution*
+  - So we end up with a useless result: $\bar{Y}_n \xrightarrow{p} \mu$, so $\bar{Y}_n \xrightarrow{d} \mu$
+  - And recentering still gives $\bar{Y}_n - \mu \xrightarrow{d} 0$
+- We need to analyze a sequence that does not **collapse** to a single point
+
+- We'll **rescale** $\bar{Y}_n - \mu$ by some factor that guarantees the variance converges to a non-zero **constant**
+  $$\Var\big(n^r(\bar{Y}_n - \mu)\big) = n^{2r} \cdot \frac{\sigma^2}{n} = \sigma^2 n^{2r - 1} \to \begin{cases} 0 & r < 1/2 \\ \sigma^2 & r = 1/2 \\ \infty & r > 1/2 \end{cases}$$
+
+- So scaling the error by $\sqrt{n}$ keeps the variance **stable**: $\Var\big(\sqrt{n}(\bar{Y}_n - \mu)\big) = \sigma^2$ for **every** $n$
+  - This is what we'll analyze: $\sqrt{n}(\bar{Y}_n - \mu)$
+  - Its mean ($0$) and variance ($\sigma^2$) never change with $n$. What about its **shape**?
+
+:::
+
+## The Central Limit Theorem in Words
+
+::: {.statement}
+Sums and means of independent and identically distributed random variables tend to be **normally distributed**.
+:::
 
 ## The Central Limit Theorem
 
+::: {.incremental}
 
-## The Central Limit Theorem
+- **Central Limit Theorem**: Let $Y_1, Y_2, \dotsc, Y_n$ be i.i.d. with $\mathbb{E}[Y_i] = \mu$ and $\Var(Y_i) = \sigma^2 < \infty$. Then
+  $$\sqrt{n}(\bar{Y}_n - \mu) \xrightarrow{d} \mathcal{N}(0, \sigma^2)$$
+
+- Equivalently, the **standardized** sample mean $\dfrac{\bar{Y}_n - \mu}{\sigma/\sqrt{n}} \xrightarrow{d} \mathcal{N}(0, 1)$
+
+- In the limit, the only things that matter about $Y_i$ after averaging are its **mean** and **variance**
+  - Skewed, bimodal, discrete, heavy-tailed (with finite variance) -- all averages become (roughly) normal.
+
+- We'll use this to say that for large $n$, the sample mean is **approximately** normal
+  $$\bar{Y}_n \overset{a}{\sim} \mathcal{N}\left(\mu, \frac{\sigma^2}{n}\right)$$
+
+- Let's prove it!
+
+:::
+
+## Moment generating functions
+
+::: {.incremental}
+
+- Our proof requires a new concept: a **moment generating function**
+  - This is a useful mathematical trick which lets us analyze an entire distribution by studying just **one** function.
+  - Then we can apply the tools of calculus - specifically **Taylor approximations** and limits of functions
+- The **moment generating function** (MGF) of a random variable $X$ is
+  $$M_X(t) = \mathbb{E}\left[e^{tX}\right]$$
+  so long as it's finite for all $t$ in some interval around $0$
+
+- Taking the derivative and evaluating at $t = 0$ generates the **moments**: $M_X(0) = 1$, $M_X'(0) = \mathbb{E}[X]$, $M_X''(0) = \mathbb{E}[X^2]$, ...
+
+:::
+
+## Moment generating functions
+
+::: {.incremental}
+
+- Properties that we need:
+  1. **Uniqueness**: Two random variables with the same MGF have the same distribution
+  2. **Continuity**: If $M_{X_n}(t) \to M_X(t)$ for every $t$ near $0$, then $X_n \xrightarrow{d} X$
+  3. **Independent sums**: If $X_1 \indep X_2$, then $M_{X_1 + X_2}(t) = \mathbb{E}\left[e^{tX_1}e^{tX_2}\right] = M_{X_1}(t)M_{X_2}(t)$
+  4. **The MGF of the Normal**: If $X \sim \mathcal{N}(0, \sigma^2)$, then $M_X(t) = e^{\sigma^2 t^2/2}$
+
+- **Our goal**: Show that the MGF of $\sqrt{n}(\bar{Y}_n - \mu)$ converges to $e^{\sigma^2 t^2/2}$
+
+:::
+
+## Proving the Central Limit Theorem
+
+::: {.incremental}
+
+- Define $W_i = Y_i - \mu$, the **centered** draw, and let $M(t) = \mathbb{E}\left[e^{tW_i}\right]$ be its MGF. Then
+  $$M(0) = 1, \qquad M'(0) = \mathbb{E}[W_i] = 0, \qquad M''(0) = \mathbb{E}[W_i^2] = \sigma^2$$
+
+- The scaled error is a scaled **sum** of the $W_i$
+  $$\sqrt{n}(\bar{Y}_n - \mu) = \frac{1}{\sqrt{n}}\sum_{i=1}^n W_i$$
+
+- Call the MGF of this scaled error $M_n(t)$. Our goal is to write $M_n(t)$ in terms of $M(t)$
+
+- We'll assume the MGF $M$ exists
+  - The general proof uses the *characteristic function* $\mathbb{E}[e^{itW_i}]$, which always exists.
+
+:::
+
+## Proving the Central Limit Theorem
+
+::: {.incremental}
+
+- First, turn the **sum** in the exponent into a **product**
+  $$\begin{aligned}
+  M_n(t) &= \mathbb{E}\left[e^{t\sqrt{n}(\bar{Y}_n - \mu)}\right] && \small\color{#777777}{\text{definition of the MGF}} \\
+  &= \mathbb{E}\left[\exp\left(\tfrac{t}{\sqrt{n}}\textstyle\sum_{i=1}^n W_i\right)\right] && \small\color{#777777}{\text{scaled error = scaled sum}} \\
+  &= \mathbb{E}\left[\exp\left(\textstyle\sum_{i=1}^n \tfrac{t}{\sqrt{n}} W_i\right)\right] && \small\color{#777777}{\text{constant inside the sum}} \\
+  &= \mathbb{E}\left[\textstyle\prod_{i=1}^n \exp\left(\tfrac{t}{\sqrt{n}} W_i\right)\right] && \small\color{#777777}{e^{a + b} = e^a e^b}
+  \end{aligned}$$
+
+- Then use **independence** and **identical distribution**
+  $$\begin{aligned}
+  \mathbb{E}\left[\textstyle\prod_{i=1}^n \exp\left(\tfrac{t}{\sqrt{n}} W_i\right)\right] &= \textstyle\prod_{i=1}^n \mathbb{E}\left[\exp\left(\tfrac{t}{\sqrt{n}} W_i\right)\right] && \small\color{#777777}{\text{independent}} \\
+  &= \textstyle\prod_{i=1}^n M\left(\tfrac{t}{\sqrt{n}}\right) && \small\color{#777777}{\text{identical: each $W_i$ has MGF $M$}} \\
+  &= \left[M\left(\tfrac{t}{\sqrt{n}}\right)\right]^n && \small\color{#777777}{\text{$n$ identical factors}}
+  \end{aligned}$$
+
+:::
+
+## Proving the Central Limit Theorem
+
+::: {.incremental}
+
+- Take a second-order Taylor expansion of $M(t)$ around $t = 0$
+  $$M(t) = M(0) + t\,M'(0) + \frac{t^2}{2}M''(0) + o(t^2) = 1 + 0 + \frac{\sigma^2 t^2}{2} + o(t^2)$$
+  where $o(t^2)$ is a remainder that vanishes faster than $t^2$ as $t \to 0$
+
+- Evaluate it at $t/\sqrt{n}$, which goes to $0$ as $n$ grows
+  $$M_n(t) = \left[M\left(\frac{t}{\sqrt{n}}\right)\right]^n = \left[1 + \frac{\sigma^2 t^2}{2n} + o\left(\frac{1}{n}\right)\right]^n$$
+
+- The remainder vanishes even after being added up $n$ times: $n \cdot o\left(\frac{1}{n}\right) \to 0$. So in the limit we can drop it and use the familiar compound interest formula $\left(1 + \frac{a}{n}\right)^n \to e^a$
+  $$M_n(t) \approx \left(1 + \frac{\sigma^2 t^2 / 2}{n}\right)^n \to e^{\sigma^2 t^2/2}$$
+
+- That's the MGF of a $\mathcal{N}(0, \sigma^2)$, so  $\sqrt{n}(\bar{Y}_n - \mu) \xrightarrow{d} \mathcal{N}(0, \sigma^2)$ 
+
+:::
+
+::: {.attribution}
+For an alternative proof that takes logs and applies L'Hôpital's rule, see @blitzstein2019introduction, Ch. 10
+:::
+
+## Many central limit theorems
+
+- What we proved is the **Lindeberg–Lévy** CLT. There are many other CLTs, each under different data-generating processes
+
+::: {.clt-table}
+
+| CLT | Relaxes | Needs  | Where you'll see it |
+| --- | --- | --- | --- |
+| **Lindeberg–Lévy**  | | i.i.d., finite variance | Sample means under random sampling |
+| **Lindeberg–Feller**, **Lyapunov** | Identical distribution | No single term dominates the total variance | Heteroskedastic errors, robust SEs |
+| **Clustered** | Independence within clusters | Many independent clusters, none dominant | Clustered samples, cluster-robust SEs |
+| **Mixing**, **$m$-dependent** | Independence across time or space | Dependence dies out with distance | Time series and spatial data, HAC SEs |
+| **Martingale** | Independence | Each term has mean zero given the past | Time series, adaptive experiments |
+| **Finite-population** (Hájek) | An infinite population | $n$ and $N - n$ both large | Survey sampling, randomization inference |
+| **Multivariate** | A single mean | Finite covariance matrix | Regression coefficients |
+
+:::
+
+::: {.incremental}
+
+- The theme: a sum of many **small**, **not-too-dependent** pieces is approximately normal. 
+  - What changes is the **sampling variance**
 
 
-## The Central Limit Theorem
-
+:::
 
 ## Properties of convergence in distribution
 
+::: {.incremental}
 
-## Asymptotic normality
+- Consider $X_n \xrightarrow{d} X$, $Y_n \xrightarrow{p} c$ for a **constant** $c$, and a continuous function $g()$
 
+- By the continuous mapping theorem, $g(X_n) \xrightarrow{d} g(X)$
 
-## Running Example
+- By **Slutsky's theorem**
 
+1. $X_n + Y_n \xrightarrow{d} X + c$
+2. $X_nY_n \xrightarrow{d} cX$
+3. $X_n/Y_n \xrightarrow{d} X/c$ if $c \neq 0$
 
-## Running Example in R
+- Careful: $X_n \xrightarrow{d} X$ and $Y_n \xrightarrow{d} Y$ does **not** imply $X_n + Y_n \xrightarrow{d} X + Y$ in general
 
+- Why this matters: we don't know $\sigma$, but if $\hat{\sigma} \xrightarrow{p} \sigma$ (more on this later), we can plug it in and still know the asymptotic distribution.
+  $$\frac{\bar{Y}_n - \mu}{\hat{\sigma}/\sqrt{n}} = \underbrace{\frac{1}{\hat{\sigma}}}_{\xrightarrow{p} 1/\sigma} \cdot \underbrace{\sqrt{n}(\bar{Y}_n - \mu)}_{\xrightarrow{d} \mathcal{N}(0, \sigma^2)} \xrightarrow{d} \frac{1}{\sigma}\mathcal{N}(0, \sigma^2) = \mathcal{N}(0, 1)$$
+
+:::
+
+## Example: Sums of Bernoullis
+
+```{r}
+#| echo: false
+#| output: asis
+
+# sqrt(n) (Ybar_n - p) for Bernoulli(0.2) draws: its MGF (left) and its PMF as
+# a histogram (right) morph toward e^(p(1-p) t^2/2) and the N(0, p(1-p)) density
+# as n steps from 1 to 400 (binom-anim/binom.js; data from binom-anim/make_binom.R)
+cat("```{=html}",
+    '<div class="bn-anim"></div>',
+    "<script>",
+    "(", readLines("binom-anim/binom.js"), ")(document.currentScript.previousElementSibling,",
+    readLines("binom-anim/binom.json", warn = FALSE), ");",
+    "</script>",
+    rep('<span class="fragment bn-step"></span>', 7),
+    "```", sep = "\n")
+```
+
+## What we've accomplished
+
+::: {.recap-result}
+$\hat{\mu} \overset{a}{\sim} \; {\color{#c5050c}{\mathcal{N}}}\left(\mu, \dfrac{\sigma^2}{n}\right)$
+:::
+
+::: {.incremental}
+
+- Under i.i.d. sampling with a finite variance, the CLT fills in the question mark: in large samples, the sampling distribution of the sample mean is approximately **normal**
+- How large is "large"? It depends on the distribution of $Y_i$.
+
+:::
 
 ## How good is the CLT approximation? {.app-slide}
 
@@ -253,55 +512,536 @@ cat("```{=html}",
 
 ## Plug-in estimators
 
+::: {.incremental}
+
+- So far, we've estimated one feature of the population: the mean $\mu = \mathbb{E}[Y_i]$, with the sample mean $\bar{Y}_n$
+
+- But we often want to learn **other** features of the population distribution
+  - The variance $\sigma^2$ (which we need for standard errors)
+  - The median, or some other quantile
+  - The share of the population above some threshold, $\Pr(Y_i > c)$
+
+- The informal recipe: write down the feature of the **population** we care about, then compute its **sample analog**
+  - Expected value $\rightarrow$ sample mean. Variance $\rightarrow$ sample variance.
+
+- Each of these features is a **function of the CDF** $F$
+  - Estimate $F$ with its sample analog, then **plug it in**
+
+:::
+
 
 ## The empirical CDF
 
+```{r}
+#| include: false
+#| ref.label: gss-age
+```
+
+::: {.incremental}
+
+- By the **fundamental bridge**, the CDF is an expectation of an indicator random variable
+
+  $$F(y) = \Pr(Y_i \le y) = \mathbb{E}\left[I(Y_i \le y)\right]$$
+
+- Its sample analog is the **empirical CDF**: replace the expectation with a sample mean
+  $$\hat{F}_n(y) = \frac{1}{n}\sum_{i=1}^n I(Y_i \le y) = \text{share of observations at or below } y$$
+
+- A **step function** that jumps by $\frac{1}{n}$ at each observation, even when $Y_i$ is continuous
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 11
+#| fig-height: 3.3
+#| fig-align: center
+
+# Treat the 2024 GSS respondents as a population: its CDF of age (red) against
+# the ECDFs of i.i.d. samples of 20 and 200 drawn from it (blue)
+set.seed(812)
+pop_cdf <- tibble(age = 18:89, F = ecdf(gss$age)(18:89))
+draws <- map_dfr(c(20, 200), \(m) tibble(n = paste("n =", m),
+                                         age = sample(gss$age, m, replace = TRUE)))
+ggplot() +
+  geom_step(data = pop_cdf, aes(age, F), colour = "#c5050c", linewidth = 1.3) +
+  stat_ecdf(data = draws, aes(age), colour = "#0479a8", linewidth = 1.1, pad = FALSE) +
+  facet_wrap(~ n) +
+  labs(x = "Age", y = NULL) +
+  theme_minimal(base_size = 18) +
+  theme(panel.grid = element_blank(),
+        axis.line.x = element_line(colour = "#333333"),
+        strip.text = element_text(face = "bold"),
+        plot.background = element_rect(fill = "#F7F7F7", colour = NA))
+```
+
+:::
 
 ## The empirical CDF
+
+::: {.incremental}
+
+- Fix any $y$. The indicators $Z_i = I(Y_i \le y)$ are i.i.d. Bernoulli with mean $\Pr(Y_i \le y) = F(y)$
+
+- So $\hat{F}_n(y) = \bar{Z}_n$ is just a **sample mean**, and everything we know about sample means applies
+  - Unbiased: $\mathbb{E}\left[\hat{F}_n(y)\right] = F(y)$
+  - Sampling variance: $\Var\left(\hat{F}_n(y)\right) = \dfrac{F(y)\big(1 - F(y)\big)}{n}$
+  - Consistent (WLLN): $\hat{F}_n(y) \xrightarrow{p} F(y)$
+  - Asymptotically normal (CLT): $\sqrt{n}\left(\hat{F}_n(y) - F(y)\right) \xrightarrow{d} \mathcal{N}\big(0, F(y)(1 - F(y))\big)$
+
+- Even stronger, the **Glivenko–Cantelli theorem** shows that the **largest** gap over all $y$ also goes to zero (with probability 1)
+  $$\sup_y \left|\hat{F}_n(y) - F(y)\right| \to 0$$
+  - The whole curve converges
+
+:::
 
 
 ## The plug-in principle
 
+::: {.incremental}
+
+- A **statistical functional** $T$ maps a CDF to a number. Many estimands can be written as $\theta = T(F)$
+
+- Notation: $\int g(y)\,dF(y)$ means $\sum_y g(y) f(y)$ if $Y_i$ is discrete, or $\int g(y) f(y)\,dy$ if it's continuous. 
+  - It's $\mathbb{E}[g(Y_i)]$
+
+- Examples
+  - Mean: $\mu = T_{\mu}(F) = \int y\,dF(y)$
+  - Variance: $\sigma^2 = T_{\sigma^2}(F) = \int y^2\,dF(y) - \left(\int y\,dF(y)\right)^2$
+  - Median: $T_{\text{med}}(F) = F^{-1}(1/2)$
+  - Tail probability: $\Pr(Y_i > c) = 1 - F(c)$
+
+- The **plug-in estimator** of $\theta = T(F)$ applies the same functional to the empirical CDF
+  $$\hat{\theta} = T(\hat{F}_n)$$
+
+:::
 
 ## The plug-in principle
+
+::: {.incremental}
+
+- $\hat{F}_n$ is the CDF of a discrete distribution that puts mass $\frac{1}{n}$ on each observation, so for any $g$
+  $$\int g(y)\,d\hat{F}_n(y) = \sum_{i=1}^n g(Y_i) \cdot \frac{1}{n} = \frac{1}{n}\sum_{i=1}^n g(Y_i)$$
+  - Every **expectation** becomes a **sample mean**
+
+- Mean: $T_{\mu}(\hat{F}_n) = \frac{1}{n}\sum_{i=1}^n Y_i = \bar{Y}_n$.
+
+- Variance: $T_{\sigma^2}(\hat{F}_n) = \frac{1}{n}\sum_{i=1}^n Y_i^2 - \bar{Y}_n^2 = \frac{1}{n}\sum_{i=1}^n (Y_i - \bar{Y}_n)^2$, the **plug-in sample variance**
+
+- Median: $\hat{F}_n^{-1}(1/2)$, the sample median. 
+
+- Tail probability: $1 - \hat{F}_n(c)$, the share of observations above $c$
+
+:::
+
+
+## Bias of the plug-in variance
+
+::: {.incremental}
+
+- The population variance
+  $$\sigma^2 = \mathbb{E}[Y_i^2] - \mu^2 $$
+
+- We can re-write our plug-in variance estimator the same way.
+
+  $$\begin{aligned}
+  \hat{\sigma}^2_n &= \frac{1}{n}\sum_{i=1}^n (Y_i - \bar{Y}_n)^2 \\
+  &= \frac{1}{n}\sum_{i=1}^n \left(Y_i^2 - 2Y_i\bar{Y}_n + \bar{Y}_n^2\right) && \small\color{#777777}{\text{expand the square}} \\
+  &= \frac{1}{n}\sum_{i=1}^n Y_i^2 - 2\bar{Y}_n \cdot \frac{1}{n}\sum_{i=1}^n Y_i + \frac{1}{n}\sum_{i=1}^n \bar{Y}_n^2 && \small\color{#777777}{\text{split the sum; } \bar{Y}_n \text{ doesn't depend on } i} \\
+  &= \frac{1}{n}\sum_{i=1}^n Y_i^2 - 2\bar{Y}_n \cdot \bar{Y}_n + \bar{Y}_n^2 && \small\color{#777777}{\tfrac{1}{n}\textstyle\sum_i Y_i = \bar{Y}_n \text{, and } n \text{ copies of } \bar{Y}_n^2} \\
+  &= \frac{1}{n}\sum_{i=1}^n Y_i^2 - \bar{Y}_n^2
+  \end{aligned}$$
+
+:::
+
+## Bias of the plug-in variance
+
+::: {.incremental}
+
+- Is it **unbiased**? Take the expectation of each piece. First, the average of the squares
+  $$\begin{aligned}
+  \mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n Y_i^2\right] &= \frac{1}{n}\sum_{i=1}^n \mathbb{E}\left[Y_i^2\right] && \small\color{#777777}{\text{linearity of expectations}} \\
+  &= \frac{1}{n} \cdot n\,\mathbb{E}\left[Y_i^2\right] = \mathbb{E}\left[Y_i^2\right] && \small\color{#777777}{\text{identically distributed}}
+  \end{aligned}$$
+
+- Then the square of the average. Rearrange $\Var(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2$ with $X = \bar{Y}_n$
+  $$\begin{aligned}
+  \mathbb{E}\left[\bar{Y}_n^2\right] &= \Var(\bar{Y}_n) + \mathbb{E}[\bar{Y}_n]^2 \\
+  &= \frac{\sigma^2}{n} + \mu^2 && \small\color{#777777}{\text{last week: } \mathbb{E}[\bar{Y}_n] = \mu,\ \Var(\bar{Y}_n) = \sigma^2/n}
+  \end{aligned}$$
+  - $\mathbb{E}[\bar{Y}_n^2] \neq \mathbb{E}[\bar{Y}_n]^2$: the sample mean's own sampling variance appears!
+
+:::
+
+## Bias of the plug-in variance
+
+::: {.incremental}
+
+- Combining the components
+  $$\begin{aligned}
+  \mathbb{E}\left[\hat{\sigma}^2_n\right] &= \mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n Y_i^2\right] - \mathbb{E}\left[\bar{Y}_n^2\right] && \small\color{#777777}{\text{linearity of expectations}} \\
+  &= \mathbb{E}\left[Y_i^2\right] - \left(\frac{\sigma^2}{n} + \mu^2\right) && \small\color{#777777}{\text{the two pieces}} \\
+  &= \left(\mathbb{E}\left[Y_i^2\right] - \mu^2\right) - \frac{\sigma^2}{n} && \small\color{#777777}{\text{regroup}} \\
+  &= \sigma^2 - \frac{\sigma^2}{n} && \small\color{#777777}{\text{definition of } \sigma^2} \\
+  &= \frac{n - 1}{n}\sigma^2
+  \end{aligned}$$
+
+- So it's **biased** downward: on average, it's too small by $\frac{\sigma^2}{n}$
+  - Intuition: Think about computing the plug-in variance with just a **single** observation!
+
+:::
+
+
+## Fixing the bias
+
+::: {.incremental}
+
+
+- How big is the bias? $\mathbb{E}\left[\hat{\sigma}^2_n\right] = \frac{n-1}{n}\sigma^2$ is too small by a fraction $\frac{1}{n}$
+
+- Rescale by $\frac{n}{n-1}$ to get the **unbiased sample variance estimator** (R's `var()`)
+  $$S^2_n = \frac{n}{n-1}\hat{\sigma}^2_n = \frac{1}{n-1}\sum_{i=1}^n (Y_i - \bar{Y}_n)^2 \qquad \mathbb{E}\left[S^2_n\right] = \frac{n}{n-1} \cdot \frac{n-1}{n}\sigma^2 = \sigma^2$$
+
+- Dividing by $n - 1$ instead of $n$ eliminates the bias ("Bessel's correction")
+
+- But the bias **vanishes** as $n$ grows. Does $\hat{\sigma}^2_n$ still get the right answer in large samples?
+
+:::
+
+## Consistency of the plug-in variance
+
+::: {.incremental}
+
+- The $Y_i^2$ are i.i.d. with mean $\mathbb{E}[Y_i^2]$, so by the WLLN
+  $$\frac{1}{n}\sum_{i=1}^n Y_i^2 \xrightarrow{p} \mathbb{E}[Y_i^2]$$
+- By the WLLN, $\bar{Y}_n \xrightarrow{p} \mu$. A limit of a product is the product of the limits, so $\bar{Y}_n^2 = \bar{Y}_n \cdot \bar{Y}_n \xrightarrow{p} \mu^2$
+
+- A sum (or difference) converges to the sum of the limits, so
+  $$\hat{\sigma}^2_n = \frac{1}{n}\sum_{i=1}^n Y_i^2 - \bar{Y}_n^2 \xrightarrow{p} \mathbb{E}[Y_i^2] - \mu^2 = \sigma^2$$
+
+- Biased, but **consistent**
+
+:::
 
 
 ## Consistency of plug-in estimators
 
+::: {.incremental}
 
-## Running Example
+- In general: $\hat{F}_n \to F$. So if small changes in $F$ only cause small changes in $T(F)$, then $T(\hat{F}_n) \to T(F)$
+  - Under these **usual plug-in regularity conditions**, plug-in estimators are also **asymptotically normal**
+  - The formal condition is a kind of differentiability of $T$.
 
+- Most estimands we'll meet are well behaved: means, variances, covariances, quantiles (where $F$ isn't flat), regression coefficients
+
+- When does it fail? When $T$ is too **sensitive** to small changes in $F$
+  - The **density** $f(y) = F'(y)$: $\hat{F}_n$ is a step function, so its derivative is $0$ everywhere except at the data, where it's undefined
+  - Plugging $\hat{F}_n$ straight in gives nonsense. We'll need to **smooth** it.
+
+:::
+
+## Running Example: 2024 GSS
+
+```{r}
+#| include: false
+#| ref.label: gss-age
+```
+
+::: {.incremental}
+
+- Estimate features of the **age** distribution of U.S. adults from the `r format(age_est$n, big.mark = ",")` GSS respondents, treating them as an i.i.d. sample
+
+:::
+
+::: {.fragment .est-table}
+
+| Estimand $\theta = T(F)$ | Plug-in estimator $T(\hat{F}_n)$ | Estimate |
+| --- | --- | --- |
+| Mean age, $\mathbb{E}[Y_i]$ | $\bar{Y}_n$ | `r sprintf("%.1f", age_est$mean)` |
+| Variance, $\Var(Y_i)$ | $\frac{1}{n}\sum_{i=1}^n (Y_i - \bar{Y}_n)^2$ | `r sprintf("%.1f", age_est$var_plugin)` |
+| Median, $F^{-1}(1/2)$ | Sample median | `r sprintf("%.0f", age_est$median)` |
+| Share 65 or older, $\Pr(Y_i \ge 65)$ | $1 - \hat{F}_n(64)$ | `r sprintf("%.3f", age_est$share65)` |
+
+:::
+
+::: {.incremental}
+
+- With $n$ this large, the $\frac{n}{n-1}$ correction barely matters: $S^2_n = `r sprintf("%.1f", age_est$var_unbiased)`$
+- And the standard error of the mean: $\widehat{SE}(\bar{Y}_n) = S_n / \sqrt{n} = `r sprintf("%.3f", sqrt(age_est$var_unbiased / age_est$n))`$
+
+:::
 
 ## Running Example in R
+
+```{r}
+#| label: gss-age
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+gss <- read_csv("../week6/data/gss2024.csv") |>
+  filter(!is.na(age))       # the GSS top-codes age at 89
+
+Fhat <- ecdf(gss$age)       # the empirical CDF, as an R function
+
+age_est <- gss |>
+  summarize(n = n(),
+            mean = mean(age),
+            var_plugin = mean((age - mean(age))^2),
+            var_unbiased = var(age),
+            median = median(age),
+            share65 = 1 - Fhat(64))
+age_est
+```
 
 
 <!-- ===== Density estimation ===== -->
 
 ## Density estimation
 
+```{r}
+#| include: false
+
+# Shared look for the density-estimation figures, matching the ECDF figure
+theme_slide <- function() {
+  theme_minimal(base_size = 18) +
+    theme(panel.grid = element_blank(),
+          axis.line.x = element_line(colour = "#333333"),
+          axis.text.y = element_blank(),
+          strip.text = element_text(face = "bold"),
+          plot.background = element_rect(fill = "#F7F7F7", colour = NA))
+}
+```
+
+::: {.incremental}
+
+- The plug-in principle can't give us the **density** $f(y)$ directly: $\hat{F}_n$ is a step function with no useful derivative
+  - But the density is often the best way to visualize the shape of a distribution
+
+- Recall what a **density** is: the share of the population in a small window around $y$, divided by the window's width
+  $$f(y) \approx \frac{F(y + h/2) - F(y - h/2)}{h} \qquad \text{for small } h$$
+
+- Plug in $\hat{F}_n$: the share of the **sample** within $h/2$ of $y$, divided by $h$
+  $$\hat{f}(y) = \frac{\hat{F}_n(y + h/2) - \hat{F}_n(y - h/2)}{h} = \frac{\#\{i : |Y_i - y| \le h/2\}}{nh}$$
+
+- The width $h$ is a **tuning parameter**
+  - Too small and each window holds few observations (**noisy**)
+  - Too large and we average over a region where $f$ changes (**biased**)
+
+:::
 
 ## Histograms
 
+::: {.incremental}
+
+- A **histogram** splits the real number line into **bins** $B_1, B_2, \dotsc$ of width $h$. For $y$ in bin $B_j$
+  $$\hat{f}(y) = \frac{\#\{i : Y_i \in B_j\}}{nh}$$
+  - Each bar's **area** is the share of observations in its bin, so the areas sum to $1$
+
+- **Bias**: the bar is flat but $f$ might not be. Larger $h$ $\leadsto$ larger bias (depending on $f^\prime(y)$)
+
+- **Variance**: the count in a bin is binomial with about $nh f(y)$ expected observations, so
+  $$\Var\left(\hat{f}(y)\right) \approx \frac{f(y)}{nh}$$
+
+- Consistent if the bins shrink, $h \to 0$, but **slowly** enough that each still fills up, $nh \to \infty$
+
+:::
+
+::: {.attribution}
+See @wasserman2006all, Ch. 6
+:::
+
+## Choosing the bin width
+
+::: {.incremental}
+
+- Pick $h$ to minimize the **integrated mean squared error** across all $y$. For small $h$ [@scott1979optimal]
+  $$\text{IMSE}(h) \approx \underbrace{\frac{h^2}{12}\int f'(y)^2\,dy}_{\text{bias}^2} + \underbrace{\frac{1}{nh}}_{\text{variance}} \quad \Longrightarrow \quad h^* = \left(\frac{6}{\int f'(y)^2\,dy}\right)^{1/3} n^{-1/3}$$
+  - Bins shrink at a rate of $n^{-1/3}$, so the **number** of bins grows like $n^{1/3}$
+
+- $h^*$ depends on the unknown $f$ through $\int f'(y)^2\,dy$. Heuristics plug in a **reference** distribution
+  - **Scott** (normal reference distribution): $h = 3.49\,\hat{\sigma}\,n^{-1/3}$ [@scott1979optimal]
+  - **Freedman–Diaconis**: $h = 2\,\text{IQR}\,n^{-1/3}$ [@freedman1981histogram]
+  - **Sturges**: $\lceil \log_2 n \rceil + 1$ bins [@sturges1926choice]. This is R's default in `hist()` - tends to use too few bins in large samples
+
+:::
+
+## How many bins?
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.2
+#| fig-align: center
+
+# The same 300 GSS respondents' ages, binned three ways. Bins are anchored at
+# half-years since age is recorded in whole years.
+set.seed(812)
+sub <- sample(gss$age, 300)
+h_fd_sub <- 2 * IQR(sub) / length(sub)^(1/3)
+panels <- c("1-year bins", sprintf("Freedman–Diaconis: %.1f years", h_fd_sub), "20-year bins")
+hist_panel <- function(k, h) {
+  geom_histogram(data = tibble(panel = factor(panels[k], panels), age = sub),
+                 aes(age, after_stat(density)), binwidth = h, boundary = 17.5,
+                 fill = "#0479a8", alpha = 0.35, colour = "#0479a8", linewidth = 0.4)
+}
+ggplot() +
+  hist_panel(1, 1) + hist_panel(2, h_fd_sub) + hist_panel(3, 20) +
+  facet_wrap(~ panel) +
+  labs(x = "Age", y = NULL) +
+  theme_slide()
+```
+
+::: {.incremental}
+
+- Too narrow: mostly **noise**. Too wide: the shape gets **smoothed away**
+
+:::
 
 ## Kernel density estimation
 
+::: {.incremental}
+
+- A histogram's estimate at $y$ depends on where the bin **edges** happen to fall
+
+- Instead, we could imagine centering a window on **every** point $y$ [@rosenblatt1956remarks]
+  $$\hat{f}(y) = \frac{1}{nh}\sum_{i=1}^n I\left(|Y_i - y| \le \tfrac{h}{2}\right)$$
+
+- Rewrite it as a **weighted average** over observations
+  $$\hat{f}(y) = \frac{1}{n}\sum_{i=1}^n \frac{1}{h}K\left(\frac{Y_i - y}{h}\right), \qquad K(u) = I\left(|u| \le \tfrac{1}{2}\right)$$
+  - Observations within $h/2$ of $y$ count fully. Everyone else counts for **nothing**
+
+- Instead of weighting every observation in the window equally, we could let an observation's weight **fall off smoothly** with its distance from $y$
+
+:::
 
 ## Kernel density estimation
 
+::: {.incremental}
 
-## Choosing the bandwidth
+- The **kernel density estimator** [@rosenblatt1956remarks; @parzen1962estimation]
+
+  $$\hat{f}_h(y) = \frac{1}{n}\sum_{i=1}^n K_h(Y_i - y) $$
+  
+- Where the **kernel** is defined as:
+
+  $$K_h(u) = \frac{1}{h}K\left(\frac{u}{h}\right)$$
+
+- The **kernel** $K$ is a function that is symmetric, non-negative and integrates to $1$: 
+  - e.g. uniform, triangular $1 - |u|$ on $[-1, 1]$, Gaussian $\phi(u)$
+  - The choice of kernel defines the shape of how the weights decay from $y$
+- The **bandwidth** $h$ defines how *many* observations get meaningful weight.
 
 
-## Running Example
+:::
 
+## Kernel density estimation
+
+::: {.incremental}
+
+- Each observation contributes a small **bump** $\frac{1}{n}K_h(\cdot - Y_i)$ (dashed). The estimate is their **sum** (solid)
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.6
+#| fig-align: center
+
+# Seven observations, a Gaussian bump (scaled by 1/n) at each, and their sum
+pts <- c(23, 31, 35, 46, 51, 57, 72)
+h_demo <- 5
+grid <- seq(5, 90, by = 0.25)
+bumps <- expand_grid(obs = pts, age = grid) |>
+  mutate(f = dnorm(age, obs, h_demo) / length(pts))
+ggplot() +
+  geom_line(data = bumps, aes(age, f, group = obs), colour = "#9a9a9a", linewidth = 0.8,
+            linetype = "dashed") +
+  geom_line(data = summarize(bumps, f = sum(f), .by = age), aes(age, f),
+            colour = "#0479a8", linewidth = 1.6) +
+  geom_rug(data = tibble(age = pts), aes(age), colour = "#333333", linewidth = 1, length = unit(0.06, "npc")) +
+  labs(x = "Age", y = NULL) +
+  theme_slide()
+```
+
+:::
+
+
+## Running Example: 2024 GSS
+
+```{r}
+#| include: false
+#| ref.label: gss-kde
+```
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 6.6
+#| fig-align: center
+
+# All respondents' ages: a Freedman-Diaconis histogram under kernel density
+# estimates at a too-small bandwidth, Silverman's rule of thumb, and a
+# too-large bandwidth
+bws <- c(0.5, bw_rot, 8)
+labs_bw <- c("h = 0.5: too small", sprintf("h = %.1f: Silverman", bw_rot), "h = 8: too large")
+kde <- map2_dfr(bws, labs_bw, \(b, l) {
+  d <- density(gss$age, bw = b, from = 18, to = 89)
+  tibble(panel = factor(l, labs_bw), age = d$x, f = d$y)
+})
+ggplot() +
+  geom_histogram(data = expand_grid(panel = factor(labs_bw, labs_bw), age = gss$age),
+                 aes(age, after_stat(density)), binwidth = h_fd, boundary = 17.5,
+                 fill = "#9a9a9a", alpha = 0.3, colour = NA) +
+  geom_line(data = kde, aes(age, f), colour = "#0479a8", linewidth = 1.3) +
+  facet_wrap(~ panel) +
+  labs(x = "Age", y = NULL) +
+  theme_slide()
+```
 
 ## Running Example in R
+
+```{r}
+#| label: gss-kde
+#| echo: true
+
+h_fd   <- 2 * IQR(gss$age) / nrow(gss)^(1/3)   # Freedman-Diaconis bin width
+bw_rot <- bw.nrd0(gss$age)                     # Silverman's rule of thumb
+c(bin_width = h_fd, bandwidth = bw_rot)
+
+fhat <- density(gss$age, bw = bw_rot)          # Gaussian kernel by default
+approx(fhat$x, fhat$y, xout = c(30, 60))$y     # estimated density at ages 30 and 60
+```
+
+```r
+ggplot(gss, aes(age)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = h_fd) +
+  geom_density(bw = bw_rot)
+```
 
 
 <!-- ===== Wrap-up ===== -->
 
 ## Next week
 
+::: {.incremental}
+
+- What do we do now that we have the **sampling distribution** of the sample mean?
+- **Interval estimators**
+  - Instead of a **single point estimate** can we give a range of values that characterizes our uncertainty?
+  - **Confidence interval**: In some fraction (e.g. 95%) of samples, the bounds will cover the true parameter.
+  - For a consistent and asymptotically normal estimator, this is just $\hat{\mu} \pm 1.96 \times \widehat{SE(\hat{\mu})}$ (for a 95% CI).
+- **Hypothesis testing**
+  - A thought experiment: If the true population mean were $\mu_0$, how likely would I be to observe a realization **as extreme** as the one in my sample?
+  - This is a **p-value**
+  - If the value is sufficiently unlikely...I may be willing to believe that the true population mean **is not** $\mu_0$
+
+:::
 
 ## References {.refs-slide}
 

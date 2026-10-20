@@ -50,7 +50,8 @@ Links become active as the materials for each week are posted.
 
 ### Week 7: Estimation: Part 2
 
-*To be posted*
+- [Week 7 Github Repository](https://github.com/astrezhnev/ps812/tree/main/slides/week7/)
+- [Week 7 `.html` slides](https://www.antonstrezhnev.com/ps812/slides/week7/week7_estimation.html)
 
 ### Week 8: Confidence Intervals and Hypothesis Testing
 
