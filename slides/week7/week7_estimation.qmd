@@ -197,7 +197,6 @@ cat("```{=html}",
 
 - Little-$o$ notation: $a_n = o(b_n)$ means $\dfrac{a_n}{b_n} \to 0$ as $n \to \infty$
   - $a_n$ vanishes **faster** than $b_n$, e.g. $\frac{1}{n^2} = o\left(\frac{1}{n}\right)$
-  - Same idea for a function near $0$: $r(t) = o(t^2)$ means $\dfrac{r(t)}{t^2} \to 0$ as $t \to 0$
 
 - Big-$O$ notation: $a_n = O(b_n)$ means $\left|\dfrac{a_n}{b_n}\right|$ stays **bounded** as $n \to \infty$
   - $a_n$ vanishes **no slower** than $b_n$, e.g. $\Var(\bar{Y}_n) = \frac{\sigma^2}{n} = O\left(\frac{1}{n}\right)$
@@ -234,12 +233,9 @@ cat("```{=html}",
   - $O_p(1)o_p(1) = o_p(1)$
   - If a sequence is $o_p(1)$, it is $O_p(1)$ but not vice-versa
 
-- Most common use: **convergence rates**. Not just **whether** $\bar{Y}_n$ converges to $\mu$, but **how quickly**?
-
-- By Chebyshev's inequality, for any $M > 0$
-  $$\Pr\left(\left|\sqrt{n}(\bar{Y}_n - \mu)\right| > M\right) \le \frac{\Var\left(\sqrt{n}(\bar{Y}_n - \mu)\right)}{M^2} = \frac{\sigma^2}{M^2}$$
-
-- So $\sqrt{n}(\bar{Y}_n - \mu) = O_p(1)$, or equivalently $\bar{Y}_n - \mu = O_p(1/\sqrt{n})$: the error shrinks at rate $1/\sqrt{n}$
+- Most common use: **convergence rates**. 
+  - **How quickly** does $\bar{Y}_n$ converges to $\mu$?
+  - It turns out $\bar{Y}_n - \mu = O_p(1/\sqrt{n})$: the error shrinks at rate $1/\sqrt{n}$
 
 :::
 
@@ -252,10 +248,10 @@ cat("```{=html}",
   - ...but says nothing about the **shape** of the sampling distribution for any given $n$
 
 - To approximate the sampling distribution in a large (but finite) sample, we need a notion of convergence to a **random variable**
-  - Not "does $X_n$ get close to a *value*?" but "does the *distribution* of $X_n$ get close to some known *distribution*?"
+  - Does the *distribution* of $bar{Y}_n$ get close to some known *distribution* as $n$ gets large?
 
 - **Convergence in distribution**
-  - A sequence of random variables $X_n$ with CDFs $F_n$ is said to **converge in distribution** to a random variable $X$ with CDF $F$ if
+  - A sequence of random variables $X_n$ with CDFs $F_n$ **converges in distribution** to a random variable $X$ with CDF $F$ if
     $$\lim_{n \to \infty} F_n(x) = F(x)$$
     at every $x$ where $F$ is continuous
 
@@ -276,16 +272,16 @@ cat("```{=html}",
 - We'll **rescale** $\bar{Y}_n - \mu$ by some factor that guarantees the variance converges to a non-zero **constant**
   $$\Var\big(n^r(\bar{Y}_n - \mu)\big) = n^{2r} \cdot \frac{\sigma^2}{n} = \sigma^2 n^{2r - 1} \to \begin{cases} 0 & r < 1/2 \\ \sigma^2 & r = 1/2 \\ \infty & r > 1/2 \end{cases}$$
 
-- So scaling the error by $\sqrt{n}$ keeps the variance **stable**: $\Var\big(\sqrt{n}(\bar{Y}_n - \mu)\big) = \sigma^2$ for **every** $n$
+- So scaling the error by $\sqrt{n}$ keeps the variance **stable**:
   - This is what we'll analyze: $\sqrt{n}(\bar{Y}_n - \mu)$
   - Its mean ($0$) and variance ($\sigma^2$) never change with $n$. What about its **shape**?
 
 :::
 
-## The Central Limit Theorem in Words
+## The Central Limit Theorem
 
 ::: {.statement}
-Sums and means of independent and identically distributed random variables tend to be **normally distributed**.
+**Sums** and **means** of independent and identically distributed random variables tend to be **normally distributed**.
 :::
 
 ## The Central Limit Theorem
@@ -298,7 +294,7 @@ Sums and means of independent and identically distributed random variables tend 
 - Equivalently, the **standardized** sample mean $\dfrac{\bar{Y}_n - \mu}{\sigma/\sqrt{n}} \xrightarrow{d} \mathcal{N}(0, 1)$
 
 - In the limit, the only things that matter about $Y_i$ after averaging are its **mean** and **variance**
-  - Skewed, bimodal, discrete, heavy-tailed (with finite variance) -- all averages become (roughly) normal.
+  - Whatever the shape of $Y_i$, the averages become (roughly) normal.
 
 - We'll use this to say that for large $n$, the sample mean is **approximately** normal
   $$\bar{Y}_n \overset{a}{\sim} \mathcal{N}\left(\mu, \frac{\sigma^2}{n}\right)$$
@@ -318,7 +314,10 @@ Sums and means of independent and identically distributed random variables tend 
   $$M_X(t) = \mathbb{E}\left[e^{tX}\right]$$
   so long as it's finite for all $t$ in some interval around $0$
 
-- Taking the derivative and evaluating at $t = 0$ generates the **moments**: $M_X(0) = 1$, $M_X'(0) = \mathbb{E}[X]$, $M_X''(0) = \mathbb{E}[X^2]$, ...
+- Taking the derivative and evaluating at $t = 0$ generates the **moments**: 
+  - $M_X(0) = 1$
+  - $M_X'(0) = \mathbb{E}[X]$
+  - $M_X''(0) = \mathbb{E}[X^2]$, ...
 
 :::
 
@@ -343,10 +342,10 @@ Sums and means of independent and identically distributed random variables tend 
 - Define $W_i = Y_i - \mu$, the **centered** draw, and let $M(t) = \mathbb{E}\left[e^{tW_i}\right]$ be its MGF. Then
   $$M(0) = 1, \qquad M'(0) = \mathbb{E}[W_i] = 0, \qquad M''(0) = \mathbb{E}[W_i^2] = \sigma^2$$
 
-- The scaled error is a scaled **sum** of the $W_i$
+- Writing the scaled **sum** of the $W_i$
   $$\sqrt{n}(\bar{Y}_n - \mu) = \frac{1}{\sqrt{n}}\sum_{i=1}^n W_i$$
 
-- Call the MGF of this scaled error $M_n(t)$. Our goal is to write $M_n(t)$ in terms of $M(t)$
+- Call the MGF of this scaled error $M_n(t)$. We first want to write $M_n(t)$ in terms of $M(t)$
 
 - We'll assume the MGF $M$ exists
   - The general proof uses the *characteristic function* $\mathbb{E}[e^{itW_i}]$, which always exists.
@@ -365,7 +364,7 @@ Sums and means of independent and identically distributed random variables tend 
   &= \mathbb{E}\left[\textstyle\prod_{i=1}^n \exp\left(\tfrac{t}{\sqrt{n}} W_i\right)\right] && \small\color{#777777}{e^{a + b} = e^a e^b}
   \end{aligned}$$
 
-- Then use **independence** and **identical distribution**
+- Then use the **i.i.d.** properties
   $$\begin{aligned}
   \mathbb{E}\left[\textstyle\prod_{i=1}^n \exp\left(\tfrac{t}{\sqrt{n}} W_i\right)\right] &= \textstyle\prod_{i=1}^n \mathbb{E}\left[\exp\left(\tfrac{t}{\sqrt{n}} W_i\right)\right] && \small\color{#777777}{\text{independent}} \\
   &= \textstyle\prod_{i=1}^n M\left(\tfrac{t}{\sqrt{n}}\right) && \small\color{#777777}{\text{identical: each $W_i$ has MGF $M$}} \\
@@ -380,15 +379,27 @@ Sums and means of independent and identically distributed random variables tend 
 
 - Take a second-order Taylor expansion of $M(t)$ around $t = 0$
   $$M(t) = M(0) + t\,M'(0) + \frac{t^2}{2}M''(0) + o(t^2) = 1 + 0 + \frac{\sigma^2 t^2}{2} + o(t^2)$$
-  where $o(t^2)$ is a remainder that vanishes faster than $t^2$ as $t \to 0$
+  $o(t^2)$ is the remainder - we use little-o notation to show that it goes to $0$ **faster** than $t^2$
 
 - Evaluate it at $t/\sqrt{n}$, which goes to $0$ as $n$ grows
   $$M_n(t) = \left[M\left(\frac{t}{\sqrt{n}}\right)\right]^n = \left[1 + \frac{\sigma^2 t^2}{2n} + o\left(\frac{1}{n}\right)\right]^n$$
 
-- The remainder vanishes even after being added up $n$ times: $n \cdot o\left(\frac{1}{n}\right) \to 0$. So in the limit we can drop it and use the familiar compound interest formula $\left(1 + \frac{a}{n}\right)^n \to e^a$
-  $$M_n(t) \approx \left(1 + \frac{\sigma^2 t^2 / 2}{n}\right)^n \to e^{\sigma^2 t^2/2}$$
+- Factor so this looks like the familiar **compound interest** formula.
+  $$M_n(t) = \left(1 + \frac{a_n}{n}\right)^n, \qquad a_n = \frac{\sigma^2 t^2}{2} + n \cdot o\left(\frac{1}{n}\right)$$
 
-- That's the MGF of a $\mathcal{N}(0, \sigma^2)$, so  $\sqrt{n}(\bar{Y}_n - \mu) \xrightarrow{d} \mathcal{N}(0, \sigma^2)$ 
+- The remainder is $o\left(\frac{1}{n}\right)$ and shrinks **faster** than $\frac{1}{n}$, so even $n$ times it goes to $0$. 
+  - So $a_n \to a = \frac{\sigma^2 t^2}{2}$
+
+:::
+
+## Proving the Central Limit Theorem
+
+::: {.incremental}
+
+- Since $a_n \to a$, for large $n$ our $M_n(t)$ behaves just like compound interest at the fixed rate $a$, which is one our definitions of $e$.
+  $$M_n(t) = \left(1 + \frac{a_n}{n}\right)^n \approx \left(1 + \frac{a}{n}\right)^n \to e^{a} = e^{\sigma^2 t^2/2}$$
+
+- That's the MGF of a $\mathcal{N}(0, \sigma^2)$, so $\sqrt{n}(\bar{Y}_n - \mu) \xrightarrow{d} \mathcal{N}(0, \sigma^2)$ 
 
 :::
 
