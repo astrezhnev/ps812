@@ -1338,7 +1338,6 @@ function (el, cfg, opts) {
 <li class="fragment"><p>Little-<span class="math inline">\(o\)</span> notation: <span class="math inline">\(a_n = o(b_n)\)</span> means <span class="math inline">\(\dfrac{a_n}{b_n} \to 0\)</span> as <span class="math inline">\(n \to \infty\)</span></p>
 <ul>
 <li class="fragment"><span class="math inline">\(a_n\)</span> vanishes <strong>faster</strong> than <span class="math inline">\(b_n\)</span>, e.g. <span class="math inline">\(\frac{1}{n^2} = o\left(\frac{1}{n}\right)\)</span></li>
-<li class="fragment">Same idea for a function near <span class="math inline">\(0\)</span>: <span class="math inline">\(r(t) = o(t^2)\)</span> means <span class="math inline">\(\dfrac{r(t)}{t^2} \to 0\)</span> as <span class="math inline">\(t \to 0\)</span></li>
 </ul></li>
 <li class="fragment"><p>Big-<span class="math inline">\(O\)</span> notation: <span class="math inline">\(a_n = O(b_n)\)</span> means <span class="math inline">\(\left|\dfrac{a_n}{b_n}\right|\)</span> stays <strong>bounded</strong> as <span class="math inline">\(n \to \infty\)</span></p>
 <ul>
@@ -1369,16 +1368,18 @@ function (el, cfg, opts) {
 <section id="big-o_p-and-little-o_p-notation-1" class="slide level2">
 <h2>Big-<span class="math inline">\(O_p\)</span> and little-<span class="math inline">\(o_p\)</span> notation</h2>
 <ul>
-<li class="fragment"><p>Useful properties</p>
+<li class="fragment">Useful properties
 <ul>
 <li class="fragment"><span class="math inline">\(o_p(1) + o_p(1) = o_p(1)\)</span></li>
 <li class="fragment"><span class="math inline">\(o_p(1) + O_p(1) = O_p(1)\)</span></li>
 <li class="fragment"><span class="math inline">\(O_p(1)o_p(1) = o_p(1)\)</span></li>
 <li class="fragment">If a sequence is <span class="math inline">\(o_p(1)\)</span>, it is <span class="math inline">\(O_p(1)\)</span> but not vice-versa</li>
 </ul></li>
-<li class="fragment"><p>Most common use: <strong>convergence rates</strong>. Not just <strong>whether</strong> <span class="math inline">\(\bar{Y}_n\)</span> converges to <span class="math inline">\(\mu\)</span>, but <strong>how quickly</strong>?</p></li>
-<li class="fragment"><p>By Chebyshev’s inequality, for any <span class="math inline">\(M &gt; 0\)</span> <span class="math display">\[\Pr\left(\left|\sqrt{n}(\bar{Y}_n - \mu)\right| &gt; M\right) \le \frac{\Var\left(\sqrt{n}(\bar{Y}_n - \mu)\right)}{M^2} = \frac{\sigma^2}{M^2}\]</span></p></li>
-<li class="fragment"><p>So <span class="math inline">\(\sqrt{n}(\bar{Y}_n - \mu) = O_p(1)\)</span>, or equivalently <span class="math inline">\(\bar{Y}_n - \mu = O_p(1/\sqrt{n})\)</span>: the error shrinks at rate <span class="math inline">\(1/\sqrt{n}\)</span></p></li>
+<li class="fragment">Most common use: <strong>convergence rates</strong>.
+<ul>
+<li class="fragment"><strong>How quickly</strong> does <span class="math inline">\(\bar{Y}_n\)</span> converges to <span class="math inline">\(\mu\)</span>?</li>
+<li class="fragment">It turns out <span class="math inline">\(\bar{Y}_n - \mu = O_p(1/\sqrt{n})\)</span>: the error shrinks at rate <span class="math inline">\(1/\sqrt{n}\)</span></li>
+</ul></li>
 </ul>
 </section>
 <section id="convergence-in-distribution" class="slide level2">
@@ -1391,11 +1392,11 @@ function (el, cfg, opts) {
 </ul></li>
 <li class="fragment">To approximate the sampling distribution in a large (but finite) sample, we need a notion of convergence to a <strong>random variable</strong>
 <ul>
-<li class="fragment">Not “does <span class="math inline">\(X_n\)</span> get close to a <em>value</em>?” but “does the <em>distribution</em> of <span class="math inline">\(X_n\)</span> get close to some known <em>distribution</em>?”</li>
+<li class="fragment">Does the <em>distribution</em> of <span class="math inline">\(bar{Y}_n\)</span> get close to some known <em>distribution</em> as <span class="math inline">\(n\)</span> gets large?</li>
 </ul></li>
 <li class="fragment"><strong>Convergence in distribution</strong>
 <ul>
-<li class="fragment">A sequence of random variables <span class="math inline">\(X_n\)</span> with CDFs <span class="math inline">\(F_n\)</span> is said to <strong>converge in distribution</strong> to a random variable <span class="math inline">\(X\)</span> with CDF <span class="math inline">\(F\)</span> if <span class="math display">\[\lim_{n \to \infty} F_n(x) = F(x)\]</span> at every <span class="math inline">\(x\)</span> where <span class="math inline">\(F\)</span> is continuous</li>
+<li class="fragment">A sequence of random variables <span class="math inline">\(X_n\)</span> with CDFs <span class="math inline">\(F_n\)</span> <strong>converges in distribution</strong> to a random variable <span class="math inline">\(X\)</span> with CDF <span class="math inline">\(F\)</span> if <span class="math display">\[\lim_{n \to \infty} F_n(x) = F(x)\]</span> at every <span class="math inline">\(x\)</span> where <span class="math inline">\(F\)</span> is continuous</li>
 </ul></li>
 <li class="fragment">We’ll denote this as <span class="math inline">\(X_n \xrightarrow{d} X\)</span>.</li>
 </ul>
@@ -1411,27 +1412,27 @@ function (el, cfg, opts) {
 </ul></li>
 <li class="fragment"><p>We need to analyze a sequence that does not <strong>collapse</strong> to a single point</p></li>
 <li class="fragment"><p>We’ll <strong>rescale</strong> <span class="math inline">\(\bar{Y}_n - \mu\)</span> by some factor that guarantees the variance converges to a non-zero <strong>constant</strong> <span class="math display">\[\Var\big(n^r(\bar{Y}_n - \mu)\big) = n^{2r} \cdot \frac{\sigma^2}{n} = \sigma^2 n^{2r - 1} \to \begin{cases} 0 &amp; r &lt; 1/2 \\ \sigma^2 &amp; r = 1/2 \\ \infty &amp; r &gt; 1/2 \end{cases}\]</span></p></li>
-<li class="fragment"><p>So scaling the error by <span class="math inline">\(\sqrt{n}\)</span> keeps the variance <strong>stable</strong>: <span class="math inline">\(\Var\big(\sqrt{n}(\bar{Y}_n - \mu)\big) = \sigma^2\)</span> for <strong>every</strong> <span class="math inline">\(n\)</span></p>
+<li class="fragment"><p>So scaling the error by <span class="math inline">\(\sqrt{n}\)</span> keeps the variance <strong>stable</strong>:</p>
 <ul>
 <li class="fragment">This is what we’ll analyze: <span class="math inline">\(\sqrt{n}(\bar{Y}_n - \mu)\)</span></li>
 <li class="fragment">Its mean (<span class="math inline">\(0\)</span>) and variance (<span class="math inline">\(\sigma^2\)</span>) never change with <span class="math inline">\(n\)</span>. What about its <strong>shape</strong>?</li>
 </ul></li>
 </ul>
 </section>
-<section id="the-central-limit-theorem-in-words" class="slide level2">
-<h2>The Central Limit Theorem in Words</h2>
+<section id="the-central-limit-theorem" class="slide level2">
+<h2>The Central Limit Theorem</h2>
 <div class="statement">
-<p>Sums and means of independent and identically distributed random variables tend to be <strong>normally distributed</strong>.</p>
+<p><strong>Sums</strong> and <strong>means</strong> of independent and identically distributed random variables tend to be <strong>normally distributed</strong>.</p>
 </div>
 </section>
-<section id="the-central-limit-theorem" class="slide level2">
+<section id="the-central-limit-theorem-1" class="slide level2">
 <h2>The Central Limit Theorem</h2>
 <ul>
 <li class="fragment"><p><strong>Central Limit Theorem</strong>: Let <span class="math inline">\(Y_1, Y_2, \dotsc, Y_n\)</span> be i.i.d. with <span class="math inline">\(\mathbb{E}[Y_i] = \mu\)</span> and <span class="math inline">\(\Var(Y_i) = \sigma^2 &lt; \infty\)</span>. Then <span class="math display">\[\sqrt{n}(\bar{Y}_n - \mu) \xrightarrow{d} \mathcal{N}(0, \sigma^2)\]</span></p></li>
 <li class="fragment"><p>Equivalently, the <strong>standardized</strong> sample mean <span class="math inline">\(\dfrac{\bar{Y}_n - \mu}{\sigma/\sqrt{n}} \xrightarrow{d} \mathcal{N}(0, 1)\)</span></p></li>
 <li class="fragment"><p>In the limit, the only things that matter about <span class="math inline">\(Y_i\)</span> after averaging are its <strong>mean</strong> and <strong>variance</strong></p>
 <ul>
-<li class="fragment">Skewed, bimodal, discrete, heavy-tailed (with finite variance) – all averages become (roughly) normal.</li>
+<li class="fragment">Whatever the shape of <span class="math inline">\(Y_i\)</span>, the averages become (roughly) normal.</li>
 </ul></li>
 <li class="fragment"><p>We’ll use this to say that for large <span class="math inline">\(n\)</span>, the sample mean is <strong>approximately</strong> normal <span class="math display">\[\bar{Y}_n \overset{a}{\sim} \mathcal{N}\left(\mu, \frac{\sigma^2}{n}\right)\]</span></p></li>
 <li class="fragment"><p>Let’s prove it!</p></li>
@@ -1446,7 +1447,12 @@ function (el, cfg, opts) {
 <li class="fragment">Then we can apply the tools of calculus - specifically <strong>Taylor approximations</strong> and limits of functions</li>
 </ul></li>
 <li class="fragment"><p>The <strong>moment generating function</strong> (MGF) of a random variable <span class="math inline">\(X\)</span> is <span class="math display">\[M_X(t) = \mathbb{E}\left[e^{tX}\right]\]</span> so long as it’s finite for all <span class="math inline">\(t\)</span> in some interval around <span class="math inline">\(0\)</span></p></li>
-<li class="fragment"><p>Taking the derivative and evaluating at <span class="math inline">\(t = 0\)</span> generates the <strong>moments</strong>: <span class="math inline">\(M_X(0) = 1\)</span>, <span class="math inline">\(M_X&#39;(0) = \mathbb{E}[X]\)</span>, <span class="math inline">\(M_X&#39;&#39;(0) = \mathbb{E}[X^2]\)</span>, …</p></li>
+<li class="fragment"><p>Taking the derivative and evaluating at <span class="math inline">\(t = 0\)</span> generates the <strong>moments</strong>:</p>
+<ul>
+<li class="fragment"><span class="math inline">\(M_X(0) = 1\)</span></li>
+<li class="fragment"><span class="math inline">\(M_X&#39;(0) = \mathbb{E}[X]\)</span></li>
+<li class="fragment"><span class="math inline">\(M_X&#39;&#39;(0) = \mathbb{E}[X^2]\)</span>, …</li>
+</ul></li>
 </ul>
 </section>
 <section id="moment-generating-functions-1" class="slide level2">
@@ -1466,8 +1472,8 @@ function (el, cfg, opts) {
 <h2>Proving the Central Limit Theorem</h2>
 <ul>
 <li class="fragment"><p>Define <span class="math inline">\(W_i = Y_i - \mu\)</span>, the <strong>centered</strong> draw, and let <span class="math inline">\(M(t) = \mathbb{E}\left[e^{tW_i}\right]\)</span> be its MGF. Then <span class="math display">\[M(0) = 1, \qquad M&#39;(0) = \mathbb{E}[W_i] = 0, \qquad M&#39;&#39;(0) = \mathbb{E}[W_i^2] = \sigma^2\]</span></p></li>
-<li class="fragment"><p>The scaled error is a scaled <strong>sum</strong> of the <span class="math inline">\(W_i\)</span> <span class="math display">\[\sqrt{n}(\bar{Y}_n - \mu) = \frac{1}{\sqrt{n}}\sum_{i=1}^n W_i\]</span></p></li>
-<li class="fragment"><p>Call the MGF of this scaled error <span class="math inline">\(M_n(t)\)</span>. Our goal is to write <span class="math inline">\(M_n(t)\)</span> in terms of <span class="math inline">\(M(t)\)</span></p></li>
+<li class="fragment"><p>Writing the scaled <strong>sum</strong> of the <span class="math inline">\(W_i\)</span> <span class="math display">\[\sqrt{n}(\bar{Y}_n - \mu) = \frac{1}{\sqrt{n}}\sum_{i=1}^n W_i\]</span></p></li>
+<li class="fragment"><p>Call the MGF of this scaled error <span class="math inline">\(M_n(t)\)</span>. We first want to write <span class="math inline">\(M_n(t)\)</span> in terms of <span class="math inline">\(M(t)\)</span></p></li>
 <li class="fragment"><p>We’ll assume the MGF <span class="math inline">\(M\)</span> exists</p>
 <ul>
 <li class="fragment">The general proof uses the <em>characteristic function</em> <span class="math inline">\(\mathbb{E}[e^{itW_i}]\)</span>, which always exists.</li>
@@ -1483,7 +1489,7 @@ M_n(t) &amp;= \mathbb{E}\left[e^{t\sqrt{n}(\bar{Y}_n - \mu)}\right] &amp;&amp; \
 &amp;= \mathbb{E}\left[\exp\left(\textstyle\sum_{i=1}^n \tfrac{t}{\sqrt{n}} W_i\right)\right] &amp;&amp; \small\color{#777777}{\text{constant inside the sum}} \\
 &amp;= \mathbb{E}\left[\textstyle\prod_{i=1}^n \exp\left(\tfrac{t}{\sqrt{n}} W_i\right)\right] &amp;&amp; \small\color{#777777}{e^{a + b} = e^a e^b}
 \end{aligned}\]</span></p></li>
-<li class="fragment"><p>Then use <strong>independence</strong> and <strong>identical distribution</strong> <span class="math display">\[\begin{aligned}
+<li class="fragment"><p>Then use the <strong>i.i.d.</strong> properties <span class="math display">\[\begin{aligned}
 \mathbb{E}\left[\textstyle\prod_{i=1}^n \exp\left(\tfrac{t}{\sqrt{n}} W_i\right)\right] &amp;= \textstyle\prod_{i=1}^n \mathbb{E}\left[\exp\left(\tfrac{t}{\sqrt{n}} W_i\right)\right] &amp;&amp; \small\color{#777777}{\text{independent}} \\
 &amp;= \textstyle\prod_{i=1}^n M\left(\tfrac{t}{\sqrt{n}}\right) &amp;&amp; \small\color{#777777}{\text{identical: each $W_i$ has MGF $M$}} \\
 &amp;= \left[M\left(\tfrac{t}{\sqrt{n}}\right)\right]^n &amp;&amp; \small\color{#777777}{\text{$n$ identical factors}}
@@ -1493,9 +1499,19 @@ M_n(t) &amp;= \mathbb{E}\left[e^{t\sqrt{n}(\bar{Y}_n - \mu)}\right] &amp;&amp; \
 <section id="proving-the-central-limit-theorem-2" class="slide level2">
 <h2>Proving the Central Limit Theorem</h2>
 <ul>
-<li class="fragment"><p>Take a second-order Taylor expansion of <span class="math inline">\(M(t)\)</span> around <span class="math inline">\(t = 0\)</span> <span class="math display">\[M(t) = M(0) + t\,M&#39;(0) + \frac{t^2}{2}M&#39;&#39;(0) + o(t^2) = 1 + 0 + \frac{\sigma^2 t^2}{2} + o(t^2)\]</span> where <span class="math inline">\(o(t^2)\)</span> is a remainder that vanishes faster than <span class="math inline">\(t^2\)</span> as <span class="math inline">\(t \to 0\)</span></p></li>
+<li class="fragment"><p>Take a second-order Taylor expansion of <span class="math inline">\(M(t)\)</span> around <span class="math inline">\(t = 0\)</span> <span class="math display">\[M(t) = M(0) + t\,M&#39;(0) + \frac{t^2}{2}M&#39;&#39;(0) + o(t^2) = 1 + 0 + \frac{\sigma^2 t^2}{2} + o(t^2)\]</span> <span class="math inline">\(o(t^2)\)</span> is the remainder - we use little-o notation to show that it goes to <span class="math inline">\(0\)</span> <strong>faster</strong> than <span class="math inline">\(t^2\)</span></p></li>
 <li class="fragment"><p>Evaluate it at <span class="math inline">\(t/\sqrt{n}\)</span>, which goes to <span class="math inline">\(0\)</span> as <span class="math inline">\(n\)</span> grows <span class="math display">\[M_n(t) = \left[M\left(\frac{t}{\sqrt{n}}\right)\right]^n = \left[1 + \frac{\sigma^2 t^2}{2n} + o\left(\frac{1}{n}\right)\right]^n\]</span></p></li>
-<li class="fragment"><p>The remainder vanishes even after being added up <span class="math inline">\(n\)</span> times: <span class="math inline">\(n \cdot o\left(\frac{1}{n}\right) \to 0\)</span>. So in the limit we can drop it and use the familiar compound interest formula <span class="math inline">\(\left(1 + \frac{a}{n}\right)^n \to e^a\)</span> <span class="math display">\[M_n(t) \approx \left(1 + \frac{\sigma^2 t^2 / 2}{n}\right)^n \to e^{\sigma^2 t^2/2}\]</span></p></li>
+<li class="fragment"><p>Factor so this looks like the familiar <strong>compound interest</strong> formula. <span class="math display">\[M_n(t) = \left(1 + \frac{a_n}{n}\right)^n, \qquad a_n = \frac{\sigma^2 t^2}{2} + n \cdot o\left(\frac{1}{n}\right)\]</span></p></li>
+<li class="fragment"><p>The remainder is <span class="math inline">\(o\left(\frac{1}{n}\right)\)</span> and shrinks <strong>faster</strong> than <span class="math inline">\(\frac{1}{n}\)</span>, so even <span class="math inline">\(n\)</span> times it goes to <span class="math inline">\(0\)</span>.</p>
+<ul>
+<li class="fragment">So <span class="math inline">\(a_n \to a = \frac{\sigma^2 t^2}{2}\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="proving-the-central-limit-theorem-3" class="slide level2">
+<h2>Proving the Central Limit Theorem</h2>
+<ul>
+<li class="fragment"><p>Since <span class="math inline">\(a_n \to a\)</span>, for large <span class="math inline">\(n\)</span> our <span class="math inline">\(M_n(t)\)</span> behaves just like compound interest at the fixed rate <span class="math inline">\(a\)</span>, which is one our definitions of <span class="math inline">\(e\)</span>. <span class="math display">\[M_n(t) = \left(1 + \frac{a_n}{n}\right)^n \approx \left(1 + \frac{a}{n}\right)^n \to e^{a} = e^{\sigma^2 t^2/2}\]</span></p></li>
 <li class="fragment"><p>That’s the MGF of a <span class="math inline">\(\mathcal{N}(0, \sigma^2)\)</span>, so <span class="math inline">\(\sqrt{n}(\bar{Y}_n - \mu) \xrightarrow{d} \mathcal{N}(0, \sigma^2)\)</span></p></li>
 </ul>
 <div class="attribution">
