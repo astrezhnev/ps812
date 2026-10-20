@@ -77,6 +77,328 @@
     "text": "Acknowledgments\nThis course is indebted to the many wonderful and generous scholars in political methodology, econometrics and sociology who have made their materials available to the public. In particular, I thank Adeline Lo, whose previous version of PS812 forms the core of this syllabus and its schedule, as well as Matthew Blackwell, P Aronow, Adam Glynn, Justin Grimmer, Jens Hainmueller, Erin Hartman, Chad Hazlett, Kosuke Imai, Gary King, Dean Knox, Kevin Quinn, Molly Roberts, Molly Offer-Westort, Brandon Stewart, and Teppei Yamamoto\nLastly, thanks to Andrew Heiss and Matt Blackwell for their Quarto website templates, which I have extensively borrowed from in designing this course site."
   },
   {
+    "objectID": "slides/week7/week7_estimation.html#welcome-back",
+    "href": "slides/week7/week7_estimation.html#welcome-back",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Welcome back!",
+    "text": "Welcome back!\n\n\n\\[\n\\newcommand{\\Var}{\\text{Var}}\n\\newcommand{\\Cov}{\\text{Cov}}\n\\newcommand{\\Corr}{\\text{Corr}}\n\\newcommand{\\indep}{\\mathrel{\\perp\\mkern-10mu\\perp}}\n\\]"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#where-weve-been",
+    "href": "slides/week7/week7_estimation.html#where-weve-been",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Where we’ve been",
+    "text": "Where we’ve been\n\n\n\n\n  \n  \n    \n    Data\n    generating\n    process\n  \n  \n    \n    Observed data\n  \n\n  \n  \n    \n    \n    probability\n  \n\n  \n  \n    \n    \n    inference\n  \n\n\n\nAdapted from Blackwell (2025), Ch. 2"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#where-weve-been-1",
+    "href": "slides/week7/week7_estimation.html#where-weve-been-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Where we’ve been",
+    "text": "Where we’ve been\n\nUnder i.i.d random sampling from the target population, we’ve established that…\n\n\n\n\\(\\mathbb{E}[\\hat{\\mu}] =\\)\n\n\n\\(\\displaystyle \\mathbb{E}\\left[\\frac{1}{n}\\sum_{i=1}^n Y_i\\right]\\)\n\n\n\\(\\displaystyle \\frac{1}{n}\\sum_{i=1}^n \\mathbb{E}[Y_i]\\)\n\n\n\\(\\displaystyle \\frac{1}{n}\\sum_{i=1}^n \\mu\\)\n\n\n\\(\\displaystyle \\mu\\)\n\n\n\n\nlinearity of expectations\n\n\nidentical: \\(\\mathbb{E}[Y_i] = \\mu\\)\n\n\nunbiased\n\n\n\n\n\\(\\Var(\\hat{\\mu}) =\\)\n\n\n\\(\\displaystyle \\Var\\left(\\frac{1}{n}\\sum_{i=1}^n Y_i\\right)\\)\n\n\n\\(\\displaystyle \\frac{1}{n^2}\\left[\\sum_{i=1}^n \\Var(Y_i) + \\sum_{i=1}^n \\sum_{j \\neq i} \\Cov(Y_i, Y_j)\\right]\\)\n\n\n\\(\\displaystyle \\frac{1}{n^2}\\sum_{i=1}^n \\Var(Y_i)\\)\n\n\n\\(\\displaystyle \\frac{1}{n^2}\\sum_{i=1}^n \\sigma^2\\)\n\n\n\\(\\displaystyle \\frac{\\sigma^2}{n}\\)\n\n\n\n\nconstants out squared; variance of a sum\n\n\nindependent: \\(\\Cov(Y_i, Y_j) = 0\\)\n\n\nidentical: \\(\\Var(Y_i) = \\sigma^2\\)\n\n\nsampling variance\n\n\n\n\n\\(\\hat{\\mu} \\sim \\; {\\color{#c5050c}{?}}\\left(\\mu, \\dfrac{\\sigma^2}{n}\\right)\\)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#where-weve-been-2",
+    "href": "slides/week7/week7_estimation.html#where-weve-been-2",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Where we’ve been",
+    "text": "Where we’ve been\n\n\\(\\hat{\\mu} \\sim \\; {\\color{#c5050c}{?}}\\left(\\mu, \\dfrac{\\sigma^2}{n}\\right)\\)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#this-week",
+    "href": "slides/week7/week7_estimation.html#this-week",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "This week",
+    "text": "This week\n\nConvergence in distribution\n\nAs sample size \\(n\\) becomes large, is the sampling distribution well-approximated by a known distribution?\nWhen a central limit theorem applies, the sampling distribution converges in distribution to a normal!\n\nPlug-in estimation\n\nWhat if we want to learn other things about the population distribution?\nA population variance? A population covariance?\nLike the mean, these are all functionals of the population CDF\nUnder i.i.d. sampling, plugging in the sample CDF usually gives a good estimator!\n\nDensity estimation\n\nHistograms and binning\nKernel estimators (weighted averages w/ weights determined by closeness)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#big-o-and-little-o-notation",
+    "href": "slides/week7/week7_estimation.html#big-o-and-little-o-notation",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Big-\\(O\\) and little-\\(o\\) notation",
+    "text": "Big-\\(O\\) and little-\\(o\\) notation\n\nSometimes we’ll want to use shorthand to characterize how fast a term shrinks (or grows)\nLittle-\\(o\\) notation: \\(a_n = o(b_n)\\) means \\(\\dfrac{a_n}{b_n} \\to 0\\) as \\(n \\to \\infty\\)\n\n\\(a_n\\) vanishes faster than \\(b_n\\), e.g. \\(\\frac{1}{n^2} = o\\left(\\frac{1}{n}\\right)\\)\nSame idea for a function near \\(0\\): \\(r(t) = o(t^2)\\) means \\(\\dfrac{r(t)}{t^2} \\to 0\\) as \\(t \\to 0\\)\n\nBig-\\(O\\) notation: \\(a_n = O(b_n)\\) means \\(\\left|\\dfrac{a_n}{b_n}\\right|\\) stays bounded as \\(n \\to \\infty\\)\n\n\\(a_n\\) vanishes no slower than \\(b_n\\), e.g. \\(\\Var(\\bar{Y}_n) = \\frac{\\sigma^2}{n} = O\\left(\\frac{1}{n}\\right)\\)\n\nSo \\(o(1)\\) is anything going to \\(0\\), and \\(O(1)\\) is anything that stays bounded"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#big-o_p-and-little-o_p-notation",
+    "href": "slides/week7/week7_estimation.html#big-o_p-and-little-o_p-notation",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Big-\\(O_p\\) and little-\\(o_p\\) notation",
+    "text": "Big-\\(O_p\\) and little-\\(o_p\\) notation\n\nFor random variables, the same shorthand is stated in terms of probabilities\nLittle-\\(o_p\\) notation denotes convergence (in probability) to zero\n\n\\(Y_n = o_p(1)\\) means \\(\\Pr(|Y_n| \\ge \\epsilon) \\to 0\\) as \\(n \\to \\infty\\), for every \\(\\epsilon &gt; 0\\)\ne.g. by the WLLN, we can write \\(\\bar{Y}_n = \\mu + o_p(1)\\)\n\nBig-\\(O_p\\) notation denotes boundedness (in probability) of a sequence as \\(n \\to \\infty\\)\n\n\\(Y_n = O_p(1)\\) means that for every \\(\\epsilon &gt; 0\\) there’s an \\(M\\) with \\(\\Pr(|Y_n| &gt; M) &lt; \\epsilon\\) for all sufficiently large \\(n\\)\n\nThe rest of the orders are defined by rescaling\n\nSo \\(Y_n = O_p(a_n)\\) means that \\(\\frac{Y_n}{a_n} = O_p(1)\\), and likewise for \\(o_p\\)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#big-o_p-and-little-o_p-notation-1",
+    "href": "slides/week7/week7_estimation.html#big-o_p-and-little-o_p-notation-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Big-\\(O_p\\) and little-\\(o_p\\) notation",
+    "text": "Big-\\(O_p\\) and little-\\(o_p\\) notation\n\nUseful properties\n\n\\(o_p(1) + o_p(1) = o_p(1)\\)\n\\(o_p(1) + O_p(1) = O_p(1)\\)\n\\(O_p(1)o_p(1) = o_p(1)\\)\nIf a sequence is \\(o_p(1)\\), it is \\(O_p(1)\\) but not vice-versa\n\nMost common use: convergence rates. Not just whether \\(\\bar{Y}_n\\) converges to \\(\\mu\\), but how quickly?\nBy Chebyshev’s inequality, for any \\(M &gt; 0\\) \\[\\Pr\\left(\\left|\\sqrt{n}(\\bar{Y}_n - \\mu)\\right| &gt; M\\right) \\le \\frac{\\Var\\left(\\sqrt{n}(\\bar{Y}_n - \\mu)\\right)}{M^2} = \\frac{\\sigma^2}{M^2}\\]\nSo \\(\\sqrt{n}(\\bar{Y}_n - \\mu) = O_p(1)\\), or equivalently \\(\\bar{Y}_n - \\mu = O_p(1/\\sqrt{n})\\): the error shrinks at rate \\(1/\\sqrt{n}\\)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#convergence-in-distribution",
+    "href": "slides/week7/week7_estimation.html#convergence-in-distribution",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Convergence in distribution",
+    "text": "Convergence in distribution\n\nBy the Weak Law of Large Numbers (WLLN) \\(\\bar{Y}_n \\xrightarrow{p} \\mu\\)\n\nTells us how the sampling distribution collapses to the point we want…\n…but says nothing about the shape of the sampling distribution for any given \\(n\\)\n\nTo approximate the sampling distribution in a large (but finite) sample, we need a notion of convergence to a random variable\n\nNot “does \\(X_n\\) get close to a value?” but “does the distribution of \\(X_n\\) get close to some known distribution?”\n\nConvergence in distribution\n\nA sequence of random variables \\(X_n\\) with CDFs \\(F_n\\) is said to converge in distribution to a random variable \\(X\\) with CDF \\(F\\) if \\[\\lim_{n \\to \\infty} F_n(x) = F(x)\\] at every \\(x\\) where \\(F\\) is continuous\n\nWe’ll denote this as \\(X_n \\xrightarrow{d} X\\)."
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#convergence-in-distribution-1",
+    "href": "slides/week7/week7_estimation.html#convergence-in-distribution-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Convergence in distribution",
+    "text": "Convergence in distribution\n\nWe want to approximate the sampling distribution of \\(\\bar{Y}_n\\). Does \\(\\bar{Y}_n\\) itself converge in distribution?\n\nConvergence in probability implies convergence in distribution\nSo we end up with a useless result: \\(\\bar{Y}_n \\xrightarrow{p} \\mu\\), so \\(\\bar{Y}_n \\xrightarrow{d} \\mu\\)\nAnd recentering still gives \\(\\bar{Y}_n - \\mu \\xrightarrow{d} 0\\)\n\nWe need to analyze a sequence that does not collapse to a single point\nWe’ll rescale \\(\\bar{Y}_n - \\mu\\) by some factor that guarantees the variance converges to a non-zero constant \\[\\Var\\big(n^r(\\bar{Y}_n - \\mu)\\big) = n^{2r} \\cdot \\frac{\\sigma^2}{n} = \\sigma^2 n^{2r - 1} \\to \\begin{cases} 0 & r &lt; 1/2 \\\\ \\sigma^2 & r = 1/2 \\\\ \\infty & r &gt; 1/2 \\end{cases}\\]\nSo scaling the error by \\(\\sqrt{n}\\) keeps the variance stable: \\(\\Var\\big(\\sqrt{n}(\\bar{Y}_n - \\mu)\\big) = \\sigma^2\\) for every \\(n\\)\n\nThis is what we’ll analyze: \\(\\sqrt{n}(\\bar{Y}_n - \\mu)\\)\nIts mean (\\(0\\)) and variance (\\(\\sigma^2\\)) never change with \\(n\\). What about its shape?"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#the-central-limit-theorem-in-words",
+    "href": "slides/week7/week7_estimation.html#the-central-limit-theorem-in-words",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "The Central Limit Theorem in Words",
+    "text": "The Central Limit Theorem in Words\n\nSums and means of independent and identically distributed random variables tend to be normally distributed."
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#the-central-limit-theorem",
+    "href": "slides/week7/week7_estimation.html#the-central-limit-theorem",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "The Central Limit Theorem",
+    "text": "The Central Limit Theorem\n\nCentral Limit Theorem: Let \\(Y_1, Y_2, \\dotsc, Y_n\\) be i.i.d. with \\(\\mathbb{E}[Y_i] = \\mu\\) and \\(\\Var(Y_i) = \\sigma^2 &lt; \\infty\\). Then \\[\\sqrt{n}(\\bar{Y}_n - \\mu) \\xrightarrow{d} \\mathcal{N}(0, \\sigma^2)\\]\nEquivalently, the standardized sample mean \\(\\dfrac{\\bar{Y}_n - \\mu}{\\sigma/\\sqrt{n}} \\xrightarrow{d} \\mathcal{N}(0, 1)\\)\nIn the limit, the only things that matter about \\(Y_i\\) after averaging are its mean and variance\n\nSkewed, bimodal, discrete, heavy-tailed (with finite variance) – all averages become (roughly) normal.\n\nWe’ll use this to say that for large \\(n\\), the sample mean is approximately normal \\[\\bar{Y}_n \\overset{a}{\\sim} \\mathcal{N}\\left(\\mu, \\frac{\\sigma^2}{n}\\right)\\]\nLet’s prove it!"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#moment-generating-functions",
+    "href": "slides/week7/week7_estimation.html#moment-generating-functions",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Moment generating functions",
+    "text": "Moment generating functions\n\nOur proof requires a new concept: a moment generating function\n\nThis is a useful mathematical trick which lets us analyze an entire distribution by studying just one function.\nThen we can apply the tools of calculus - specifically Taylor approximations and limits of functions\n\nThe moment generating function (MGF) of a random variable \\(X\\) is \\[M_X(t) = \\mathbb{E}\\left[e^{tX}\\right]\\] so long as it’s finite for all \\(t\\) in some interval around \\(0\\)\nTaking the derivative and evaluating at \\(t = 0\\) generates the moments: \\(M_X(0) = 1\\), \\(M_X'(0) = \\mathbb{E}[X]\\), \\(M_X''(0) = \\mathbb{E}[X^2]\\), …"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#moment-generating-functions-1",
+    "href": "slides/week7/week7_estimation.html#moment-generating-functions-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Moment generating functions",
+    "text": "Moment generating functions\n\nProperties that we need:\n\nUniqueness: Two random variables with the same MGF have the same distribution\nContinuity: If \\(M_{X_n}(t) \\to M_X(t)\\) for every \\(t\\) near \\(0\\), then \\(X_n \\xrightarrow{d} X\\)\nIndependent sums: If \\(X_1 \\indep X_2\\), then \\(M_{X_1 + X_2}(t) = \\mathbb{E}\\left[e^{tX_1}e^{tX_2}\\right] = M_{X_1}(t)M_{X_2}(t)\\)\nThe MGF of the Normal: If \\(X \\sim \\mathcal{N}(0, \\sigma^2)\\), then \\(M_X(t) = e^{\\sigma^2 t^2/2}\\)\n\nOur goal: Show that the MGF of \\(\\sqrt{n}(\\bar{Y}_n - \\mu)\\) converges to \\(e^{\\sigma^2 t^2/2}\\)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#proving-the-central-limit-theorem",
+    "href": "slides/week7/week7_estimation.html#proving-the-central-limit-theorem",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Proving the Central Limit Theorem",
+    "text": "Proving the Central Limit Theorem\n\nDefine \\(W_i = Y_i - \\mu\\), the centered draw, and let \\(M(t) = \\mathbb{E}\\left[e^{tW_i}\\right]\\) be its MGF. Then \\[M(0) = 1, \\qquad M'(0) = \\mathbb{E}[W_i] = 0, \\qquad M''(0) = \\mathbb{E}[W_i^2] = \\sigma^2\\]\nThe scaled error is a scaled sum of the \\(W_i\\) \\[\\sqrt{n}(\\bar{Y}_n - \\mu) = \\frac{1}{\\sqrt{n}}\\sum_{i=1}^n W_i\\]\nCall the MGF of this scaled error \\(M_n(t)\\). Our goal is to write \\(M_n(t)\\) in terms of \\(M(t)\\)\nWe’ll assume the MGF \\(M\\) exists\n\nThe general proof uses the characteristic function \\(\\mathbb{E}[e^{itW_i}]\\), which always exists."
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#proving-the-central-limit-theorem-1",
+    "href": "slides/week7/week7_estimation.html#proving-the-central-limit-theorem-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Proving the Central Limit Theorem",
+    "text": "Proving the Central Limit Theorem\n\nFirst, turn the sum in the exponent into a product \\[\\begin{aligned}\nM_n(t) &= \\mathbb{E}\\left[e^{t\\sqrt{n}(\\bar{Y}_n - \\mu)}\\right] && \\small\\color{#777777}{\\text{definition of the MGF}} \\\\\n&= \\mathbb{E}\\left[\\exp\\left(\\tfrac{t}{\\sqrt{n}}\\textstyle\\sum_{i=1}^n W_i\\right)\\right] && \\small\\color{#777777}{\\text{scaled error = scaled sum}} \\\\\n&= \\mathbb{E}\\left[\\exp\\left(\\textstyle\\sum_{i=1}^n \\tfrac{t}{\\sqrt{n}} W_i\\right)\\right] && \\small\\color{#777777}{\\text{constant inside the sum}} \\\\\n&= \\mathbb{E}\\left[\\textstyle\\prod_{i=1}^n \\exp\\left(\\tfrac{t}{\\sqrt{n}} W_i\\right)\\right] && \\small\\color{#777777}{e^{a + b} = e^a e^b}\n\\end{aligned}\\]\nThen use independence and identical distribution \\[\\begin{aligned}\n\\mathbb{E}\\left[\\textstyle\\prod_{i=1}^n \\exp\\left(\\tfrac{t}{\\sqrt{n}} W_i\\right)\\right] &= \\textstyle\\prod_{i=1}^n \\mathbb{E}\\left[\\exp\\left(\\tfrac{t}{\\sqrt{n}} W_i\\right)\\right] && \\small\\color{#777777}{\\text{independent}} \\\\\n&= \\textstyle\\prod_{i=1}^n M\\left(\\tfrac{t}{\\sqrt{n}}\\right) && \\small\\color{#777777}{\\text{identical: each $W_i$ has MGF $M$}} \\\\\n&= \\left[M\\left(\\tfrac{t}{\\sqrt{n}}\\right)\\right]^n && \\small\\color{#777777}{\\text{$n$ identical factors}}\n\\end{aligned}\\]"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#proving-the-central-limit-theorem-2",
+    "href": "slides/week7/week7_estimation.html#proving-the-central-limit-theorem-2",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Proving the Central Limit Theorem",
+    "text": "Proving the Central Limit Theorem\n\nTake a second-order Taylor expansion of \\(M(t)\\) around \\(t = 0\\) \\[M(t) = M(0) + t\\,M'(0) + \\frac{t^2}{2}M''(0) + o(t^2) = 1 + 0 + \\frac{\\sigma^2 t^2}{2} + o(t^2)\\] where \\(o(t^2)\\) is a remainder that vanishes faster than \\(t^2\\) as \\(t \\to 0\\)\nEvaluate it at \\(t/\\sqrt{n}\\), which goes to \\(0\\) as \\(n\\) grows \\[M_n(t) = \\left[M\\left(\\frac{t}{\\sqrt{n}}\\right)\\right]^n = \\left[1 + \\frac{\\sigma^2 t^2}{2n} + o\\left(\\frac{1}{n}\\right)\\right]^n\\]\nThe remainder vanishes even after being added up \\(n\\) times: \\(n \\cdot o\\left(\\frac{1}{n}\\right) \\to 0\\). So in the limit we can drop it and use the familiar compound interest formula \\(\\left(1 + \\frac{a}{n}\\right)^n \\to e^a\\) \\[M_n(t) \\approx \\left(1 + \\frac{\\sigma^2 t^2 / 2}{n}\\right)^n \\to e^{\\sigma^2 t^2/2}\\]\nThat’s the MGF of a \\(\\mathcal{N}(0, \\sigma^2)\\), so \\(\\sqrt{n}(\\bar{Y}_n - \\mu) \\xrightarrow{d} \\mathcal{N}(0, \\sigma^2)\\)\n\n\nFor an alternative proof that takes logs and applies L’Hôpital’s rule, see Blitzstein and Hwang (2019), Ch. 10"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#many-central-limit-theorems",
+    "href": "slides/week7/week7_estimation.html#many-central-limit-theorems",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Many central limit theorems",
+    "text": "Many central limit theorems\n\nWhat we proved is the Lindeberg–Lévy CLT. There are many other CLTs, each under different data-generating processes\n\n\n\n\n\n\n\n\n\n\n\nCLT\nRelaxes\nNeeds\nWhere you’ll see it\n\n\n\n\nLindeberg–Lévy\n\ni.i.d., finite variance\nSample means under random sampling\n\n\nLindeberg–Feller, Lyapunov\nIdentical distribution\nNo single term dominates the total variance\nHeteroskedastic errors, robust SEs\n\n\nClustered\nIndependence within clusters\nMany independent clusters, none dominant\nClustered samples, cluster-robust SEs\n\n\nMixing, \\(m\\)-dependent\nIndependence across time or space\nDependence dies out with distance\nTime series and spatial data, HAC SEs\n\n\nMartingale\nIndependence\nEach term has mean zero given the past\nTime series, adaptive experiments\n\n\nFinite-population (Hájek)\nAn infinite population\n\\(n\\) and \\(N - n\\) both large\nSurvey sampling, randomization inference\n\n\nMultivariate\nA single mean\nFinite covariance matrix\nRegression coefficients\n\n\n\n\n\nThe theme: a sum of many small, not-too-dependent pieces is approximately normal.\n\nWhat changes is the sampling variance"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#properties-of-convergence-in-distribution",
+    "href": "slides/week7/week7_estimation.html#properties-of-convergence-in-distribution",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Properties of convergence in distribution",
+    "text": "Properties of convergence in distribution\n\nConsider \\(X_n \\xrightarrow{d} X\\), \\(Y_n \\xrightarrow{p} c\\) for a constant \\(c\\), and a continuous function \\(g()\\)\nBy the continuous mapping theorem, \\(g(X_n) \\xrightarrow{d} g(X)\\)\nBy Slutsky’s theorem\n\n\n\\(X_n + Y_n \\xrightarrow{d} X + c\\)\n\\(X_nY_n \\xrightarrow{d} cX\\)\n\\(X_n/Y_n \\xrightarrow{d} X/c\\) if \\(c \\neq 0\\)\n\n\nCareful: \\(X_n \\xrightarrow{d} X\\) and \\(Y_n \\xrightarrow{d} Y\\) does not imply \\(X_n + Y_n \\xrightarrow{d} X + Y\\) in general\nWhy this matters: we don’t know \\(\\sigma\\), but if \\(\\hat{\\sigma} \\xrightarrow{p} \\sigma\\) (more on this later), we can plug it in and still know the asymptotic distribution. \\[\\frac{\\bar{Y}_n - \\mu}{\\hat{\\sigma}/\\sqrt{n}} = \\underbrace{\\frac{1}{\\hat{\\sigma}}}_{\\xrightarrow{p} 1/\\sigma} \\cdot \\underbrace{\\sqrt{n}(\\bar{Y}_n - \\mu)}_{\\xrightarrow{d} \\mathcal{N}(0, \\sigma^2)} \\xrightarrow{d} \\frac{1}{\\sigma}\\mathcal{N}(0, \\sigma^2) = \\mathcal{N}(0, 1)\\]"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#example-sums-of-bernoullis",
+    "href": "slides/week7/week7_estimation.html#example-sums-of-bernoullis",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Example: Sums of Bernoullis",
+    "text": "Example: Sums of Bernoullis"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#what-weve-accomplished",
+    "href": "slides/week7/week7_estimation.html#what-weve-accomplished",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "What we’ve accomplished",
+    "text": "What we’ve accomplished\n\n\\(\\hat{\\mu} \\overset{a}{\\sim} \\; {\\color{#c5050c}{\\mathcal{N}}}\\left(\\mu, \\dfrac{\\sigma^2}{n}\\right)\\)\n\n\nUnder i.i.d. sampling with a finite variance, the CLT fills in the question mark: in large samples, the sampling distribution of the sample mean is approximately normal\nHow large is “large”? It depends on the distribution of \\(Y_i\\)."
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#how-good-is-the-clt-approximation",
+    "href": "slides/week7/week7_estimation.html#how-good-is-the-clt-approximation",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "How good is the CLT approximation?",
+    "text": "How good is the CLT approximation?"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#plug-in-estimators",
+    "href": "slides/week7/week7_estimation.html#plug-in-estimators",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Plug-in estimators",
+    "text": "Plug-in estimators\n\nSo far, we’ve estimated one feature of the population: the mean \\(\\mu = \\mathbb{E}[Y_i]\\), with the sample mean \\(\\bar{Y}_n\\)\nBut we often want to learn other features of the population distribution\n\nThe variance \\(\\sigma^2\\) (which we need for standard errors)\nThe median, or some other quantile\nThe share of the population above some threshold, \\(\\Pr(Y_i &gt; c)\\)\n\nThe informal recipe: write down the feature of the population we care about, then compute its sample analog\n\nExpected value \\(\\rightarrow\\) sample mean. Variance \\(\\rightarrow\\) sample variance.\n\nEach of these features is a function of the CDF \\(F\\)\n\nEstimate \\(F\\) with its sample analog, then plug it in"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#the-empirical-cdf",
+    "href": "slides/week7/week7_estimation.html#the-empirical-cdf",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "The empirical CDF",
+    "text": "The empirical CDF\n\nBy the fundamental bridge, the CDF is an expectation of an indicator random variable\n\\[F(y) = \\Pr(Y_i \\le y) = \\mathbb{E}\\left[I(Y_i \\le y)\\right]\\]\nIts sample analog is the empirical CDF: replace the expectation with a sample mean \\[\\hat{F}_n(y) = \\frac{1}{n}\\sum_{i=1}^n I(Y_i \\le y) = \\text{share of observations at or below } y\\]\nA step function that jumps by \\(\\frac{1}{n}\\) at each observation, even when \\(Y_i\\) is continuous"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#the-empirical-cdf-1",
+    "href": "slides/week7/week7_estimation.html#the-empirical-cdf-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "The empirical CDF",
+    "text": "The empirical CDF\n\nFix any \\(y\\). The indicators \\(Z_i = I(Y_i \\le y)\\) are i.i.d. Bernoulli with mean \\(\\Pr(Y_i \\le y) = F(y)\\)\nSo \\(\\hat{F}_n(y) = \\bar{Z}_n\\) is just a sample mean, and everything we know about sample means applies\n\nUnbiased: \\(\\mathbb{E}\\left[\\hat{F}_n(y)\\right] = F(y)\\)\nSampling variance: \\(\\Var\\left(\\hat{F}_n(y)\\right) = \\dfrac{F(y)\\big(1 - F(y)\\big)}{n}\\)\nConsistent (WLLN): \\(\\hat{F}_n(y) \\xrightarrow{p} F(y)\\)\nAsymptotically normal (CLT): \\(\\sqrt{n}\\left(\\hat{F}_n(y) - F(y)\\right) \\xrightarrow{d} \\mathcal{N}\\big(0, F(y)(1 - F(y))\\big)\\)\n\nEven stronger, the Glivenko–Cantelli theorem shows that the largest gap over all \\(y\\) also goes to zero (with probability 1) \\[\\sup_y \\left|\\hat{F}_n(y) - F(y)\\right| \\to 0\\]\n\nThe whole curve converges"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#the-plug-in-principle",
+    "href": "slides/week7/week7_estimation.html#the-plug-in-principle",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "The plug-in principle",
+    "text": "The plug-in principle\n\nA statistical functional \\(T\\) maps a CDF to a number. Many estimands can be written as \\(\\theta = T(F)\\)\nNotation: \\(\\int g(y)\\,dF(y)\\) means \\(\\sum_y g(y) f(y)\\) if \\(Y_i\\) is discrete, or \\(\\int g(y) f(y)\\,dy\\) if it’s continuous.\n\nIt’s \\(\\mathbb{E}[g(Y_i)]\\)\n\nExamples\n\nMean: \\(\\mu = T_{\\mu}(F) = \\int y\\,dF(y)\\)\nVariance: \\(\\sigma^2 = T_{\\sigma^2}(F) = \\int y^2\\,dF(y) - \\left(\\int y\\,dF(y)\\right)^2\\)\nMedian: \\(T_{\\text{med}}(F) = F^{-1}(1/2)\\)\nTail probability: \\(\\Pr(Y_i &gt; c) = 1 - F(c)\\)\n\nThe plug-in estimator of \\(\\theta = T(F)\\) applies the same functional to the empirical CDF \\[\\hat{\\theta} = T(\\hat{F}_n)\\]"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#the-plug-in-principle-1",
+    "href": "slides/week7/week7_estimation.html#the-plug-in-principle-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "The plug-in principle",
+    "text": "The plug-in principle\n\n\\(\\hat{F}_n\\) is the CDF of a discrete distribution that puts mass \\(\\frac{1}{n}\\) on each observation, so for any \\(g\\) \\[\\int g(y)\\,d\\hat{F}_n(y) = \\sum_{i=1}^n g(Y_i) \\cdot \\frac{1}{n} = \\frac{1}{n}\\sum_{i=1}^n g(Y_i)\\]\n\nEvery expectation becomes a sample mean\n\nMean: \\(T_{\\mu}(\\hat{F}_n) = \\frac{1}{n}\\sum_{i=1}^n Y_i = \\bar{Y}_n\\).\nVariance: \\(T_{\\sigma^2}(\\hat{F}_n) = \\frac{1}{n}\\sum_{i=1}^n Y_i^2 - \\bar{Y}_n^2 = \\frac{1}{n}\\sum_{i=1}^n (Y_i - \\bar{Y}_n)^2\\), the plug-in sample variance\nMedian: \\(\\hat{F}_n^{-1}(1/2)\\), the sample median.\nTail probability: \\(1 - \\hat{F}_n(c)\\), the share of observations above \\(c\\)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#bias-of-the-plug-in-variance",
+    "href": "slides/week7/week7_estimation.html#bias-of-the-plug-in-variance",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Bias of the plug-in variance",
+    "text": "Bias of the plug-in variance\n\nThe population variance \\[\\sigma^2 = \\mathbb{E}[Y_i^2] - \\mu^2 \\]\nWe can re-write our plug-in variance estimator the same way.\n\\[\\begin{aligned}\n\\hat{\\sigma}^2_n &= \\frac{1}{n}\\sum_{i=1}^n (Y_i - \\bar{Y}_n)^2 \\\\\n&= \\frac{1}{n}\\sum_{i=1}^n \\left(Y_i^2 - 2Y_i\\bar{Y}_n + \\bar{Y}_n^2\\right) && \\small\\color{#777777}{\\text{expand the square}} \\\\\n&= \\frac{1}{n}\\sum_{i=1}^n Y_i^2 - 2\\bar{Y}_n \\cdot \\frac{1}{n}\\sum_{i=1}^n Y_i + \\frac{1}{n}\\sum_{i=1}^n \\bar{Y}_n^2 && \\small\\color{#777777}{\\text{split the sum; } \\bar{Y}_n \\text{ doesn't depend on } i} \\\\\n&= \\frac{1}{n}\\sum_{i=1}^n Y_i^2 - 2\\bar{Y}_n \\cdot \\bar{Y}_n + \\bar{Y}_n^2 && \\small\\color{#777777}{\\tfrac{1}{n}\\textstyle\\sum_i Y_i = \\bar{Y}_n \\text{, and } n \\text{ copies of } \\bar{Y}_n^2} \\\\\n&= \\frac{1}{n}\\sum_{i=1}^n Y_i^2 - \\bar{Y}_n^2\n\\end{aligned}\\]"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#bias-of-the-plug-in-variance-1",
+    "href": "slides/week7/week7_estimation.html#bias-of-the-plug-in-variance-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Bias of the plug-in variance",
+    "text": "Bias of the plug-in variance\n\nIs it unbiased? Take the expectation of each piece. First, the average of the squares \\[\\begin{aligned}\n\\mathbb{E}\\left[\\frac{1}{n}\\sum_{i=1}^n Y_i^2\\right] &= \\frac{1}{n}\\sum_{i=1}^n \\mathbb{E}\\left[Y_i^2\\right] && \\small\\color{#777777}{\\text{linearity of expectations}} \\\\\n&= \\frac{1}{n} \\cdot n\\,\\mathbb{E}\\left[Y_i^2\\right] = \\mathbb{E}\\left[Y_i^2\\right] && \\small\\color{#777777}{\\text{identically distributed}}\n\\end{aligned}\\]\nThen the square of the average. Rearrange \\(\\Var(X) = \\mathbb{E}[X^2] - \\mathbb{E}[X]^2\\) with \\(X = \\bar{Y}_n\\) \\[\\begin{aligned}\n\\mathbb{E}\\left[\\bar{Y}_n^2\\right] &= \\Var(\\bar{Y}_n) + \\mathbb{E}[\\bar{Y}_n]^2 \\\\\n&= \\frac{\\sigma^2}{n} + \\mu^2 && \\small\\color{#777777}{\\text{last week: } \\mathbb{E}[\\bar{Y}_n] = \\mu,\\ \\Var(\\bar{Y}_n) = \\sigma^2/n}\n\\end{aligned}\\]\n\n\\(\\mathbb{E}[\\bar{Y}_n^2] \\neq \\mathbb{E}[\\bar{Y}_n]^2\\): the sample mean’s own sampling variance appears!"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#bias-of-the-plug-in-variance-2",
+    "href": "slides/week7/week7_estimation.html#bias-of-the-plug-in-variance-2",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Bias of the plug-in variance",
+    "text": "Bias of the plug-in variance\n\nCombining the components \\[\\begin{aligned}\n\\mathbb{E}\\left[\\hat{\\sigma}^2_n\\right] &= \\mathbb{E}\\left[\\frac{1}{n}\\sum_{i=1}^n Y_i^2\\right] - \\mathbb{E}\\left[\\bar{Y}_n^2\\right] && \\small\\color{#777777}{\\text{linearity of expectations}} \\\\\n&= \\mathbb{E}\\left[Y_i^2\\right] - \\left(\\frac{\\sigma^2}{n} + \\mu^2\\right) && \\small\\color{#777777}{\\text{the two pieces}} \\\\\n&= \\left(\\mathbb{E}\\left[Y_i^2\\right] - \\mu^2\\right) - \\frac{\\sigma^2}{n} && \\small\\color{#777777}{\\text{regroup}} \\\\\n&= \\sigma^2 - \\frac{\\sigma^2}{n} && \\small\\color{#777777}{\\text{definition of } \\sigma^2} \\\\\n&= \\frac{n - 1}{n}\\sigma^2\n\\end{aligned}\\]\nSo it’s biased downward: on average, it’s too small by \\(\\frac{\\sigma^2}{n}\\)\n\nIntuition: Think about computing the plug-in variance with just a single observation!"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#fixing-the-bias",
+    "href": "slides/week7/week7_estimation.html#fixing-the-bias",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Fixing the bias",
+    "text": "Fixing the bias\n\nHow big is the bias? \\(\\mathbb{E}\\left[\\hat{\\sigma}^2_n\\right] = \\frac{n-1}{n}\\sigma^2\\) is too small by a fraction \\(\\frac{1}{n}\\)\nRescale by \\(\\frac{n}{n-1}\\) to get the unbiased sample variance estimator (R’s var()) \\[S^2_n = \\frac{n}{n-1}\\hat{\\sigma}^2_n = \\frac{1}{n-1}\\sum_{i=1}^n (Y_i - \\bar{Y}_n)^2 \\qquad \\mathbb{E}\\left[S^2_n\\right] = \\frac{n}{n-1} \\cdot \\frac{n-1}{n}\\sigma^2 = \\sigma^2\\]\nDividing by \\(n - 1\\) instead of \\(n\\) eliminates the bias (“Bessel’s correction”)\nBut the bias vanishes as \\(n\\) grows. Does \\(\\hat{\\sigma}^2_n\\) still get the right answer in large samples?"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#consistency-of-the-plug-in-variance",
+    "href": "slides/week7/week7_estimation.html#consistency-of-the-plug-in-variance",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Consistency of the plug-in variance",
+    "text": "Consistency of the plug-in variance\n\nThe \\(Y_i^2\\) are i.i.d. with mean \\(\\mathbb{E}[Y_i^2]\\), so by the WLLN \\[\\frac{1}{n}\\sum_{i=1}^n Y_i^2 \\xrightarrow{p} \\mathbb{E}[Y_i^2]\\]\nBy the WLLN, \\(\\bar{Y}_n \\xrightarrow{p} \\mu\\). A limit of a product is the product of the limits, so \\(\\bar{Y}_n^2 = \\bar{Y}_n \\cdot \\bar{Y}_n \\xrightarrow{p} \\mu^2\\)\nA sum (or difference) converges to the sum of the limits, so \\[\\hat{\\sigma}^2_n = \\frac{1}{n}\\sum_{i=1}^n Y_i^2 - \\bar{Y}_n^2 \\xrightarrow{p} \\mathbb{E}[Y_i^2] - \\mu^2 = \\sigma^2\\]\nBiased, but consistent"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#consistency-of-plug-in-estimators",
+    "href": "slides/week7/week7_estimation.html#consistency-of-plug-in-estimators",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Consistency of plug-in estimators",
+    "text": "Consistency of plug-in estimators\n\nIn general: \\(\\hat{F}_n \\to F\\). So if small changes in \\(F\\) only cause small changes in \\(T(F)\\), then \\(T(\\hat{F}_n) \\to T(F)\\)\n\nUnder these usual plug-in regularity conditions, plug-in estimators are also asymptotically normal\nThe formal condition is a kind of differentiability of \\(T\\).\n\nMost estimands we’ll meet are well behaved: means, variances, covariances, quantiles (where \\(F\\) isn’t flat), regression coefficients\nWhen does it fail? When \\(T\\) is too sensitive to small changes in \\(F\\)\n\nThe density \\(f(y) = F'(y)\\): \\(\\hat{F}_n\\) is a step function, so its derivative is \\(0\\) everywhere except at the data, where it’s undefined\nPlugging \\(\\hat{F}_n\\) straight in gives nonsense. We’ll need to smooth it."
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#running-example-2024-gss",
+    "href": "slides/week7/week7_estimation.html#running-example-2024-gss",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Running Example: 2024 GSS",
+    "text": "Running Example: 2024 GSS\n\nEstimate features of the age distribution of U.S. adults from the 3,859 GSS respondents, treating them as an i.i.d. sample\n\n\n\n\n\n\n\n\n\n\nEstimand \\(\\theta = T(F)\\)\nPlug-in estimator \\(T(\\hat{F}_n)\\)\nEstimate\n\n\n\n\nMean age, \\(\\mathbb{E}[Y_i]\\)\n\\(\\bar{Y}_n\\)\n49.0\n\n\nVariance, \\(\\Var(Y_i)\\)\n\\(\\frac{1}{n}\\sum_{i=1}^n (Y_i - \\bar{Y}_n)^2\\)\n311.9\n\n\nMedian, \\(F^{-1}(1/2)\\)\nSample median\n48\n\n\nShare 65 or older, \\(\\Pr(Y_i \\ge 65)\\)\n\\(1 - \\hat{F}_n(64)\\)\n0.236\n\n\n\n\n\nWith \\(n\\) this large, the \\(\\frac{n}{n-1}\\) correction barely matters: \\(S^2_n = 312.0\\)\nAnd the standard error of the mean: \\(\\widehat{SE}(\\bar{Y}_n) = S_n / \\sqrt{n} = 0.284\\)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#running-example-in-r",
+    "href": "slides/week7/week7_estimation.html#running-example-in-r",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Running Example in R",
+    "text": "Running Example in R\n\nlibrary(tidyverse)\n\ngss &lt;- read_csv(\"../week6/data/gss2024.csv\") |&gt;\n  filter(!is.na(age))       # the GSS top-codes age at 89\n\nFhat &lt;- ecdf(gss$age)       # the empirical CDF, as an R function\n\nage_est &lt;- gss |&gt;\n  summarize(n = n(),\n            mean = mean(age),\n            var_plugin = mean((age - mean(age))^2),\n            var_unbiased = var(age),\n            median = median(age),\n            share65 = 1 - Fhat(64))\nage_est\n\n# A tibble: 1 × 6\n      n  mean var_plugin var_unbiased median share65\n  &lt;int&gt; &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;\n1  3859  49.0       312.         312.     48   0.236"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#density-estimation",
+    "href": "slides/week7/week7_estimation.html#density-estimation",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Density estimation",
+    "text": "Density estimation\n\nThe plug-in principle can’t give us the density \\(f(y)\\) directly: \\(\\hat{F}_n\\) is a step function with no useful derivative\n\nBut the density is often the best way to visualize the shape of a distribution\n\nRecall what a density is: the share of the population in a small window around \\(y\\), divided by the window’s width \\[f(y) \\approx \\frac{F(y + h/2) - F(y - h/2)}{h} \\qquad \\text{for small } h\\]\nPlug in \\(\\hat{F}_n\\): the share of the sample within \\(h/2\\) of \\(y\\), divided by \\(h\\) \\[\\hat{f}(y) = \\frac{\\hat{F}_n(y + h/2) - \\hat{F}_n(y - h/2)}{h} = \\frac{\\#\\{i : |Y_i - y| \\le h/2\\}}{nh}\\]\nThe width \\(h\\) is a tuning parameter\n\nToo small and each window holds few observations (noisy)\nToo large and we average over a region where \\(f\\) changes (biased)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#histograms",
+    "href": "slides/week7/week7_estimation.html#histograms",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Histograms",
+    "text": "Histograms\n\nA histogram splits the real number line into bins \\(B_1, B_2, \\dotsc\\) of width \\(h\\). For \\(y\\) in bin \\(B_j\\) \\[\\hat{f}(y) = \\frac{\\#\\{i : Y_i \\in B_j\\}}{nh}\\]\n\nEach bar’s area is the share of observations in its bin, so the areas sum to \\(1\\)\n\nBias: the bar is flat but \\(f\\) might not be. Larger \\(h\\) \\(\\leadsto\\) larger bias (depending on \\(f^\\prime(y)\\))\nVariance: the count in a bin is binomial with about \\(nh f(y)\\) expected observations, so \\[\\Var\\left(\\hat{f}(y)\\right) \\approx \\frac{f(y)}{nh}\\]\nConsistent if the bins shrink, \\(h \\to 0\\), but slowly enough that each still fills up, \\(nh \\to \\infty\\)\n\n\nSee Wasserman (2006), Ch. 6"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#choosing-the-bin-width",
+    "href": "slides/week7/week7_estimation.html#choosing-the-bin-width",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Choosing the bin width",
+    "text": "Choosing the bin width\n\nPick \\(h\\) to minimize the integrated mean squared error across all \\(y\\). For small \\(h\\) (Scott 1979) \\[\\text{IMSE}(h) \\approx \\underbrace{\\frac{h^2}{12}\\int f'(y)^2\\,dy}_{\\text{bias}^2} + \\underbrace{\\frac{1}{nh}}_{\\text{variance}} \\quad \\Longrightarrow \\quad h^* = \\left(\\frac{6}{\\int f'(y)^2\\,dy}\\right)^{1/3} n^{-1/3}\\]\n\nBins shrink at a rate of \\(n^{-1/3}\\), so the number of bins grows like \\(n^{1/3}\\)\n\n\\(h^*\\) depends on the unknown \\(f\\) through \\(\\int f'(y)^2\\,dy\\). Heuristics plug in a reference distribution\n\nScott (normal reference distribution): \\(h = 3.49\\,\\hat{\\sigma}\\,n^{-1/3}\\) (Scott 1979)\nFreedman–Diaconis: \\(h = 2\\,\\text{IQR}\\,n^{-1/3}\\) (Freedman and Diaconis 1981)\nSturges: \\(\\lceil \\log_2 n \\rceil + 1\\) bins (Sturges 1926). This is R’s default in hist() - tends to use too few bins in large samples"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#how-many-bins",
+    "href": "slides/week7/week7_estimation.html#how-many-bins",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "How many bins?",
+    "text": "How many bins?\n\n\nToo narrow: mostly noise. Too wide: the shape gets smoothed away"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#kernel-density-estimation",
+    "href": "slides/week7/week7_estimation.html#kernel-density-estimation",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Kernel density estimation",
+    "text": "Kernel density estimation\n\nA histogram’s estimate at \\(y\\) depends on where the bin edges happen to fall\nInstead, we could imagine centering a window on every point \\(y\\) (Rosenblatt 1956) \\[\\hat{f}(y) = \\frac{1}{nh}\\sum_{i=1}^n I\\left(|Y_i - y| \\le \\tfrac{h}{2}\\right)\\]\nRewrite it as a weighted average over observations \\[\\hat{f}(y) = \\frac{1}{n}\\sum_{i=1}^n \\frac{1}{h}K\\left(\\frac{Y_i - y}{h}\\right), \\qquad K(u) = I\\left(|u| \\le \\tfrac{1}{2}\\right)\\]\n\nObservations within \\(h/2\\) of \\(y\\) count fully. Everyone else counts for nothing\n\nInstead of weighting every observation in the window equally, we could let an observation’s weight fall off smoothly with its distance from \\(y\\)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#kernel-density-estimation-1",
+    "href": "slides/week7/week7_estimation.html#kernel-density-estimation-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Kernel density estimation",
+    "text": "Kernel density estimation\n\nThe kernel density estimator (Rosenblatt 1956; Parzen 1962)\n\\[\\hat{f}_h(y) = \\frac{1}{n}\\sum_{i=1}^n K_h(Y_i - y) \\]\nWhere the kernel is defined as:\n\\[K_h(u) = \\frac{1}{h}K\\left(\\frac{u}{h}\\right)\\]\nThe kernel \\(K\\) is a function that is symmetric, non-negative and integrates to \\(1\\):\n\ne.g. uniform, triangular \\(1 - |u|\\) on \\([-1, 1]\\), Gaussian \\(\\phi(u)\\)\nThe choice of kernel defines the shape of how the weights decay from \\(y\\)\n\nThe bandwidth \\(h\\) defines how many observations get meaningful weight."
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#kernel-density-estimation-2",
+    "href": "slides/week7/week7_estimation.html#kernel-density-estimation-2",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Kernel density estimation",
+    "text": "Kernel density estimation\n\nEach observation contributes a small bump \\(\\frac{1}{n}K_h(\\cdot - Y_i)\\) (dashed). The estimate is their sum (solid)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#running-example-2024-gss-1",
+    "href": "slides/week7/week7_estimation.html#running-example-2024-gss-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Running Example: 2024 GSS",
+    "text": "Running Example: 2024 GSS"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#running-example-in-r-1",
+    "href": "slides/week7/week7_estimation.html#running-example-in-r-1",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Running Example in R",
+    "text": "Running Example in R\n\nh_fd   &lt;- 2 * IQR(gss$age) / nrow(gss)^(1/3)   # Freedman-Diaconis bin width\nbw_rot &lt;- bw.nrd0(gss$age)                     # Silverman's rule of thumb\nc(bin_width = h_fd, bandwidth = bw_rot)\n\nbin_width bandwidth \n 3.825249  3.047998 \n\nfhat &lt;- density(gss$age, bw = bw_rot)          # Gaussian kernel by default\napprox(fhat$x, fhat$y, xout = c(30, 60))$y     # estimated density at ages 30 and 60\n\n[1] 0.01749374 0.01663595\n\n\nggplot(gss, aes(age)) +\n  geom_histogram(aes(y = after_stat(density)), binwidth = h_fd) +\n  geom_density(bw = bw_rot)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#next-week",
+    "href": "slides/week7/week7_estimation.html#next-week",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Next week",
+    "text": "Next week\n\nWhat do we do now that we have the sampling distribution of the sample mean?\nInterval estimators\n\nInstead of a single point estimate can we give a range of values that characterizes our uncertainty?\nConfidence interval: In some fraction (e.g. 95%) of samples, the bounds will cover the true parameter.\nFor a consistent and asymptotically normal estimator, this is just \\(\\hat{\\mu} \\pm 1.96 \\times \\widehat{SE(\\hat{\\mu})}\\) (for a 95% CI).\n\nHypothesis testing\n\nA thought experiment: If the true population mean were \\(\\mu_0\\), how likely would I be to observe a realization as extreme as the one in my sample?\nThis is a p-value\nIf the value is sufficiently unlikely…I may be willing to believe that the true population mean is not \\(\\mu_0\\)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#references",
+    "href": "slides/week7/week7_estimation.html#references",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "References",
+    "text": "References\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nFreedman, David, and Persi Diaconis. 1981. “On the Histogram as a Density Estimator: \\(L_2\\) Theory.” Zeitschrift für Wahrscheinlichkeitstheorie Und Verwandte Gebiete 57 (4): 453–76. https://doi.org/10.1007/BF01025868.\n\n\nParzen, Emanuel. 1962. “On Estimation of a Probability Density Function and Mode.” The Annals of Mathematical Statistics 33 (3): 1065–76. https://doi.org/10.1214/aoms/1177704472.\n\n\nRosenblatt, Murray. 1956. “Remarks on Some Nonparametric Estimates of a Density Function.” The Annals of Mathematical Statistics 27 (3): 832–37. https://doi.org/10.1214/aoms/1177728190.\n\n\nScott, David W. 1979. “On Optimal and Data-Based Histograms.” Biometrika 66 (3): 605–10. https://doi.org/10.1093/biomet/66.3.605.\n\n\nSturges, Herbert A. 1926. “The Choice of a Class Interval.” Journal of the American Statistical Association 21 (153): 65–66. https://doi.org/10.1080/01621459.1926.10502161.\n\n\nWasserman, Larry. 2006. All of Nonparametric Statistics. Springer. https://doi.org/10.1007/0-387-30623-4."
+  },
+  {
     "objectID": "slides/week6/week6_estimation.html#welcome-back",
     "href": "slides/week6/week6_estimation.html#welcome-back",
     "title": "Week 6: Estimation",
@@ -193,7 +515,7 @@
     "href": "slides/week6/week6_estimation.html#estimates-in-r",
     "title": "Week 6: Estimation",
     "section": "Estimates in R",
-    "text": "Estimates in R\n\nlibrary(tidyverse)\n\ngss &lt;- read_csv(\"data/gss2024.csv\") |&gt;\n  filter(!is.na(voted20))   # said whether they voted in 2020\n\nest &lt;- gss |&gt;\n  summarize(n = n(),\n            ybar = mean(voted20),\n            ybar_w = weighted.mean(voted20, weight))\nest\n\n# A tibble: 1 x 3\n      n  ybar ybar_w\n  &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1  3373 0.778  0.770"
+    "text": "Estimates in R\n\nlibrary(tidyverse)\n\ngss &lt;- read_csv(\"data/gss2024.csv\") |&gt;\n  filter(!is.na(voted20))   # said whether they voted in 2020\n\nest &lt;- gss |&gt;\n  summarize(n = n(),\n            ybar = mean(voted20),\n            ybar_w = weighted.mean(voted20, weight))\nest\n\n# A tibble: 1 × 3\n      n  ybar ybar_w\n  &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1  3373 0.778  0.770"
   },
   {
     "objectID": "slides/week6/week6_estimation.html#estimators-are-random-variables",
@@ -347,7 +669,7 @@
     "href": "slides/week6/week6_estimation.html#running-example-2024-gss-in-r",
     "title": "Week 6: Estimation",
     "section": "Running Example: 2024 GSS in R",
-    "text": "Running Example: 2024 GSS in R\n\ntruth &lt;- 0.668   # Census CPS: share of citizens 18+ who voted in 2020\n\ngss_se &lt;- gss |&gt;\n  summarize(n = n(),\n            ybar = mean(voted20),\n            s2 = var(voted20),         \n            se = sqrt(s2 / n),\n            ybar_w = weighted.mean(voted20, weight))\ngss_se\n\n# A tibble: 1 x 5\n      n  ybar    s2      se ybar_w\n  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;\n1  3373 0.778 0.173 0.00716  0.770"
+    "text": "Running Example: 2024 GSS in R\n\ntruth &lt;- 0.668   # Census CPS: share of citizens 18+ who voted in 2020\n\ngss_se &lt;- gss |&gt;\n  summarize(n = n(),\n            ybar = mean(voted20),\n            s2 = var(voted20),         \n            se = sqrt(s2 / n),\n            ybar_w = weighted.mean(voted20, weight))\ngss_se\n\n# A tibble: 1 × 5\n      n  ybar    s2      se ybar_w\n  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;\n1  3373 0.778 0.173 0.00716  0.770"
   },
   {
     "objectID": "slides/week6/week6_estimation.html#the-challenges-of-inference",
@@ -1390,14 +1712,14 @@
     "href": "lectures.html",
     "title": "Lectures",
     "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nIllustrating conditional probability - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)\nIllustrating Bayes’ rule with BISG - Can we predict an individual’s race/ethnicity from geolocation and surname frequency data (RShiny app using the Census Bureau surname list and the 2020 Census)\n\n\n\n\n\nWeek 3 Github Repository\nWeek 3 .html slides\n\n\n\n\n\nWeek 4 Github Repository\nWeek 4 .html slides\nSlicing a bivariate normal (RShiny app)\n\n\n\n\n\nWeek 5 Github Repository\nWeek 5 .html slides\n\n\n\n\n\nWeek 6 Github Repository\nWeek 6 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nIllustrating conditional probability - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)\nIllustrating Bayes’ rule with BISG - Can we predict an individual’s race/ethnicity from geolocation and surname frequency data (RShiny app using the Census Bureau surname list and the 2020 Census)\n\n\n\n\n\nWeek 3 Github Repository\nWeek 3 .html slides\n\n\n\n\n\nWeek 4 Github Repository\nWeek 4 .html slides\nSlicing a bivariate normal (RShiny app)\n\n\n\n\n\nWeek 5 Github Repository\nWeek 5 .html slides\n\n\n\n\n\nWeek 6 Github Repository\nWeek 6 .html slides\n\n\n\n\n\nWeek 7 Github Repository\nWeek 7 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
   },
   {
     "objectID": "lectures.html#lecture-slides",
     "href": "lectures.html#lecture-slides",
     "title": "Lectures",
     "section": "",
-    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nIllustrating conditional probability - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)\nIllustrating Bayes’ rule with BISG - Can we predict an individual’s race/ethnicity from geolocation and surname frequency data (RShiny app using the Census Bureau surname list and the 2020 Census)\n\n\n\n\n\nWeek 3 Github Repository\nWeek 3 .html slides\n\n\n\n\n\nWeek 4 Github Repository\nWeek 4 .html slides\nSlicing a bivariate normal (RShiny app)\n\n\n\n\n\nWeek 5 Github Repository\nWeek 5 .html slides\n\n\n\n\n\nWeek 6 Github Repository\nWeek 6 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
+    "text": "Lecture slides are available as self-contained .html files made with RevealJS from a Quarto .qmd file. You can choose to print these to a PDF document by using the “PDF Export Mode” in the Tools menu accessed via the settings button in the lower left-hand side of the page. You are also welcome to directly download the .qmd file and supporting data/images/etc. from the GitHub repository. Slides are organized by week and combine Tuesday and Wednesday’s lectures.\nLinks become active as the materials for each week are posted.\n\n\n\n\nWeek 1 Github Repository\nWeek 1 .html slides\n\n\n\n\n\nWeek 2 Github Repository\nWeek 2 .html slides\nIllustrating conditional probability - How does the distribution of Party ID shift as you condition on observed policy preferences? (RShiny app using data from the Cooperative Election Study 2025)\nIllustrating Bayes’ rule with BISG - Can we predict an individual’s race/ethnicity from geolocation and surname frequency data (RShiny app using the Census Bureau surname list and the 2020 Census)\n\n\n\n\n\nWeek 3 Github Repository\nWeek 3 .html slides\n\n\n\n\n\nWeek 4 Github Repository\nWeek 4 .html slides\nSlicing a bivariate normal (RShiny app)\n\n\n\n\n\nWeek 5 Github Repository\nWeek 5 .html slides\n\n\n\n\n\nWeek 6 Github Repository\nWeek 6 .html slides\n\n\n\n\n\nWeek 7 Github Repository\nWeek 7 .html slides\n\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted\n\n\n\nTo be posted"
   },
   {
     "objectID": "schedule.html",

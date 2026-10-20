@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>How good is the CLT approximation? – PoliSci 812</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-59285f19cc93ba41e7772f6fd9b25434.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content="../..">
+<script src="../../site_libs/quarto-contrib/shinylive-0.10.12/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="../../site_libs/quarto-contrib/shinylive-0.10.12/shinylive/run-python-blocks.js" type="module"></script>
+<link href="../../site_libs/quarto-contrib/shinylive-0.10.12/shinylive/shinylive.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+  /* This page exists to be framed inside the week 7 slides, so the
+     site navbar, footer and title block are hidden. */
+  .navbar, .nav-footer, #title-block-header, header#title-block-header
+    { display:none !important; }
+  body { padding:0 !important; margin:0 !important; background:#F7F7F7; }
+  main, .page-columns, .content { padding:0 !important; margin:0 !important;
+    max-width:none !important; }
+  /* shinylive sizes its viewer to a fixed `viewerHeight`, which overflows
+     the frame whenever the slide gives this page less room than that. The
+     overflow is unreachable: a wheel over the app scrolls the app's own
+     panels, and scroll chaining stops at the iframe boundary. So pin the
+     widget to whatever viewport it lands in and let the app scroll its
+     panels inside, which is what its own layout is built to do. */
+  html, body { height:100%; overflow:hidden; }
+  .shinylive-wrapper, .shinylive-container {
+    height:100vh !important; height:100dvh !important; min-height:0 !important;
+    margin:0 !important; padding:0 !important; border:0 !important;
+    border-radius:0 !important; box-shadow:none !important; }
+  .shinylive-container > div { height:100% !important; min-height:0 !important; }
+  iframe.app-frame { display:block; border:0 !important;
+    height:100vh !important; height:100dvh !important; }
+</style>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">PoliSci 812</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../syllabus.html"> 
+<span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../staff.html"> 
+<span class="menu-text">Staff</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../lectures.html"> 
+<span class="menu-text">Lectures</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../sections.html"> 
+<span class="menu-text">Sections</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../assignments.html"> 
+<span class="menu-text">Assignments</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://uw-mpolscimethods.slack.com/"> 
+<span class="menu-text">Slack</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.gradescope.com/courses/1395673"> 
+<span class="menu-text">Gradescope</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/astrezhnev/ps812"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-layout-custom page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+<!-- main -->
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How good is the CLT approximation?</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- GENERATED FILE -- do not edit by hand.
+     Edit clt-app/app.R and run:  Rscript clt-app/build_app_qmd.R -->
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 700
+#| components: [viewer]
+
+## file: app.R
+# ---------------------------------------------------------------------------
+# How good is the CLT's normal approximation?
+#
+# Pick a population distribution and a sampling design: by default a simple
+# random sample of n i.i.d. draws; optionally a clustered sample of G clusters
+# of m units each (n = G * m), with intra-cluster correlation (ICC) rho
+# between the responses of any two units in the same cluster; or a serially
+# correlated sample of n units in a row (a time series, or units along a
+# line), with corr(Y_i, Y_j) = rho^|i - j|. The app repeats the whole sampling
+# procedure R times, takes the sample mean each time, and sets the histogram
+# of those R sample means against two normal curves:
+#
+#   adjusted CLT   N( mu, sigma^2 * deff / n )
+#   i.i.d. CLT     N( mu, sigma^2 / n )   -- what i.i.d. sampling would give
+#
+# with the design effect
+#
+#   clustered   deff = 1 + (m - 1) rho
+#   serial      deff = 1 + 2 sum_{k=1}^{n-1} (1 - k/n) rho^k  -&gt;  (1 + rho) / (1 - rho)
+#
+# The first has the sample mean's true variance under the design; the
+# second ignores the dependence. The two agree when rho = 0 (or m = 1), so for
+# an i.i.d. sample the app draws just the one curve, the CLT normal. Under
+# serial correlation the CLT still holds for any rho &lt; 1, with the bounded
+# design effect slowing it down; at rho = 1 every unit equals the first, so
+# Ybar = Y_1 has the population's own shape whatever n is. The
+# Kolmogorov-Smirnov distance (largest vertical gap between the simulated CDF
+# and the normal CDF) summarizes how far each is from the simulation. Since KS
+# mostly reflects the center, the app also reports tail coverage: how often
+# the interval Ybar +/- 1.96 SE covers mu, and how the misses split between
+# the two tails (2.5% each if the normal approximation holds). A Q-Q plot can
+# stand in for the CDF panel.
+#
+# Clustering. Every response keeps exactly the population distribution, and
+# two units in the same cluster have correlation exactly rho. Where the family
+# allows it, each response is a cluster-level component shared by everyone in
+# the cluster plus a unit-level component of its own:
+#
+#   Normal(mu, sigma^2)  mu + N(0, rho sigma^2) + N(0, (1 - rho) sigma^2)
+#   Poisson(lambda)      Pois(rho lambda) + Pois((1 - rho) lambda)
+#   Exponential(rate)    Gamma(rho, rate) + Gamma(1 - rho, rate)
+#   Gamma(k, rate)       Gamma(rho k, rate) + Gamma((1 - rho) k, rate)
+#   Bernoulli(p)         Bern(p_g), with the cluster's p_g ~ Beta and mean p
+#                        (the beta-binomial model; ICC = 1 / (a + b + 1))
+#   Log-normal           exp of a normal random-effects model on the log
+#                        scale, with its ICC r chosen so the correlation on
+#                        the original scale is rho:
+#                        r = log(1 + rho (e^{s^2} - 1)) / s^2
+#
+# The uniform and the Pareto have no such split. There each unit gives its
+# cluster's shared draw with probability sqrt(rho) and a draw of its own
+# otherwise (share_draws()), so two units share a draw with probability rho.
+#
+# Serial correlation. Again every response keeps exactly the population
+# distribution, and corr(Y_i, Y_j) = rho^|i - j| exactly. Each response is
+# built from the one before (markov()); where the family allows it, as a
+# thinned copy of it plus fresh noise:
+#
+#   Normal(mu, sigma^2)  mu + rho (Y_{i-1} - mu) + N(0, (1 - rho^2) sigma^2)
+#   Poisson(lambda)      Binomial(Y_{i-1}, rho) + Pois((1 - rho) lambda)
+#   Gamma(k, rate)       Beta(rho k, (1 - rho) k) Y_{i-1} + Gamma((1 - rho) k, rate)
+#                        (the exponential is the gamma with k = 1)
+#
+# The rest (Bernoulli, uniform, log-normal, Pareto) repeat the previous
+# response with probability rho and take a fresh draw otherwise (sticky()), so
+# Y_i and Y_j are the same draw with probability rho^|i - j|.
+#
+# Deliberately base R + shiny only. Every extra package is another wasm
+# download when this runs in the browser through shinylive.
+# ---------------------------------------------------------------------------
+
+library(shiny)
+
+COL_SIM   &lt;- "#0479A8"
+COL_CLT   &lt;- "#c5050c"
+COL_IID   &lt;- "#C77400"
+INK       &lt;- "#333333"
+
+R_DEFAULT &lt;- 2000
+R_MAX     &lt;- 10000
+BUDGET    &lt;- 1e7     # most draws per simulation, so a run stays quick in the browser
+CHUNK     &lt;- 1e6     # draws generated per pass
+
+`%||%` &lt;- function(a, b) if (is.null(a) || length(a) == 0 || is.na(a)) b else a
+
+# How often Ybar +/- z SE covers mu, and the share of misses on each side:
+# `low` is Ybar more than z SEs below mu (the interval lies below mu), `high`
+# more than z SEs above it
+coverage &lt;- function(x, mean, se, z = qnorm(0.975)) {
+  low &lt;- mean(x &lt; mean - z * se); high &lt;- mean(x &gt; mean + z * se)
+  list(cover = 1 - low - high, low = low, high = high)
+}
+
+fmt &lt;- function(v) formatC(signif(v, 3), digits = 3, format = "fg", flag = "#")
+
+# Each population is set by its mean and variance. Bernoulli, Poisson and
+# exponential have a variance that is a function of the mean (`var_of`), and
+# the variance slider is locked to it; the rest have a free variance. `mean`
+# gives the mean slider's range, step and starting value; `var` the variance
+# slider's when it is free.
+DISTS &lt;- list(
+  normal      = list(mean = c(-5, 5, 0.5, 0), var = c(0.25, 25, 0.25, 1)),
+  uniform     = list(mean = c(-5, 5, 0.5, 0), var = c(0.25, 25, 0.25, 1)),
+  bernoulli   = list(mean = c(0.01, 0.99, 0.01, 0.1), var_of = function(m) m * (1 - m),
+                     var_max = 0.25, var_step = 0.0001, rule = "μ(1 − μ)"),
+  poisson     = list(mean = c(0.1, 20, 0.1, 2), var_of = function(m) m,
+                     var_max = 20, var_step = 0.1, rule = "μ"),
+  exponential = list(mean = c(0.2, 5, 0.1, 1), var_of = function(m) m^2,
+                     var_max = 25, var_step = 0.01, rule = "μ²"),
+  gamma       = list(mean = c(0.5, 10, 0.1, 2), var = c(0.1, 25, 0.1, 2)),
+  lognormal   = list(mean = c(0.5, 10, 0.1, 1), var = c(0.1, 25, 0.1, 1)),
+  pareto      = list(mean = c(1, 10, 0.1, 2), var = c(0.1, 25, 0.1, 2))
+)
+DIST_DEFAULT &lt;- "exponential"
+D0 &lt;- DISTS[[DIST_DEFAULT]]
+
+# Clustering for a population with no convenient shared/own split: each unit
+# gives its cluster's shared draw with probability sqrt(icc), and a draw of
+# its own otherwise. Every response is still a draw from the population, and
+# two units in a cluster share a draw with probability icc, so their
+# correlation is exactly icc.
+share_draws &lt;- function(r) function(nc, m, icc) {
+  y &lt;- r(nc * m)
+  if (icc == 0) return(y)
+  take &lt;- runif(nc * m) &lt; sqrt(icc)
+  y[take] &lt;- rep(r(nc), each = m)[take]
+  y
+}
+
+# Serial correlation: k samples of n responses in a row, as an n x k matrix
+# (one sample per column). The first response is a draw from the population
+# `r`; each one after comes from the one before through `step(prev, rho)`.
+markov &lt;- function(r, step) function(n, k, rho) {
+  y &lt;- matrix(0, n, k)
+  y[1, ] &lt;- r(k)
+  if (n &gt; 1) for (t in 2:n) y[t, ] &lt;- if (rho == 0) r(k) else step(y[t - 1, ], rho)
+  y
+}
+
+# Serial correlation for a population with no convenient thinning: repeat the
+# previous response with probability rho, take a fresh draw otherwise
+sticky &lt;- function(r) markov(r, function(prev, rho)
+  ifelse(runif(length(prev)) &lt; rho, prev, r(length(prev))))
+
+# Gamma (and exponential) AR(1) by beta thinning: Beta(rho k, (1 - rho) k)
+# times a Gamma(k, rate) is Gamma(rho k, rate), and adding an independent
+# Gamma((1 - rho) k, rate) gives back Gamma(k, rate)
+gamma_chain &lt;- function(k, r) markov(function(j) rgamma(j, k, r), function(prev, rho)
+  rbeta(length(prev), rho * k, (1 - rho) * k) * prev + rgamma(length(prev), (1 - rho) * k, r))
+
+# Design effect of serial correlation rho^|i - j| on the mean of n responses
+serial_deff &lt;- function(n, rho) {
+  if (n == 1 || rho == 0) return(1)
+  k &lt;- seq_len(n - 1)
+  1 + 2 * sum((1 - k / n) * rho^k)
+}
+
+# The population from its mean and variance (the variance only where it is
+# free). Values are clamped to the distribution's range, since a switch of
+# distribution reaches the server a moment before the sliders' new ranges do.
+# `draw(nc, m, icc)` returns nc clusters of m responses, cluster by cluster;
+# `chain(n, k, rho)` returns k serially correlated samples of n, one per column.
+population &lt;- function(dist, mean, var) {
+  d  &lt;- DISTS[[dist]]
+  mu &lt;- min(max(mean %||% d$mean[4], d$mean[1]), d$mean[2])
+  s2 &lt;- if (is.null(d$var)) d$var_of(mu) else min(max(var %||% d$var[4], d$var[1]), d$var[2])
+  s  &lt;- sqrt(s2)
+  base &lt;- list(mean = mu, var = s2, discrete = dist %in% c("bernoulli", "poisson"))
+  c(base, switch(dist,
+    normal = list(
+      label = sprintf("Normal(μ = %g, σ² = %g)", mu, s2),
+      xlim = mu + c(-4, 4) * s, d = function(x) dnorm(x, mu, s),
+      draw = function(nc, m, icc)
+        mu + rep(rnorm(nc, 0, sqrt(icc) * s), each = m) + rnorm(nc * m, 0, sqrt(1 - icc) * s),
+      chain = markov(function(k) rnorm(k, mu, s), function(prev, rho)
+        mu + rho * (prev - mu) + rnorm(length(prev), 0, sqrt(1 - rho^2) * s))),
+    uniform = {
+      a &lt;- sqrt(3 * s2)      # half-width: Var = (2a)^2 / 12
+      list(label = sprintf("Uniform(%g, %g)", signif(mu - a, 3), signif(mu + a, 3)),
+           xlim = mu + c(-1.25, 1.25) * a, d = function(x) dunif(x, mu - a, mu + a),
+           draw = share_draws(function(k) runif(k, mu - a, mu + a)),
+           chain = sticky(function(k) runif(k, mu - a, mu + a)))
+    },
+    bernoulli = list(
+      label = sprintf("Bernoulli(p = %g)", mu),
+      xlim = c(0, 1), d = function(x) dbinom(x, 1, mu),
+      draw = function(nc, m, icc) {
+        pg &lt;- if (icc == 0) rep(mu, nc)
+              else rbeta(nc, mu * (1 - icc) / icc, (1 - mu) * (1 - icc) / icc)
+        rbinom(nc * m, 1, rep(pg, each = m))
+      },
+      chain = sticky(function(k) rbinom(k, 1, mu))),
+    poisson = list(
+      label = sprintf("Poisson(λ = %g)", mu),
+      xlim = c(0, qpois(0.999, mu)), d = function(x) dpois(x, mu),
+      draw = function(nc, m, icc)
+        rep(rpois(nc, icc * mu), each = m) + rpois(nc * m, (1 - icc) * mu),
+      chain = markov(function(k) rpois(k, mu), function(prev, rho)
+        rbinom(length(prev), prev, rho) + rpois(length(prev), (1 - rho) * mu))),
+    exponential = {
+      r &lt;- 1 / mu
+      list(label = sprintf("Exponential(rate = %g)", signif(r, 3)),
+           xlim = c(0, qexp(0.995, r)), d = function(x) dexp(x, r),
+           draw = function(nc, m, icc) {
+             if (icc == 0) return(rexp(nc * m, r))
+             rep(rgamma(nc, shape = icc, rate = r), each = m) +
+               rgamma(nc * m, shape = 1 - icc, rate = r)
+           },
+           chain = gamma_chain(1, r))
+    },
+    gamma = {
+      k &lt;- mu^2 / s2; r &lt;- mu / s2
+      list(label = sprintf("Gamma(shape = %g, rate = %g)", signif(k, 3), signif(r, 3)),
+           xlim = c(0, qgamma(0.995, k, r)), d = function(x) dgamma(x, k, r),
+           draw = function(nc, m, icc)
+             rep(rgamma(nc, shape = icc * k, rate = r), each = m) +
+               rgamma(nc * m, shape = (1 - icc) * k, rate = r),
+           chain = gamma_chain(k, r))
+    },
+    lognormal = {
+      sl2 &lt;- log(1 + s2 / mu^2); ml &lt;- log(mu) - sl2 / 2
+      list(label = sprintf("Log-normal(μ_log = %g, σ²_log = %g)", signif(ml, 3), signif(sl2, 3)),
+           xlim = c(0, qlnorm(0.995, ml, sqrt(sl2))), d = function(x) dlnorm(x, ml, sqrt(sl2)),
+           draw = function(nc, m, icc) {
+             r &lt;- log(1 + icc * expm1(sl2)) / sl2     # log-scale ICC giving icc here
+             exp(ml + rep(rnorm(nc, 0, sqrt(r * sl2)), each = m) +
+                   rnorm(nc * m, 0, sqrt((1 - r) * sl2)))
+           },
+           chain = sticky(function(k) rlnorm(k, ml, sqrt(sl2))))
+    },
+    pareto = {
+      al &lt;- 1 + sqrt(1 + mu^2 / s2)   # from CV^2 = 1 / (alpha (alpha - 2))
+      xm &lt;- mu * (al - 1) / al
+      list(label = sprintf("Pareto(α = %g, xₘ = %g)", signif(al, 3), signif(xm, 3)),
+           xlim = c(0, xm * 0.005^(-1 / al)),
+           d = function(x) ifelse(x &lt; xm, 0, al * xm^al / x^(al + 1)),
+           draw = share_draws(function(k) xm * runif(k)^(-1 / al)),
+           chain = sticky(function(k) xm * runif(k)^(-1 / al)))
+    }))
+}
+
+# R sample means, each from a fresh sample under design d: G clusters of m
+# (an i.i.d. sample is G = n clusters of one), or a serially correlated run of
+# n. Samples are drawn in passes of about CHUNK responses; each column of a
+# pass's matrix is one sample.
+simulate_means &lt;- function(pop, d, R) {
+  n &lt;- d$n
+  per_pass &lt;- max(1, floor(CHUNK / n))
+  out &lt;- numeric(R)
+  done &lt;- 0
+  while (done &lt; R) {
+    k &lt;- min(per_pass, R - done)
+    y &lt;- if (d$type == "serial") pop$chain(n, k, d$rho) else pop$draw(k * d$G, d$m, d$icc)
+    out[done + seq_len(k)] &lt;- colMeans(matrix(y, nrow = n))
+    done &lt;- done + k
+  }
+  out
+}
+
+# Kolmogorov-Smirnov distance between the ECDF of x and a normal CDF, and
+# where it is attained: the ECDF value there (from the right or the left of a
+# jump) and the normal CDF value
+ks_normal &lt;- function(x, mean, sd) {
+  x  &lt;- sort(x)
+  R  &lt;- length(x)
+  Fn &lt;- pnorm(x, mean, sd)
+  up &lt;- seq_len(R) / R - Fn
+  dn &lt;- Fn - (seq_len(R) - 1) / R
+  i  &lt;- which.max(pmax(up, dn))
+  list(D = max(up[i], dn[i]), at = x[i], Fn = Fn[i],
+       Fe = if (up[i] &gt;= dn[i]) i / R else (i - 1) / R)
+}
+
+css &lt;- "
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700&amp;family=Red+Hat+Text:wght@400;500;700&amp;display=swap');
+html, body { height:100%; }
+body { font-family:'Red Hat Text',system-ui,sans-serif; background:#F7F7F7; color:#333;
+       margin:0; padding:10px; font-size:14px; box-sizing:border-box; overflow:hidden; }
+h4 { font-family:'Red Hat Display',system-ui,sans-serif; margin:0; font-size:16px; }
+h5 { font-family:'Red Hat Display',system-ui,sans-serif; margin:2px 0 4px 0; font-size:14px;
+     font-weight:700; color:#666; }
+/* fluidPage() wraps the UI in an auto-height .container-fluid; it needs a
+   definite height for the panels below to size to the frame. */
+body &gt; .container-fluid { height:100%; padding:0; }
+.wrap { display:flex; gap:12px; height:100%; }
+.card { display:flex; flex-direction:column; min-width:0; min-height:0;
+        background:#fff; border:1px solid #e2e2e2; border-radius:8px; padding:8px 12px;
+        box-sizing:border-box; }
+.side { width:232px; flex:none; overflow-y:auto; }
+.side hr { margin:6px 0 4px 0; border-color:#eee; }
+.main { flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:12px; }
+.top { flex:1.45 1 0; }
+.bottom { flex:1 1 0; display:flex; gap:12px; min-height:0; }
+.bottom .card { flex:1 1 0; }
+.hdr { display:flex; justify-content:space-between; align-items:baseline; min-height:22px; flex:none; }
+.hdr .form-group { width:auto !important; margin:0; }
+.hdr .checkbox { margin:0; font-size:12.5px; color:#666; }
+.hdr .shiny-options-group { font-size:12.5px; color:#666; }
+.hdr .radio-inline { padding-left:18px; margin-left:8px; }
+.hdr .radio-inline input { margin-left:-16px; margin-top:3px; }
+.model { font-size:12px; color:#777; }
+.sim { color:#0479A8; } .c { color:#c5050c; } .n0 { color:#C77400; }
+.plot { flex:1 1 auto; min-height:0; }
+.form-group { margin-bottom:2px; }
+.control-label { font-weight:500; white-space:nowrap; font-size:13px; margin-bottom:0; }
+select.form-control { height:30px; padding:2px 6px; font-size:13px; }
+input.form-control { height:30px; padding:2px 6px; font-size:13px; }
+.irs--shiny .irs-bar { border-color:var(--gc); background:var(--gc); }
+.irs--shiny .irs-single { background:var(--gc); }
+.irs--shiny .irs-handle { border-color:var(--gc); }
+.irs--shiny .irs-min, .irs--shiny .irs-max { display:none !important; }
+.run { display:flex; gap:8px; align-items:center; }
+.run .form-group { flex:1 1 0; margin:0; }
+#go { flex:1.3 1 0; height:30px; padding:0 6px; background:#c5050c; border-color:#c5050c; color:#fff;
+      font-weight:700; }
+/* the variance slider when the mean fixes it */
+.locked { opacity:0.45; pointer-events:none; }
+.note { font-size:12px; color:#777; margin-top:4px; line-height:1.3; }
+.stale { color:#c5050c; font-weight:500; }
+.fit { display:flex; flex-wrap:wrap; column-gap:18px; row-gap:0; font-size:12px; color:#777;
+       margin:2px 0 0 0; flex:none; align-items:center; }
+.fit b { font-family:'Red Hat Display',sans-serif; font-size:15px; color:#333; }
+"
+
+var_label &lt;- function(dist) {
+  rule &lt;- DISTS[[dist]]$rule
+  if (is.null(rule)) "σ² – variance" else paste0("σ² – variance (= ", rule, ")")
+}
+
+slider &lt;- function(id, label, min, max, value, step, col = INK, class = NULL) {
+  div(id = paste0(id, "_wrap"), class = class, style = paste0("--gc:", col, ";"),
+      sliderInput(id, HTML(label), min = min, max = max, value = value, step = step,
+                  width = "100%", ticks = FALSE))
+}
+
+ui &lt;- fluidPage(
+  tags$head(tags$style(HTML(css)), tags$script(HTML(
+    "Shiny.addCustomMessageHandler('lock', function (m) {
+       document.getElementById(m.id + '_wrap').classList.toggle('locked', m.locked);
+     });"))),
+  div(class = "wrap",
+    div(class = "card side",
+      h5("Population"),
+      selectInput("dist", NULL, width = "100%", selectize = FALSE, selected = DIST_DEFAULT,
+                  list("Discrete" = c("Bernoulli" = "bernoulli", "Poisson" = "poisson"),
+                       "Continuous" = c("Normal" = "normal", "Uniform" = "uniform",
+                                        "Exponential" = "exponential", "Gamma" = "gamma",
+                                        "Log-normal" = "lognormal", "Pareto" = "pareto"))),
+      slider("mean", "μ &amp;ndash; mean", D0$mean[1], D0$mean[2], D0$mean[4], D0$mean[3]),
+      slider("var", var_label(DIST_DEFAULT), 0, D0$var_max, D0$var_of(D0$mean[4]), D0$var_step,
+             class = "locked"),
+      tags$hr(),
+      h5("Sampling design"),
+      selectInput("design", NULL, width = "100%", selectize = FALSE,
+                  c("Simple random sample (i.i.d.)" = "iid", "Clustered sample" = "cluster",
+                    "Serially correlated sample" = "serial")),
+      conditionalPanel("input.design == 'iid' || input.design == 'serial'",
+        slider("n", "n &amp;ndash; sample size", 1, 300, 30, 1)),
+      conditionalPanel("input.design == 'serial'",
+        slider("rho", "ρ &amp;ndash; correlation of neighbors", 0, 1, 0.5, 0.01),
+        uiOutput("serial_note")),
+      conditionalPanel("input.design == 'cluster'",
+        slider("G", "G &amp;ndash; number of clusters", 1, 100, 10, 1),
+        slider("m", "m &amp;ndash; units per cluster", 1, 25, 5, 1),
+        slider("icc", "ρ &amp;ndash; intra-cluster correlation", 0, 0.9, 0.2, 0.05),
+        uiOutput("design_note")),
+      tags$hr(),
+      h5("Simulated samples"),
+      div(class = "run",
+        numericInput("R", NULL, R_DEFAULT, min = 100, max = R_MAX, step = 500, width = "100%"),
+        actionButton("go", "Simulate")),
+      uiOutput("run_note")
+    ),
+    div(class = "main",
+      div(class = "card top",
+        uiOutput("main_hdr"),
+        uiOutput("stats"),
+        div(class = "plot", plotOutput("hist", height = "100%"))
+      ),
+      div(class = "bottom",
+        div(class = "card",
+          div(class = "hdr", h4("Population distribution"),
+              span(class = "model", textOutput("pop_note", inline = TRUE))),
+          div(class = "plot", plotOutput("pop", height = "100%"))),
+        div(class = "card",
+          div(class = "hdr", h4(textOutput("shape_title", inline = TRUE)),
+              radioButtons("shape", NULL, c("CDF" = "cdf", "Q-Q" = "qq"), inline = TRUE)),
+          div(class = "plot", plotOutput("cdf", height = "100%")))
+      )
+    )
+  )
+)
+
+# `small` is for the two lower panels: fewer y ticks, a tighter margin
+par_base &lt;- function(small = FALSE) {
+  par(mar = c(2.5, if (small) 3 else 3.4, 0.4, 0.6), mgp = c(1.5, 0.45, 0), tcl = -0.25,
+      las = 1, col.axis = "#555", family = "sans", cex.axis = 0.85, cex.lab = 0.9,
+      lab = c(5, if (small) 3 else 5, 7))
+}
+
+# Shared x-range for the histogram and the CDF panel: four CLT SDs either side
+# of mu, widened to take in all but the most extreme 0.2% of the simulated
+# means, so a few far outliers (Pareto) don't squash the picture
+x_range &lt;- function(res)
+  range(c(quantile(res$means, c(0.001, 0.999)), res$pop$mean + c(-4, 4) * res$se))
+
+draw_hist &lt;- function(res, show_iid) {
+  mu &lt;- res$pop$mean
+  xl &lt;- x_range(res)
+  x  &lt;- res$means[res$means &gt;= xl[1] &amp; res$means &lt;= xl[2]]
+  if (res$pop$discrete) {
+    # A discrete population puts the sample mean on a lattice with spacing
+    # 1/n; bins hold a whole number of lattice points, centered on them, so
+    # the histogram doesn't alias into a comb
+    step &lt;- 1 / res$n
+    w    &lt;- step * max(1, round(diff(range(x)) / step / 40))
+    br   &lt;- seq(min(x) - step / 2, max(x) + w, by = w)
+  } else {
+    br &lt;- pretty(range(x), 40)
+  }
+  h  &lt;- hist(x, breaks = br, plot = FALSE)
+  h$density &lt;- h$density * length(x) / length(res$means)   # still a density over all draws
+  u  &lt;- seq(xl[1], xl[2], length.out = 500)
+  fc &lt;- dnorm(u, mu, res$se)
+  # The i.i.d. curve is left to run off the top when it is much narrower
+  ymax &lt;- 1.12 * max(h$density, fc)
+  par_base()
+  plot(NA, xlim = xl, ylim = c(0, ymax), xaxs = "i", yaxs = "i",
+       xlab = "sample mean", ylab = "density", bty = "l", fg = "#999")
+  rect(h$breaks[-length(h$breaks)], 0, h$breaks[-1], h$density,
+       col = adjustcolor(COL_SIM, 0.35), border = adjustcolor(COL_SIM, 0.6), lwd = 0.5)
+  segments(mu, 0, mu, ymax, col = INK, lty = 3)
+  if (res$dependent &amp;&amp; show_iid) lines(u, dnorm(u, mu, res$se0), col = COL_IID, lwd = 2.5, lty = 2)
+  lines(u, fc, col = COL_CLT, lwd = 3)
+}
+
+draw_cdf &lt;- function(res, show_iid) {
+  xs &lt;- sort(unique(res$means))
+  Fe &lt;- ecdf(res$means)(xs)
+  xl &lt;- x_range(res)
+  u  &lt;- seq(xl[1], xl[2], length.out = 500)
+  mu &lt;- res$pop$mean
+  k  &lt;- res$ks
+  par_base(small = TRUE)
+  plot(NA, xlim = xl, ylim = c(0, 1), xaxs = "i", yaxs = "i",
+       xlab = "sample mean", ylab = "CDF", bty = "l", fg = "#999")
+  if (res$dependent &amp;&amp; show_iid) lines(u, pnorm(u, mu, res$se0), col = COL_IID, lwd = 2, lty = 2)
+  lines(u, pnorm(u, mu, res$se), col = COL_CLT, lwd = 2.5)
+  lines(c(xl[1], xs, xl[2]), c(0, Fe, 1), type = "s", col = COL_SIM, lwd = 2)
+  segments(k$at, k$Fe, k$at, k$Fn, col = INK, lwd = 3, lend = 1)
+  text(k$at, (k$Fe + k$Fn) / 2, sprintf(" D = %s", fmt(k$D)),
+       adj = if (k$at &lt; mu) c(0, 0.5) else c(1.1, 0.5), cex = 0.85, col = INK, font = 2)
+}
+
+# Simulated quantiles of Ybar against the CLT normal's, both in CLT SEs from
+# mu, at 400 evenly spread probabilities. On the CLT normal the points follow
+# the solid line; the i.i.d. CLT normal, narrower by se0 / se, is the dashed
+# line. Guides at +/- 1.96 mark the tails the coverage numbers count.
+draw_qq &lt;- function(res, show_iid) {
+  pr &lt;- ppoints(400)
+  zt &lt;- qnorm(pr)
+  zs &lt;- (quantile(res$means, pr, names = FALSE) - res$pop$mean) / res$se
+  lim &lt;- range(c(zt, zs, -4, 4))
+  par_base(small = TRUE)
+  plot(NA, xlim = range(zt), ylim = lim, xaxs = "i",
+       xlab = "CLT normal quantile (SEs)", ylab = "simulated (SEs)", bty = "l", fg = "#999")
+  abline(v = c(-1.96, 1.96), h = c(-1.96, 1.96), col = "#e4e4e4")
+  if (res$dependent &amp;&amp; show_iid) abline(0, res$se0 / res$se, col = COL_IID, lwd = 2, lty = 2)
+  abline(0, 1, col = COL_CLT, lwd = 2.5)
+  points(zt, zs, pch = 16, cex = 0.45, col = adjustcolor(COL_SIM, 0.8))
+}
+
+draw_pop &lt;- function(pop) {
+  par_base(small = TRUE)
+  if (pop$discrete) {
+    v &lt;- seq(pop$xlim[1], pop$xlim[2])
+    f &lt;- pop$d(v)
+    plot(NA, xlim = range(v) + c(-0.6, 0.6), ylim = c(0, 1.25 * max(f)), xaxs = "i", yaxs = "i",
+         xlab = "y", ylab = "probability", bty = "l", fg = "#999",
+         xaxt = if (length(v) &lt;= 3) "n" else "s")
+    if (length(v) &lt;= 3) axis(1, at = v, col = "#999")
+    segments(v, 0, v, f, col = INK, lwd = if (length(v) &lt;= 12) 10 else 4, lend = 1)
+    ymax &lt;- 1.25 * max(f)
+  } else {
+    u &lt;- seq(pop$xlim[1], pop$xlim[2], length.out = 400)
+    f &lt;- pop$d(u)
+    f[!is.finite(f)] &lt;- NA
+    # Scale to the density away from the left edge, so one that blows up at 0
+    # (gamma with shape &lt; 1) runs off the top rather than flattening the rest
+    ymax &lt;- 1.25 * max(f[u &gt;= pop$xlim[1] + 0.03 * diff(pop$xlim)], na.rm = TRUE)
+    plot(NA, xlim = pop$xlim, ylim = c(0, ymax), xaxs = "i", yaxs = "i",
+         xlab = "y", ylab = "density", bty = "l", fg = "#999")
+    ok &lt;- !is.na(f)
+    polygon(c(u[ok], rev(u[ok])), c(f[ok], 0 * u[ok]), col = adjustcolor(INK, 0.12), border = NA)
+    lines(u, f, col = INK, lwd = 2.5)
+  }
+  segments(pop$mean, 0, pop$mean, ymax, col = INK, lty = 3)
+  mtext(pop$label, side = 3, line = -1.2, adj = 0.98, cex = 0.8, col = "#555")
+}
+
+server &lt;- function(input, output, session) {
+  pop &lt;- reactive(population(input$dist, input$mean, input$var))
+
+  # A new distribution resets the mean slider to its range, and frees the
+  # variance slider (normal) or locks it to the mean (the rest)
+  observeEvent(input$dist, {
+    d &lt;- DISTS[[input$dist]]
+    updateSliderInput(session, "mean", min = d$mean[1], max = d$mean[2],
+                      step = d$mean[3], value = d$mean[4])
+    locked &lt;- is.null(d$var)
+    if (locked)
+      updateSliderInput(session, "var", label = var_label(input$dist), min = 0,
+                        max = d$var_max, step = d$var_step, value = d$var_of(d$mean[4]))
+    else
+      updateSliderInput(session, "var", label = var_label(input$dist), min = d$var[1],
+                        max = d$var[2], step = d$var[3], value = d$var[4])
+    session$sendCustomMessage("lock", list(id = "var", locked = locked))
+  }, ignoreInit = TRUE)
+
+  observeEvent(input$mean, {
+    p &lt;- pop()
+    if (is.null(DISTS[[input$dist]]$var)) updateSliderInput(session, "var", value = p$var)
+  })
+  # An i.i.d. sample of n is G = n clusters of one unit each
+  design &lt;- reactive(switch(input$design,
+    cluster = list(type = "cluster", n = input$G * input$m, G = input$G, m = input$m,
+                   icc = input$icc, deff = 1 + (input$m - 1) * input$icc),
+    serial  = list(type = "serial", n = input$n, rho = input$rho,
+                   deff = serial_deff(input$n, input$rho)),
+    list(type = "iid", n = input$n, G = input$n, m = 1, icc = 0, deff = 1)))
+  settings &lt;- reactive(list(pop = pop()$label, design = design(), R = input$R))
+
+  res &lt;- eventReactive(input$go, {
+    p &lt;- pop()
+    d &lt;- design()
+    n &lt;- d$n
+    asked &lt;- min(max(round(input$R %||% R_DEFAULT), 100), R_MAX)
+    R &lt;- max(100, min(asked, floor(BUDGET / n)))
+    means &lt;- simulate_means(p, d, R)
+    se   &lt;- sqrt(p$var * d$deff / n)
+    se0  &lt;- sqrt(p$var / n)
+    list(means = means, pop = p, n = n, R = R, asked = asked, deff = d$deff,
+         dependent = d$type != "iid",
+         adj = if (d$type == "cluster") "cluster-adjusted" else "serial-adjusted",
+         se = se, se0 = se0,
+         ks = ks_normal(means, p$mean, se), ks0 = ks_normal(means, p$mean, se0),
+         cov = coverage(means, p$mean, se), cov0 = coverage(means, p$mean, se0),
+         settings = settings())
+  }, ignoreNULL = FALSE)
+
+  output$design_note &lt;- renderUI({
+    d &lt;- design()
+    req(d$type == "cluster")
+    n &lt;- d$n
+    div(class = "note",
+        if (d$m == 1) sprintf("n = %d. With m = 1, ρ has no effect.", n)
+        else sprintf("n = G × m = %d · design effect 1 + (m − 1)ρ = %s · effective n ≈ %s",
+                     n, fmt(1 + (d$m - 1) * d$icc), fmt(n / (1 + (d$m - 1) * d$icc))))
+  })
+
+  output$serial_note &lt;- renderUI({
+    d &lt;- design()
+    req(d$type == "serial")
+    div(class = "note",
+      "corr(Yᵢ, Yⱼ) = ρ^|i − j|",
+      if (d$rho == 1) " · every unit equals the first, so Ȳ = Y₁ whatever n is"
+      else sprintf(" · design effect %s (→ (1 + ρ)/(1 − ρ) = %s as n grows) · effective n ≈ %s",
+                   fmt(d$deff), fmt((1 + d$rho) / (1 - d$rho)), fmt(d$n / d$deff)))
+  })
+
+  output$run_note &lt;- renderUI({
+    r &lt;- res()
+    div(class = "note",
+      if (!identical(settings(), r$settings))
+        div(class = "stale", "Settings changed: press Simulate."),
+      if (r$R &lt; r$asked)
+        div(sprintf("Ran %s samples rather than %s to keep the run quick at n = %d.",
+                    format(r$R, big.mark = ","), format(r$asked, big.mark = ","), r$n)))
+  })
+
+  # The header doubles as the legend. The i.i.d. CLT curve only differs from
+  # the CLT curve under dependence, so it and its checkbox appear only then.
+  output$main_hdr &lt;- renderUI({
+    r &lt;- res()
+    title &lt;- "Sampling distribution of Ȳ: "
+    if (!r$dependent)
+      return(div(class = "hdr",
+        h4(title, span(class = "sim", "simulated"), " vs. ", span(class = "c", "CLT normal"))))
+    div(class = "hdr",
+      h4(title, span(class = "sim", "simulated"), " vs. ",
+         span(class = "c", paste(r$adj, "CLT")), " vs. ", span(class = "n0", "i.i.d. CLT")),
+      checkboxInput("show_iid", "show i.i.d. CLT", isolate(input$show_iid) %||% TRUE))
+  })
+
+  output$pop_note &lt;- renderText(
+    if (input$design == "iid") "each response" else "each response, whatever ρ is")
+
+  output$stats &lt;- renderUI({
+    r &lt;- res()
+    noise &lt;- 1.36 / sqrt(r$R)    # 95% point of the KS statistic under a perfect fit
+    # A KS distance read against the noise level: within it, or how many times it
+    verdict &lt;- function(D)
+      if (D &lt;= noise) " (within noise)" else sprintf(" (%.1f× noise)", D / noise)
+    runs  &lt;- span(sprintf("%s samples of n = %d", format(r$R, big.mark = ","), r$n))
+    noise_note &lt;- span("simulation noise level ", tags$b(fmt(noise)))
+    pct &lt;- function(v) sprintf("%.1f%%", 100 * v)
+    cov_noise &lt;- 1.96 * sqrt(0.05 * 0.95 / r$R)   # simulation noise in a 95% coverage rate
+    cov_span &lt;- function(cv, cls, label)
+      span(class = cls, label, tags$b(pct(cv$cover)),
+           sprintf(" (misses low %s, high %s)", pct(cv$low), pct(cv$high)))
+    cov_note &lt;- span(sprintf("target 95%% (2.5%%, 2.5%%) ± %.1f", 100 * cov_noise))
+    if (!r$dependent)
+      return(div(
+        div(class = "fit",
+          span(class = "sim", "SD of simulated Ȳ ", tags$b(fmt(sd(r$means)))),
+          span(class = "c", "CLT SE σ/√n ", tags$b(fmt(r$se))),
+          runs),
+        div(class = "fit",
+          span(class = "c", "KS distance to CLT normal ", tags$b(fmt(r$ks$D)), verdict(r$ks$D)),
+          noise_note),
+        div(class = "fit",
+          cov_span(r$cov, "c", "Ȳ ± 1.96 SE covers μ "), cov_note)))
+    div(
+      div(class = "fit",
+        span(class = "sim", "SD of simulated Ȳ ", tags$b(fmt(sd(r$means)))),
+        span(class = "c", paste(r$adj, "SE "), tags$b(fmt(r$se))),
+        span(class = "n0", "i.i.d. SE ", tags$b(fmt(r$se0))),
+        runs),
+      div(class = "fit",
+        span(class = "c", paste0("KS distance to ", r$adj, " CLT "), tags$b(fmt(r$ks$D)), verdict(r$ks$D)),
+        span(class = "n0", "to i.i.d. CLT ", tags$b(fmt(r$ks0$D)), verdict(r$ks0$D)),
+        noise_note),
+      div(class = "fit",
+        cov_span(r$cov, "c", paste0("Ȳ ± 1.96 SE covers μ: ", r$adj, " SE ")),
+        cov_span(r$cov0, "n0", "i.i.d. SE "), cov_note)
+    )
+  })
+
+  output$hist &lt;- renderPlot(draw_hist(res(), input$show_iid %||% TRUE), res = 96)
+  output$cdf  &lt;- renderPlot({
+    draw &lt;- if (identical(input$shape, "qq")) draw_qq else draw_cdf
+    draw(res(), input$show_iid %||% TRUE)
+  }, res = 96)
+  output$shape_title &lt;- renderText(
+    if (identical(input$shape, "qq")) "Q-Q plot against the CLT normal" else "CDFs and the KS distance")
+  output$pop  &lt;- renderPlot(draw_pop(pop()), res = 96)
+}
+
+shinyApp(ui, server)
+</code></pre>
+
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/astrezhnev\.github\.io\/ps812\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Licensed under a <i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i> <i class="fa-brands fa-creative-commons-by" aria-label="creative-commons-by"></i> <i class="fa-brands fa-creative-commons-nc" aria-label="creative-commons-nc"></i> <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Made with <a href="https://quarto.org/">Quarto</a> | <a href="https://github.com/astrezhnev/ps812/issues">Report an Issue</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
