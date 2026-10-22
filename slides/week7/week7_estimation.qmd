@@ -532,8 +532,9 @@ $\hat{\mu} \overset{a}{\sim} \; {\color{#c5050c}{\mathcal{N}}}\left(\mu, \dfrac{
   - The median, or some other quantile
   - The share of the population above some threshold, $\Pr(Y_i > c)$
 
-- The informal recipe: write down the feature of the **population** we care about, then compute its **sample analog**
-  - Expected value $\rightarrow$ sample mean. Variance $\rightarrow$ sample variance.
+- **Informally**: Write down the feature of the **population** we care about, then compute its **sample analog**
+  - Expected value $\rightarrow$ sample mean. 
+  - Variance $\rightarrow$ sample variance.
 
 - Each of these features is a **function of the CDF** $F$
   - Estimate $F$ with its sample analog, then **plug it in**
@@ -593,7 +594,7 @@ ggplot() +
 
 ::: {.incremental}
 
-- Fix any $y$. The indicators $Z_i = I(Y_i \le y)$ are i.i.d. Bernoulli with mean $\Pr(Y_i \le y) = F(y)$
+- For any given value of $y$, the indicators $Z_i = I(Y_i \le y)$ are i.i.d. Bernoulli with mean $\Pr(Y_i \le y) = F(y)$
 
 - So $\hat{F}_n(y) = \bar{Z}_n$ is just a **sample mean**, and everything we know about sample means applies
   - Unbiased: $\mathbb{E}\left[\hat{F}_n(y)\right] = F(y)$
@@ -741,14 +742,16 @@ ggplot() +
 ::: {.incremental}
 
 - In general: $\hat{F}_n \to F$. So if small changes in $F$ only cause small changes in $T(F)$, then $T(\hat{F}_n) \to T(F)$
-  - Under these **usual plug-in regularity conditions**, plug-in estimators are also **asymptotically normal**
-  - The formal condition is a kind of differentiability of $T$.
+  - In other words, $T$ needs to be **continuous** (in a particular sense)
 
-- Most estimands we'll meet are well behaved: means, variances, covariances, quantiles (where $F$ isn't flat), regression coefficients
+- Under some additional regularity conditions, plug-in estimators are also **asymptotically normal**
+  - This involves a kind of differentiability of $T$ with respect to the **distribution** $F$.
+
+- Most estimands we'll work with are well behaved: means, variances, covariances, quantiles (where $F$ isn't flat), regression coefficients
 
 - When does it fail? When $T$ is too **sensitive** to small changes in $F$
-  - The **density** $f(y) = F'(y)$: $\hat{F}_n$ is a step function, so its derivative is $0$ everywhere except at the data, where it's undefined
-  - Plugging $\hat{F}_n$ straight in gives nonsense. We'll need to **smooth** it.
+  - The **density** $f(y) = F'(y)$: $\hat{F}_n$ is a step function and fails **continuity**
+  - Plugging $\hat{F}_n$ straight doesn't work. We'll need to **smooth** it.
 
 :::
 
@@ -828,7 +831,7 @@ theme_slide <- function() {
 
 ::: {.incremental}
 
-- The plug-in principle can't give us the **density** $f(y)$ directly: $\hat{F}_n$ is a step function with no useful derivative
+- The plug-in principle can't give us the **density** $f(y)$ directly
   - But the density is often the best way to visualize the shape of a distribution
 
 - Recall what a **density** is: the share of the population in a small window around $y$, divided by the window's width
@@ -853,8 +856,8 @@ theme_slide <- function() {
 
 - **Bias**: the bar is flat but $f$ might not be. Larger $h$ $\leadsto$ larger bias (depending on $f^\prime(y)$)
 
-- **Variance**: the count in a bin is binomial with about $nh f(y)$ expected observations, so
-  $$\Var\left(\hat{f}(y)\right) \approx \frac{f(y)}{nh}$$
+- **Variance**: the count in a bin is binomial with $n$ trials and success probability approximately $hf(y)$
+  $$\Var\left(\hat{f}(y)\right) \approx \frac{n hf(y) (1 - hf(y))}{(nh)^2}  = \frac{f(y)}{nh} (1 - hf(y)) \approx \frac{f(y)}{nh} \qquad \text{for small } h$$
 
 - Consistent if the bins shrink, $h \to 0$, but **slowly** enough that each still fills up, $nh \to \infty$
 
@@ -913,6 +916,7 @@ ggplot() +
 
 ## Kernel density estimation
 
+
 ::: {.incremental}
 
 - A histogram's estimate at $y$ depends on where the bin **edges** happen to fall
@@ -920,11 +924,8 @@ ggplot() +
 - Instead, we could imagine centering a window on **every** point $y$ [@rosenblatt1956remarks]
   $$\hat{f}(y) = \frac{1}{nh}\sum_{i=1}^n I\left(|Y_i - y| \le \tfrac{h}{2}\right)$$
 
-- Rewrite it as a **weighted average** over observations
-  $$\hat{f}(y) = \frac{1}{n}\sum_{i=1}^n \frac{1}{h}K\left(\frac{Y_i - y}{h}\right), \qquad K(u) = I\left(|u| \le \tfrac{1}{2}\right)$$
-  - Observations within $h/2$ of $y$ count fully. Everyone else counts for **nothing**
-
-- Instead of weighting every observation in the window equally, we could let an observation's weight **fall off smoothly** with its distance from $y$
+- A **weighted count**: observations within $h/2$ of $y$ get weight $1$. Everyone else gets **nothing**
+  - But instead of weighting every observation in the window equally, we could let an observation's weight **fall off smoothly** with its distance from $y$
 
 :::
 
@@ -934,11 +935,11 @@ ggplot() +
 
 - The **kernel density estimator** [@rosenblatt1956remarks; @parzen1962estimation]
 
-  $$\hat{f}_h(y) = \frac{1}{n}\sum_{i=1}^n K_h(Y_i - y) $$
+  $$\hat{f}_h(y) = \frac{1}{nh}\sum_{i=1}^n K_h(Y_i - y) $$
   
 - Where the **kernel** is defined as:
 
-  $$K_h(u) = \frac{1}{h}K\left(\frac{u}{h}\right)$$
+  $$K_h(u) = K\left(\frac{u}{h}\right)$$
 
 - The **kernel** $K$ is a function that is symmetric, non-negative and integrates to $1$: 
   - e.g. uniform, triangular $1 - |u|$ on $[-1, 1]$, Gaussian $\phi(u)$
@@ -952,7 +953,7 @@ ggplot() +
 
 ::: {.incremental}
 
-- Each observation contributes a small **bump** $\frac{1}{n}K_h(\cdot - Y_i)$ (dashed). The estimate is their **sum** (solid)
+- Each observation contributes a small **bump** $\frac{1}{nh}K_h(\cdot - Y_i)$ (dashed). The estimate is their **sum** (solid)
 
 :::
 
@@ -974,6 +975,39 @@ ggplot() +
   geom_line(data = bumps, aes(age, f, group = obs), colour = "#9a9a9a", linewidth = 0.8,
             linetype = "dashed") +
   geom_line(data = summarize(bumps, f = sum(f), .by = age), aes(age, f),
+            colour = "#0479a8", linewidth = 1.6) +
+  geom_rug(data = tibble(age = pts), aes(age), colour = "#333333", linewidth = 1, length = unit(0.06, "npc")) +
+  labs(x = "Age", y = NULL) +
+  theme_slide()
+```
+
+:::
+
+## Kernel density estimation
+
+::: {.incremental}
+
+- Same observations with a **triangular** kernel instead of a **gaussian**/**normal** kernel
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.6
+#| fig-align: center
+
+# Same seven observations with triangular bumps (1 - |u|) on [-1, 1]. Bandwidth set so
+# each bump has the same SD as the Gaussian above (triangular SD is h / sqrt(6))
+h_tri <- h_demo * sqrt(6)
+bumps_tri <- expand_grid(obs = pts, age = grid) |>
+  mutate(f = pmax(1 - abs(age - obs) / h_tri, 0) / (h_tri * length(pts)))
+ggplot() +
+  geom_line(data = bumps_tri, aes(age, f, group = obs), colour = "#9a9a9a", linewidth = 0.8,
+            linetype = "dashed") +
+  geom_line(data = summarize(bumps_tri, f = sum(f), .by = age), aes(age, f),
             colour = "#0479a8", linewidth = 1.6) +
   geom_rug(data = tibble(age = pts), aes(age), colour = "#333333", linewidth = 1, length = unit(0.06, "npc")) +
   labs(x = "Age", y = NULL) +
