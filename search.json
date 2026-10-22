@@ -242,7 +242,7 @@
     "href": "slides/week7/week7_estimation.html#plug-in-estimators",
     "title": "Week 7: Estimation, Part 2",
     "section": "Plug-in estimators",
-    "text": "Plug-in estimators\n\nSo far, we’ve estimated one feature of the population: the mean \\(\\mu = \\mathbb{E}[Y_i]\\), with the sample mean \\(\\bar{Y}_n\\)\nBut we often want to learn other features of the population distribution\n\nThe variance \\(\\sigma^2\\) (which we need for standard errors)\nThe median, or some other quantile\nThe share of the population above some threshold, \\(\\Pr(Y_i &gt; c)\\)\n\nThe informal recipe: write down the feature of the population we care about, then compute its sample analog\n\nExpected value \\(\\rightarrow\\) sample mean. Variance \\(\\rightarrow\\) sample variance.\n\nEach of these features is a function of the CDF \\(F\\)\n\nEstimate \\(F\\) with its sample analog, then plug it in"
+    "text": "Plug-in estimators\n\nSo far, we’ve estimated one feature of the population: the mean \\(\\mu = \\mathbb{E}[Y_i]\\), with the sample mean \\(\\bar{Y}_n\\)\nBut we often want to learn other features of the population distribution\n\nThe variance \\(\\sigma^2\\) (which we need for standard errors)\nThe median, or some other quantile\nThe share of the population above some threshold, \\(\\Pr(Y_i &gt; c)\\)\n\nInformally: Write down the feature of the population we care about, then compute its sample analog\n\nExpected value \\(\\rightarrow\\) sample mean.\nVariance \\(\\rightarrow\\) sample variance.\n\nEach of these features is a function of the CDF \\(F\\)\n\nEstimate \\(F\\) with its sample analog, then plug it in"
   },
   {
     "objectID": "slides/week7/week7_estimation.html#the-empirical-cdf",
@@ -256,7 +256,7 @@
     "href": "slides/week7/week7_estimation.html#the-empirical-cdf-1",
     "title": "Week 7: Estimation, Part 2",
     "section": "The empirical CDF",
-    "text": "The empirical CDF\n\nFix any \\(y\\). The indicators \\(Z_i = I(Y_i \\le y)\\) are i.i.d. Bernoulli with mean \\(\\Pr(Y_i \\le y) = F(y)\\)\nSo \\(\\hat{F}_n(y) = \\bar{Z}_n\\) is just a sample mean, and everything we know about sample means applies\n\nUnbiased: \\(\\mathbb{E}\\left[\\hat{F}_n(y)\\right] = F(y)\\)\nSampling variance: \\(\\Var\\left(\\hat{F}_n(y)\\right) = \\dfrac{F(y)\\big(1 - F(y)\\big)}{n}\\)\nConsistent (WLLN): \\(\\hat{F}_n(y) \\xrightarrow{p} F(y)\\)\nAsymptotically normal (CLT): \\(\\sqrt{n}\\left(\\hat{F}_n(y) - F(y)\\right) \\xrightarrow{d} \\mathcal{N}\\big(0, F(y)(1 - F(y))\\big)\\)\n\nEven stronger, the Glivenko–Cantelli theorem shows that the largest gap over all \\(y\\) also goes to zero (with probability 1) \\[\\sup_y \\left|\\hat{F}_n(y) - F(y)\\right| \\to 0\\]\n\nThe whole curve converges"
+    "text": "The empirical CDF\n\nFor any given value of \\(y\\), the indicators \\(Z_i = I(Y_i \\le y)\\) are i.i.d. Bernoulli with mean \\(\\Pr(Y_i \\le y) = F(y)\\)\nSo \\(\\hat{F}_n(y) = \\bar{Z}_n\\) is just a sample mean, and everything we know about sample means applies\n\nUnbiased: \\(\\mathbb{E}\\left[\\hat{F}_n(y)\\right] = F(y)\\)\nSampling variance: \\(\\Var\\left(\\hat{F}_n(y)\\right) = \\dfrac{F(y)\\big(1 - F(y)\\big)}{n}\\)\nConsistent (WLLN): \\(\\hat{F}_n(y) \\xrightarrow{p} F(y)\\)\nAsymptotically normal (CLT): \\(\\sqrt{n}\\left(\\hat{F}_n(y) - F(y)\\right) \\xrightarrow{d} \\mathcal{N}\\big(0, F(y)(1 - F(y))\\big)\\)\n\nEven stronger, the Glivenko–Cantelli theorem shows that the largest gap over all \\(y\\) also goes to zero (with probability 1) \\[\\sup_y \\left|\\hat{F}_n(y) - F(y)\\right| \\to 0\\]\n\nThe whole curve converges"
   },
   {
     "objectID": "slides/week7/week7_estimation.html#the-plug-in-principle",
@@ -312,7 +312,7 @@
     "href": "slides/week7/week7_estimation.html#consistency-of-plug-in-estimators",
     "title": "Week 7: Estimation, Part 2",
     "section": "Consistency of plug-in estimators",
-    "text": "Consistency of plug-in estimators\n\nIn general: \\(\\hat{F}_n \\to F\\). So if small changes in \\(F\\) only cause small changes in \\(T(F)\\), then \\(T(\\hat{F}_n) \\to T(F)\\)\n\nUnder these usual plug-in regularity conditions, plug-in estimators are also asymptotically normal\nThe formal condition is a kind of differentiability of \\(T\\).\n\nMost estimands we’ll meet are well behaved: means, variances, covariances, quantiles (where \\(F\\) isn’t flat), regression coefficients\nWhen does it fail? When \\(T\\) is too sensitive to small changes in \\(F\\)\n\nThe density \\(f(y) = F'(y)\\): \\(\\hat{F}_n\\) is a step function, so its derivative is \\(0\\) everywhere except at the data, where it’s undefined\nPlugging \\(\\hat{F}_n\\) straight in gives nonsense. We’ll need to smooth it."
+    "text": "Consistency of plug-in estimators\n\nIn general: \\(\\hat{F}_n \\to F\\). So if small changes in \\(F\\) only cause small changes in \\(T(F)\\), then \\(T(\\hat{F}_n) \\to T(F)\\)\n\nIn other words, \\(T\\) needs to be continuous (in a particular sense)\n\nUnder some additional regularity conditions, plug-in estimators are also asymptotically normal\n\nThis involves a kind of differentiability of \\(T\\) with respect to the distribution \\(F\\).\n\nMost estimands we’ll work with are well behaved: means, variances, covariances, quantiles (where \\(F\\) isn’t flat), regression coefficients\nWhen does it fail? When \\(T\\) is too sensitive to small changes in \\(F\\)\n\nThe density \\(f(y) = F'(y)\\): \\(\\hat{F}_n\\) is a step function and fails continuity\nPlugging \\(\\hat{F}_n\\) straight doesn’t work. We’ll need to smooth it."
   },
   {
     "objectID": "slides/week7/week7_estimation.html#running-example-2024-gss",
@@ -333,14 +333,14 @@
     "href": "slides/week7/week7_estimation.html#density-estimation",
     "title": "Week 7: Estimation, Part 2",
     "section": "Density estimation",
-    "text": "Density estimation\n\nThe plug-in principle can’t give us the density \\(f(y)\\) directly: \\(\\hat{F}_n\\) is a step function with no useful derivative\n\nBut the density is often the best way to visualize the shape of a distribution\n\nRecall what a density is: the share of the population in a small window around \\(y\\), divided by the window’s width \\[f(y) \\approx \\frac{F(y + h/2) - F(y - h/2)}{h} \\qquad \\text{for small } h\\]\nPlug in \\(\\hat{F}_n\\): the share of the sample within \\(h/2\\) of \\(y\\), divided by \\(h\\) \\[\\hat{f}(y) = \\frac{\\hat{F}_n(y + h/2) - \\hat{F}_n(y - h/2)}{h} = \\frac{\\#\\{i : |Y_i - y| \\le h/2\\}}{nh}\\]\nThe width \\(h\\) is a tuning parameter\n\nToo small and each window holds few observations (noisy)\nToo large and we average over a region where \\(f\\) changes (biased)"
+    "text": "Density estimation\n\nThe plug-in principle can’t give us the density \\(f(y)\\) directly\n\nBut the density is often the best way to visualize the shape of a distribution\n\nRecall what a density is: the share of the population in a small window around \\(y\\), divided by the window’s width \\[f(y) \\approx \\frac{F(y + h/2) - F(y - h/2)}{h} \\qquad \\text{for small } h\\]\nPlug in \\(\\hat{F}_n\\): the share of the sample within \\(h/2\\) of \\(y\\), divided by \\(h\\) \\[\\hat{f}(y) = \\frac{\\hat{F}_n(y + h/2) - \\hat{F}_n(y - h/2)}{h} = \\frac{\\#\\{i : |Y_i - y| \\le h/2\\}}{nh}\\]\nThe width \\(h\\) is a tuning parameter\n\nToo small and each window holds few observations (noisy)\nToo large and we average over a region where \\(f\\) changes (biased)"
   },
   {
     "objectID": "slides/week7/week7_estimation.html#histograms",
     "href": "slides/week7/week7_estimation.html#histograms",
     "title": "Week 7: Estimation, Part 2",
     "section": "Histograms",
-    "text": "Histograms\n\nA histogram splits the real number line into bins \\(B_1, B_2, \\dotsc\\) of width \\(h\\). For \\(y\\) in bin \\(B_j\\) \\[\\hat{f}(y) = \\frac{\\#\\{i : Y_i \\in B_j\\}}{nh}\\]\n\nEach bar’s area is the share of observations in its bin, so the areas sum to \\(1\\)\n\nBias: the bar is flat but \\(f\\) might not be. Larger \\(h\\) \\(\\leadsto\\) larger bias (depending on \\(f^\\prime(y)\\))\nVariance: the count in a bin is binomial with about \\(nh f(y)\\) expected observations, so \\[\\Var\\left(\\hat{f}(y)\\right) \\approx \\frac{f(y)}{nh}\\]\nConsistent if the bins shrink, \\(h \\to 0\\), but slowly enough that each still fills up, \\(nh \\to \\infty\\)\n\n\nSee Wasserman (2006), Ch. 6"
+    "text": "Histograms\n\nA histogram splits the real number line into bins \\(B_1, B_2, \\dotsc\\) of width \\(h\\). For \\(y\\) in bin \\(B_j\\) \\[\\hat{f}(y) = \\frac{\\#\\{i : Y_i \\in B_j\\}}{nh}\\]\n\nEach bar’s area is the share of observations in its bin, so the areas sum to \\(1\\)\n\nBias: the bar is flat but \\(f\\) might not be. Larger \\(h\\) \\(\\leadsto\\) larger bias (depending on \\(f^\\prime(y)\\))\nVariance: the count in a bin is binomial with \\(n\\) trials and success probability approximately \\(hf(y)\\) \\[\\Var\\left(\\hat{f}(y)\\right) \\approx \\frac{n hf(y) (1 - hf(y))}{(nh)^2}  = \\frac{f(y)}{nh} (1 - hf(y)) \\approx \\frac{f(y)}{nh} \\qquad \\text{for small } h\\]\nConsistent if the bins shrink, \\(h \\to 0\\), but slowly enough that each still fills up, \\(nh \\to \\infty\\)\n\n\nSee Wasserman (2006), Ch. 6"
   },
   {
     "objectID": "slides/week7/week7_estimation.html#choosing-the-bin-width",
@@ -361,21 +361,28 @@
     "href": "slides/week7/week7_estimation.html#kernel-density-estimation",
     "title": "Week 7: Estimation, Part 2",
     "section": "Kernel density estimation",
-    "text": "Kernel density estimation\n\nA histogram’s estimate at \\(y\\) depends on where the bin edges happen to fall\nInstead, we could imagine centering a window on every point \\(y\\) (Rosenblatt 1956) \\[\\hat{f}(y) = \\frac{1}{nh}\\sum_{i=1}^n I\\left(|Y_i - y| \\le \\tfrac{h}{2}\\right)\\]\nRewrite it as a weighted average over observations \\[\\hat{f}(y) = \\frac{1}{n}\\sum_{i=1}^n \\frac{1}{h}K\\left(\\frac{Y_i - y}{h}\\right), \\qquad K(u) = I\\left(|u| \\le \\tfrac{1}{2}\\right)\\]\n\nObservations within \\(h/2\\) of \\(y\\) count fully. Everyone else counts for nothing\n\nInstead of weighting every observation in the window equally, we could let an observation’s weight fall off smoothly with its distance from \\(y\\)"
+    "text": "Kernel density estimation\n\nA histogram’s estimate at \\(y\\) depends on where the bin edges happen to fall\nInstead, we could imagine centering a window on every point \\(y\\) (Rosenblatt 1956) \\[\\hat{f}(y) = \\frac{1}{nh}\\sum_{i=1}^n I\\left(|Y_i - y| \\le \\tfrac{h}{2}\\right)\\]\nA weighted count: observations within \\(h/2\\) of \\(y\\) get weight \\(1\\). Everyone else gets nothing\n\nBut instead of weighting every observation in the window equally, we could let an observation’s weight fall off smoothly with its distance from \\(y\\)"
   },
   {
     "objectID": "slides/week7/week7_estimation.html#kernel-density-estimation-1",
     "href": "slides/week7/week7_estimation.html#kernel-density-estimation-1",
     "title": "Week 7: Estimation, Part 2",
     "section": "Kernel density estimation",
-    "text": "Kernel density estimation\n\nThe kernel density estimator (Rosenblatt 1956; Parzen 1962)\n\\[\\hat{f}_h(y) = \\frac{1}{n}\\sum_{i=1}^n K_h(Y_i - y) \\]\nWhere the kernel is defined as:\n\\[K_h(u) = \\frac{1}{h}K\\left(\\frac{u}{h}\\right)\\]\nThe kernel \\(K\\) is a function that is symmetric, non-negative and integrates to \\(1\\):\n\ne.g. uniform, triangular \\(1 - |u|\\) on \\([-1, 1]\\), Gaussian \\(\\phi(u)\\)\nThe choice of kernel defines the shape of how the weights decay from \\(y\\)\n\nThe bandwidth \\(h\\) defines how many observations get meaningful weight."
+    "text": "Kernel density estimation\n\nThe kernel density estimator (Rosenblatt 1956; Parzen 1962)\n\\[\\hat{f}_h(y) = \\frac{1}{nh}\\sum_{i=1}^n K_h(Y_i - y) \\]\nWhere the kernel is defined as:\n\\[K_h(u) = K\\left(\\frac{u}{h}\\right)\\]\nThe kernel \\(K\\) is a function that is symmetric, non-negative and integrates to \\(1\\):\n\ne.g. uniform, triangular \\(1 - |u|\\) on \\([-1, 1]\\), Gaussian \\(\\phi(u)\\)\nThe choice of kernel defines the shape of how the weights decay from \\(y\\)\n\nThe bandwidth \\(h\\) defines how many observations get meaningful weight."
   },
   {
     "objectID": "slides/week7/week7_estimation.html#kernel-density-estimation-2",
     "href": "slides/week7/week7_estimation.html#kernel-density-estimation-2",
     "title": "Week 7: Estimation, Part 2",
     "section": "Kernel density estimation",
-    "text": "Kernel density estimation\n\nEach observation contributes a small bump \\(\\frac{1}{n}K_h(\\cdot - Y_i)\\) (dashed). The estimate is their sum (solid)"
+    "text": "Kernel density estimation\n\nEach observation contributes a small bump \\(\\frac{1}{nh}K_h(\\cdot - Y_i)\\) (dashed). The estimate is their sum (solid)"
+  },
+  {
+    "objectID": "slides/week7/week7_estimation.html#kernel-density-estimation-3",
+    "href": "slides/week7/week7_estimation.html#kernel-density-estimation-3",
+    "title": "Week 7: Estimation, Part 2",
+    "section": "Kernel density estimation",
+    "text": "Kernel density estimation\n\nSame observations with a triangular kernel instead of a gaussian/normal kernel"
   },
   {
     "objectID": "slides/week7/week7_estimation.html#running-example-2024-gss-1",
