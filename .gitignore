@@ -49,3 +49,7 @@ slides/week3/data/2012_stata.dta
 # 2024 GSS Cross-section source file for week 6 (~6 MB). prepare_data.R
 # turns it into the small committed CSV extract.
 slides/week6/data/GSS2024.dta
+
+# 2024 ANES Time Series source file for section 7 (~79 MB). prepare_data.R
+# turns it into the small committed CSV extract.
+sections/week7/data/anes_timeseries_2024_stata_20260519.dta

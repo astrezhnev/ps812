@@ -56,7 +56,7 @@ Links become active as the materials for each week are posted.
 
 *Friday, October 23*
 
-*To be posted*
+- [Week 7 GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/sections/week7/)
 
 ### Week 8: Confidence Intervals and Hypothesis Testing
 

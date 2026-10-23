@@ -1,0 +1,153 @@
+---
+title: "PS 812: Section 7 Exercise"
+author: "YOUR NAME"
+date: "10-23-2026"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| eval: true
+library(tidyverse)
+theme_set(theme_minimal(base_size = 13))
+
+set.seed(812)
+
+anes <- read_csv("data/anes24_therm.csv")
+```
+
+Data:
+
+- `anes`: 2024 American National Election Studies (ANES) Time Series, 5,521 respondents, pre-election interview. `id`, `weight` (pre-election survey weight)
+- Feeling thermometers, 0 (very cold) to 100 (very warm): `ft_harris`, `ft_trump`, `ft_biden`, `ft_rfk`, `ft_vance`, `ft_walz`, `ft_dem` (Democratic Party), `ft_rep` (Republican Party).
+
+Respondents are told that ratings above 50 degrees mean they feel favorable and warm toward the person, ratings below 50 mean they feel unfavorable and cold, and 50 means neither warm nor cold.
+
+We'll focus in this exercise on the two party thermometers, `ft_dem` and `ft_rep`. Our running example is the Democratic Party thermometer. Our estimand is its population mean, $\mu = \mathbb{E}[Y]$, and our estimator is the sample mean $\bar Y$.
+
+# Part 1: The plug-in standard error
+
+## Task 1: setup
+
+Drop observations with missing values of `ft_dem`. How many respondents are in the sample? Compute the sample mean and sample standard deviation, and plot a histogram with `binwidth = 5`.
+
+```{r}
+
+```
+
+## Task 2: the plug-in standard error
+
+From lecture, $\text{Var}(\bar Y) = \sigma^2 / n$. Plug in the sample variance to estimate the standard error:
+
+$$
+\widehat{\text{SE}}(\bar Y) = \sqrt{\hat \sigma^2 / n}
+$$
+
+```{r}
+
+```
+
+# Part 2: The bootstrap by hand
+
+## Task 3: one bootstrap sample
+
+a. Draw one bootstrap sample: Compute its mean and compare it to `mean(y)`.
+b. In your bootstrap sample, count how many times each `id` was drawn. Merge this `count` back to the original dataset.
+c. What are the mean and the sum of `counts`? What share of respondents get weight 0? Weight 3 or more?
+
+```{r}
+
+```
+
+## Task 4: many bootstrap samples
+
+Draw $B = 2000$ bootstrap samples and save the mean of each. Calcualte the **bootstrap standard error** and compare it to your answer from Task 2.
+
+```{r}
+
+```
+
+## Task 5: the bootstrap distribution
+
+Plot a histogram of `boot_means`. Compare this to a normal density with mean `mean(y)` and standard deviation equal to your plug-in standard error (`geom_function(fun = dnorm, args = list(...))`).
+
+```{r}
+
+```
+
+## Task 6: how many bootstrap samples?
+
+Write a function `boot_se(y, B)` that returns the bootstrap SE of the mean from `B` bootstrap samples. For each of `B` = 25, 100, 500, and 2000, compute `boot_se(y, B)` 50 times, and plot the 50 values for each `B` (e.g., `geom_jitter()` with `B` on the x-axis). Draw a horizontal line at the analytical SE estimate (Task 2's result). What happens to the spread as `B` grows?
+
+```{r}
+
+```
+
+
+## Task 7: random weights
+
+The bootstrap mean is a weighted mean, $\bar Y^* = \frac{1}{n}\sum_i W_i Y_i$, where the weights are the counts from Task 3. Those weights don't have to be integers. The **fractional-weighted bootstrap** uses
+
+$$
+W_i = n \cdot \frac{E_i}{\sum_j E_j}, \qquad E_1, \dots, E_n \overset{\text{iid}}{\sim} \text{Exponential}(1)
+$$
+
+a. Draw one set of fractional weights and one set of multinomial weights (`rmultinom(1, n, rep(1/n, n))`). Compare their mean, variance, and share equal to 0, and plot their histograms.
+b. Draw $B = 2000$ fractional-bootstrap means with `weighted.mean(y, rexp(n))`. Calculate the SE and compare it to Tasks 2 and 4.
+
+```{r}
+
+```
+
+
+# Part 3: Other estimands and estimators
+
+## Task 8: the standard deviation
+
+Consider our sample standard deviation estimator $\hat{\sigma}$ of the population standard deviation $\sigma$ of Democratic party approval.
+
+a. Bootstrap the standard error of $\hat{\sigma}$.
+b. If $Y$ were normal, the SE of $\hat\sigma$ would be approximately $\sigma / \sqrt{2n}$. Compare it to your result? What do you find?
+
+```{r}
+
+```
+
+## Task 9: correlation
+
+Using respondents who rated both parties, compute the correlation $r$ between `ft_dem` and `ft_rep`. Use the `cor()` function.
+
+a. Bootstrap the SE.
+b. If $X$ and $Y$ are both normally distrbuted, the large-sample SE of $r$ is $(1 - r^2)/\sqrt{n}$. Compare it to your bootstrap results. What do you find?
+
+```{r}
+
+```
+
+## Task 10: the median
+
+a. Compute the median Republican Party thermometer (`ft_rep`) and its bootstrap distribution by resampling ($B = 2000$). Plot the distribution of bootstrap medians.
+b. What's strange about it compared to the bootstrap distribution of the mean? 
+c. Now bootstrap the median of `ft_dem`. What is its bootstrap SE?
+
+```{r}
+
+```
+
+## Task 11: survey weights
+
+So far we've treated every respondent equally. Now we'll use the ANES survey `weight`.
+
+a. Compute the weighted mean Democratic Party thermometer with `weighted.mean()`. How different is it from the unweighted mean?
+b. Bootstrap the weighted mean. Compare the standard error to the plug-in SE from Task 2. What happens to the sampling variance with weights.
+c. A measure of effective sample size (Kish's ESS) is $n_{\text{eff}} = (\sum_i w_i)^2 / \sum_i w_i^2$. Compute it, and compare $\hat\sigma / \sqrt{n_{\text{eff}}}$ to your bootstrap SE.
+
+```{r}
+
+```
