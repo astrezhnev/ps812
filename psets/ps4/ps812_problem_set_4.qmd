@@ -23,15 +23,15 @@ library(haven)
 
 > This problem set is due at 11:59pm on **Tuesday, November 3**. Please submit your solutions via [Gradescope](https://www.gradescope.com/). Upload both a rendered `.html` file saved as "Yourlastname_Yourfirstinitial_pset4.html" and the corresponding Quarto file saved as "Yourlastname_Yourfirstinitial_pset4.qmd". We recommend editing the provided `.qmd` file directly and writing your answers and code in line with the questions. We should be able to run your code without error messages. You are strongly encouraged to discuss the problems with other students, but each student must write up their own answers and code. In order to receive credit, homework submissions must be substantially started and all work must be shown.
 
-# Background
+# Problem 1
 
-A large literature on the "diploma divide" documents gaps between people with and without a college education, in vote choice, in political attitudes and in how they see their own place in society. @gidron2017politics argue that support for the populist right is rooted partly in *status anxiety*: men without a college education feel they have slipped down the social hierarchy. Their key outcome is a survey question asked in the International Social Survey Programme [ISSP, @issp2019]:
+A large literature in political science focuses on divides in political attitudes by college education. Non-college voters have moved towards supporting right-wing parties, particularly populist right-wing parties, in many democracies. @gidron2017politics argue that this trend is rooted partly in growing *status anxiety* among men without a college education. To document this pattern, they examine data from the International Social Survey Programme (ISSP) [@issp2019] - a periodic survey of residents of many different countries over time. They specifically look at responses to the following question which measures *subjective social status*:
 
 > *In our society, there are groups which tend to be towards the top and groups which tend to be towards the bottom. Below is a scale that runs from the top to the bottom. Where would you put yourself on this scale?*
 
-Respondents answer on a ladder from 1 (bottom) to 10 (top). In this problem set we will describe the gap in this *subjective social status* between men with and without tertiary education in the 2019 wave of the ISSP. We are not estimating a causal effect of education. The quantities of interest are differences between two conditional distributions, and we will compare two ways of summarizing that difference: the difference in means and the difference in empirical cumulative distribution functions (eCDFs).
+Respondents answer on a scale that runs from 1 (bottom) to 10 (top). 
 
-The file `issp2019_status_counts.csv` in the data folder covers respondents aged 30 to 65 in ten countries who answered the ladder question. It does not have one row per respondent. Instead, the data are stored in a compressed form that is common for large surveys and census tables: each row is a *cell*, a unique combination of the variables, together with the number of respondents who fall in it. The columns are:
+The file `issp2019_status_counts.csv` in the data folder covers respondents aged 30 to 65 in ten countries who answered this status question. The file does not contain the raw per-respondent data. Instead, it is stored in a *compressed* form that is common for large surveys and census tables. Each row describes a unique combination of the variables and provides a **count** of the number of respondents in the survey who fall into that *cell*. The columns are:
 
 - `country`
 - `sex`: `"Male"` or `"Female"`
@@ -39,19 +39,19 @@ The file `issp2019_status_counts.csv` in the data folder covers respondents aged
 - `topbot`: the answer on the 1 to 10 ladder
 - `n`: the number of respondents in that cell
 
-In these ten countries every respondent has the same survey weight, so no information is lost by storing the data this way. You can turn the table back into one row per respondent with `uncount()` from the `tidyr` package.
+The ISSP provides no survey weights for these countries. We are assuming that we have simple random samples from the target population. In other words, assume the pairs $(Y_i, G_i)$ are **independently and identically distributed**.
 
-Throughout, we focus on **men**, and say a respondent has tertiary education if `degree` is 5 or 6. Let $Y_i \in \{1, \dots, 10\}$ denote respondent $i$'s answer and $G_i \in \{0, 1\}$ whether they completed tertiary education. Let $n_1$ and $n_0$ be the number of respondents with and without tertiary education. Treat the two groups as independent random samples from their respective populations, with $n_1$ and $n_0$ fixed.
-
-# Problem 1
-
-We start with Switzerland.
+For the purposes of this problem set, a respondent has tertiary education if `degree` is 5 or 6 (bachelor's or post-graduate). Let $Y_i \in \{1, \dots, 10\}$ denote respondent $i$'s answer to the social status question and $G_i \in \{0, 1\}$ whether they completed tertiary education. Let $n_1$ and $n_0$ be the number of respondents with and without tertiary education.
 
 ## Part A
 
-Load the data. How many rows does the file have, and how many respondents does it describe? Reconstruct the individual-level data with `uncount()`, keep Swiss men with a non-missing `degree`, and create the tertiary indicator. Verify that you have 427 respondents with tertiary education and 504 without. Make a bar plot showing, for each group, the share of respondents at each rung of the ladder (the two groups should be easy to compare). Briefly describe the two distributions.
+First, we need to convert the table into a dataset with one row per respondent. The `uncount()` function from the `tidyr` package will accomplish this - be sure to read the documentation. How many rows does the file have? How many total respondents does it describe?
 
 ## Part B
+
+For now, we will focus on **Switzerland** - create a new dataframe that contains only Swiss men with non-missing `degree` data and create the tertiary indicator. Make a bar plot showing, for each group, the share of respondents at each rung of the ladder (the two groups should be easy to compare). Briefly describe the two distributions.
+
+## Part C
 
 Our first estimand is the difference in means
 
@@ -59,79 +59,55 @@ $$\tau = E[Y_i \mid G_i = 1] - E[Y_i \mid G_i = 0]$$
 
 Write down the plug-in estimator $\hat{\tau}$ and compute it for Switzerland.
 
-## Part C
+## Part D
 
-Derive $Var(\hat{\tau})$ in terms of the two conditional variances $\sigma_1^2 = Var(Y_i \mid G_i = 1)$ and $\sigma_0^2 = Var(Y_i \mid G_i = 0)$. Propose an estimator of the standard error, compute it, and report a 95% confidence interval for $\tau$ based on the normal approximation. Interpret the estimate in one or two sentences. What does it, and what does it not, tell us about the effect of education on subjective social status?
+Derive $Var(\hat{\tau})$ (conditional on $n_1$ and $n_0$) in terms of the two conditional variances $\sigma_1^2 = Var(Y_i \mid G_i = 1)$ and $\sigma_0^2 = Var(Y_i \mid G_i = 0)$. Propose an estimator of the standard error, compute it, and report a 95% asymptotically normal confidence interval for $\tau$. Interpret your results. What do we conclude about the relationship between education and subjective social status?
 
-{{< pagebreak >}}
+## Part E
+
+Now estimate the difference-in-means between tertiary and non-tertiary for **each** of the countries in the dataset for both **men** and **women**, again dropping respondents with missing `degree` (hint: this will be very easy if you wrote your code from Parts B-D as a series of `tidyverse` functions - you can now just use `group_by()`). Make two figures that plot the point estimates and 95% confidence intervals for each country - the first for men and the second for women. Compare the two sets of figures. For how many countries do you reject the null of no difference between college and non-college *men* (at $\alpha = .05$)? For how many countries do you reject the null of no difference between college and non-college *women* (at $\alpha = .05$)?
 
 # Problem 2
 
-The difference in means summarizes the gap between two distributions in a single number. Here we compare the full distributions instead. For $g \in \{0, 1\}$ define the conditional CDF $F_g(k) = P(Y_i \leq k \mid G_i = g)$ and its estimator, the eCDF
+## Part A
+
+Instead of the difference-in-means, we will now estimate the full difference in the **cumulative distribution functions** of $Y_i$ between $G_i = 1$ and $G_i = 0$. For $g \in \{0, 1\}$ define the conditional CDF $F_g(k) = P(Y_i \leq k \mid G_i = g)$ and its estimator, the empirical CDF:
 
 $$\hat{F}_g(k) = \frac{1}{n_g} \sum_{i: G_i = g} \mathbb{1}\{Y_i \leq k\}$$
 
-Our second estimand is the difference in CDFs at each rung,
+Define the difference in CDFs at each "rung" of the social status ladder question as:
 
-$$D(k) = F_0(k) - F_1(k), \quad k = 1, \dots, 9$$
+$$D(k) = F_1(k) - F_0(k), \quad k = 1, \dots, 9$$
 
-$D(k) > 0$ means that respondents without tertiary education are more likely than those with tertiary education to place themselves at or below rung $k$.
-
-## Part A
-
-Compute $\hat{F}_1(k)$ and $\hat{F}_0(k)$ for $k = 1, \dots, 10$ in Switzerland and plot both eCDFs as step functions in one graph. Why do we only define $D(k)$ for $k = 1, \dots, 9$?
+Interpret what $D(k) > 0$ means in terms of how respondents with and without tertiary education place themselves on the social status ranking.
 
 ## Part B
 
-Show that $\hat{D}(k) = \hat{F}_0(k) - \hat{F}_1(k)$ is itself a difference in means, of a variable you should define. Use your answer to Problem 1 Part C to derive $Var(\hat{D}(k))$ as a function of $F_0(k)$, $F_1(k)$, $n_0$ and $n_1$. Compute $\hat{D}(k)$ and its standard error for $k = 1, \dots, 9$, and plot the estimates with pointwise 95% confidence intervals.
+Compute $\hat{F}_1(k)$ and $\hat{F}_0(k)$ for $k = 1, \dots, 10$ in Switzerland and plot both eCDFs as step functions in one graph.
 
 ## Part C
 
-Show that for any random variable taking values in $\{1, \dots, 10\}$,
+We'll use a non-parametric/pairs bootstrap to estimate the standard error for the difference in the empirical CDF at each "rung". Write a function that takes the Swiss data as input and returns $\hat{D}(1), \dots, \hat{D}(9)$. Then draw $B = 2000$ bootstrap samples, setting the seed once to `53703`. Compute your estimates on each bootstrap sample. Take the standard deviation of the bootstrap replicates of each of $\hat{D}(1), \dots, \hat{D}(9)$ to estimate $SE(\hat{D}(1)), \dots, SE(\hat{D}(9))$. Construct 95% confidence intervals for each $D(k)$ using a normal approximation. 
 
-$$E[Y_i] = 1 + \sum_{k=1}^{9} \left(1 - P(Y_i \leq k)\right)$$
-
-and use this to show that $\tau = \sum_{k=1}^{9} D(k)$. Verify that the same identity holds for your estimates.
+Plot each of your estimates $\hat{D}(1), \dots, \hat{D}(9)$ along with the upper and lower bounds of your 95% confidence interval (use line width or color to distinguish the point estimate from the bounds -- consider `geom_ribbon()` as well). Add a line at $0$ and interpret your results. What do you notice about the difference in **distributions**?
 
 ## Part D
 
-Compute the median of $Y_i$ in each group and compare the difference in medians with $\hat{\tau}$. Using your estimates of $D(k)$, describe *where* on the ladder the two groups differ. What does the difference in means hide about this gap?
+Instead of the normal approximation, we'll compute bootstrap **percentile** intervals. For each rung $k$, calculate the 2.5th and 97.5th percentiles of your bootstrap replicates of $\hat{D}(k)$ (use the `quantile()` function) - this is your estimated 95% confidence interval. Again, make a plot of your estimates $\hat{D}(1), \dots, \hat{D}(9)$ but now with the upper and lower bounds of your percentile intervals. How do they compare to your intervals using a normal approximation?
 
-{{< pagebreak >}}
+## Part E
 
-# Problem 3
+In Part C, you built a separate 95% confidence interval for each rung. These are **pointwise** intervals. While the probability that any one interval covers the truth (under repeated sampling) is 95%, the probability that *all nine* cover their true values at the same time is less than 95%. 
 
-The standard errors in Problems 1 and 2 rely on formulas we derived. The nonparametric bootstrap gives us standard errors and confidence intervals without deriving anything, by approximating the sampling distribution of an estimator through resampling.
+A *uniform* (simultaneous) confidence band fixes this problem (at the cost of being much wider). We will construct the bootstrap *sup-t* band [@montielolea2019simultaneous].
 
-## Part A
-
-Write a function that takes the Swiss data and returns $\hat{\tau}$ and $\hat{D}(1), \dots, \hat{D}(9)$. Then draw $B = 2000$ bootstrap samples, set the seed to `53703`, and recompute your estimates in each sample. Resample *within* each group: draw $n_1$ respondents with replacement from the tertiary group and $n_0$ from the non-tertiary group. Why does this match the sampling assumptions we made above? Report a table with the estimates, the analytical standard errors from Problems 1 and 2, and the bootstrap standard errors, to three decimal places. How do they compare?
-
-## Part B
-
-Compute 95% percentile bootstrap confidence intervals for $\tau$ and for each $D(k)$, and compare them with the normal-approximation intervals. Where, if anywhere, do they differ, and why might that be?
-
-## Part C
-
-In Problem 2 Part B you built nine 95% confidence intervals, one for each rung. Explain why the probability that *all nine* cover their true values at the same time is less than 95%. A *uniform* (simultaneous) confidence band fixes this. In each bootstrap draw $b$, compute
+For each bootstrap draw in Part C, compute
 
 $$M_b = \max_{k} \frac{|\hat{D}^{(b)}(k) - \hat{D}(k)|}{\widehat{se}(\hat{D}(k))}$$
 
-where $\widehat{se}$ is the bootstrap standard error from Part A (skip any $k$ where it is zero). Let $c$ be the 95th percentile of $M_1, \dots, M_B$. The band is $\hat{D}(k) \pm c \cdot \widehat{se}(\hat{D}(k))$. Report $c$, compare it with 1.96, and add the band to your plot from Problem 2 Part B.
+where $\widehat{se}$ is the bootstrap standard error from Part C (skip any $k$ where it is zero). In other words, for each bootstrap draw, divide the absolute difference between the draw and your point estimate at each rung by that rung's standard error, and take the largest of these across the 9 rungs. 
 
-{{< pagebreak >}}
-
-# Problem 4
-
-Now we use all ten countries.
-
-## Part A
-
-Estimate $\tau$ with an analytical standard error for every country. Present the results in a table and in a plot of the point estimates with 95% confidence intervals, ordered by the size of the gap. Briefly describe the cross-national pattern.
-
-## Part B
-
-Estimate $D(k)$ with pointwise 95% confidence intervals (analytical or bootstrap) for every country and plot them in a single faceted figure. Find two or three countries with similar estimates of $\tau$. Do their $D(k)$ curves look alike? Use them to explain what the difference in eCDFs can reveal about a gap between groups that the difference in means cannot.
+Let $c$ be the 95th percentile of $M_1, \dots, M_B$. Construct the uniform confidence band $\hat{D}(k) \pm c \cdot \widehat{se}(\hat{D}(k))$ and plot it as in Part C. Report this new critical value $c$, and compare it with the usual 1.96. How do your results change from Part C?
 
 {{< pagebreak >}}
 
