@@ -238,15 +238,15 @@ anes |> filter(!is.na(ft_trump)) |>
 
 ## The plug-in principle
 
-- Lecture: replace the unknown CDF $F$ with the ECDF $\hat F$ to estimate $\theta(F)$
-- The SE is also a functional of $F$: the SD of $\hat\theta$ when samples of size $n$ are drawn from $F$
+- Replace the unknown CDF $F$ with the ECDF $\hat F$ to estimate $\theta(F)$
+  - The SE is also a functional of $F$. It's the SD of $\hat\theta$ when samples of size $n$ are drawn from $F$
 - **Bootstrap**: estimate it by the SD of $\hat\theta$ when samples of size $n$ are drawn from $\hat F$
-- Drawing from $\hat F$ = picking respondents uniformly at random **with replacement**
-  - This is specifically the "non-parametric" or "pairs" bootstrap (when talking about sampling $Y_i$ and $X_i$ together).
+  - One way to draw from $\hat F$ is to pick respondents uniformly at random **with replacement**
+  - This is known as the "non-parametric" bootstrap.
 
 ---
 
-## What we want to replicate
+## Intuition behind the bootstrap
 
 ::: {.ims-stack}
 ![](assets/boot1prop1.png){.fragment .fade-out fragment-index=1 width="722"}
@@ -260,9 +260,11 @@ Figures 12.1 and 12.2 from Mine Çetinkaya-Rundel and Johanna Hardin, [*Introduc
 
 ---
 
-## What we can replicate
+## How we'll do it
 
-![](assets/boot1prop4.png){fig-align="center"}
+::: {.ims-stack}
+![](assets/boot1prop4.png){width="909"}
+:::
 
 ::: {.ims-credit}
 Figure 12.4 from Mine Çetinkaya-Rundel and Johanna Hardin, [*Introduction to Modern Statistics*](https://openintro-ims.netlify.app/foundations-bootstrapping), 2nd ed. (OpenIntro, 2024), ch. 12. [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
