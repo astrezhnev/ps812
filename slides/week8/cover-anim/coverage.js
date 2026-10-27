@@ -6,7 +6,8 @@ function (el, d) {
   // cover. Then the covering ones fade back so the misses stand out, and
   // finally the colors and the truth fade away and one interval is picked
   // out as "ours": in practice we see one interval, not its color. Data from
-  // the ci-sim chunk of week8_inference.qmd (mu, lower, upper, covers, ours).
+  // the ci-sim chunk of week8_inference.qmd (mu, lower, upper, covers, ours,
+  // and optionally n, shown above the tally).
   // One stage per .cv-step fragment; stepping backwards runs each transition
   // in reverse.
   var NS = 'http://www.w3.org/2000/svg';
@@ -72,6 +73,11 @@ function (el, d) {
   var tally = mk('g', {}, svg);
   var count = mk('text', { x: TX, y: py(d.mu) - 10, 'text-anchor': 'middle', 'font-size': 34, fill: BLUE }, tally);
   var denom = mk('text', { x: TX, y: py(d.mu) + 34, 'text-anchor': 'middle', 'font-size': 24, fill: GREY }, tally);
+  if (d.n) {                                       // flag the sample size when it isn't the usual one
+    var nLab = mk('text', { x: TX, y: Y1 + 10, 'text-anchor': 'middle', 'font-size': 30, fill: INK }, svg);
+    mk('tspan', { 'font-style': 'italic' }, nLab).textContent = 'n';
+    mk('tspan', {}, nLab).textContent = ' = ' + d.n;
+  }
 
   function render(st) {
     var shown = 0, cov = 0, dm = st.dim, ou = st.ours;

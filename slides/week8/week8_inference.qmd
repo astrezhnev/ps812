@@ -445,7 +445,7 @@ ci_small <- map(1:100, \(s) {
 # (cover-anim/coverage.js; data from the ci-sim-small chunk above)
 cv_small <- jsonlite::toJSON(list(mu = mu, lower = round(ci_small$lower, 3),
                                   upper = round(ci_small$upper, 3),
-                                  covers = ci_small$covers, ours = 1),
+                                  covers = ci_small$covers, ours = 1, n = 6),
                              auto_unbox = TRUE, digits = NA)
 cat("```{=html}",
     '<div class="cv-anim"></div>',
@@ -650,6 +650,32 @@ $Y_i \overset{\text{i.i.d.}}{\sim} \text{Exponential}(1)$, `r format(reps, big.m
   - Equivalent idea for a one-sided **lower bound**
 
 :::
+
+## One-sided confidence intervals
+
+```{r}
+#| echo: false
+#| output: asis
+
+# The first 100 samples from ci-sim again, as two-sided 95% intervals (left)
+# and one-sided 95% upper bounds (right), falling into place side by side with
+# a count under each; then the covering ones fade back
+# (cover-anim/onesided.js; data from the ci-sim chunk above)
+ci_upper1 <- ci_first$est + qnorm(0.95) * ci_first$se
+os_data <- jsonlite::toJSON(list(mu = mu, lower = round(ci_first$lower, 3),
+                                 upper = round(ci_first$upper, 3), covers = ci_first$covers,
+                                 upper1 = round(ci_upper1, 3), covers1 = mu <= ci_upper1,
+                                 z2 = round(qnorm(0.975), 2), z1 = round(qnorm(0.95), 2)),
+                            auto_unbox = TRUE, digits = NA)
+cat("```{=html}",
+    '<div class="os-anim"></div>',
+    "<script>",
+    "(", readLines("cover-anim/onesided.js"), ")(document.currentScript.previousElementSibling,",
+    os_data, ");",
+    "</script>",
+    rep('<span class="fragment os-step"></span>', 4),
+    "```", sep = "\n")
+```
 
 ## Hypothesis Testing
 
