@@ -259,6 +259,13 @@
     "text": "One-sided confidence intervals\n\nMost of the time, researchers present two-sided and symmetric confidence intervals.\n\nBut there’s nothing saying that we have to be symmetric or two-sided!\nIt just depends on where we want to allocate our “coverage failure” \\(\\alpha\\).\n\nWe could instead stack it all on one side and construct a one-sided confidence interval!\n\\[P( \\theta \\le u) = 1 - \\alpha\\]\nFor an asymptotically normal CI of the sample mean, this is just\n\\[u = \\bar{Y} + z_{1-\\alpha}\\frac{\\hat{\\sigma}}{\\sqrt{n}}\\]\nFor a 95% interval, \\(\\alpha = 0.05\\) and \\(z_{0.95} \\approx 1.64\\) (qnorm(0.95) in R)\n\nWe’ve narrowed the upper bound a bit in exchange for an arbitrary lower bound \\(-\\infty\\).\nEquivalent idea for a one-sided lower bound"
   },
   {
+    "objectID": "slides/week8/week8_inference.html#one-sided-confidence-intervals-1",
+    "href": "slides/week8/week8_inference.html#one-sided-confidence-intervals-1",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "One-sided confidence intervals",
+    "text": "One-sided confidence intervals"
+  },
+  {
     "objectID": "slides/week8/week8_inference.html#hypothesis-testing",
     "href": "slides/week8/week8_inference.html#hypothesis-testing",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",

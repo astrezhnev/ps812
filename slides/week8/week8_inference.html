@@ -1961,7 +1961,8 @@ function (el, d) {
   // cover. Then the covering ones fade back so the misses stand out, and
   // finally the colors and the truth fade away and one interval is picked
   // out as "ours": in practice we see one interval, not its color. Data from
-  // the ci-sim chunk of week8_inference.qmd (mu, lower, upper, covers, ours).
+  // the ci-sim chunk of week8_inference.qmd (mu, lower, upper, covers, ours,
+  // and optionally n, shown above the tally).
   // One stage per .cv-step fragment; stepping backwards runs each transition
   // in reverse.
   var NS = 'http://www.w3.org/2000/svg';
@@ -2027,6 +2028,11 @@ function (el, d) {
   var tally = mk('g', {}, svg);
   var count = mk('text', { x: TX, y: py(d.mu) - 10, 'text-anchor': 'middle', 'font-size': 34, fill: BLUE }, tally);
   var denom = mk('text', { x: TX, y: py(d.mu) + 34, 'text-anchor': 'middle', 'font-size': 24, fill: GREY }, tally);
+  if (d.n) {                                       // flag the sample size when it isn't the usual one
+    var nLab = mk('text', { x: TX, y: Y1 + 10, 'text-anchor': 'middle', 'font-size': 30, fill: INK }, svg);
+    mk('tspan', { 'font-style': 'italic' }, nLab).textContent = 'n';
+    mk('tspan', {}, nLab).textContent = ' = ' + d.n;
+  }
 
   function render(st) {
     var shown = 0, cov = 0, dm = st.dim, ou = st.ours;
@@ -2116,7 +2122,8 @@ function (el, d) {
   // cover. Then the covering ones fade back so the misses stand out, and
   // finally the colors and the truth fade away and one interval is picked
   // out as "ours": in practice we see one interval, not its color. Data from
-  // the ci-sim chunk of week8_inference.qmd (mu, lower, upper, covers, ours).
+  // the ci-sim chunk of week8_inference.qmd (mu, lower, upper, covers, ours,
+  // and optionally n, shown above the tally).
   // One stage per .cv-step fragment; stepping backwards runs each transition
   // in reverse.
   var NS = 'http://www.w3.org/2000/svg';
@@ -2182,6 +2189,11 @@ function (el, d) {
   var tally = mk('g', {}, svg);
   var count = mk('text', { x: TX, y: py(d.mu) - 10, 'text-anchor': 'middle', 'font-size': 34, fill: BLUE }, tally);
   var denom = mk('text', { x: TX, y: py(d.mu) + 34, 'text-anchor': 'middle', 'font-size': 24, fill: GREY }, tally);
+  if (d.n) {                                       // flag the sample size when it isn't the usual one
+    var nLab = mk('text', { x: TX, y: Y1 + 10, 'text-anchor': 'middle', 'font-size': 30, fill: INK }, svg);
+    mk('tspan', { 'font-style': 'italic' }, nLab).textContent = 'n';
+    mk('tspan', {}, nLab).textContent = ' = ' + d.n;
+  }
 
   function render(st) {
     var shown = 0, cov = 0, dm = st.dim, ou = st.ours;
@@ -2249,7 +2261,7 @@ function (el, d) {
   goTo(fragmentStage(), false);
 }
 )(document.currentScript.previousElementSibling,
-{"mu":2.28062808106628,"lower":[-67.942,-31.186,-10.467,-53.577,-61.108,-34.002,-25.137,-65.648,4.904,-80.675,-44.806,-79.345,-16.585,-67.936,-47.792,-32.964,-23.176,-88.041,-75.773,-35.485,17.048,-35.957,-75.416,-45.632,-46.294,-37.205,-50.321,-60.977,-82.872,-59.664,-53.844,-0.393,-61.448,-67.343,-23.656,-60.891,-56.294,-78.236,-30.033,-49.893,-59.07,-0.863,-71.235,-16.961,-30.352,-47.833,-53.648,-73.141,-8.789,-29.515,-81.322,27.585,-54.035,-26.484,-30.421,-61.682,-7.886,-39.075,3.457,-33.972,-45.577,-20.905,-72.5,-43.094,-60.38,-39.497,-7.881,-67.932,-50.381,-11.344,-63.276,-53.236,-37.524,-53.502,-38.855,-15.225,-68.692,5.112,-28.09,-13.394,-58.537,-5.272,-48.537,50.33,-63.765,-46.529,-36.34,-32.761,-8.455,12.157,-70.174,-65.606,-52.408,-87.367,-36.476,-14.381,-6.12,-64.68,-54.61,35.097],"upper":[27.942,46.186,72.134,70.244,52.775,59.002,80.137,28.982,66.763,-2.658,41.472,14.345,38.251,41.269,46.125,67.964,33.176,36.374,42.44,45.485,66.286,60.957,25.416,38.299,64.627,27.205,60.321,74.31,36.205,59.664,48.844,67.06,56.448,35.677,68.656,35.891,54.627,-15.097,70.033,54.893,44.403,30.196,31.235,71.961,70.352,10.5,75.315,9.808,68.789,75.182,42.989,74.081,45.701,76.484,78.754,63.349,72.886,37.408,61.543,17.305,47.243,67.571,69.167,42.76,45.38,44.83,94.547,21.265,18.714,64.677,50.943,24.903,85.857,80.835,62.188,85.225,42.026,66.555,58.09,66.728,41.87,60.272,59.204,88.003,-11.235,54.862,81.34,40.095,61.788,61.843,-4.826,35.606,52.408,13.034,38.143,49.381,89.453,44.68,57.943,78.236],"covers":[true,true,true,true,true,true,true,true,false,false,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,false,false,true,true,true,true,false,false,true,true,true,true,true,true,true,true,false],"ours":1}
+{"mu":2.28062808106628,"lower":[-67.942,-31.186,-10.467,-53.577,-61.108,-34.002,-25.137,-65.648,4.904,-80.675,-44.806,-79.345,-16.585,-67.936,-47.792,-32.964,-23.176,-88.041,-75.773,-35.485,17.048,-35.957,-75.416,-45.632,-46.294,-37.205,-50.321,-60.977,-82.872,-59.664,-53.844,-0.393,-61.448,-67.343,-23.656,-60.891,-56.294,-78.236,-30.033,-49.893,-59.07,-0.863,-71.235,-16.961,-30.352,-47.833,-53.648,-73.141,-8.789,-29.515,-81.322,27.585,-54.035,-26.484,-30.421,-61.682,-7.886,-39.075,3.457,-33.972,-45.577,-20.905,-72.5,-43.094,-60.38,-39.497,-7.881,-67.932,-50.381,-11.344,-63.276,-53.236,-37.524,-53.502,-38.855,-15.225,-68.692,5.112,-28.09,-13.394,-58.537,-5.272,-48.537,50.33,-63.765,-46.529,-36.34,-32.761,-8.455,12.157,-70.174,-65.606,-52.408,-87.367,-36.476,-14.381,-6.12,-64.68,-54.61,35.097],"upper":[27.942,46.186,72.134,70.244,52.775,59.002,80.137,28.982,66.763,-2.658,41.472,14.345,38.251,41.269,46.125,67.964,33.176,36.374,42.44,45.485,66.286,60.957,25.416,38.299,64.627,27.205,60.321,74.31,36.205,59.664,48.844,67.06,56.448,35.677,68.656,35.891,54.627,-15.097,70.033,54.893,44.403,30.196,31.235,71.961,70.352,10.5,75.315,9.808,68.789,75.182,42.989,74.081,45.701,76.484,78.754,63.349,72.886,37.408,61.543,17.305,47.243,67.571,69.167,42.76,45.38,44.83,94.547,21.265,18.714,64.677,50.943,24.903,85.857,80.835,62.188,85.225,42.026,66.555,58.09,66.728,41.87,60.272,59.204,88.003,-11.235,54.862,81.34,40.095,61.788,61.843,-4.826,35.606,52.408,13.034,38.143,49.381,89.453,44.68,57.943,78.236],"covers":[true,true,true,true,true,true,true,true,false,false,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,false,false,true,true,true,true,false,false,true,true,true,true,true,true,true,true,false],"ours":1,"n":6}
 );
 </script>
 <span class="fragment cv-step"></span>
@@ -2640,6 +2652,178 @@ function (el, d) {
 <li class="fragment">Equivalent idea for a one-sided <strong>lower bound</strong></li>
 </ul></li>
 </ul>
+</section>
+<section id="one-sided-confidence-intervals-1" class="slide level2">
+<h2>One-sided confidence intervals</h2>
+<div class="os-anim"></div>
+<script>
+(
+function (el, d) {
+  // Two-sided against one-sided 95% intervals from the same repeated samples,
+  // side by side, in the visual language of coverage.js. Left: estimate +/-
+  // z2 SE; right: everything up to estimate + z1 SE, so its bars run off the
+  // bottom of the panel toward -infinity. Each sample's interval falls into
+  // place in both panels at once, blue if it covers mu and red if it misses,
+  // with a count under each panel; then the covering ones fade back so the
+  // misses stand out. Data from the ci-sim chunk of week8_inference.qmd (mu,
+  // lower, upper, covers, upper1, covers1, z2, z1). One stage per .os-step
+  // fragment; stepping backwards runs each transition in reverse.
+  var NS = 'http://www.w3.org/2000/svg';
+  var W = 1000, H = 540;
+  var BLUE = '#0479a8', RED = '#c5050c', INK = '#333333', GREY = '#9a9a9a';
+  var Y0 = 440, Y1 = 100;                          // plot box, shared by both panels
+  var PW = 370, PX = [80, 530];                    // panel width, left edges
+  var BOT = Y0 + 40;                               // where the one-sided bars end, past the fade
+  var N = d.lower.length;
+  var lo = Math.min.apply(null, d.lower), hi = Math.max.apply(null, d.upper), pad = 0.06 * (hi - lo);
+  lo -= pad; hi += pad;
+
+  // Stages: truth alone, one interval, 20, all 100, misses highlighted
+  var STAGES = [
+    { one: 0, few: 0, rest: 0, dim: 0 },
+    { one: 1, few: 0, rest: 0, dim: 0 },
+    { one: 1, few: 1, rest: 0, dim: 0 },
+    { one: 1, few: 1, rest: 1, dim: 0 },
+    { one: 1, few: 1, rest: 1, dim: 1 }
+  ];
+  var DUR = [0, 1100, 2600, 4200, 900];
+  var EASED = { dim: 1 };                          // the rest are eased per interval
+  var FEW = 20;
+
+  function mk(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clamp(t) { return t < 0 ? 0 : t > 1 ? 1 : t; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function win(v, a, b) { return clamp((v - a) / (b - a)); }
+  function py(v) { return Y0 - (v - lo) / (hi - lo) * (Y0 - Y1); }
+  // Which transition interval i falls in, and when within it
+  function fall(st, i) {
+    if (i === 0) return win(st.one, 0, 0.7);
+    var k = i < FEW ? 'few' : 'rest', a = i < FEW ? 1 : FEW, b = i < FEW ? FEW - 1 : N - 1;
+    var s = 0.85 * (i - a) / Math.max(1, b - a);
+    return win(st[k], s, s + 0.15);
+  }
+
+  var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
+                        'aria-label': 'The same samples give two-sided intervals and one-sided upper bounds; both cover the truth about 95 times in 100, but the one-sided bounds are lower and run down to minus infinity',
+                        style: 'width: 100%; height: auto; max-height: 540px; display: block; margin: 0 auto; font-family: inherit;' }, el);
+
+  // The one-sided bars fade out at the bottom of their panel: a mask with a
+  // gradient, in user space so it doesn't move with the falling bars
+  var uid = 'os' + Math.random().toString(36).slice(2, 8);
+  var defs = mk('defs', {}, svg);
+  var grad = mk('linearGradient', { id: uid + 'g', gradientUnits: 'userSpaceOnUse', x1: 0, x2: 0, y1: Y0 - 70, y2: Y0 + 15 }, defs);
+  mk('stop', { offset: 0, 'stop-color': '#fff' }, grad);
+  mk('stop', { offset: 1, 'stop-color': '#000' }, grad);
+  var mask = mk('mask', { id: uid + 'm', maskUnits: 'userSpaceOnUse', x: 0, y: -300, width: W, height: H + 600 }, defs);
+  mk('rect', { x: 0, y: -300, width: W, height: H + 600, fill: 'url(#' + uid + 'g)' }, mask);
+
+  var panels = [
+    { x0: PX[0], lower: d.lower, upper: d.upper, covers: d.covers,
+      title: 'Two-sided', sub: 'estimate ± ' + d.z2 + ' SE' },
+    { x0: PX[1], lower: null, upper: d.upper1, covers: d.covers1,
+      title: 'One-sided', sub: '−∞ up to estimate + ' + d.z1 + ' SE' }
+  ];
+  var truth = mk('g', {}, svg);
+  panels.forEach(function (p) {
+    var cx = p.x0 + PW / 2, col = PW / N;
+    mk('text', { x: cx, y: 34, 'text-anchor': 'middle', 'font-size': 28, fill: INK }, svg).textContent = p.title;
+    mk('text', { x: cx, y: 68, 'text-anchor': 'middle', 'font-size': 21, fill: GREY }, svg).textContent = p.sub;
+    mk('line', { x1: p.x0 - 10, x2: p.x0 + PW + 10, y1: py(d.mu), y2: py(d.mu), stroke: INK, 'stroke-width': 2.5,
+                 'stroke-dasharray': '12 8' }, truth);
+    var lab = mk('text', { x: p.x0 - 22, y: py(d.mu) + 9, 'text-anchor': 'end', 'font-size': 28, fill: INK }, truth);
+    mk('tspan', { 'font-style': 'italic' }, lab).textContent = 'μ';
+    var g = mk('g', p.lower ? {} : { mask: 'url(#' + uid + 'm)' }, svg);
+    p.bars = p.upper.map(function (u, i) {
+      var x = p.x0 + (i + 0.5) * col;
+      return mk('line', { x1: x, x2: x, 'stroke-width': Math.min(4, 0.7 * col), 'stroke-linecap': 'round' }, g);
+    });
+    p.tally = mk('text', { x: cx, y: Y0 + 72, 'text-anchor': 'middle', 'font-size': 24, fill: GREY }, svg);
+    p.count = mk('tspan', { 'font-size': 34, fill: BLUE }, p.tally);
+    p.denom = mk('tspan', {}, p.tally);
+  });
+  mk('text', { x: PX[1] + PW + 16, y: Y0 - 4, 'font-size': 26, fill: GREY }, svg).textContent = '↓ −∞';
+
+  function render(st) {
+    var shown = 0;
+    panels.forEach(function (p) { p.cov = 0; });
+    for (var i = 0; i < N; i++) {
+      var f = fall(st, i), drop = (1 - ease(f)) * 260;
+      var op = f > 0 ? (f < 1 ? 0.6 : 1) : 0;
+      if (f >= 1) shown++;
+      panels.forEach(function (p) {
+        var b = p.bars[i], c = p.covers[i];
+        b.setAttribute('y1', (py(p.upper[i]) - drop).toFixed(1));
+        b.setAttribute('y2', p.lower ? (py(p.lower[i]) - drop).toFixed(1) : BOT);
+        b.setAttribute('stroke', f < 1 ? INK : c ? BLUE : RED);
+        b.setAttribute('opacity', (op * lerp(1, c ? 0.3 : 1, st.dim)).toFixed(3));   // covering ones fade back
+        if (f >= 1 && c) p.cov++;
+      });
+    }
+    panels.forEach(function (p) {
+      p.count.textContent = p.cov;
+      p.denom.textContent = ' of ' + shown + ' cover';
+      p.tally.setAttribute('opacity', shown ? 1 : 0);
+    });
+  }
+
+  // ---- Stepping (one stage per .os-step fragment) ----------------------------
+  var cur = -1, raf = null;
+  function mix(A, B, e) {
+    var st = {};
+    for (var k in A) st[k] = lerp(A[k], B[k], EASED[k] ? ease(e) : e);
+    return st;
+  }
+  function goTo(s, animate) {
+    s = Math.max(0, Math.min(STAGES.length - 1, s));
+    if (raf) { cancelAnimationFrame(raf); raf = null; render(STAGES[cur]); }
+    if (s === cur) return;
+    var prev = cur;
+    cur = s;
+    if (!animate || prev < 0 || Math.abs(s - prev) !== 1) { render(STAGES[s]); return; }
+    var A = STAGES[prev], B = STAGES[s], dur = DUR[Math.max(s, prev)], t0 = null;
+    raf = requestAnimationFrame(function frame(now) {
+      if (t0 === null) t0 = now;
+      var e = Math.min(1, (now - t0) / dur);
+      render(mix(A, B, e));
+      raf = e < 1 ? requestAnimationFrame(frame) : null;
+    });
+  }
+
+  // Reveal wiring, as in the darts-and-rings animation
+  var slide = el.closest('section');
+  function fragmentStage() {
+    return slide ? slide.querySelectorAll('.fragment.os-step.visible').length : 0;
+  }
+  function onThisSlide() {
+    return window.Reveal && Reveal.getCurrentSlide && Reveal.getCurrentSlide() === slide;
+  }
+  ['fragmentshown', 'fragmenthidden'].forEach(function (type) {
+    document.addEventListener(type, function () {
+      if (onThisSlide()) goTo(fragmentStage(), true);
+    });
+  });
+  ['ready', 'slidechanged'].forEach(function (type) {
+    document.addEventListener(type, function (e) {
+      if (e.currentSlide === slide) { if (raf) { cancelAnimationFrame(raf); raf = null; } cur = -1; goTo(fragmentStage(), false); }
+    });
+  });
+  render(STAGES[0]);
+  goTo(fragmentStage(), false);
+}
+)(document.currentScript.previousElementSibling,
+{"mu":2.28062808106628,"lower":[-4.495,-1.943,-1.899,-2.048,-2.728,-1.843,-5.67,-6.3,-6.474,-3.416,-1.456,-1.78,-0.955,-3.836,-6.117,-0.862,-2.452,-7.147,-3.732,-1.094,-5.58,-3.412,-5.585,-7.874,-2.237,0.592,-3.897,3.134,1.806,-0.673,-2.188,-1.648,-6.972,-2.126,-2.051,-4.649,-1.599,-6.868,-0.785,-7.22,-4.319,-4.697,-6.415,-4.836,-1.588,1.011,-6.27,-3.8,-5.367,-4.596,-6.426,3.212,-5.436,-2.413,-3.617,0.033,-0.189,-4.467,-2.457,-7.73,-2.781,-2.466,-2.922,-4.352,-5.908,-7.526,-2.985,-6.422,-0.169,-0.116,0.002,-1.38,-3.506,-0.246,2.819,1.872,-4.762,0.259,-3.61,-4.368,-8.061,1.447,-1.822,0.322,0.702,-1.158,-3.309,-0.28,0.691,-6.631,-2.479,-8.223,-7.661,-4.849,2.611,-3.464,-2.898,-2.75,0.532,-4.128],"upper":[6.039,8.799,8.443,8.128,7.68,8.743,4.766,4.368,4.034,7.128,9.088,8.596,9.535,6.908,4.657,9.79,7.844,3.443,6.332,9.114,4.748,6.996,4.857,2.63,8.405,11.072,6.601,13.658,12.066,9.561,8.232,8.776,3.232,8.174,7.863,5.717,8.735,3.572,9.649,3.224,6.031,5.633,4.083,5.6,8.936,11.373,4.114,6.616,5.287,6.112,3.914,13.64,4.952,8.069,7.005,10.839,10.049,6.375,7.937,2.59,7.589,8.062,7.406,5.696,4.9,3.298,7.829,4.166,10.473,10.772,10.41,9.36,7.074,10.474,13.341,12.184,5.63,10.485,6.87,6.324,2.313,11.577,8.802,10.866,10.682,9.594,7.277,9.76,11.309,3.779,8.007,2.527,2.693,5.877,12.945,6.9,7.382,7.694,10.848,6.696],"covers":[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true],"upper1":[5.192,7.935,7.612,7.31,6.843,7.892,3.927,3.51,3.189,6.28,8.24,7.762,8.692,6.045,3.791,8.934,7.017,2.592,5.523,8.294,3.917,6.159,4.018,1.785,7.55,10.23,5.757,12.812,11.241,8.739,7.394,7.938,2.412,7.346,7.066,4.884,7.904,2.732,8.81,2.384,5.199,4.803,3.239,4.761,8.09,10.54,3.28,5.778,4.43,5.251,3.082,12.802,4.117,7.226,6.151,9.97,9.226,5.504,7.102,1.76,6.755,7.216,6.576,4.888,4.031,2.428,6.96,3.315,9.618,9.897,9.573,8.497,6.224,9.612,12.495,11.355,4.795,9.663,6.027,5.464,1.479,10.763,7.948,10.018,9.88,8.73,6.426,8.953,10.455,2.942,7.164,1.663,1.86,5.014,12.114,6.067,6.555,6.854,10.019,5.826],"covers1":[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,false,false,true,true,true,true,true,true,true],"z2":1.96,"z1":1.64}
+);
+</script>
+<span class="fragment os-step"></span>
+<span class="fragment os-step"></span>
+<span class="fragment os-step"></span>
+<span class="fragment os-step"></span>
 </section>
 <section id="hypothesis-testing" class="slide level2">
 <h2>Hypothesis Testing</h2>
