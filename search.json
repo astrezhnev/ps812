@@ -186,7 +186,28 @@
     "href": "slides/week8/week8_inference.html#confidence-intervals-under-asymptotic-normality-4",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
     "section": "Confidence intervals under asymptotic normality",
+    "text": "Confidence intervals under asymptotic normality\n\\[P\\left(-\\frac{c}{SE(\\bar{Y})} \\le \\frac{\\bar{Y} - \\mu}{SE(\\bar{Y})} \\le \\frac{c}{SE(\\bar{Y})}\\right)\\]"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#confidence-intervals-under-asymptotic-normality-5",
+    "href": "slides/week8/week8_inference.html#confidence-intervals-under-asymptotic-normality-5",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Confidence intervals under asymptotic normality",
     "text": "Confidence intervals under asymptotic normality\n\nSet the probability equal to \\(1 - \\alpha\\) and solve for \\(c\\) using the inverse CDF \\(\\Phi^{-1}()\\)\n\\[\\begin{aligned}\n2\\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right) - 1 &= 1 - \\alpha \\\\\n\\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right) &= 1 - \\frac{\\alpha}{2} && \\small\\color{#777777}{\\text{add 1, divide by 2}} \\\\\n\\frac{c}{SE(\\bar{Y})} &= \\Phi^{-1}\\left(1 - \\frac{\\alpha}{2}\\right) && \\small\\color{#777777}{\\text{apply the inverse CDF}} \\\\\nc &= \\Phi^{-1}\\left(1 - \\frac{\\alpha}{2}\\right) \\times SE(\\bar{Y})\n\\end{aligned}\\]\nThe critical value \\(z_{1-\\alpha/2} = \\Phi^{-1}(1 - \\alpha/2)\\) is the \\(1 - \\alpha/2\\) quantile of the standard normal\n\nBy symmetry, we allocate \\(\\alpha/2\\) probability to each tail.\n\nFor a 95% interval, \\(\\alpha = 0.05\\) and \\(z_{0.975} \\approx 1.96\\) (qnorm(0.975) in R)"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#confidence-intervals-under-asymptotic-normality-6",
+    "href": "slides/week8/week8_inference.html#confidence-intervals-under-asymptotic-normality-6",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Confidence intervals under asymptotic normality",
+    "text": "Confidence intervals under asymptotic normality\n\\[\\Phi(z_{0.975}) = \\int_{-\\infty}^{z_{0.975}} \\frac{1}{\\sqrt{2\\pi}} e^{-z^2/2}\\,dz = 0.975 \\quad \\Longleftrightarrow \\quad z_{0.975} = \\Phi^{-1}(0.975)\\]"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#critical-values-and-coverage",
+    "href": "slides/week8/week8_inference.html#critical-values-and-coverage",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Critical values and coverage",
+    "text": "Critical values and coverage\n\\[P\\left(-z \\le \\frac{\\bar{Y} - \\mu}{SE(\\bar{Y})} \\le z\\right) \\approx 2\\Phi(z) - 1\\]"
   },
   {
     "objectID": "slides/week8/week8_inference.html#plugging-in-the-estimated-standard-error",
@@ -256,7 +277,7 @@
     "href": "slides/week8/week8_inference.html#one-sided-confidence-intervals",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
     "section": "One-sided confidence intervals",
-    "text": "One-sided confidence intervals\n\nMost of the time, researchers present two-sided and symmetric confidence intervals.\n\nBut there’s nothing saying that we have to be symmetric or two-sided!\nIt just depends on where we want to allocate our “coverage failure” \\(\\alpha\\).\n\nWe could instead stack it all on one side and construct a one-sided confidence interval!\n\\[P( \\theta \\le u) = 1 - \\alpha\\]\nFor an asymptotically normal CI of the sample mean, this is just\n\\[u = \\bar{Y} + z_{1-\\alpha}\\frac{\\hat{\\sigma}}{\\sqrt{n}}\\]\nFor a 95% interval, \\(\\alpha = 0.05\\) and \\(z_{0.95} \\approx 1.64\\) (qnorm(0.95) in R)\n\nWe’ve narrowed the upper bound a bit in exchange for an arbitrary lower bound \\(-\\infty\\).\nEquivalent idea for a one-sided lower bound"
+    "text": "One-sided confidence intervals\n\nMost of the time, researchers present two-sided and symmetric confidence intervals.\n\nBut there’s nothing saying that we have to be symmetric or two-sided!\nIt just depends on where we want to allocate our “coverage failure” \\(\\alpha\\).\n\nWe could instead stack it all on one side and construct a one-sided confidence interval!\n\\[P( \\theta \\le u) = 1 - \\alpha\\]\nFor an asymptotically normal CI of the sample mean, this is just\n\\[u = \\bar{Y} + z_{1-\\alpha}\\frac{\\hat{\\sigma}}{\\sqrt{n}}\\]\nFor a 95% interval, \\(\\alpha = 0.05\\) and \\(z_{0.95} \\approx 1.645\\) (qnorm(0.95) in R)\n\nWe’ve narrowed the upper bound a bit in exchange for an arbitrary lower bound \\(-\\infty\\).\nEquivalent idea for a one-sided lower bound"
   },
   {
     "objectID": "slides/week8/week8_inference.html#one-sided-confidence-intervals-1",
@@ -271,6 +292,34 @@
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
     "section": "Hypothesis Testing",
     "text": "Hypothesis Testing"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#null-and-alternative-hypotheses",
+    "href": "slides/week8/week8_inference.html#null-and-alternative-hypotheses",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Null and Alternative Hypotheses",
+    "text": "Null and Alternative Hypotheses"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#false-positives-and-false-negatives",
+    "href": "slides/week8/week8_inference.html#false-positives-and-false-negatives",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "False Positives and False Negatives",
+    "text": "False Positives and False Negatives"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#deriving-the-test-statistic",
+    "href": "slides/week8/week8_inference.html#deriving-the-test-statistic",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Deriving the test statistic",
+    "text": "Deriving the test statistic"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#confidence-intervals-and-hypothesis-tests",
+    "href": "slides/week8/week8_inference.html#confidence-intervals-and-hypothesis-tests",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Confidence intervals and hypothesis tests",
+    "text": "Confidence intervals and hypothesis tests"
   },
   {
     "objectID": "slides/week8/week8_inference.html#next-week",
@@ -305,7 +354,7 @@
     "href": "slides/week5/week5_estimands.html#from-theory-to-empirics",
     "title": "Week 5: Estimands",
     "section": "From theory to empirics",
-    "text": "From theory to empirics\n\n\n\n\n  \n  \n    \n    \n    Evidence points\n    to new questions\n  \n\n  \n  \n    \n    Theory or\n    general goal\n  \n  \n    Theoretical\n    estimands\n  \n  \n    Empirical\n    estimands\n  \n  \n    Estimation\n    strategies\n  \n\n  \n  \n    \n    \n    \n    \n    Set\n    a specific\n    target\n    \n    By argument\n    \n    Unit-specific quantity,\n    Target population\n  \n\n  \n  \n    \n    \n    \n    \n    Link\n    to observable\n    data\n    \n    By assumption\n    \n    Directed Acyclic Graphs,\n    Potential outcomes\n  \n\n  \n  \n    \n    \n    \n    \n    Learn\n    how to estimate from\n    data we observe\n    \n    By data\n    \n    OLS regression,\n    Machine learning\n  \n\n  Example tools:\n\n\n\nAdapted from Lundberg, Johnson, and Stewart (2021), Fig. 1"
+    "text": "From theory to empirics\n\n\n\n\n  \n  \n    \n    \n    Evidence points\n    to new questions\n  \n\n  \n  \n    \n    Theory or\n    general goal\n  \n  \n    Theoretical\n    estimands\n  \n  \n    Empirical\n    estimands\n  \n  \n    Estimation\n    strategies\n  \n\n  \n  \n    \n    \n    \n    \n    Set\n    a specific\n    target\n    \n    By argument\n    \n    Unit-specific quantity,\n    Target population\n  \n\n  \n  \n    \n    \n    \n    \n    Link\n    to observable\n    data\n    \n    By assumption\n    \n    Directed Acyclic Graphs,\n    Potential outcomes\n  \n\n  \n  \n    \n    \n    \n    \n    Learn\n    how to estimate from\n    data we observe\n    \n    By data\n    \n    OLS regression,\n    Machine learning\n  \n\n  Example tools:\n\n\n\nAdapted from Lundberg et al. (2021), Fig. 1"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#one-view-of-scientific-theory",
@@ -417,21 +466,21 @@
     "href": "slides/week5/week5_estimands.html#theory-as-mechanism-explaining",
     "title": "Week 5: Estimands",
     "section": "Theory as mechanism-explaining",
-    "text": "Theory as mechanism-explaining\n\nBut how do we know whether an effect in one setting generalizes to other settings?\n\nThis is often termed an “external validity” or “transportability” question.\nIs the effect the same if we did the intervention tomorrow? Or in Sweden? Or in the real world and not a survey?\n\nThe empiricists’ answer: Just run more studies in more places!\nThe theorists’ rebuttal: You can run all the experiments you want, you won’t know the mechanism\nTheory and Credibility (Ashworth, Berry, and Bueno de Mesquita 2021) “‘Why does this important thing happen?’ has been replaced by ‘What is the effect of \\(x\\) on \\(y\\)?’” (p. 1)\n\n“The essence of formal theory is the crafting of models that embody mechanisms and reveal the all else equal implications of those mechanisms” (p. 7)\n“The essence of the credibility revolution is the crafting of research designs that make credible the claim to have held all else equal, at least on average” (p. 7)"
+    "text": "Theory as mechanism-explaining\n\nBut how do we know whether an effect in one setting generalizes to other settings?\n\nThis is often termed an “external validity” or “transportability” question.\nIs the effect the same if we did the intervention tomorrow? Or in Sweden? Or in the real world and not a survey?\n\nThe empiricists’ answer: Just run more studies in more places!\nThe theorists’ rebuttal: You can run all the experiments you want, you won’t know the mechanism\nTheory and Credibility (Ashworth et al. 2021) “‘Why does this important thing happen?’ has been replaced by ‘What is the effect of \\(x\\) on \\(y\\)?’” (p. 1)\n\n“The essence of formal theory is the crafting of models that embody mechanisms and reveal the all else equal implications of those mechanisms” (p. 7)\n“The essence of the credibility revolution is the crafting of research designs that make credible the claim to have held all else equal, at least on average” (p. 7)"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#step-1-set-a-target",
     "href": "slides/week5/week5_estimands.html#step-1-set-a-target",
     "title": "Week 5: Estimands",
     "section": "Step 1: Set a target",
-    "text": "Step 1: Set a target\n\n\n\n\n  \n  \n    \n    \n    Evidence points\n    to new questions\n  \n\n  \n  \n    \n    Theory or\n    general goal\n  \n  \n    Theoretical\n    estimands\n  \n  \n    Empirical\n    estimands\n  \n  \n    Estimation\n    strategies\n  \n\n  \n  \n    \n    \n    \n    \n    Set\n    a specific\n    target\n    \n    By argument\n    \n    Unit-specific quantity,\n    Target population\n  \n\n  \n  \n    \n    \n    \n    \n    Link\n    to observable\n    data\n    \n    By assumption\n    \n    Directed Acyclic Graphs,\n    Potential outcomes\n  \n\n  \n  \n    \n    \n    \n    \n    Learn\n    how to estimate from\n    data we observe\n    \n    By data\n    \n    OLS regression,\n    Machine learning\n  \n\n  Example tools:\n\n\n\nAdapted from Lundberg, Johnson, and Stewart (2021), Fig. 1"
+    "text": "Step 1: Set a target\n\n\n\n\n  \n  \n    \n    \n    Evidence points\n    to new questions\n  \n\n  \n  \n    \n    Theory or\n    general goal\n  \n  \n    Theoretical\n    estimands\n  \n  \n    Empirical\n    estimands\n  \n  \n    Estimation\n    strategies\n  \n\n  \n  \n    \n    \n    \n    \n    Set\n    a specific\n    target\n    \n    By argument\n    \n    Unit-specific quantity,\n    Target population\n  \n\n  \n  \n    \n    \n    \n    \n    Link\n    to observable\n    data\n    \n    By assumption\n    \n    Directed Acyclic Graphs,\n    Potential outcomes\n  \n\n  \n  \n    \n    \n    \n    \n    Learn\n    how to estimate from\n    data we observe\n    \n    By data\n    \n    OLS regression,\n    Machine learning\n  \n\n  Example tools:\n\n\n\nAdapted from Lundberg et al. (2021), Fig. 1"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#whats-your-estimand",
     "href": "slides/week5/week5_estimands.html#whats-your-estimand",
     "title": "Week 5: Estimands",
     "section": "What’s your estimand?",
-    "text": "What’s your estimand?\n\nEvery quantitative study must be able to answer the question: what is your estimand? The estimand is the target quantity—the purpose of the statistical analysis. Much attention is already placed on how to do estimation; a similar degree of care should be given to defining the thing we are estimating. We advocate that authors state the central quantity of each analysis—the theoretical estimand—in precise terms that exist outside of any statistical model. In our framework, researchers do three things: (1) set a theoretical estimand, clearly connecting this quantity to theory; (2) link to an empirical estimand, which is informative about the theoretical estimand under some identification assumptions; and (3) learn from data.\n\n— Lundberg, Johnson, and Stewart (2021)"
+    "text": "What’s your estimand?\n\nEvery quantitative study must be able to answer the question: what is your estimand? The estimand is the target quantity—the purpose of the statistical analysis. Much attention is already placed on how to do estimation; a similar degree of care should be given to defining the thing we are estimating. We advocate that authors state the central quantity of each analysis—the theoretical estimand—in precise terms that exist outside of any statistical model. In our framework, researchers do three things: (1) set a theoretical estimand, clearly connecting this quantity to theory; (2) link to an empirical estimand, which is informative about the theoretical estimand under some identification assumptions; and (3) learn from data.\n\n— Lundberg et al. (2021)"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#types-of-empirical-questions",
@@ -445,7 +494,7 @@
     "href": "slides/week5/week5_estimands.html#estimands-as-population-expectations",
     "title": "Week 5: Estimands",
     "section": "Estimands as population expectations",
-    "text": "Estimands as population expectations\n\nMany theoretical estimands in the social sciences can be articulated in terms of a unit-specific quantity plus a target population (Lundberg, Johnson, and Stewart 2021)\n\nStated in terms that “exist outside of any statistical model” rather than as regression coefficients\n\nFor descriptive estimands, a common target is the expectation of the individual level outcome measure \\(Y_i\\) over some population distribution\n\\[ \\underbrace{\\mathbb{E}}_{\\substack{\\text{average over the} \\\\ \\text{target population}}} \\big[\\, \\underbrace{Y_i}_{\\text{unit-specific quantity}} \\,\\big] \\]"
+    "text": "Estimands as population expectations\n\nMany theoretical estimands in the social sciences can be articulated in terms of a unit-specific quantity plus a target population (Lundberg et al. 2021)\n\nStated in terms that “exist outside of any statistical model” rather than as regression coefficients\n\nFor descriptive estimands, a common target is the expectation of the individual level outcome measure \\(Y_i\\) over some population distribution\n\\[ \\underbrace{\\mathbb{E}}_{\\substack{\\text{average over the} \\\\ \\text{target population}}} \\big[\\, \\underbrace{Y_i}_{\\text{unit-specific quantity}} \\,\\big] \\]"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#defining-causal-estimands",
@@ -473,7 +522,7 @@
     "href": "slides/week5/week5_estimands.html#step-2-link-to-observable-data",
     "title": "Week 5: Estimands",
     "section": "Step 2: Link to observable data",
-    "text": "Step 2: Link to observable data\n\n\n\n\n  \n  \n    \n    \n    Evidence points\n    to new questions\n  \n\n  \n  \n    \n    Theory or\n    general goal\n  \n  \n    Theoretical\n    estimands\n  \n  \n    Empirical\n    estimands\n  \n  \n    Estimation\n    strategies\n  \n\n  \n  \n    \n    \n    \n    \n    Set\n    a specific\n    target\n    \n    By argument\n    \n    Unit-specific quantity,\n    Target population\n  \n\n  \n  \n    \n    \n    \n    \n    Link\n    to observable\n    data\n    \n    By assumption\n    \n    Directed Acyclic Graphs,\n    Potential outcomes\n  \n\n  \n  \n    \n    \n    \n    \n    Learn\n    how to estimate from\n    data we observe\n    \n    By data\n    \n    OLS regression,\n    Machine learning\n  \n\n  Example tools:\n\n\n\nAdapted from Lundberg, Johnson, and Stewart (2021), Fig. 1"
+    "text": "Step 2: Link to observable data\n\n\n\n\n  \n  \n    \n    \n    Evidence points\n    to new questions\n  \n\n  \n  \n    \n    Theory or\n    general goal\n  \n  \n    Theoretical\n    estimands\n  \n  \n    Empirical\n    estimands\n  \n  \n    Estimation\n    strategies\n  \n\n  \n  \n    \n    \n    \n    \n    Set\n    a specific\n    target\n    \n    By argument\n    \n    Unit-specific quantity,\n    Target population\n  \n\n  \n  \n    \n    \n    \n    \n    Link\n    to observable\n    data\n    \n    By assumption\n    \n    Directed Acyclic Graphs,\n    Potential outcomes\n  \n\n  \n  \n    \n    \n    \n    \n    Learn\n    how to estimate from\n    data we observe\n    \n    By data\n    \n    OLS regression,\n    Machine learning\n  \n\n  Example tools:\n\n\n\nAdapted from Lundberg et al. (2021), Fig. 1"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#causal-identification",
@@ -515,7 +564,7 @@
     "href": "slides/week5/week5_estimands.html#step-3-learn-from-data",
     "title": "Week 5: Estimands",
     "section": "Step 3: Learn from data",
-    "text": "Step 3: Learn from data\n\n\n\n\n  \n  \n    \n    \n    Evidence points\n    to new questions\n  \n\n  \n  \n    \n    Theory or\n    general goal\n  \n  \n    Theoretical\n    estimands\n  \n  \n    Empirical\n    estimands\n  \n  \n    Estimation\n    strategies\n  \n\n  \n  \n    \n    \n    \n    \n    Set\n    a specific\n    target\n    \n    By argument\n    \n    Unit-specific quantity,\n    Target population\n  \n\n  \n  \n    \n    \n    \n    \n    Link\n    to observable\n    data\n    \n    By assumption\n    \n    Directed Acyclic Graphs,\n    Potential outcomes\n  \n\n  \n  \n    \n    \n    \n    \n    Learn\n    how to estimate from\n    data we observe\n    \n    By data\n    \n    OLS regression,\n    Machine learning\n  \n\n  Example tools:\n\n\n\nAdapted from Lundberg, Johnson, and Stewart (2021), Fig. 1"
+    "text": "Step 3: Learn from data\n\n\n\n\n  \n  \n    \n    \n    Evidence points\n    to new questions\n  \n\n  \n  \n    \n    Theory or\n    general goal\n  \n  \n    Theoretical\n    estimands\n  \n  \n    Empirical\n    estimands\n  \n  \n    Estimation\n    strategies\n  \n\n  \n  \n    \n    \n    \n    \n    Set\n    a specific\n    target\n    \n    By argument\n    \n    Unit-specific quantity,\n    Target population\n  \n\n  \n  \n    \n    \n    \n    \n    Link\n    to observable\n    data\n    \n    By assumption\n    \n    Directed Acyclic Graphs,\n    Potential outcomes\n  \n\n  \n  \n    \n    \n    \n    \n    Learn\n    how to estimate from\n    data we observe\n    \n    By data\n    \n    OLS regression,\n    Machine learning\n  \n\n  Example tools:\n\n\n\nAdapted from Lundberg et al. (2021), Fig. 1"
   },
   {
     "objectID": "slides/week5/week5_estimands.html#next-week",
@@ -529,7 +578,7 @@
     "href": "slides/week5/week5_estimands.html#references",
     "title": "Week 5: Estimands",
     "section": "References",
-    "text": "References\n\n\nArrow, Kenneth J. 1951. Social Choice and Individual Values. New York: Wiley.\n\n\nAshworth, Scott, Christopher R. Berry, and Ethan Bueno de Mesquita. 2021. Theory and Credibility: Integrating Theoretical and Empirical Social Science. Princeton: Princeton University Press.\n\n\nBox, George E. P. 1979. “Robustness in the Strategy of Scientific Model Building.” In Robustness in Statistics, edited by Robert L. Launer and Graham N. Wilkinson, 201–36. New York: Academic Press.\n\n\nClarke, Kevin A., and David M. Primo. 2007. “Modernizing Political Science: A Model-Based Approach.” Perspectives on Politics 5 (4): 741–53. https://doi.org/10.1017/S1537592707072192.\n\n\n———. 2012. A Model Discipline: Political Science and the Logic of Representations. New York: Oxford University Press.\n\n\nDuverger, Maurice. 1954. Political Parties: Their Organization and Activity in the Modern State. London: Methuen.\n\n\nFearon, James D. 1995. “Rationalist Explanations for War.” International Organization 49 (3): 379–414. https://doi.org/10.1017/S0020818300033324.\n\n\nHacking, Ian. 1983. Representing and Intervening: Introductory Topics in the Philosophy of Natural Science. Cambridge: Cambridge University Press.\n\n\nHolland, Paul W. 1986. “Statistics and Causal Inference.” Journal of the American Statistical Association 81 (396): 945–60. https://doi.org/10.1080/01621459.1986.10478354.\n\n\nLakatos, Imre. 1970. “Falsification and the Methodology of Scientific Research Programmes.” In Criticism and the Growth of Knowledge, edited by Imre Lakatos and Alan Musgrave, 91–196. Cambridge: Cambridge University Press.\n\n\nLundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. “What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory.” American Sociological Review 86 (3): 532–65. https://doi.org/10.1177/00031224211004187.\n\n\nPopper, Karl R. (1935) 1959. The Logic of Scientific Discovery. London: Hutchinson.\n\n\nRubin, Donald B. 1974. “Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies.” Journal of Educational Psychology 66 (5): 688–701. https://doi.org/10.1037/h0037350.\n\n\nWoodward, James. 2003. Making Things Happen: A Theory of Causal Explanation. New York: Oxford University Press."
+    "text": "References\n\n\nArrow, Kenneth J. 1951. Social Choice and Individual Values. Wiley.\n\n\nAshworth, Scott, Christopher R. Berry, and Ethan Bueno de Mesquita. 2021. Theory and Credibility: Integrating Theoretical and Empirical Social Science. Princeton University Press.\n\n\nBox, George E. P. 1979. “Robustness in the Strategy of Scientific Model Building.” In Robustness in Statistics, edited by Robert L. Launer and Graham N. Wilkinson. Academic Press.\n\n\nClarke, Kevin A., and David M. Primo. 2007. “Modernizing Political Science: A Model-Based Approach.” Perspectives on Politics 5 (4): 741–53. https://doi.org/10.1017/S1537592707072192.\n\n\nClarke, Kevin A., and David M. Primo. 2012. A Model Discipline: Political Science and the Logic of Representations. Oxford University Press.\n\n\nDuverger, Maurice. 1954. Political Parties: Their Organization and Activity in the Modern State. Methuen.\n\n\nFearon, James D. 1995. “Rationalist Explanations for War.” International Organization 49 (3): 379–414. https://doi.org/10.1017/S0020818300033324.\n\n\nHacking, Ian. 1983. Representing and Intervening: Introductory Topics in the Philosophy of Natural Science. Cambridge University Press.\n\n\nHolland, Paul W. 1986. “Statistics and Causal Inference.” Journal of the American Statistical Association 81 (396): 945–60. https://doi.org/10.1080/01621459.1986.10478354.\n\n\nLakatos, Imre. 1970. “Falsification and the Methodology of Scientific Research Programmes.” In Criticism and the Growth of Knowledge, edited by Imre Lakatos and Alan Musgrave. Cambridge University Press.\n\n\nLundberg, Ian, Rebecca Johnson, and Brandon M. Stewart. 2021. “What Is Your Estimand? Defining the Target Quantity Connects Statistical Evidence to Theory.” American Sociological Review 86 (3): 532–65. https://doi.org/10.1177/00031224211004187.\n\n\nPopper, Karl R. (1935) 1959. The Logic of Scientific Discovery. Hutchinson.\n\n\nRubin, Donald B. 1974. “Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies.” Journal of Educational Psychology 66 (5): 688–701. https://doi.org/10.1037/h0037350.\n\n\nWoodward, James. 2003. Making Things Happen: A Theory of Causal Explanation. Oxford University Press."
   },
   {
     "objectID": "slides/week1/week1_intro_and_review.html#welcome",
@@ -788,7 +837,7 @@
     "href": "slides/week1/week1_intro_and_review.html#references",
     "title": "Week 1: Intro to Probability",
     "section": "References",
-    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge: Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. “Modern Plain Text Computing.” Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
+    "text": "References\n\n\nAronow, P. M., and Benjamin T. Miller. 2019. Foundations of Agnostic Statistics. Cambridge University Press. https://doi.org/10.1017/9781316831762.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nHealy, Kieran. 2025. Modern Plain Text Computing. Online course notes. https://mptc.io/.\n\n\nTversky, Amos, and Daniel Kahneman. 1983. “Extensional Versus Intuitive Reasoning: The Conjunction Fallacy in Probability Judgment.” Psychological Review 90 (4): 293–315. https://doi.org/10.1037/0033-295X.90.4.293."
   },
   {
     "objectID": "schedule.html",
@@ -1271,7 +1320,7 @@
     "href": "slides/week2/week2_conditional_probability.html#references",
     "title": "Week 2: Conditional Probability and Independence",
     "section": "References",
-    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nElliott, Marc N., Peter A. Morrison, Allen Fremont, Daniel F. McCaffrey, Philip Pantoja, and Nicole Lurie. 2009. “Using the Census Bureau’s Surname List to Improve Estimates of Race/Ethnicity and Associated Disparities.” Health Services and Outcomes Research Methodology 9 (2): 69–83. https://doi.org/10.1007/s10742-009-0047-1.\n\n\nFearon, James D., and David D. Laitin. 2003. “Ethnicity, Insurgency, and Civil War.” American Political Science Review 97 (1): 75–90. https://doi.org/10.1017/S0003055403000534.\n\n\nImai, Kosuke, and Kabir Khanna. 2016. “Improving Ecological Inference by Predicting Individual Ethnicity from Voter Registration Records.” Political Analysis 24 (2): 263–72. https://doi.org/10.1093/pan/mpw001."
+    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nElliott, Marc N., Peter A. Morrison, Allen Fremont, Daniel F. McCaffrey, Philip Pantoja, and Nicole Lurie. 2009. “Using the Census Bureau’s Surname List to Improve Estimates of Race/Ethnicity and Associated Disparities.” Health Services and Outcomes Research Methodology 9 (2): 69–83. https://doi.org/10.1007/s10742-009-0047-1.\n\n\nFearon, James D., and David D. Laitin. 2003. “Ethnicity, Insurgency, and Civil War.” American Political Science Review 97 (1): 75–90. https://doi.org/10.1017/S0003055403000534.\n\n\nImai, Kosuke, and Kabir Khanna. 2016. “Improving Ecological Inference by Predicting Individual Ethnicity from Voter Registration Records.” Political Analysis 24 (2): 263–72. https://doi.org/10.1093/pan/mpw001."
   },
   {
     "objectID": "slides/week3/week3_random_variables.html#welcome-back",
@@ -1579,7 +1628,7 @@
     "href": "slides/week3/week3_random_variables.html#references",
     "title": "Week 3: Random Variables and Distributions",
     "section": "References",
-    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nGreene, Kenneth. 2016. “Mexico Panel Study, 2012.” Inter-university Consortium for Political; Social Research (ICPSR). https://doi.org/10.3886/ICPSR35024.v1."
+    "text": "References\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nGreene, Kenneth. 2016. Mexico Panel Study, 2012. Inter-university Consortium for Political; Social Research (ICPSR). https://doi.org/10.3886/ICPSR35024.v1."
   },
   {
     "objectID": "slides/week4/week4_joint_distributions.html#welcome-back",
@@ -1922,7 +1971,7 @@
     "href": "slides/week4/week4_joint_distributions.html#references",
     "title": "Week 4: Joint and Conditional Distributions",
     "section": "References",
-    "text": "References\n\n\nAnscombe, F. J. 1973. “Graphs in Statistical Analysis.” The American Statistician 27 (1): 17–21. https://doi.org/10.1080/00031305.1973.10478966.\n\n\nMatejka, Justin, and George Fitzmaurice. 2017. “Same Stats, Different Graphs: Generating Datasets with Varied Appearance and Identical Statistics Through Simulated Annealing.” In Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems, 1290–94. ACM. https://doi.org/10.1145/3025453.3025912."
+    "text": "References\n\n\nAnscombe, F. J. 1973. “Graphs in Statistical Analysis.” The American Statistician 27 (1): 17–21. https://doi.org/10.1080/00031305.1973.10478966.\n\n\nMatejka, Justin, and George Fitzmaurice. 2017. “Same Stats, Different Graphs: Generating Datasets with Varied Appearance and Identical Statistics Through Simulated Annealing.” Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems, 1290–94. https://doi.org/10.1145/3025453.3025912."
   },
   {
     "objectID": "slides/week6/week6_estimation.html#welcome-back",
@@ -2216,7 +2265,7 @@
     "href": "slides/week6/week6_estimation.html#references",
     "title": "Week 6: Estimation",
     "section": "References",
-    "text": "References\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nFabina, Jacob, and Zachary Scherer. 2022. “Voting and Registration in the Election of November 2020.” Current Population Reports P20-585. Washington, DC: U.S. Census Bureau. https://www.census.gov/content/dam/Census/library/publications/2022/demo/p20-585.pdf."
+    "text": "References\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nFabina, Jacob, and Zachary Scherer. 2022. Voting and Registration in the Election of November 2020. Current Population Reports Nos. P20-585. U.S. Census Bureau. https://www.census.gov/content/dam/Census/library/publications/2022/demo/p20-585.pdf."
   },
   {
     "objectID": "slides/week7/week7_estimation.html#welcome-back",
@@ -2552,7 +2601,7 @@
     "href": "slides/week7/week7_estimation.html#references",
     "title": "Week 7: Estimation, Part 2",
     "section": "References",
-    "text": "References\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Boca Raton, FL: Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nFreedman, David, and Persi Diaconis. 1981. “On the Histogram as a Density Estimator: \\(L_2\\) Theory.” Zeitschrift für Wahrscheinlichkeitstheorie Und Verwandte Gebiete 57 (4): 453–76. https://doi.org/10.1007/BF01025868.\n\n\nParzen, Emanuel. 1962. “On Estimation of a Probability Density Function and Mode.” The Annals of Mathematical Statistics 33 (3): 1065–76. https://doi.org/10.1214/aoms/1177704472.\n\n\nRosenblatt, Murray. 1956. “Remarks on Some Nonparametric Estimates of a Density Function.” The Annals of Mathematical Statistics 27 (3): 832–37. https://doi.org/10.1214/aoms/1177728190.\n\n\nScott, David W. 1979. “On Optimal and Data-Based Histograms.” Biometrika 66 (3): 605–10. https://doi.org/10.1093/biomet/66.3.605.\n\n\nSturges, Herbert A. 1926. “The Choice of a Class Interval.” Journal of the American Statistical Association 21 (153): 65–66. https://doi.org/10.1080/01621459.1926.10502161.\n\n\nWasserman, Larry. 2006. All of Nonparametric Statistics. New York: Springer. https://doi.org/10.1007/0-387-30623-4."
+    "text": "References\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. 2nd ed. Chapman; Hall/CRC. https://projects.iq.harvard.edu/stat110/home.\n\n\nFreedman, David, and Persi Diaconis. 1981. “On the Histogram as a Density Estimator: \\(L_2\\) Theory.” Zeitschrift für Wahrscheinlichkeitstheorie Und Verwandte Gebiete 57 (4): 453–76. https://doi.org/10.1007/BF01025868.\n\n\nParzen, Emanuel. 1962. “On Estimation of a Probability Density Function and Mode.” The Annals of Mathematical Statistics 33 (3): 1065–76. https://doi.org/10.1214/aoms/1177704472.\n\n\nRosenblatt, Murray. 1956. “Remarks on Some Nonparametric Estimates of a Density Function.” The Annals of Mathematical Statistics 27 (3): 832–37. https://doi.org/10.1214/aoms/1177728190.\n\n\nScott, David W. 1979. “On Optimal and Data-Based Histograms.” Biometrika 66 (3): 605–10. https://doi.org/10.1093/biomet/66.3.605.\n\n\nSturges, Herbert A. 1926. “The Choice of a Class Interval.” Journal of the American Statistical Association 21 (153): 65–66. https://doi.org/10.1080/01621459.1926.10502161.\n\n\nWasserman, Larry. 2006. All of Nonparametric Statistics. Springer. https://doi.org/10.1007/0-387-30623-4."
   },
   {
     "objectID": "staff.html",
