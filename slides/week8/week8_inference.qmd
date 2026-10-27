@@ -24,6 +24,7 @@ format:
       url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 execute:
   cache: false
+  echo: true
 code:
   execute:
     - r
@@ -68,10 +69,10 @@ Adapted from @blackwell2025users, Ch. 2
 $\sqrt{n}\left(\hat{\mu} - \mu\right) \xrightarrow{d} \mathcal{N}\left(0, \sigma^2\right)$
 :::
 
--  **Intuition**: Averaging washes out every feature of the distribution beyond the mean and variance:
+- **Intuition**: Averaging washes out every feature of the distribution beyond the mean and variance:
   - And the **normal** is the distribution **fully defined** by mean and variance alone
-  - All odd central moments $\ge 3$ are zero
-  - All even central moments $\ge 4$ are functions of $\Var(X)$
+    - All odd central moments $\ge 3$ are zero
+    - All even central moments $\ge 4$ are functions of $\Var(X)$
 
 ## This week
 
@@ -130,6 +131,8 @@ cat("```{=html}",
     rep('<span class="fragment dr-step"></span>', 4),
     "```", sep = "\n")
 ```
+
+## Motivation: ANES (2024) - Attitudes towards the parties
 
 ## Motivation: ANES (2024) - Attitudes towards the parties
 
@@ -208,8 +211,9 @@ anes |> summarize(mean_ft_diff = mean(ft_diff),
                   se_ft_diff = sd_ft_diff/sqrt(n))
 ```
 
-- In terms of RMSE, our estimator is `r sprintf("%.3f", sd(anes$ft_diff) / sqrt(nrow(anes)))` units from the true mean...which is about a third of our estimate - not *too* big but still sizeable.
-  - Can we quantify our uncertainty in a more transparent way though?
+- In terms of **RMSE**, our estimator is `r sprintf("%.3f", sd(anes$ft_diff) / sqrt(nrow(anes)))` units from the true mean...which is about a third of our estimate - not *too* big but still sizeable.
+  - It's entirely plausible though that we could have obtained our estimate in a world where the true difference is **zero**.
+  - Can we quantify our uncertainty in a more transparent and rigorous way?
 
 ## Confidence interval
 
@@ -218,7 +222,7 @@ anes |> summarize(mean_ft_diff = mean(ft_diff),
 - A **confidence interval** is an estimator that consists of an *upper* and a *lower* bound.
   - These bounds are constructed to have a particular **coverage rate**
 
-- Formally, a $100(1-\alpha)\%$ **confidence interval** for population parameter $\theta$ is an interval $[l, u]$ where $l = l(Y_1, Y_2, \dotsc, Y_n)$ and $u = u(Y_1, Y_2, \dotsc, Y_n)$ are functions of the data such that
+- A $100(1-\alpha)\%$ **confidence interval** for population parameter $\theta$ is an interval $[l, u]$ where $l = l(Y_1, Y_2, \dotsc, Y_n)$ and $u = u(Y_1, Y_2, \dotsc, Y_n)$ are functions of the data such that
 
   $$P(l \le \theta \le u) = 1 - \alpha$$
 
@@ -236,7 +240,7 @@ anes |> summarize(mean_ft_diff = mean(ft_diff),
   - This means we need the **distribution** of our estimator - mean and variance alone aren't enough!
   - That's why we spent so much time on the **central limit theorem** - in large samples we can approximate the sampling distribution with a **normal**.
 
-- We'll design our interval to be **symmetric** and **centered on the sample mean**
+- We'll focus on an interval that is **symmetric** and **centered on the sample mean**
 
   $$P(\underbrace{\bar{Y} - c}_{\text{lower}} \le \mu \le \underbrace{\bar{Y} + c}_{\text{upper}}) = 1 - \alpha$$
 
@@ -246,7 +250,7 @@ anes |> summarize(mean_ft_diff = mean(ft_diff),
 
 ::: {.incremental}
 
-- Our target is the population mean, $\theta = \mu$. Rearrange the event so that the **estimator** is in the middle
+- Rearrange the probability so that the **estimator** is in the middle
   $$\begin{aligned}
   P(\bar{Y} - c \le \mu \le \bar{Y} + c) &= P(-c \le \mu - \bar{Y} \le c) && \small\color{#777777}{\text{subtract } \bar{Y} \text{ throughout}} \\
   &= P(-c \le \bar{Y} - \mu \le c) && \small\color{#777777}{\text{multiply by } -1} \\
