@@ -301,6 +301,27 @@ anes |> summarize(mean_ft_diff = mean(ft_diff),
 
 ## Confidence intervals under asymptotic normality
 
+$$P\left(-\frac{c}{SE(\bar{Y})} \le \frac{\bar{Y} - \mu}{SE(\bar{Y})} \le \frac{c}{SE(\bar{Y})}\right)$$
+
+```{r}
+#| echo: false
+#| output: asis
+
+# The coverage probability as the area under the N(0, 1) density between the
+# bounds, built up as a difference of CDFs and then set to 95% to land on the
+# critical values (cover-anim/integral.js)
+cat("```{=html}",
+    '<div class="ig-anim"></div>',
+    "<script>",
+    "(", readLines("cover-anim/integral.js"), ")(document.currentScript.previousElementSibling,",
+    '{ "k": 1.25, "alpha": 0.05 }', ");",
+    "</script>",
+    rep('<span class="fragment ig-step"></span>', 4),
+    "```", sep = "\n")
+```
+
+## Confidence intervals under asymptotic normality
+
 ::: {.incremental}
 
 - Set the probability equal to $1 - \alpha$ and solve for $c$ using the **inverse CDF** $\Phi^{-1}()$
@@ -318,6 +339,47 @@ anes |> summarize(mean_ft_diff = mean(ft_diff),
 - For a 95% interval, $\alpha = 0.05$ and $z_{0.975} \approx 1.96$ (`qnorm(0.975)` in R)
 
 :::
+
+## Confidence intervals under asymptotic normality
+
+$$\Phi(z_{0.975}) = \int_{-\infty}^{z_{0.975}} \frac{1}{\sqrt{2\pi}} e^{-z^2/2}\,dz = 0.975 \quad \Longleftrightarrow \quad z_{0.975} = \Phi^{-1}(0.975)$$
+
+```{r}
+#| echo: false
+#| output: asis
+
+# The CDF forwards (z to probability) and backwards (probability 0.975 to
+# the critical value 1.96), on the density and the CDF side by side
+# (cover-anim/quantile.js)
+cat("```{=html}",
+    '<div class="qn-anim"></div>',
+    "<script>",
+    "(", readLines("cover-anim/quantile.js"), ")(document.currentScript.previousElementSibling,",
+    '{ "z": [0, 1], "alpha": 0.05 }', ");",
+    "</script>",
+    rep('<span class="fragment qn-step"></span>', 3),
+    "```", sep = "\n")
+```
+
+## Critical values and coverage
+
+$$P\left(-z \le \frac{\bar{Y} - \mu}{SE(\bar{Y})} \le z\right) \approx 2\Phi(z) - 1$$
+
+```{r}
+#| echo: false
+#| output: asis
+
+# Symmetric bounds slide out through the usual critical values, with the
+# coverage 2 * Phi(z) - 1 collected in a table (cover-anim/rule.js)
+cat("```{=html}",
+    '<div class="rl-anim"></div>',
+    "<script>",
+    "(", readLines("cover-anim/rule.js"), ")(document.currentScript.previousElementSibling,",
+    '{ "z": [1, 1.645, 1.96, 2.58] }', ");",
+    "</script>",
+    rep('<span class="fragment rl-step"></span>', 4),
+    "```", sep = "\n")
+```
 
 ## Plugging in the estimated standard error
 
@@ -645,7 +707,7 @@ $Y_i \overset{\text{i.i.d.}}{\sim} \text{Exponential}(1)$, `r format(reps, big.m
 
   $$u = \bar{Y} + z_{1-\alpha}\frac{\hat{\sigma}}{\sqrt{n}}$$
 
-- For a 95% interval, $\alpha = 0.05$ and $z_{0.95} \approx 1.64$ (`qnorm(0.95)` in R)
+- For a 95% interval, $\alpha = 0.05$ and $z_{0.95} \approx 1.645$ (`qnorm(0.95)` in R)
   - We've narrowed the upper bound a bit in exchange for an arbitrary lower bound $-\infty$.
   - Equivalent idea for a one-sided **lower bound**
 
@@ -678,6 +740,14 @@ cat("```{=html}",
 ```
 
 ## Hypothesis Testing
+
+## Null and Alternative Hypotheses
+
+## False Positives and False Negatives
+
+## Deriving the test statistic
+
+## Confidence intervals and hypothesis tests
 
 ## Next week
 
