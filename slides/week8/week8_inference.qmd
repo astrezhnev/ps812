@@ -1,0 +1,95 @@
+---
+title: "Week 8: Confidence Intervals and Hypothesis Testing"
+subtitle: "PS 812 - Introduction to Statistical Methods in Political Science"
+author:
+  - name: "Anton Strezhnev"
+    affiliation: "University of Wisconsin-Madison"
+    email: strezhnev@wisc.edu
+date: "October 27, 2026"
+date-format: "MMMM D, YYYY"
+editor:
+  render-on-save: true
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    overview: true
+    navigation-mode: vertical
+    progress: false
+    controls: true
+    link-external-newwindow: true
+    footer: "PS 812 - University of Wisconsin-Madison"
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+execute:
+  cache: false
+code:
+  execute:
+    - r
+    - python
+embed-resources: true
+bibliography: ../ps812.bib
+link-citations: true
+
+---
+
+## Welcome back! {.title-slide}
+
+<!-- MathJax macros for the whole deck. The reveal math plugin overwrites
+     window.MathJax, so a header config would be clobbered; defining them in
+     the first slide registers them before any later slide is typeset. The
+     wrapper takes up no space and renders nothing. -->
+::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
+$$
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Corr}{\text{Corr}}
+\newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
+$$
+:::
+
+
+## Where we've been
+
+::: {.prob-inf .hl-inf}
+{{< include _prob_inference.qmd >}}
+:::
+
+::: {.attribution}
+Adapted from @blackwell2025users, Ch. 2
+:::
+
+## Where we've been
+
+- Under **i.i.d random sampling** from the target population, a **central limit theorem** gives us...
+
+::: {.recap-result}
+$\sqrt{n}\left(\hat{\mu} - \mu\right) \xrightarrow{d} \mathcal{N}\left(0, \sigma^2\right)$
+:::
+
+::: {.incremental}
+
+- TODO
+
+:::
+
+## This week
+
+::: {.incremental}
+
+
+- **Confidence intervals**
+  - TODO
+
+- **Hypothesis testing**
+  - TODO
+
+
+:::
+
+
+## References {.refs-slide}
+
+::: {#refs}
+:::
