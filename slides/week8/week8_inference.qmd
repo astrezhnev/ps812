@@ -62,17 +62,16 @@ Adapted from @blackwell2025users, Ch. 2
 
 ## Where we've been
 
-- Under **i.i.d random sampling** from the target population, a **central limit theorem** gives us...
+- Under **i.i.d random sampling** from the target population, the **central limit theorem** gives us...
 
 ::: {.recap-result}
 $\sqrt{n}\left(\hat{\mu} - \mu\right) \xrightarrow{d} \mathcal{N}\left(0, \sigma^2\right)$
 :::
 
-::: {.incremental}
-
-- TODO
-
-:::
+-  **Intuition**: Averaging washes out every feature of the distribution beyond the mean and variance:
+  - And the **normal** is the distribution **fully defined** by mean and variance alone
+  - All odd central moments $\ge 3$ are zero
+  - All even central moments $\ge 4$ are functions of $\Var(X)$
 
 ## This week
 
@@ -80,7 +79,7 @@ $\sqrt{n}\left(\hat{\mu} - \mu\right) \xrightarrow{d} \mathcal{N}\left(0, \sigma
 
 
 - **Confidence intervals**
-  - TODO
+  - Can we represent our 
 
 - **Hypothesis testing**
   - TODO
