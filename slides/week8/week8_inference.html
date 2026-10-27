@@ -1381,7 +1381,8 @@ function (el, d, opts) {
     mk('rect', { x: TX, y: 352, width: TW, height: 26, fill: 'none', stroke: GREY, 'stroke-width': 1, 'stroke-opacity': 0.5 }, gTal);
     var share = mk('rect', { x: TX, y: 356, height: 18, fill: GREY }, gTal);
     var nominal = mk('rect', { x: TX, y: 349, height: 32, fill: 'none', stroke: GOLD, 'stroke-width': 3 }, gTal);
-    var width = rich([['μ', 1, 1], [' ± ']], { x: TX + TW / 2, y: 250, 'text-anchor': 'middle', 'font-size': 23, fill: INK }, svg);
+    var gWidth = mk('g', {}, svg);                 // holds the label and its hat, so both fade together
+    var width = rich([['μ', 1, 1], [' ± ']], { x: TX + TW / 2, y: 250, 'text-anchor': 'middle', 'font-size': 23, fill: INK }, gWidth);
     var zSpan = mk('tspan', {}, width);
     mk('tspan', {}, width).textContent = ' SE';
 
@@ -1412,7 +1413,7 @@ function (el, d, opts) {
       share.setAttribute('width', settled ? TW * covered / settled : 0);
       nominal.setAttribute('width', TW * (2 * Phi(z) - 1));
       zSpan.textContent = z.toFixed(1);
-      width.setAttribute('opacity', win(st.one, 0.55, 0.8));
+      gWidth.setAttribute('opacity', win(st.one, 0.55, 0.8));
       placeHats();
     };
   }
@@ -1667,7 +1668,8 @@ function (el, d, opts) {
     mk('rect', { x: TX, y: 352, width: TW, height: 26, fill: 'none', stroke: GREY, 'stroke-width': 1, 'stroke-opacity': 0.5 }, gTal);
     var share = mk('rect', { x: TX, y: 356, height: 18, fill: GREY }, gTal);
     var nominal = mk('rect', { x: TX, y: 349, height: 32, fill: 'none', stroke: GOLD, 'stroke-width': 3 }, gTal);
-    var width = rich([['μ', 1, 1], [' ± ']], { x: TX + TW / 2, y: 250, 'text-anchor': 'middle', 'font-size': 23, fill: INK }, svg);
+    var gWidth = mk('g', {}, svg);                 // holds the label and its hat, so both fade together
+    var width = rich([['μ', 1, 1], [' ± ']], { x: TX + TW / 2, y: 250, 'text-anchor': 'middle', 'font-size': 23, fill: INK }, gWidth);
     var zSpan = mk('tspan', {}, width);
     mk('tspan', {}, width).textContent = ' SE';
 
@@ -1698,7 +1700,7 @@ function (el, d, opts) {
       share.setAttribute('width', settled ? TW * covered / settled : 0);
       nominal.setAttribute('width', TW * (2 * Phi(z) - 1));
       zSpan.textContent = z.toFixed(1);
-      width.setAttribute('opacity', win(st.one, 0.55, 0.8));
+      gWidth.setAttribute('opacity', win(st.one, 0.55, 0.8));
       placeHats();
     };
   }
