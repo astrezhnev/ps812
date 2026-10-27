@@ -77,16 +77,590 @@ $\sqrt{n}\left(\hat{\mu} - \mu\right) \xrightarrow{d} \mathcal{N}\left(0, \sigma
 
 ::: {.incremental}
 
-
 - **Confidence intervals**
-  - Can we represent our 
+  - **Interval estimator** - An *upper* and *lower* bound constructed to *cover* the true parameter in some percentage of repeated samples.
+  - Constructing confidence intervals under **asymptotic normality**
+  - Small sample coverage rates and some typical corrections.
 
 - **Hypothesis testing**
-  - TODO
+  - Statistical **decision making** through thought experiments.
+  - **Given** some assumed value of the population parameter, how likely would I be to observe what I find in my sample (or more extreme)?
+  - This is a **p-value**. If it's sufficiently low, I may be willing to believe that the population parameter is **not** the hypothesized value.
 
+- Connections between **confidence intervals** and **hypothesis testing**
 
 :::
 
+## Point estimation
+
+```{r}
+#| echo: false
+#| output: asis
+
+# One estimate lands near mu and its distance is marked; 29 more stack into
+# rows; the rows average onto mu (unbiased); their squared distances fill a
+# tally whose average is the MSE (dart-anim/darts.js; data from
+# dart-anim/make_darts.R)
+cat("```{=html}",
+    '<div class="dr-anim"></div>',
+    "<script>",
+    "(", readLines("dart-anim/darts.js"), ")(document.currentScript.previousElementSibling,",
+    readLines("dart-anim/darts.json", warn = FALSE), ", { mode: 'dart' });",
+    "</script>",
+    rep('<span class="fragment dr-step"></span>', 4),
+    "```", sep = "\n")
+```
+
+## Interval estimation
+
+```{r}
+#| echo: false
+#| output: asis
+
+# The same samples thrown as rings mu_hat +/- z se_hat: one lands, then the
+# rest, misses in red; a tally counts how many cover mu against the nominal
+# 2 Phi(z) - 1 while z widens from 1 to 2 and narrows to 0.5
+# (dart-anim/darts.js; data from dart-anim/make_darts.R)
+cat("```{=html}",
+    '<div class="dr-anim"></div>',
+    "<script>",
+    "(", readLines("dart-anim/darts.js"), ")(document.currentScript.previousElementSibling,",
+    readLines("dart-anim/darts.json", warn = FALSE), ", { mode: 'ring' });",
+    "</script>",
+    rep('<span class="fragment dr-step"></span>', 4),
+    "```", sep = "\n")
+```
+
+## Motivation: ANES (2024) - Attitudes towards the parties
+
+- Do Americans feel more warmly towards the **Democratic** party or the **Republican** party?
+  - The 2024 American National Election Study (ANES) asks respondents to rate each party on a 0-100 feeling thermometer.
+
+```{r}
+library(tidyverse)
+# 2024 ANES pre-election wave
+anes <- read_csv("data/anes24_therm.csv") |>
+  filter(!is.na(ft_dem), !is.na(ft_rep)) |>
+  mutate(ft_diff = ft_dem - ft_rep)   # Dem minus Rep for each respondent
+```
+
+- We'll use a sample mean estimator for the *within-respondent* difference
+  - As before, we'll ignore the sample weights for now...
+
+```{r}
+anes |> summarize(mean_ft_dem = mean(ft_dem),
+                    mean_ft_rep = mean(ft_rep),
+                    mean_ft_diff = mean(ft_diff))
+```
+
+- On average, respondents feel `r sprintf("%.2f", mean(anes$ft_diff))` points *more warmly* towards the Democrats?
+  - But how confident are we that the truth isn't **zero**?
+
+## Attitudes towards the parties
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.8
+#| fig-align: center
+
+theme_anes <- theme_minimal(base_size = 18) +
+  theme(panel.grid = element_blank(),
+        axis.line.x = element_line(colour = "#333333"),
+        plot.background = element_rect(fill = "#F7F7F7", colour = NA))
+
+# One panel per series, each on its own x range (0-100 for the parties,
+# -100 to 100 for the difference) and a shared count axis; solid lines mark
+# the means, the dashed line marks zero difference
+therm_long <- anes |>
+  select(ft_dem, ft_rep, ft_diff) |>
+  pivot_longer(everything(), names_to = "series", values_to = "value") |>
+  mutate(series = factor(series, levels = c("ft_dem", "ft_rep", "ft_diff"),
+                         labels = c("Democratic Party", "Republican Party", "Dem − Rep")))
+therm_means <- therm_long |> summarize(value = mean(value), .by = series)
+
+ggplot(therm_long, aes(x = value, fill = series)) +
+  # Answers heap at 0, 15, 30, ..., 85, 100: the party panels use bins [0, 10), ...,
+  # [90, 100] so no heap sits on an edge; the difference is binned around 0
+  geom_histogram(data = \(d) filter(d, series != "Dem − Rep"), breaks = seq(0, 100, 10),
+                 closed = "left", colour = "#F7F7F7") +
+  geom_histogram(data = \(d) filter(d, series == "Dem − Rep"), binwidth = 10, center = 0,
+                 colour = "#F7F7F7") +
+  geom_vline(data = tibble(series = factor("Dem − Rep", levels = levels(therm_long$series)), value = 0),
+             aes(xintercept = value), linetype = "dashed", linewidth = 0.8) +
+  geom_vline(data = therm_means, aes(xintercept = value), linewidth = 1.4) +
+  facet_wrap(~series, nrow = 1, scales = "free_x") +
+  scale_fill_manual(values = c("#0479a8", "#c5050c", "#646569"), guide = "none") +
+  labs(x = "Feeling thermometer", y = "Number of respondents") +
+  theme_anes +
+  theme(strip.text = element_text(size = 20), panel.spacing.x = unit(2, "lines"))
+```
+
+## Attitudes towards the parties
+
+- We can calculate an estimate of the **standard error** of the mean using our formula from before
+
+  $$\widehat{SE}(\bar{Y}) = \frac{\hat{\sigma}}{\sqrt{n}} = \frac{\sqrt{\frac{1}{n-1}\sum_{i=1}^n \left(Y_i - \bar{Y}\right)^2}}{\sqrt{n}} $$
+```{r}
+anes |> summarize(mean_ft_diff = mean(ft_diff),
+                  n=n(),
+                  sd_ft_diff = sd(ft_diff),
+                  se_ft_diff = sd_ft_diff/sqrt(n))
+```
+
+- In terms of RMSE, our estimator is `r sprintf("%.3f", sd(anes$ft_diff) / sqrt(nrow(anes)))` units from the true mean...which is about a third of our estimate - not *too* big but still sizeable.
+  - Can we quantify our uncertainty in a more transparent way though?
+
+## Confidence interval
+
+::: {.incremental}
+
+- A **confidence interval** is an estimator that consists of an *upper* and a *lower* bound.
+  - These bounds are constructed to have a particular **coverage rate**
+
+- Formally, a $100(1-\alpha)\%$ **confidence interval** for population parameter $\theta$ is an interval $[l, u]$ where $l = l(Y_1, Y_2, \dotsc, Y_n)$ and $u = u(Y_1, Y_2, \dotsc, Y_n)$ are functions of the data such that
+
+  $$P(l \le \theta \le u) = 1 - \alpha$$
+
+- The **bounds** are random variables
+  - They're functions of the data - just like our sample mean estimator
+
+:::
+
+## Confidence intervals under asymptotic normality
+
+::: {.incremental}
+
+- How can we derive a confidence interval for the **population mean** $\mu$ 
+  - We'll need to calculate the **probability** of drawing an interval that either does or does not cover the target.
+  - This means we need the **distribution** of our estimator - mean and variance alone aren't enough!
+  - That's why we spent so much time on the **central limit theorem** - in large samples we can approximate the sampling distribution with a **normal**.
+
+- We'll design our interval to be **symmetric** and **centered on the sample mean**
+
+  $$P(\underbrace{\bar{Y} - c}_{\text{lower}} \le \mu \le \underbrace{\bar{Y} + c}_{\text{upper}}) = 1 - \alpha$$
+
+:::
+
+## Confidence intervals under asymptotic normality
+
+::: {.incremental}
+
+- Our target is the population mean, $\theta = \mu$. Rearrange the event so that the **estimator** is in the middle
+  $$\begin{aligned}
+  P(\bar{Y} - c \le \mu \le \bar{Y} + c) &= P(-c \le \mu - \bar{Y} \le c) && \small\color{#777777}{\text{subtract } \bar{Y} \text{ throughout}} \\
+  &= P(-c \le \bar{Y} - \mu \le c) && \small\color{#777777}{\text{multiply by } -1} \\
+  &= P\left(-\frac{c}{SE(\bar{Y})} \le \frac{\bar{Y} - \mu}{SE(\bar{Y})} \le \frac{c}{SE(\bar{Y})}\right) && \small\color{#777777}{\text{divide by } SE(\bar{Y}) = \sigma/\sqrt{n} > 0}
+  \end{aligned}$$
+
+- The term in the middle is the **standardized** sample mean
+  $$\frac{\bar{Y} - \mu}{SE(\bar{Y})} = \frac{\bar{Y} - \mu}{\sigma/\sqrt{n}} = \frac{\sqrt{n}(\bar{Y} - \mu)}{\sigma}$$
+
+- If we knew its **distribution**, we could choose $c$ to make the probability exactly $1 - \alpha$
+
+:::
+
+## Confidence intervals under asymptotic normality
+
+::: {.incremental}
+
+- Last week we used the **central limit theorem** to show that
+
+  $$ \sqrt{n}(\bar{Y} - \mu) \xrightarrow{d} \mathcal{N}(0, \sigma^2) $$
+
+- And, by extension (continuous mapping theorem), the standardized mean is asymptotically **standard normal**
+
+  $$ \frac{\sqrt{n}(\bar{Y} - \mu)}{\sigma} \xrightarrow{d} \mathcal{N}(0, 1) $$
+
+- We now have a **pivotal quantity** - a function of the data and parameter whose (limiting) distribution **does not depend** on any unknowns.
+  
+:::
+
+## Confidence intervals under asymptotic normality
+
+::: {.incremental}
+
+- Now we just need to find the value of $c$ that satisfies
+
+  $$ P\left(-\frac{c}{SE(\bar{Y})} \le \frac{\bar{Y} - \mu}{SE(\bar{Y})} \le \frac{c}{SE(\bar{Y})}\right) = 1 - \alpha$$
+
+- The probability of landing in an *interval* is just **difference of two CDFs**. Let $\Phi()$ be the **standard normal** CDF
+
+  $$\begin{aligned}
+  &= P\left(\frac{\bar{Y} - \mu}{SE(\bar{Y})} \le \frac{c}{SE(\bar{Y})}\right) - P\left(\frac{\bar{Y} - \mu}{SE(\bar{Y})} < -\frac{c}{SE(\bar{Y})}\right) && \small\color{#777777}{\text{below the upper minus below the lower}} \\
+  &\approx \Phi\left(\frac{c}{SE(\bar{Y})}\right) - \Phi\left(-\frac{c}{SE(\bar{Y})}\right) && \small\color{#777777}{\text{asymptotic normality}} \\
+  &= \Phi\left(\frac{c}{SE(\bar{Y})}\right) - \left[1 - \Phi\left(\frac{c}{SE(\bar{Y})}\right)\right] && \small\color{#777777}{\text{symmetry: } \Phi(-x) = 1 - \Phi(x)} \\
+  &= 2\Phi\left(\frac{c}{SE(\bar{Y})}\right) - 1
+  \end{aligned}$$
+
+:::
+
+## Confidence intervals under asymptotic normality
+
+::: {.incremental}
+
+- Set the probability equal to $1 - \alpha$ and solve for $c$ using the **inverse CDF** $\Phi^{-1}()$
+
+  $$\begin{aligned}
+  2\Phi\left(\frac{c}{SE(\bar{Y})}\right) - 1 &= 1 - \alpha \\
+  \Phi\left(\frac{c}{SE(\bar{Y})}\right) &= 1 - \frac{\alpha}{2} && \small\color{#777777}{\text{add 1, divide by 2}} \\
+  \frac{c}{SE(\bar{Y})} &= \Phi^{-1}\left(1 - \frac{\alpha}{2}\right) && \small\color{#777777}{\text{apply the inverse CDF}} \\
+  c &= \Phi^{-1}\left(1 - \frac{\alpha}{2}\right) \times SE(\bar{Y})
+  \end{aligned}$$
+
+- The **critical value** $z_{1-\alpha/2} = \Phi^{-1}(1 - \alpha/2)$ is the $1 - \alpha/2$ quantile of the standard normal
+  - By symmetry, we allocate $\alpha/2$ probability to each tail.
+
+- For a 95% interval, $\alpha = 0.05$ and $z_{0.975} \approx 1.96$ (`qnorm(0.975)` in R)
+
+:::
+
+## Plugging in the estimated standard error
+
+::: {.incremental}
+
+- Our two-sided $100(1-\alpha)\%$ confidence interval is
+
+  $$ \left[\bar{Y} - z_{1-\alpha/2}\frac{\sigma}{\sqrt{n}},\ \ \bar{Y} + z_{1-\alpha/2}\frac{\sigma}{\sqrt{n}}\right]$$
+
+- Unfortunately, we don't know $\sigma$! So let's plug in our estimated $\hat{\sigma}$ instead.
+
+  $$ \left[\bar{Y} - z_{1-\alpha/2}\widehat{SE}(\bar{Y}),\ \ \bar{Y} + z_{1-\alpha/2}\widehat{SE}(\bar{Y})\right], \qquad \widehat{SE}(\bar{Y}) = \frac{\hat{\sigma}}{\sqrt{n}}$$
+
+- Is this valid? Yes, by **Slutsky's theorem**, if $\hat{\sigma} \xrightarrow{p} \sigma$, then
+
+  $$ \frac{\bar{Y} - \mu}{\widehat{SE}(\bar{Y})} = \frac{\overbrace{\sqrt{n}(\bar{Y} - \mu)}^{\xrightarrow{d} \mathcal{N}(0, \sigma^2)}}{\underbrace{\hat{\sigma}}_{\xrightarrow{p} \sigma}} \xrightarrow{d} \frac{1}{\sigma}\mathcal{N}(0, \sigma^2) = \mathcal{N}(0, 1)$$
+
+- Our normalized mean with the estimated standard error is still asymptotically **standard normal**.
+
+:::
+
+## Attitudes towards the parties
+
+```{r}
+#| echo: true
+
+anes |> summarize(est = mean(ft_diff),
+                  se = sd(ft_diff) / sqrt(n()),
+                  lower = est - qnorm(0.975) * se,
+                  upper = est + qnorm(0.975) * se)
+```
+
+```{r}
+#| include: false
+ci <- anes |> summarize(est = mean(ft_diff), se = sd(ft_diff) / sqrt(n()),
+                        lower = est - qnorm(0.975) * se, upper = est + qnorm(0.975) * se)
+```
+
+::: {.incremental}
+
+- Our 95% confidence interval for the average Dem $-$ Rep difference is $[`r sprintf("%.2f", ci$lower)`, `r sprintf("%.2f", ci$upper)`]$
+
+- **Interpretation**: We are *95% confident* that the true population difference in Dem vs. Rep thermometers is between $[`r sprintf("%.2f", ci$lower)`, `r sprintf("%.2f", ci$upper)`]$
+
+- This **does not mean** that there is a 95% *probability* that the true difference lies between $[`r sprintf("%.2f", ci$lower)`, `r sprintf("%.2f", ci$upper)`]$
+  - $\mu$ is fixed - it either *is* or *isn't* in this particular interval.
+  - The bounds are the **estimator** - they have randomness under repeated sampling.
+  - The specific bounds we calculate are the **estimate**
+
+:::
+
+## Interpreting Confidence Intervals
+
+```{r}
+#| label: ci-sim
+#| include: false
+
+# Treat the ANES respondents as the population, so the truth mu is known;
+# draw repeated i.i.d. samples of n = 500 and build a 95% CI from each
+set.seed(812)
+pop <- anes$ft_diff
+mu <- mean(pop)
+n <- 500
+
+ci_sim <- map(1:10000, \(s) {
+  y <- sample(pop, n, replace = TRUE)
+  tibble(sim = s, est = mean(y), se = sd(y) / sqrt(n))
+}) |>
+  list_rbind() |>
+  mutate(lower = est - qnorm(0.975) * se,
+         upper = est + qnorm(0.975) * se,
+         covers = lower <= mu & mu <= upper)
+
+ci_first <- slice_head(ci_sim, n = 100)
+ci_ours <- sample(100, 1)   # the one interval we'd actually see
+```
+
+```{r}
+#| echo: false
+#| output: asis
+
+# The first 100 simulated intervals fall into place against the truth (blue
+# covers, red misses) with a running count; the covering ones fade back; then
+# colors and truth fade and one interval is picked out as ours
+# (cover-anim/coverage.js; data from the ci-sim chunk above)
+cv_data <- jsonlite::toJSON(list(mu = mu, lower = round(ci_first$lower, 3),
+                                 upper = round(ci_first$upper, 3),
+                                 covers = ci_first$covers, ours = ci_ours),
+                            auto_unbox = TRUE, digits = NA)
+cat("```{=html}",
+    '<div class="cv-anim"></div>',
+    "<script>",
+    "(", readLines("cover-anim/coverage.js"), ")(document.currentScript.previousElementSibling,",
+    cv_data, ");",
+    "</script>",
+    rep('<span class="fragment cv-step"></span>', 5),
+    "```", sep = "\n")
+```
+
+## Small sample confidence intervals
+
+```{r}
+#| label: ci-sim-small
+#| include: false
+
+# The same simulation as ci-sim, but with samples of only n = 6. Seed 819
+# gives 88 of 100 covering, in line with the ~12% outside +/- 1.96 that the
+# pivot-sim histogram on the next slide shows at n = 6
+set.seed(819)
+ci_small <- map(1:100, \(s) {
+  y <- sample(pop, 6, replace = TRUE)
+  tibble(sim = s, est = mean(y), se = sd(y) / sqrt(6))
+}) |>
+  list_rbind() |>
+  mutate(lower = est - qnorm(0.975) * se,
+         upper = est + qnorm(0.975) * se,
+         covers = lower <= mu & mu <= upper)
+```
+
+```{r}
+#| echo: false
+#| output: asis
+
+# The coverage animation again at n = 6, stopping before "ours"
+# (cover-anim/coverage.js; data from the ci-sim-small chunk above)
+cv_small <- jsonlite::toJSON(list(mu = mu, lower = round(ci_small$lower, 3),
+                                  upper = round(ci_small$upper, 3),
+                                  covers = ci_small$covers, ours = 1),
+                             auto_unbox = TRUE, digits = NA)
+cat("```{=html}",
+    '<div class="cv-anim"></div>',
+    "<script>",
+    "(", readLines("cover-anim/coverage.js"), ")(document.currentScript.previousElementSibling,",
+    cv_small, ");",
+    "</script>",
+    rep('<span class="fragment cv-step"></span>', 4),
+    "```", sep = "\n")
+```
+
+## Small sample confidence intervals
+
+```{r}
+#| label: pivot-sim
+#| include: false
+
+# The standardized mean (Ybar - mu) / (sigma_hat / sqrt(n)) in repeated samples
+# from the ANES "population", at shrinking n. Bins are 0.245 wide so that
+# +/- 1.96 falls on a bin edge; densities are shares of all draws per unit
+pv_n <- c(500, 100, 20, 10, 6)
+pv_w <- 0.245
+pv_edges <- seq(-21, 21) * pv_w
+pv_stat <- map(pv_n, \(n) map_dbl(1:20000, \(s) {
+  y <- sample(pop, n, replace = TRUE)
+  (mean(y) - mu) / (sd(y) / sqrt(n))
+}))
+pv_dens <- map(pv_stat, \(t) {
+  t <- t[is.finite(t)]
+  as.vector(table(cut(t, pv_edges))) / (length(t) * pv_w)
+})
+pv_out <- map_dbl(pv_stat, \(t) mean(abs(t) > qnorm(0.975)))
+```
+
+```{r}
+#| echo: false
+#| output: asis
+
+# The histogram of the standardized mean morphs from n = 500 to n = 6 against
+# N(0, 1), with the share beyond +/- 1.96 tallied against 5%
+# (cover-anim/pivot.js; data from the pivot-sim chunk above)
+pv_data <- jsonlite::toJSON(list(n = pv_n, edges = round(pv_edges, 4),
+                                 dens = map(pv_dens, round, 4), out = round(pv_out, 4),
+                                 crit = round(qnorm(0.975), 2), alpha = 0.05),
+                            auto_unbox = TRUE, digits = NA)
+cat("```{=html}",
+    '<div class="pv-anim"></div>',
+    "<script>",
+    "(", readLines("cover-anim/pivot.js"), ")(document.currentScript.previousElementSibling,",
+    pv_data, ");",
+    "</script>",
+    rep('<span class="fragment pv-step"></span>', length(pv_n)),
+    "```", sep = "\n")
+```
+
+## Small sample confidence intervals
+
+::: {.incremental}
+
+- Our 95% confidence interval from above is a **large sample** approximation
+  - Relies on $\frac{\sqrt{n}(\bar{Y} - \mu)}{\hat{\sigma}} \xrightarrow{d} \mathcal{N}(0, 1)$
+- Even if our data were **normally distributed**, $Y_i \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu, \sigma^2)$, the asymptotic confidence interval is not quite exact
+  - Because we're **estimating** the standard error.
+
+- Getting exact coverage guarantees for our confidence intervals in a **finite sample** requires some additional assumptions.
+  - Our sampling distribution may also not be **normal** in finite samples.
+
+- @student1908probable showed that for **normally distributed** data, $Y_i \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu, \sigma^2)$ where $\hat{\sigma^2}$ is the unbiased sample variance deviation estimator:
+
+  $$T = \frac{\sqrt{n}(\bar{Y} - \mu)}{\hat{\sigma}} \sim t_{(n-1)} $$
+
+- $t_{(n-1)}$ is the **t**-distribution with $n-1$ "degrees of freedom"
+
+:::
+
+## Small sample confidence intervals
+
+::: {.incremental}
+
+- The **t** distribution is the ratio of a **standard normal** and the square root of an independent **chi-squared** divided by its **degrees of freedom**.
+
+  $$T = \frac{\sqrt{n}(\bar{Y} - \mu)}{\hat{\sigma}} = \underbrace{\frac{\sqrt{n}(\bar{Y} - \mu)}{\sigma}}_{\text{Normal}(0, 1)} \times \left(\underbrace{\frac{(n-1)\hat{\sigma}^2}{\sigma^2}}_{\chi^2_{(n-1)}} \bigg/ (n-1)\right)^{-1/2} $$
+
+- The **chi-squared** distribution is the distribution of the sum of *squared* i.i.d. standard normals. 
+  - The parameter is the *number* of independent normals being summed - typically referred to as the "degrees of freedom"
+  - Under normality, $\frac{(n-1)\hat{\sigma}^2}{\sigma^2} = \sum_{i=1}^n \left(\frac{Y_i - \bar{Y}}{\sigma}\right)^2$ is the sum of $n$ squared normal deviations.
+  - But $\sum_{i=1}^n (Y_i - \bar{Y}) = 0$. Once we know $n-1$ of the outcomes, the last is fixed. So it behaves like a sum of only $n-1$ *independent* squared standard normals: $\chi^2_{(n-1)}$
+
+:::
+
+## The t-distribution
+
+```{r}
+#| echo: false
+#| output: asis
+
+# The t density with n - 1 df morphs toward N(0, 1) as n grows, its critical
+# values closing in on +/- 1.96; the script also writes the critical value
+# into the .tcrit span in the formula below (t-anim/tdist.js)
+cat("```{=html}",
+    '<div class="td-anim"></div>',
+    "<script>",
+    "(", readLines("t-anim/tdist.js"), ")(document.currentScript.previousElementSibling,",
+    '{ "n": [3, 6, 11, 31, 101, 1001] }', ");",
+    "</script>",
+    rep('<span class="fragment td-step"></span>', 6),
+    "```", sep = "\n")
+```
+
+::: {style="text-align: center; font-size: 1.4em; margin-top: 0.2em;"}
+$\bar{Y} \pm$ [1.960]{.tcrit style="color: #0479a8; font-weight: 600; font-variant-numeric: tabular-nums;"} $\times \widehat{SE}(\bar{Y})$
+:::
+
+## t-distribution critical values {.nostretch}
+
+```{r}
+#| label: t-cover-sim
+#| include: false
+
+# Coverage of 95% intervals for the mean of Exponential(1) data (skewed, so
+# not normal; the true mean is 1) using normal vs. t critical values, across
+# sample sizes. 20,000 samples per n
+set.seed(812)
+reps <- 20000
+t_cover <- map(c(3, 5, 10, 20, 50, 100, 250), \(n) {
+  y <- matrix(rexp(n * reps), nrow = n)       # one sample per column
+  est <- colMeans(y)
+  se <- apply(y, 2, sd) / sqrt(n)
+  tibble(n = n,
+         Normal = mean(abs(est - 1) <= qnorm(0.975) * se),
+         t = mean(abs(est - 1) <= qt(0.975, df = n - 1) * se))
+}) |>
+  list_rbind() |>
+  pivot_longer(c(Normal, t), names_to = "crit", values_to = "coverage")
+
+# Step 1: normal critical values only; step 2: add the t critical values
+t_cover_plot <- function(step) {
+  d <- if (step == 1) filter(t_cover, crit == "Normal") else t_cover
+  lab <- d |> filter(n == min(n)) |>
+    mutate(label = if_else(crit == "Normal", "± 1.96", "± t critical value"),
+           vjust = if_else(crit == "Normal", 1.6, -1))
+  ggplot(d, aes(x = n, y = coverage, colour = crit)) +
+    geom_hline(yintercept = 0.95, linetype = "dashed", linewidth = 1) +
+    geom_line(linewidth = 1.4) +
+    geom_point(size = 3.5) +
+    geom_text(data = lab, aes(label = label, vjust = vjust), hjust = -0.1, size = 7) +
+    scale_colour_manual(values = c(Normal = "#c5050c", t = "#0479a8"), guide = "none") +
+    scale_x_log10(breaks = unique(t_cover$n)) +
+    scale_y_continuous(limits = c(0.72, 0.96), breaks = seq(0.75, 0.95, 0.05),
+                       labels = scales::percent) +
+    labs(x = "Sample size (n)", y = "Coverage of a 95% CI") +
+    theme_anes +
+    theme(panel.grid.major.y = element_line(colour = "#e3e3e3"))
+}
+```
+
+::: {.r-stack}
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 5.4
+#| fig-align: center
+t_cover_plot(1)
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 5.4
+#| fig-align: center
+t_cover_plot(2)
+```
+
+:::
+
+:::
+
+::: {style="text-align: center; color: #777777; font-size: 0.8em;"}
+$Y_i \overset{\text{i.i.d.}}{\sim} \text{Exponential}(1)$, `r format(reps, big.mark = ",")` samples per $n$
+:::
+
+## One-sided confidence intervals
+
+::: {.incremental}
+
+- Most of the time, researchers present two-sided and symmetric confidence intervals.
+  - But there's nothing saying that we **have** to be symmetric or two-sided!
+  - It just depends on where we want to allocate our "coverage failure" $\alpha$.
+- We could instead stack it all on one side and construct a **one-sided** confidence interval!
+
+  $$P( \theta \le u) = 1 - \alpha$$
+
+- For an asymptotically normal CI of the sample mean, this is just
+
+  $$u = \bar{Y} + z_{1-\alpha}\frac{\hat{\sigma}}{\sqrt{n}}$$
+
+- For a 95% interval, $\alpha = 0.05$ and $z_{0.95} \approx 1.64$ (`qnorm(0.95)` in R)
+  - We've narrowed the upper bound a bit in exchange for an arbitrary lower bound $-\infty$.
+  - Equivalent idea for a one-sided **lower bound**
+
+:::
+
+## Hypothesis Testing
+
+## Next week
+
+::: {.incremental}
+
+- **Regression**
+  - How do we model the **conditional expectation** of $Y$ as $X$ changes
+  - Flexible but noisy methods: binned scatterplots, kernel estimators
+  - More precise but need **assumptions**: ordinary least squares
+- **Plug-in estimator** for the "best linear predictor"
+  - Later: Interpreting the BLP as the CEF.
+
+:::
 
 ## References {.refs-slide}
 
