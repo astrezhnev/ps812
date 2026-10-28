@@ -11,18 +11,20 @@ function (el, d, opts) {
   //   5        the N(0, 1) null distribution grows out of the H0 line    step 4
   //   6        the alpha budget splits into the two tails: the
   //            rejection region beyond +/- z_{1 - alpha/2}               step 5
-  //   7  8     the observed T falls onto the axis, then the decision     step 6
-  //   9        the p-value: the probability beyond +/- |T|               (extra)
+  //   7  8     aside: a one-sided test (Ha: mu > mu0) puts all of alpha
+  //            in the upper tail beyond z_{1 - alpha}; then back again
+  //   9 10     the observed T falls onto the axis, then the decision     step 6
+  //   11       the p-value: the probability beyond +/- |T|               (extra)
   // Data: d.ybar and d.se (the estimate and its standard error), d.mu0 (the
   // null value), d.alpha, d.ylab (what Ybar measures). One stage per
   // .nh-step fragment; stepping backwards runs each transition in reverse.
   opts = opts || {};
-  var FROM = opts.from || 0, TO = opts.to == null ? 9 : opts.to;
+  var FROM = opts.from || 0, TO = opts.to == null ? 11 : opts.to;
   var NS = 'http://www.w3.org/2000/svg';
   var W = 1000, H = 440;
   var BLUE = '#0479a8', RED = '#c5050c', INK = '#333333', GOLD = '#d9a21b', GREY = '#9a9a9a';
   var X0 = 60, X1 = 940, Y0 = 360, Y1 = 120, L = 4.5, YMAX = 0.42;
-  var T = (d.ybar - d.mu0) / d.se, Z, P;
+  var T = (d.ybar - d.mu0) / d.se, Z, Z1, P;
 
   function mk(tag, attrs, parent) {
     var e = document.createElementNS(NS, tag);
@@ -47,7 +49,8 @@ function (el, d, opts) {
     return (a + b) / 2;
   }
   Z = nq(1 - d.alpha / 2);
-  P = 2 * (1 - ncdf(Math.abs(T)));
+  Z1 = nq(1 - d.alpha);
+  P =2 * (1 - ncdf(Math.abs(T)));
   function area(a, b, s) {                         // closed path under s * density from a to b
     var p = [px(a).toFixed(1) + ' ' + Y0];
     for (var x = a; x < b; x += 0.02) p.push(px(x).toFixed(1) + ' ' + py(s * npdf(x)).toFixed(1));
@@ -56,13 +59,15 @@ function (el, d, opts) {
   }
   function fmt(v) { return (v < 0 ? '−' : '') + Math.abs(v).toFixed(2); }
 
-  var KEYS = ['h0', 'ha', 'ax', 'al', 'dn', 'rj', 'ob', 'dc', 'pv'];
+  // os1 switches the one-sided aside on and os2 switches it back off, so the
+  // one-sided weight os = os1 - os2 is 1 only at stage 7
+  var KEYS = ['h0', 'ha', 'ax', 'al', 'dn', 'rj', 'os1', 'os2', 'ob', 'dc', 'pv'];
   var STAGES = KEYS.map(function () { return 0; }).concat(0).map(function (_, s) {
     var st = {};
     KEYS.forEach(function (k, j) { st[k] = s > j ? 1 : 0; });
     return st;
   });
-  var DUR = [0, 800, 900, 1400, 900, 1300, 1500, 1100, 800, 900];
+  var DUR = [0, 800, 900, 1400, 900, 1300, 1500, 1400, 1400, 1100, 800, 900];
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
                         'aria-label': 'A hypothesis test built up step by step: the null and alternative, the test statistic, the error rate, the null distribution, the rejection region, and where the observed statistic lands',
@@ -75,17 +80,26 @@ function (el, d, opts) {
   var dnLab = mk('text', { x: px(1.3), y: py(0.3), 'text-anchor': 'start', 'font-size': 21, fill: INK }, gDn);
   dnLab.textContent = 'T under H₀: N(0, 1)';
   var gRj = mk('g', {}, svg);
-  var tails = [mk('path', { fill: RED, 'fill-opacity': 0.75, d: area(-L, -Z, 1) }, gRj),
-               mk('path', { fill: RED, 'fill-opacity': 0.75, d: area(Z, L, 1) }, gRj)];
-  [-1, 1].forEach(function (s) {
-    mk('line', { x1: px(s * Z), x2: px(s * Z), y1: Y0, y2: Y1 - 20, stroke: RED, 'stroke-width': 2.5, 'stroke-dasharray': '10 7' }, gRj);
-    mk('text', { x: px(s * Z), y: Y0 + 34, 'text-anchor': 'middle', 'font-size': 22, 'font-weight': 600, fill: RED }, gRj).textContent = fmt(s * Z);
-    var t = mk('text', { x: px(s * (Z + 1.25)), y: py(0.16), 'text-anchor': 'middle', 'font-size': 22, fill: RED }, gRj);
-    t.textContent = 'reject H₀';
-    mk('text', { x: px(s * (Z + 1.25)), y: py(0.16) + 26, 'text-anchor': 'middle', 'font-size': 19, fill: RED }, gRj).textContent = 'α/2 = ' + (d.alpha / 2).toFixed(3);
+  // One group of tail, critical line and labels per side; the upper side's
+  // critical value slides between z_{1 - alpha/2} and z_{1 - alpha}
+  var sides = [-1, 1].map(function (s) {
+    var sd = { g: mk('g', {}, gRj) };
+    sd.tail = mk('path', { fill: RED, 'fill-opacity': 0.75 }, sd.g);
+    sd.line = mk('line', { y1: Y0, y2: Y1 - 20, stroke: RED, 'stroke-width': 2.5, 'stroke-dasharray': '10 7' }, sd.g);
+    sd.crit = mk('text', { y: Y0 + 34, 'text-anchor': 'middle', 'font-size': 22, 'font-weight': 600, fill: RED }, sd.g);
+    sd.rej = mk('text', { y: py(0.16), 'text-anchor': 'middle', 'font-size': 22, fill: RED }, sd.g);
+    sd.rej.textContent = 'reject H₀';
+    sd.half = mk('text', { y: py(0.16) + 26, 'text-anchor': 'middle', 'font-size': 19, fill: RED }, sd.g);
+    sd.half.textContent = 'α/2 = ' + (d.alpha / 2).toFixed(3);
+    sd.whole = mk('text', { y: py(0.16) + 26, 'text-anchor': 'middle', 'font-size': 19, fill: RED }, sd.g);
+    sd.whole.textContent = 'α = ' + d.alpha.toFixed(3);
+    return sd;
   });
   var keep = mk('text', { x: px(0), y: py(0.1), 'text-anchor': 'middle', 'font-size': 22, fill: INK }, gRj);
   keep.textContent = 'fail to reject H₀';
+  var gOs = mk('g', {}, svg);
+  mk('text', { x: X0, y: Y1 - 14, 'font-size': 24, 'font-weight': 700, fill: RED }, gOs).textContent = 'One-sided test';
+  mk('text', { x: X0, y: Y1 + 14, 'font-size': 19, fill: GREY }, gOs).textContent = 'all of α in the upper tail';
   var gPv = mk('g', {}, svg);
   [-1, 1].forEach(function (s) {
     mk('path', { fill: GOLD, d: s < 0 ? area(-L, -Math.abs(T), 1) : area(Math.abs(T), L, 1) }, gPv);
@@ -112,13 +126,17 @@ function (el, d, opts) {
   var h0Line = mk('line', { x1: px(0), x2: px(0), y1: 52, y2: Y0, stroke: GOLD, 'stroke-width': 3, 'stroke-dasharray': '12 8' }, gH0);
   mk('text', { x: px(0), y: 40, 'text-anchor': 'middle', 'font-size': 26, 'font-weight': 600, fill: GOLD }, gH0).textContent = 'H₀: μ = ' + d.mu0;
   var gHa = mk('g', {}, svg);
-  [-1, 1].forEach(function (s) {
-    var a = px(s * 1.25), b = px(s * 3.6);
-    mk('line', { x1: a, x2: b - s * 14, y1: 32, y2: 32, stroke: INK, 'stroke-width': 3 }, gHa);
-    mk('path', { d: 'M' + b + ' 32L' + (b - s * 16) + ' 23L' + (b - s * 16) + ' 41Z', fill: INK }, gHa);
-    mk('text', { x: b + s * 10, y: 40, 'text-anchor': s < 0 ? 'end' : 'start', 'font-size': 22, fill: INK }, gHa).textContent = s < 0 ? 'μ < ' + d.mu0 : 'μ > ' + d.mu0;
+  var haArms = [-1, 1].map(function (s) {
+    var a = px(s * 1.25), b = px(s * 3.6), g = mk('g', {}, gHa);
+    mk('line', { x1: a, x2: b - s * 14, y1: 32, y2: 32, stroke: INK, 'stroke-width': 3 }, g);
+    mk('path', { d: 'M' + b + ' 32L' + (b - s * 16) + ' 23L' + (b - s * 16) + ' 41Z', fill: INK }, g);
+    mk('text', { x: b + s * 10, y: 40, 'text-anchor': s < 0 ? 'end' : 'start', 'font-size': 22, fill: INK }, g).textContent = s < 0 ? 'μ < ' + d.mu0 : 'μ > ' + d.mu0;
+    return g;
   });
-  mk('text', { x: px(2.4), y: 64, 'text-anchor': 'middle', 'font-size': 22, fill: INK }, gHa).textContent = 'Hₐ: μ ≠ ' + d.mu0;
+  var haTwo = mk('text', { x: px(2.4), y: 64, 'text-anchor': 'middle', 'font-size': 22, fill: INK }, gHa);
+  haTwo.textContent = 'Hₐ: μ ≠ ' + d.mu0;
+  var haOne = mk('text', { x: px(2.4), y: 64, 'text-anchor': 'middle', 'font-size': 22, 'font-weight': 600, fill: RED }, gHa);
+  haOne.textContent = 'Hₐ: μ > ' + d.mu0;
 
   // ---- Error budget: one square in 1 / alpha --------------------------------
   var NB = Math.round(1 / d.alpha), BC = 5, BS = 22, BX = X0 + 6, BY = 140;
@@ -155,8 +173,13 @@ function (el, d, opts) {
     'P(|T| ≥ ' + Math.abs(T).toFixed(2) + ' | H₀)';
 
   function render(st) {
+    var os = ease(clamp(st.os1 - st.os2));
     gH0.setAttribute('opacity', st.h0);
+    h0Line.setAttribute('opacity', 1 - st.dn);         // the null density takes over from the line
     gHa.setAttribute('opacity', st.ha);
+    haArms[0].setAttribute('opacity', 1 - os);
+    haTwo.setAttribute('opacity', 1 - os);
+    haOne.setAttribute('opacity', os);
     // Axis rescale: a Ybar tick at mu0 + v sits at v (one plot unit per point
     // of Ybar) and slides to T = v / se
     yTicks.forEach(function (tk) {
@@ -165,7 +188,8 @@ function (el, d, opts) {
       tk.t.setAttribute('opacity', (1 - st.ax) * vis); tk.k.setAttribute('opacity', (1 - st.ax) * vis);
     });
     tTicks.forEach(function (tk) {
-      var hide = Math.abs(Math.abs(tk.v) - Z) < 0.5 ? 1 - st.rj : 1;   // make room for the critical values
+      // make room for the critical values (the lower one leaves when one-sided)
+      var hide = Math.abs(Math.abs(tk.v) - Z) < 0.5 ? 1 - st.rj * (tk.v < 0 ? 1 - os : 1) : 1;
       tk.t.setAttribute('opacity', st.ax * hide); tk.k.setAttribute('opacity', st.ax * hide);
     });
     axY.setAttribute('opacity', 1 - st.ax);
@@ -180,6 +204,20 @@ function (el, d, opts) {
     gDn.setAttribute('opacity', st.dn > 0 ? 1 : 0);
     dnLab.setAttribute('opacity', st.dn * (1 - st.rj));
     gRj.setAttribute('opacity', clamp(2 * st.rj - 1));
+    // One-sided aside: the lower tail fades and its alpha/2 moves to the
+    // upper tail, whose critical value slides in from z_{1 - alpha/2}
+    sides.forEach(function (sd, j) {
+      var s = j ? 1 : -1, c = j ? lerp(Z, Z1, os) : Z;
+      sd.tail.setAttribute('d', s < 0 ? area(-L, -c, 1) : area(c, L, 1));
+      sd.line.setAttribute('x1', px(s * c)); sd.line.setAttribute('x2', px(s * c));
+      sd.crit.setAttribute('x', px(s * c)); sd.crit.textContent = fmt(s * c);
+      sd.rej.setAttribute('x', px(s * (c + 1.25)));
+      sd.half.setAttribute('x', px(s * (c + 1.25))); sd.whole.setAttribute('x', px(s * (c + 1.25)));
+      sd.half.setAttribute('opacity', j ? 1 - os : 1);
+      sd.whole.setAttribute('opacity', j ? os : 0);
+      sd.g.setAttribute('opacity', j ? 1 : 1 - os);
+    });
+    gOs.setAttribute('opacity', os);
     // The red square splits and flies to the tails
     halves.forEach(function (h, j) {
       var s = j ? 1 : -1, tx = px(s * (Z + 0.5)) - BS / 4, ty = Y0 - BS - 4;

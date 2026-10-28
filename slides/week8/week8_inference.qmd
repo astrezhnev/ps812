@@ -748,7 +748,7 @@ cat("```{=html}",
   - Calculate the probability of observing our sample **given** this assumption.
   - A sufficiently **unlikely** sample may persuade us that our assumption should be rejected.
 - The "null hypothesis statistical testing" (NHST) paradigm is **ubiquitious** in science.
-  - Combines ideas from both Fisher and Neyman-Pearson approaches to hypothesis tests.
+  - Combines ideas from both Fisher [-@fisher1925statistical] and Neyman-Pearson [-@neyman1933problem] approaches to hypothesis tests.
 
 :::
 
@@ -830,7 +830,7 @@ nhst_anim(0, 2)
 - Given a particular null and alternative, we want to choose a **test statistic** that will be large *if* the null is false (and not too large if it is true).
   - We also want to know (or be able to calculate) the distribution of the test statistic **under the null**
 
-- Our most common test statistic is the t-statistic (esp. for tests based on asymptotic normality):
+- Our most common test statistic is the **t-statistic** (esp. for tests based on asymptotic normality):
 
   $$ T = \frac{\hat{\mu} - \mu_0}{\widehat{SE}(\hat{\mu})} $$
 
@@ -957,7 +957,7 @@ nhst_anim(4, 5)
 ```{r}
 #| echo: false
 #| output: asis
-nhst_anim(5, 6)
+nhst_anim(5, 8)
 ```
 
 ## The decision
@@ -965,7 +965,7 @@ nhst_anim(5, 6)
 ```{r}
 #| echo: false
 #| output: asis
-nhst_anim(6, 8)
+nhst_anim(8, 10)
 ```
 
 ## p-values
@@ -976,10 +976,10 @@ nhst_anim(6, 8)
   - If the p-value falls below our chosen $\alpha$, we **reject** the null
 - The **smallest** $\alpha$ for which we would still reject our null hypothesis.
   - Calculate using `2*pnorm(-abs(T))` for a two-sided asymptotically normal test.
-- Be careful! - P-values are **not**
-  - Evidence that the effect is **substantively** significant
-  - The probability that the null hypothesis is true $(P(H_0 \text{ true}|\text{observed data}) \neq P(\text{observed data} | H_0 \text{ true}))$
-  - The probability that the alternative is true (all probabilities here are **conditional** on the null)
+- Be careful! P-values are **not**...
+  - ...evidence that the effect is **substantively** significant
+  - ...the probability that the null hypothesis is true $P(H_0 \text{ true}|\text{observed data}) \neq P(\text{observed data} | H_0 \text{ true})$
+  - ...the probability that the alternative is true (all probabilities here are **conditional** on the null)
 
 :::
 
@@ -987,61 +987,117 @@ nhst_anim(6, 8)
 
 ::: {.incremental}
 
-- Confidence intervals and hypothesis tests have a dual relationship
-  - A $100(1-\alpha)\%$ confidence interval contains all of the null hypotheses that we'd **fail** to reject with an $\alpha$ level test.
-- This gives us a way of generating a confidence interval if **all we have** is a hypothesis test (e.g. randomization tests in 813).
-  - Vary $\mu_0$ across some range of values, conduct the hypothesis test, collect all the values where $p$ is greater than $\alpha$.
+- Confidence intervals and hypothesis tests have a **dual** relationship
+  - A $100(1-\alpha)\%$ **confidence interval** contains all of the null hypotheses that we'd **fail to reject** with an $\alpha$ level test.
 - Two-sided CIs correspond to two-sided hypothesis tests.
   - *One-sided CIs* correspond to one-sided hypothesis tests.
+- This relationship also gives us a way of generating a confidence interval if **all we have** is a hypothesis test (e.g. randomization tests in ps813).
+  - Vary $\mu_0$ across some range of values
+  - Conduct the hypothesis test at each value
+  - Collect all the values where $p$ is greater than $\alpha$.
+  - That's our $100(1-\alpha)\%$ interval!
 
 :::
 
 
-## Connection to confidence intervals
+## Connection to confidence intervals {.nostretch}
+
+```{r}
+#| include: false
+
+# Test inversion: the two-sided p-value for H0: mu = mu0 at every mu0 (the
+# curve), against our 95% CI drawn on the p = 0.05 line. The nulls we fail to
+# reject (p > 0.05) are exactly the ones inside the interval. The y axis is on
+# a square-root scale to stretch out the region near p = 0.05. Built up one
+# layer per step, each a full plot on an opaque background stacked as
+# fragments (.r-stack):
+#   "curve"   the p-value curve and the p = 0.05 line
+#   "reject"  the nulls we reject, shaded
+#   "ci"      our 95% CI on the p = 0.05 line
+#   "zero"    the test of H0: mu = 0 from before
+p_curve <- tibble(mu0 = seq(ci$est - 4.5 * ci$se, ci$est + 4.5 * ci$se, length.out = 600),
+                  p = 2 * pnorm(-abs(ci$est - mu0) / ci$se))
+p_zero <- 2 * pnorm(-abs(ci$est) / ci$se)
+inv_steps <- c("curve", "reject", "ci", "zero")
+inv_plot <- function(step) {
+  k <- match(step, inv_steps)
+  p <- ggplot(p_curve, aes(x = mu0, y = p))
+  if (k >= 2) p <- p +
+    geom_area(data = \(d) filter(d, mu0 <= ci$lower), fill = "#c5050c", alpha = 0.15) +
+    geom_area(data = \(d) filter(d, mu0 >= ci$upper), fill = "#c5050c", alpha = 0.15)
+  p <- p +
+    geom_area(fill = "#0479a8", alpha = 0.08) +
+    geom_line(colour = "#333333", linewidth = 1.2, alpha = 0.45) +
+    geom_hline(yintercept = 0.05, linetype = "dashed", colour = "#c5050c", linewidth = 0.8)
+  if (k >= 4) p <- p +
+    geom_vline(xintercept = 0, linetype = "dashed", colour = "#333333", linewidth = 0.8, alpha = 0.4)
+  if (k >= 3) p <- p +
+    geom_segment(data = ci, aes(x = lower, xend = lower, y = 0, yend = 0.05),
+                 inherit.aes = FALSE, linetype = "dotted", colour = "#0479a8", linewidth = 0.8) +
+    geom_segment(data = ci, aes(x = upper, xend = upper, y = 0, yend = 0.05),
+                 inherit.aes = FALSE, linetype = "dotted", colour = "#0479a8", linewidth = 0.8) +
+    geom_pointrange(data = ci, aes(x = est, y = 0.05, xmin = lower, xmax = upper),
+                    inherit.aes = FALSE, colour = "#0479a8", size = 1.1, linewidth = 2.2)
+  if (k >= 4) p <- p +
+    annotate("point", x = 0, y = p_zero, colour = "#c5050c", size = 3.5)
+  p +
+    scale_x_continuous(limits = range(p_curve$mu0)) +
+    scale_y_sqrt(limits = c(0, 1), breaks = c(0, 0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 1),
+                 expand = expansion(mult = c(0, 0.02))) +
+    labs(x = expression("Hypothesized Dem" - "Rep difference" ~ mu[0]),
+         y = expression("p-value for" ~ H[0]:~mu == mu[0] ~ "(square-root scale)")) +
+    theme_anes +
+    theme(axis.line.y = element_line(colour = "#333333"))
+}
+```
+
+::: {.r-stack}
 
 ```{r}
 #| echo: false
 #| fig-height: 5.6
 #| fig-width: 11
 #| fig-align: center
-
-# Test inversion: the two-sided p-value for H0: mu = mu0 at every mu0 (the
-# curve), against our 95% CI drawn on the p = 0.05 line. The nulls we fail to
-# reject (p > 0.05) are exactly the ones inside the interval. The y axis is on
-# a square-root scale to stretch out the region near p = 0.05
-p_curve <- tibble(mu0 = seq(ci$est - 4.5 * ci$se, ci$est + 4.5 * ci$se, length.out = 600),
-                  p = 2 * pnorm(-abs(ci$est - mu0) / ci$se))
-p_zero <- 2 * pnorm(-abs(ci$est) / ci$se)
-
-ggplot(p_curve, aes(x = mu0, y = p)) +
-  # nulls we reject at alpha = 0.05
-  geom_area(data = \(d) filter(d, mu0 <= ci$lower), fill = "#c5050c", alpha = 0.15) +
-  geom_area(data = \(d) filter(d, mu0 >= ci$upper), fill = "#c5050c", alpha = 0.15) +
-  geom_area(fill = "#0479a8", alpha = 0.08) +
-  geom_line(colour = "#333333", linewidth = 1.2, alpha = 0.45) +
-  geom_hline(yintercept = 0.05, linetype = "dashed", colour = "#c5050c", linewidth = 0.8) +
-  geom_segment(data = ci, aes(x = lower, xend = lower, y = 0, yend = 0.05),
-               inherit.aes = FALSE, linetype = "dotted", colour = "#0479a8", linewidth = 0.8) +
-  geom_segment(data = ci, aes(x = upper, xend = upper, y = 0, yend = 0.05),
-               inherit.aes = FALSE, linetype = "dotted", colour = "#0479a8", linewidth = 0.8) +
-  # the 95% CI, as in a coefficient plot
-  geom_pointrange(data = ci, aes(x = est, y = 0.05, xmin = lower, xmax = upper),
-                  inherit.aes = FALSE, colour = "#0479a8", size = 1.1, linewidth = 2.2) +
-  # the test of H0: mu = 0 from before
-  annotate("point", x = 0, y = p_zero, colour = "#c5050c", size = 3.5) +
-  annotate("segment", x = 0, xend = 0, y = p_zero, yend = 0.17, colour = "#c5050c", linewidth = 0.6) +
-  annotate("text", x = 0, y = 0.17, label = sprintf("H[0]:~mu == 0~~(p == %.3f)", p_zero),
-           parse = TRUE, vjust = -0.3, colour = "#c5050c", size = 6) +
-  annotate("text", x = ci$est, y = 0.05, label = "95% CI", vjust = 2.2, colour = "#0479a8", size = 6.5) +
-  annotate("text", x = max(p_curve$mu0), y = 0.05, label = "p = 0.05", hjust = 1, vjust = -0.6,
-           colour = "#c5050c", size = 6) +
-  scale_y_sqrt(limits = c(0, 1), breaks = c(0, 0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 1),
-               expand = expansion(mult = c(0, 0.02))) +
-  labs(x = expression("Hypothesized Dem" - "Rep difference" ~ mu[0]),
-       y = expression("p-value for" ~ H[0]:~mu == mu[0] ~ "(square-root scale)")) +
-  theme_anes +
-  theme(axis.line.y = element_line(colour = "#333333"))
+inv_plot("curve")
 ```
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-height: 5.6
+#| fig-width: 11
+#| fig-align: center
+inv_plot("reject")
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-height: 5.6
+#| fig-width: 11
+#| fig-align: center
+inv_plot("ci")
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-height: 5.6
+#| fig-width: 11
+#| fig-align: center
+inv_plot("zero")
+```
+
+:::
+
+:::
 
 ## Multiple testing
 
@@ -1076,7 +1132,7 @@ Randall Munroe, "Significant," [xkcd.com/882](https://xkcd.com/882/) (CC BY-NC 2
 ::: {.incremental}
 
 - When testing multiple hypotheses, we want to **control** the global error rate of the full "family" of tests
-  - One error rate we could target is **family-wise error rate**
+- One error rate we could target is **family-wise error rate**
 
   $$\text{FWER} = P(\text{at least one rejection} | \text{All nulls are true}) $$
 - We can write this using the complement
@@ -1204,12 +1260,12 @@ age_est <- bind_rows(
 
 :::: {.columns}
 
-::: {.column width="56%"}
+::: {.column width="42%"}
 
 ```{r}
 #| echo: false
 #| fig-height: 5.6
-#| fig-width: 6.6
+#| fig-width: 5.2
 
 # Estimates top to bottom with 95% CIs; the pooled estimate sits above a rule
 ggplot(age_est, aes(x = estimate, y = fct_rev(group), colour = group == "All respondents")) +
@@ -1217,31 +1273,54 @@ ggplot(age_est, aes(x = estimate, y = fct_rev(group), colour = group == "All res
   geom_hline(yintercept = 5.5, colour = "#9a9a9a", linewidth = 0.4) +
   geom_pointrange(aes(xmin = lower, xmax = upper), size = 0.9, linewidth = 1.4) +
   scale_colour_manual(values = c(`TRUE` = "#333333", `FALSE` = "#0479a8"), guide = "none") +
-  labs(x = "Dem − Rep thermometer gap\n(estimate and 95% CI)", y = NULL) +
+  labs(x = "Dem − Rep gap\n(estimate and 95% CI)", y = NULL) +
   theme_anes +
   theme(axis.text.y = element_text(size = 20, colour = "#333333"))
 ```
 
 :::
 
-::: {.column width="44%" .fragment}
-
-::: {style="font-size: 0.8em;"}
+::: {.column width="58%" .fragment}
 
 ```{r}
 #| echo: false
+#| output: asis
 
+# A regression table, econometrics style: one numbered column per sample
+# (each estimate is the intercept of a regression of the gap on a constant),
+# the standard error in parentheses beneath its estimate, and N below a rule
 stars <- function(p) case_when(p < 0.001 ~ "***", p < 0.01 ~ "**", p < 0.05 ~ "*", .default = "")
 num <- function(x) sub("^-", "−", sprintf("%.2f", x))
-age_est |>
-  transmute(Group = group,
-            Estimate = paste0(num(estimate), stars(p)),
-            SE = paste0("(", num(se), ")"),
-            N = format(n, big.mark = ",")) |>
-  knitr::kable(align = "lrrr")
+row <- function(label, cells, class = "") {
+  paste0('<tr class="', class, '"><td>', label, "</td>",
+         paste0("<td>", cells, "</td>", collapse = ""), "</tr>")
+}
+cat('```{=html}',
+    "<style>",
+    ".reveal .reg-table table { border-collapse: collapse; margin: 0 auto; font-size: 0.74em; border-top: 2px solid #333; border-bottom: 2px solid #333; }",
+    ".reveal .reg-table table th, .reveal .reg-table table td { border: none; padding: 0.12em 0.5em; text-align: center; white-space: nowrap; }",
+    ".reveal .reg-table table td:first-child { text-align: left; }",
+    ".reveal .reg-table table th { font-weight: 400; }",
+    ".reveal .reg-table table .span { border-bottom: 1px solid #333; }",
+    ".reveal .reg-table table thead tr:last-child th { border-bottom: 1px solid #333; color: #646569; }",
+    ".reveal .reg-table table .se td { color: #646569; padding-bottom: 0.4em; }",
+    ".reveal .reg-table table .gof td { border-top: 1px solid #333; }",
+    ".reveal .reg-table table sup { font-size: 0.7em; }",
+    "</style>",
+    '<div class="reg-table"><table>',
+    "<thead>",
+    '<tr><th></th><th></th><th class="span" colspan="5">Age group</th></tr>',
+    paste0("<tr><th></th>", paste0("<th>", c("All", levels(age_est$group)[-1]), "</th>", collapse = ""), "</tr>"),
+    paste0("<tr><th></th>", paste0("<th>(", seq_len(nrow(age_est)), ")</th>", collapse = ""), "</tr>"),
+    "</thead>",
+    "<tbody>",
+    row("Dem − Rep gap", paste0(num(age_est$estimate), "<sup>", stars(age_est$p), "</sup>")),
+    row("", paste0("(", num(age_est$se), ")"), "se"),
+    row("N", format(age_est$n, big.mark = ","), "gof"),
+    "</tbody>",
+    "</table></div>",
+    "```", sep = "\n")
 ```
-
-:::
 
 ::: {style="font-size: 0.6em; color: #646569;"}
 Estimates are mean Dem − Rep thermometer differences; standard errors in parentheses. Two-sided tests of H₀: μ = 0: \* p < 0.05, \*\* p < 0.01, \*\*\* p < 0.001.
@@ -1257,11 +1336,11 @@ Estimates are mean Dem − Rep thermometer differences; standard errors in paren
 
 - The American Statistical Association's statement on p-values [@wasserstein2016asa]
   1) P-values can indicate how **incompatible** the data are with a specified statistical model
-  2) P-values do **not** measure the probability that the hypothesis is true, or that the data were produced by chance alone
-  3) Conclusions and decisions should not be based **only** on whether a p-value passes a threshold
-  4) Proper inference requires **full reporting** and transparency - how many tests did you run?
-  5) A p-value does **not** measure the **size** of an effect or the **importance** of a result
-  6) By itself, a p-value is not a good measure of **evidence** for a model or hypothesis
+  2) P-values **do not** measure the probability that the studied hypothesis is true, or the probability that the data were produced by random chance alone. 
+  3) Scientific conclusions and business or policy decisions should not be based **only** on whether a p-value passes a specific threshold. 
+  4) Proper inference requires **full reporting** and transparency.
+  5) A p-value, or statistical significance, does not measure the size of an effect or the **importance** of a result. 
+  6) By itself, a p-value does not provide a good measure of evidence regarding a model or hypothesis. 
 - A p-value is $P(\text{data at least this extreme} | H_0)$, **not** $P(H_0 | \text{data})$
 
 :::
@@ -1283,9 +1362,15 @@ Estimates are mean Dem − Rep thermometer differences; standard errors in paren
 
 ::: {.incremental}
 
-- **The significance filter** - in low-powered studies, the estimates that pass the threshold **exaggerate** the effect (Type M) and can even have the wrong sign (Type S) [@gelman2014beyond]
-- **Meaning of a null** - Some failures to reject are genuinely **informative** zeroes [@rainey2014arguing; @hartman2018equivalence] while failures for underpowered studies are **uninformative** - those studies would likely fail to detect most **substantively interesting** effects [@arelbundock2026quantitative].
-- **Proposed fixes** range from a stricter default threshold ($p < 0.005$) [@benjamin2018redefine] to abandoning "statistical significance" altogether in favor of reporting **estimates and intervals** [@amrhein2019scientists]
+- **The significance filter** [@gelman2014beyond] 
+  - In low-powered studies, the estimates that pass the threshold **exaggerate** the effect (Type M) 
+  - And very often have the wrong sign (Type S) 
+- **Meaning of a null** 
+  - Some failures to reject are genuinely **informative** zeroes [@rainey2014arguing; @hartman2018equivalence] 
+  - Failures for underpowered studies are often **uninformative**. Those studies would likely fail to detect most **substantively interesting** effects [@arelbundock2026quantitative].
+- **Proposed fixes** 
+  - Stricter default threshold ($p < 0.005$) [@benjamin2018redefine] 
+  - Abandon "statistical significance" altogether in favor of reporting estimates + ranges of values "compatible" with the data [@amrhein2019scientists]
 
 :::
 
