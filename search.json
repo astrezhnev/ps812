@@ -179,7 +179,7 @@
     "href": "slides/week8/week8_inference.html#confidence-intervals-under-asymptotic-normality-3",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
     "section": "Confidence intervals under asymptotic normality",
-    "text": "Confidence intervals under asymptotic normality\n\nNow we just need to find the value of \\(c\\) that satisfies\n\\[ P\\left(-\\frac{c}{SE(\\bar{Y})} \\le \\frac{\\bar{Y} - \\mu}{SE(\\bar{Y})} \\le \\frac{c}{SE(\\bar{Y})}\\right) = 1 - \\alpha\\]\nThe probability of landing in an interval is just difference of two CDFs. Let \\(\\Phi()\\) be the standard normal CDF\n\\[\\begin{aligned}\n&= P\\left(\\frac{\\bar{Y} - \\mu}{SE(\\bar{Y})} \\le \\frac{c}{SE(\\bar{Y})}\\right) - P\\left(\\frac{\\bar{Y} - \\mu}{SE(\\bar{Y})} &lt; -\\frac{c}{SE(\\bar{Y})}\\right) && \\small\\color{#777777}{\\text{below the upper minus below the lower}} \\\\\n&\\approx \\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right) - \\Phi\\left(-\\frac{c}{SE(\\bar{Y})}\\right) && \\small\\color{#777777}{\\text{asymptotic normality}} \\\\\n&= \\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right) - \\left[1 - \\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right)\\right] && \\small\\color{#777777}{\\text{symmetry: } \\Phi(-x) = 1 - \\Phi(x)} \\\\\n&= 2\\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right) - 1\n\\end{aligned}\\]"
+    "text": "Confidence intervals under asymptotic normality\n\nNow we just need to find the value of \\(c\\) that satisfies\n\\[ P\\left(-\\frac{c}{SE(\\bar{Y})} \\le \\frac{\\bar{Y} - \\mu}{SE(\\bar{Y})} \\le \\frac{c}{SE(\\bar{Y})}\\right) = 1 - \\alpha\\]\nThe probability of landing in an interval is just difference of two CDFs. Let \\(\\Phi()\\) be the standard normal CDF\n\\[\\begin{aligned}\n&= P\\left(\\frac{\\bar{Y} - \\mu}{SE(\\bar{Y})} \\le \\frac{c}{SE(\\bar{Y})}\\right) - P\\left(\\frac{\\bar{Y} - \\mu}{SE(\\bar{Y})} &lt; -\\frac{c}{SE(\\bar{Y})}\\right) && \\small\\color{#777777}{\\text{upper minus lower}} \\\\\n&\\approx \\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right) - \\Phi\\left(-\\frac{c}{SE(\\bar{Y})}\\right) && \\small\\color{#777777}{\\text{asymptotic normality}} \\\\\n&= \\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right) - \\left[1 - \\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right)\\right] && \\small\\color{#777777}{\\text{symmetry: } \\Phi(-x) = 1 - \\Phi(x)} \\\\\n&= 2\\Phi\\left(\\frac{c}{SE(\\bar{Y})}\\right) - 1\n\\end{aligned}\\]"
   },
   {
     "objectID": "slides/week8/week8_inference.html#confidence-intervals-under-asymptotic-normality-4",
@@ -249,7 +249,7 @@
     "href": "slides/week8/week8_inference.html#small-sample-confidence-intervals-2",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
     "section": "Small sample confidence intervals",
-    "text": "Small sample confidence intervals\n\nOur 95% confidence interval from above is a large sample approximation\n\nRelies on \\(\\frac{\\sqrt{n}(\\bar{Y} - \\mu)}{\\hat{\\sigma}} \\xrightarrow{d} \\mathcal{N}(0, 1)\\)\n\nEven if our data were normally distributed, \\(Y_i \\overset{\\text{i.i.d.}}{\\sim} \\mathcal{N}(\\mu, \\sigma^2)\\), the asymptotic confidence interval is not quite exact\n\nBecause we’re estimating the standard error.\n\nGetting exact coverage guarantees for our confidence intervals in a finite sample requires some additional assumptions.\n\nOur sampling distribution may also not be normal in finite samples.\n\nStudent (1908) showed that for normally distributed data, \\(Y_i \\overset{\\text{i.i.d.}}{\\sim} \\mathcal{N}(\\mu, \\sigma^2)\\) where \\(\\hat{\\sigma^2}\\) is the unbiased sample variance deviation estimator:\n\\[T = \\frac{\\sqrt{n}(\\bar{Y} - \\mu)}{\\hat{\\sigma}} \\sim t_{(n-1)} \\]\n\\(t_{(n-1)}\\) is the t-distribution with \\(n-1\\) “degrees of freedom”"
+    "text": "Small sample confidence intervals\n\nOur 95% confidence interval from above is a large sample approximation\n\nRelies on \\(\\frac{\\sqrt{n}(\\bar{Y} - \\mu)}{\\hat{\\sigma}} \\xrightarrow{d} \\mathcal{N}(0, 1)\\)\n\nEven if our data were normally distributed, \\(Y_i \\overset{\\text{i.i.d.}}{\\sim} \\mathcal{N}(\\mu, \\sigma^2)\\), the asymptotic confidence interval is not quite exact\n\nBecause we’re estimating the standard error.\n\nGetting exact coverage guarantees for our confidence intervals in a finite sample requires some additional assumptions.\n\nOur sampling distribution may also not be normal in finite samples.\n\nStudent (1908) showed that for normally distributed data, \\(Y_i \\overset{\\text{i.i.d.}}{\\sim} \\mathcal{N}(\\mu, \\sigma^2)\\) where \\(\\hat{\\sigma^2}\\) is the unbiased sample variance estimator:\n\\[T = \\frac{\\sqrt{n}(\\bar{Y} - \\mu)}{\\hat{\\sigma}} \\sim t_{(n-1)} \\]\n\\(t_{(n-1)}\\) is the t-distribution with \\(n-1\\) “degrees of freedom”"
   },
   {
     "objectID": "slides/week8/week8_inference.html#small-sample-confidence-intervals-3",
@@ -291,35 +291,189 @@
     "href": "slides/week8/week8_inference.html#hypothesis-testing",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
     "section": "Hypothesis Testing",
-    "text": "Hypothesis Testing"
+    "text": "Hypothesis Testing\n\nAnother approach to thinking about uncertainty in our estimator is from the perspective of evaluating hypotheses\nAssume a particular “truth” about the parameter we want to learn about.\n\nCalculate the probability of observing our sample given this assumption.\nA sufficiently unlikely sample may persuade us that our assumption should be rejected.\n\nThe “null hypothesis statistical testing” (NHST) paradigm is ubiquitious in science.\n\nCombines ideas from both Fisher and Neyman-Pearson approaches to hypothesis tests."
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#general-framework",
+    "href": "slides/week8/week8_inference.html#general-framework",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "General Framework",
+    "text": "General Framework\n\nChoose a null \\(H_0\\) and an alternative \\(H_a\\) hypothesis about some feature of the population\nChoose a test statistic \\(T\\) that is a function of the data we observe \\(T(Y_1, Y_2, \\dotsc, Y_n)\\)\nChoose a desired Type I (false positive) error rate\nFind the distribution of the test statistic under the null hypothesis\nDefine the rejection region for the chosen error rate in terms of values of the test statistic\nCalculate whether the observed test statistic falls in the rejection region\nIf it does, reject the null. Otherwise, fail to reject the null."
   },
   {
     "objectID": "slides/week8/week8_inference.html#null-and-alternative-hypotheses",
     "href": "slides/week8/week8_inference.html#null-and-alternative-hypotheses",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
     "section": "Null and Alternative Hypotheses",
-    "text": "Null and Alternative Hypotheses"
+    "text": "Null and Alternative Hypotheses\n\nThe null hypothesis is the statement we wish to find evidence against.\n\nUsually a “baseline” assumption: “no effect/difference/deviation from what’s already known”\nWe denote this as \\(H_0: \\mu = \\mu_0\\)\n\nThe alternative hypothesis is the research claim we wish to make\n\n“There is an effect/difference/deviation from baseline”\nWe denote this as \\(H_a: \\mu \\neq \\mu_0\\)\n\nEx: The average population difference between Democratic and Republican feeling thermometer ratings\n\nNull Hypothesis: \\(H_0: \\mu = 0\\) - The population average is zero\nAlternative Hypothesis: \\(H_a: \\mu \\neq 0\\) - The population average is not zero\n\nMost of the time we see two-sided hypothesis tests (\\(\\neq\\))\n\nWe are willing to reject in favor of a difference in either direction.\nSometimes (though rarely), we might only want to reject the null if the result is in a particular direction.\n\\(H_0: \\mu = 0, H_a: \\mu &gt; 0\\)"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#step-1-null-and-alternative-hypotheses",
+    "href": "slides/week8/week8_inference.html#step-1-null-and-alternative-hypotheses",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Step 1: Null and alternative hypotheses",
+    "text": "Step 1: Null and alternative hypotheses"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#choosing-a-test-statistic",
+    "href": "slides/week8/week8_inference.html#choosing-a-test-statistic",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Choosing a test statistic",
+    "text": "Choosing a test statistic\n\nGiven a particular null and alternative, we want to choose a test statistic that will be large if the null is false (and not too large if it is true).\n\nWe also want to know (or be able to calculate) the distribution of the test statistic under the null\n\nOur most common test statistic is the t-statistic (esp. for tests based on asymptotic normality):\n\\[ T = \\frac{\\hat{\\mu} - \\mu_0}{\\widehat{SE}(\\hat{\\mu})} \\]\nEx. For testing the null of \\(\\mu = 0\\) difference in Democratic v. Republican feeling thermometers using the sample mean estimator\n\\[ T = \\frac{\\bar{Y} - 0}{\\hat{\\sigma}/\\sqrt{n}} \\]\nWe’ve shown that under the null \\(T\\) is asymptotically standard normal\n\\[T \\overset{a}{\\sim} \\mathcal{N}(0, 1) \\]"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#the-test-statistic",
+    "href": "slides/week8/week8_inference.html#the-test-statistic",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "The test statistic",
+    "text": "The test statistic"
   },
   {
     "objectID": "slides/week8/week8_inference.html#false-positives-and-false-negatives",
     "href": "slides/week8/week8_inference.html#false-positives-and-false-negatives",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
     "section": "False Positives and False Negatives",
-    "text": "False Positives and False Negatives"
+    "text": "False Positives and False Negatives\n\nAt the end of the test we will either reject the null \\(H_0\\) in favor of \\(H_a\\) or fail to reject\n\nEach of these decisions carries with it a risk of error\n\nType I error or false positives\n\nWe reject the null even though it is true\n\nType II error or a false negative\n\nWe fail to reject the null when it is false.\n\n\n\n\n\n\n\n\n\n\n\n\n\\(H_0\\) true\n\\(H_0\\) false\n\n\n\n\nRetain \\(H_0\\)\nCorrect\nType II error (false negative)\n\n\nReject \\(H_0\\)\nType I error (false positive)\nCorrect"
   },
   {
-    "objectID": "slides/week8/week8_inference.html#deriving-the-test-statistic",
-    "href": "slides/week8/week8_inference.html#deriving-the-test-statistic",
+    "objectID": "slides/week8/week8_inference.html#size-and-power-of-a-test",
+    "href": "slides/week8/week8_inference.html#size-and-power-of-a-test",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
-    "section": "Deriving the test statistic",
-    "text": "Deriving the test statistic"
+    "section": "Size and Power of a Test",
+    "text": "Size and Power of a Test\n\nIn NHST, we directly control the Type I or False positive rate\n\nThis is because we only have probabilities given \\(H_0\\) is true\n\nThe level or size of our test, denoted \\(\\alpha\\) is our chosen probability of a Type I error.\nOur choice of level depends on how much we’d like to avoid a false discovery\n\nIn social sciences, typical convention is \\(\\alpha = .05\\) - but this is arbitrary!\nTo detect the Higgs Boson, CERN physicists used \\(\\alpha = 1 - \\Phi(5) = 2.87 \\times 10^{-7}\\)\n\nChoosing a low Type I error trades off a potentially higher Type II error (more false negatives)\n\nThe power of a test is defined as \\(1 - Pr(\\text{False negative})\\)\nThis is in part a function of our chosen Type I error, but also a function of an unknown: the true parameter value (relative to the sampling variance of our estimator)\nWe’ll often calculate power before running our study under hypothesized values of the parameter to figure out how large of an effect our study can plausibly detect.\n\nYou’ll be doing this in section this week!"
   },
   {
-    "objectID": "slides/week8/week8_inference.html#confidence-intervals-and-hypothesis-tests",
-    "href": "slides/week8/week8_inference.html#confidence-intervals-and-hypothesis-tests",
+    "objectID": "slides/week8/week8_inference.html#the-type-i-error-rate",
+    "href": "slides/week8/week8_inference.html#the-type-i-error-rate",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
-    "section": "Confidence intervals and hypothesis tests",
-    "text": "Confidence intervals and hypothesis tests"
+    "section": "The Type I error rate",
+    "text": "The Type I error rate"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#the-null-distribution",
+    "href": "slides/week8/week8_inference.html#the-null-distribution",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "The null distribution",
+    "text": "The null distribution"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#the-rejection-region",
+    "href": "slides/week8/week8_inference.html#the-rejection-region",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "The rejection region",
+    "text": "The rejection region\n\nOnce we know the distribution of the test statistic under the null, we need to decide what realizations of the test statistic will lead to a decision of rejecting \\(H_0\\)\n\nThis is known as the rejection region for the test.\nHow large of a \\(T\\) will lead us to conclude in favor of the alternative?\n\nTo do this, we need to find the value \\(c\\) such that\n\\[Pr(-c \\le T \\le c) = 1 - \\alpha\\]\nFor a two-sided test, \\(H_a: \\mu \\neq \\mu_0\\), we’ll allocate our “\\(\\alpha\\) budget” symmetrically to both tails of the test statistic distribution\n\nEquivalent to \\(Pr(|T| \\le c) = 1 - \\alpha\\)"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#the-rejection-region-1",
+    "href": "slides/week8/week8_inference.html#the-rejection-region-1",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "The rejection region",
+    "text": "The rejection region\n\nFor an asymptotically standard normal test statistic, our critical values should look familiar\n\\[\\begin{aligned}\nPr(-c \\le T \\le c) &\\approx \\Phi(c) - \\Phi(-c) && \\small\\color{#777777}{\\text{difference of two CDFs}} \\\\\n&= \\Phi(c) - \\left[1 - \\Phi(c)\\right] && \\small\\color{#777777}{\\text{symmetry: } \\Phi(-x) = 1 - \\Phi(x)} \\\\\n&= 2\\Phi(c) - 1\n\\end{aligned}\\]\nSetting this equal to \\(1 - \\alpha\\) and solving for \\(c\\)\n\\[\\begin{aligned}\n2\\Phi(c) - 1 &= 1 - \\alpha \\\\\n\\Phi(c) &= 1 - \\frac{\\alpha}{2} && \\small\\color{#777777}{\\text{add 1, divide by 2}} \\\\\nc &= \\Phi^{-1}\\left(1 - \\frac{\\alpha}{2}\\right) = z_{1 - \\alpha/2} && \\small\\color{#777777}{\\text{apply the inverse CDF}}\n\\end{aligned}\\]\nReject \\(H_0\\) if \\(|T| &gt; z_{1-\\alpha/2}\\). For \\(\\alpha = 0.05\\), reject if \\(|T| &gt; 1.96\\) - the same critical value as our 95% confidence interval!"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#the-rejection-region-2",
+    "href": "slides/week8/week8_inference.html#the-rejection-region-2",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "The rejection region",
+    "text": "The rejection region"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#the-decision",
+    "href": "slides/week8/week8_inference.html#the-decision",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "The decision",
+    "text": "The decision"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#p-values",
+    "href": "slides/week8/week8_inference.html#p-values",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "p-values",
+    "text": "p-values\n\nThe p-value for a particular hypothesis test is the probability of observing a test statistic at least as extreme as the one we observe in the sample given that the null is true\n\nIf the p-value falls below our chosen \\(\\alpha\\), we reject the null\n\nThe smallest \\(\\alpha\\) for which we would still reject our null hypothesis.\n\nCalculate using 2*pnorm(-abs(T)) for a two-sided asymptotically normal test.\n\nBe careful! - P-values are not\n\nEvidence that the effect is substantively significant\nThe probability that the null hypothesis is true \\((P(H_0 \\text{ true}|\\text{observed data}) \\neq P(\\text{observed data} | H_0 \\text{ true}))\\)\nThe probability that the alternative is true (all probabilities here are conditional on the null)"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#connection-to-confidence-intervals",
+    "href": "slides/week8/week8_inference.html#connection-to-confidence-intervals",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Connection to confidence intervals",
+    "text": "Connection to confidence intervals\n\nConfidence intervals and hypothesis tests have a dual relationship\n\nA \\(100(1-\\alpha)\\%\\) confidence interval contains all of the null hypotheses that we’d fail to reject with an \\(\\alpha\\) level test.\n\nThis gives us a way of generating a confidence interval if all we have is a hypothesis test (e.g. randomization tests in 813).\n\nVary \\(\\mu_0\\) across some range of values, conduct the hypothesis test, collect all the values where \\(p\\) is greater than \\(\\alpha\\).\n\nTwo-sided CIs correspond to two-sided hypothesis tests.\n\nOne-sided CIs correspond to one-sided hypothesis tests."
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#connection-to-confidence-intervals-1",
+    "href": "slides/week8/week8_inference.html#connection-to-confidence-intervals-1",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Connection to confidence intervals",
+    "text": "Connection to confidence intervals"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#multiple-testing",
+    "href": "slides/week8/week8_inference.html#multiple-testing",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Multiple testing",
+    "text": "Multiple testing\n\n\n\n\n\n\n\n\n\n\n\n\nRandall Munroe, “Significant,” xkcd.com/882 (CC BY-NC 2.5)"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#bonferroni-correction",
+    "href": "slides/week8/week8_inference.html#bonferroni-correction",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Bonferroni correction",
+    "text": "Bonferroni correction\n\nWhen testing multiple hypotheses, we want to control the global error rate of the full “family” of tests\n\nOne error rate we could target is family-wise error rate\n\n\\[\\text{FWER} = P(\\text{at least one rejection} | \\text{All nulls are true}) \\]\nWe can write this using the complement\n\\[\\text{FWER} = 1 - P(\\text{fail to reject all tests} | \\text{All nulls are true})\\]\nIf I have \\(K\\) independent tests where I reject each at the rate \\(\\alpha\\), my FWER is\n\\[\\begin{aligned}\n\\text{FWER} &= 1 - P(\\text{fail to reject all } K | \\text{All nulls are true}) \\\\\n&= 1 - \\textstyle\\prod_{k=1}^K P(\\text{fail to reject } H_{0k} | H_{0k} \\text{ true}) && \\small\\color{#777777}{\\text{independence}} \\\\\n&= 1 - \\textstyle\\prod_{k=1}^K (1 - \\alpha) && \\small\\color{#777777}{\\text{Type I error rate } \\alpha} \\\\\n&= 1 - (1 - \\alpha)^K\n\\end{aligned}\\]"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#bonferroni-correction-1",
+    "href": "slides/week8/week8_inference.html#bonferroni-correction-1",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Bonferroni correction",
+    "text": "Bonferroni correction\n\nUncorrected, our testing procedure fails to control the FWER at the target \\(\\alpha\\)\n\nSince \\(1-\\alpha &lt; 1\\), \\((1 - \\alpha)^{K} \\to 0\\) as \\(K \\to \\infty\\), so the FWER \\(\\to 1\\).\n\nOne simple correction is to alter the rate that we reject each individual hypothesis so that the FWER remains at most \\(\\alpha\\) even as we increase the number of tests we conduct.\n\nThe Bonferroni correction: reject each test at \\(\\alpha/K\\) rather than \\(\\alpha\\)\nEquivalently, reject if \\(|T_k| &gt; z_{1 - \\alpha/(2K)}\\) - a wider rejection region for every test\n\nWhy does this work? Remember that the probability of the union is bounded by the sum of the component probabilities.\n\\[\\begin{aligned}\n\\text{FWER} &= P\\left(\\textstyle\\bigcup_{k=1}^K \\{\\text{reject } H_{0k}\\} \\,\\middle|\\, \\text{All nulls are true}\\right) \\\\\n&\\le \\textstyle\\sum_{k=1}^K P(\\text{reject } H_{0k} | H_{0k} \\text{ true}) && \\small\\color{#777777}{\\text{union bound}} \\\\\n&\\le K \\times \\frac{\\alpha}{K} = \\alpha && \\small\\color{#777777}{\\text{each test at level } \\alpha / K}\n\\end{aligned}\\]\nEx: \\(K = 20\\) tests at \\(\\alpha = 0.05\\). We’d reject each null only if \\(p &lt; 0.0025\\) - \\(|T| &gt; 3.02\\) instead of \\(1.96\\)\n\nThe consequence is a much higher bar for each test: lower power and more false negatives."
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#holm-correction",
+    "href": "slides/week8/week8_inference.html#holm-correction",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Holm correction",
+    "text": "Holm correction\n\nAn alternative approach is the Holm step-down procedure (Holm 1979)\n\nAlso controls the FWER at \\(\\alpha\\) (for any dependence)\nRejects at least as often as Bonferroni (so more power)\n\nThe Holm testing approach:\n\nSort the p-values from smallest to largest: \\(p_{(1)} \\le p_{(2)} \\le \\dotsc \\le p_{(K)}\\)\nStart at \\(k = 1\\): if \\(p_{(k)} \\le \\frac{\\alpha}{K - k + 1}\\), reject \\(H_{0(k)}\\) and move on to \\(k + 1\\)\nStop at the first \\(p_{(k)} &gt; \\frac{\\alpha}{K - k + 1}\\): fail to reject \\(H_{0(k)}\\) and every hypothesis after it\n\nThe bar relaxes as we go - first step is just Bonferroni:\n\\[\\underbrace{\\frac{\\alpha}{K}}_{k = 1}, \\quad \\underbrace{\\frac{\\alpha}{K - 1}}_{k = 2}, \\quad \\underbrace{\\frac{\\alpha}{K - 2}}_{k = 3}, \\quad \\dotsc, \\quad \\underbrace{\\frac{\\alpha}{1}}_{k = K}\\]\nTwo equivalent ways to correct: shrink the threshold \\((p_k &lt; \\alpha/K)\\) or inflate the p-value \\((K p_k &lt; \\alpha)\\)\n\nIn R, p.adjust(p, method = \"holm\") (or \"bonferroni\") returns adjusted p-values we can compare to \\(\\alpha\\) as if it were a single test"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#multiple-testing-1",
+    "href": "slides/week8/week8_inference.html#multiple-testing-1",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Multiple testing",
+    "text": "Multiple testing"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#bonferroni-and-holm",
+    "href": "slides/week8/week8_inference.html#bonferroni-and-holm",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Bonferroni and Holm",
+    "text": "Bonferroni and Holm"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#attitudes-towards-the-parties-by-age",
+    "href": "slides/week8/week8_inference.html#attitudes-towards-the-parties-by-age",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Attitudes towards the parties by age",
+    "text": "Attitudes towards the parties by age\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nGroup\nEstimate\nSE\nN\n\n\n\n\nAll respondents\n2.28**\n(0.81)\n5,477\n\n\n18–29\n3.77\n(2.19)\n547\n\n\n30–39\n−0.97\n(1.90)\n833\n\n\n40–49\n4.54*\n(1.89)\n870\n\n\n50–64\n1.07\n(1.70)\n1,276\n\n\n65+\n4.68**\n(1.60)\n1,680\n\n\n\n\n\n\n\nEstimates are mean Dem − Rep thermometer differences; standard errors in parentheses. Two-sided tests of H₀: μ = 0: * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001."
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#caution-with-nhst",
+    "href": "slides/week8/week8_inference.html#caution-with-nhst",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Caution with NHST",
+    "text": "Caution with NHST\n\nThe American Statistical Association’s statement on p-values (Wasserstein and Lazar 2016)\n\nP-values can indicate how incompatible the data are with a specified statistical model\nP-values do not measure the probability that the hypothesis is true, or that the data were produced by chance alone\nConclusions and decisions should not be based only on whether a p-value passes a threshold\nProper inference requires full reporting and transparency - how many tests did you run?\nA p-value does not measure the size of an effect or the importance of a result\nBy itself, a p-value is not a good measure of evidence for a model or hypothesis\n\nA p-value is \\(P(\\text{data at least this extreme} | H_0)\\), not \\(P(H_0 | \\text{data})\\)"
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#caution-with-nhst-1",
+    "href": "slides/week8/week8_inference.html#caution-with-nhst-1",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Caution with NHST",
+    "text": "Caution with NHST\n\n“Significant” vs. “not significant” is not itself significant (Gelman and Stern 2006)\n\n65+ is “significant” and 18–29 is not - but the difference between them is 0.90 (SE 2.71), nowhere near significant!\n\nResearcher degrees of freedom - “p-hacking” and the “garden of forking paths” (Simmons et al. 2011; Gelman and Loken 2014)\n\nMany choices of sample, outcome, controls and subgroups - an implicit multiple testing problem even if only one test is reported\n\nPublication bias - journals (and authors) favor results that clear \\(p &lt; 0.05\\) (Gerber and Malhotra 2008)\n\nPublished estimates often bunch just past the critical value."
+  },
+  {
+    "objectID": "slides/week8/week8_inference.html#caution-with-nhst-2",
+    "href": "slides/week8/week8_inference.html#caution-with-nhst-2",
+    "title": "Week 8: Confidence Intervals and Hypothesis Testing",
+    "section": "Caution with NHST",
+    "text": "Caution with NHST\n\nThe significance filter - in low-powered studies, the estimates that pass the threshold exaggerate the effect (Type M) and can even have the wrong sign (Type S) (Gelman and Carlin 2014)\nMeaning of a null - Some failures to reject are genuinely informative zeroes (Rainey 2014; Hartman and Hidalgo 2018) while failures for underpowered studies are uninformative - those studies would likely fail to detect most substantively interesting effects (Arel-Bundock et al. 2026).\nProposed fixes range from a stricter default threshold (\\(p &lt; 0.005\\)) (Benjamin et al. 2018) to abandoning “statistical significance” altogether in favor of reporting estimates and intervals (Amrhein et al. 2019)"
   },
   {
     "objectID": "slides/week8/week8_inference.html#next-week",
@@ -333,7 +487,7 @@
     "href": "slides/week8/week8_inference.html#references",
     "title": "Week 8: Confidence Intervals and Hypothesis Testing",
     "section": "References",
-    "text": "References\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nStudent. 1908. “The Probable Error of a Mean.” Biometrika 6 (1): 1–25. https://doi.org/10.1093/biomet/6.1.1."
+    "text": "References\n\n\nAmrhein, Valentin, Sander Greenland, and Blake McShane. 2019. “Scientists Rise up Against Statistical Significance.” Nature 567 (7748): 305–7. https://doi.org/10.1038/d41586-019-00857-9.\n\n\nArel-Bundock, Vincent, Ryan C. Briggs, Hristos Doucouliagos, Marco M. Mendoza Aviña, and T. D. Stanley. 2026. “Quantitative Political Science Research Is Greatly Underpowered.” The Journal of Politics 88 (1): 36–46. https://doi.org/10.1086/734279.\n\n\nBenjamin, Daniel J., James O. Berger, Magnus Johannesson, Brian A. Nosek, E.-J. Wagenmakers, et al. 2018. “Redefine Statistical Significance.” Nature Human Behaviour 2 (1): 6–10. https://doi.org/10.1038/s41562-017-0189-z.\n\n\nBlackwell, Matthew. 2025. A User’s Guide to Statistical Inference and Regression. https://mattblackwell.github.io/gov2002-book/.\n\n\nGelman, Andrew, and John Carlin. 2014. “Beyond Power Calculations: Assessing Type s (Sign) and Type m (Magnitude) Errors.” Perspectives on Psychological Science 9 (6): 641–51. https://doi.org/10.1177/1745691614551642.\n\n\nGelman, Andrew, and Eric Loken. 2014. “The Statistical Crisis in Science.” American Scientist 102 (6): 460. https://doi.org/10.1511/2014.111.460.\n\n\nGelman, Andrew, and Hal Stern. 2006. “The Difference Between ‘Significant’ and ‘Not Significant’ Is Not Itself Statistically Significant.” The American Statistician 60 (4): 328–31. https://doi.org/10.1198/000313006X152649.\n\n\nGerber, Alan, and Neil Malhotra. 2008. “Do Statistical Reporting Standards Affect What Is Published? Publication Bias in Two Leading Political Science Journals.” Quarterly Journal of Political Science 3 (3): 313–26. https://doi.org/10.1561/100.00008024.\n\n\nHartman, Erin, and F. Daniel Hidalgo. 2018. “An Equivalence Approach to Balance and Placebo Tests.” American Journal of Political Science 62 (4): 1000–1013. https://doi.org/10.1111/ajps.12387.\n\n\nHolm, Sture. 1979. “A Simple Sequentially Rejective Multiple Test Procedure.” Scandinavian Journal of Statistics 6 (2): 65–70. https://www.jstor.org/stable/4615733.\n\n\nRainey, Carlisle. 2014. “Arguing for a Negligible Effect.” American Journal of Political Science 58 (4): 1083–91. https://doi.org/10.1111/ajps.12102.\n\n\nSimmons, Joseph P., Leif D. Nelson, and Uri Simonsohn. 2011. “False-Positive Psychology: Undisclosed Flexibility in Data Collection and Analysis Allows Presenting Anything as Significant.” Psychological Science 22 (11): 1359–66. https://doi.org/10.1177/0956797611417632.\n\n\nStudent. 1908. “The Probable Error of a Mean.” Biometrika 6 (1): 1–25. https://doi.org/10.1093/biomet/6.1.1.\n\n\nWasserstein, Ronald L., and Nicole A. Lazar. 2016. “The ASA Statement on p-Values: Context, Process, and Purpose.” The American Statistician 70 (2): 129–33. https://doi.org/10.1080/00031305.2016.1154108."
   },
   {
     "objectID": "slides/week5/week5_estimands.html#welcome-back",
