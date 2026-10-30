@@ -1,0 +1,710 @@
+---
+title: "PS 812"
+subtitle: "Section 8: Hypothesis Tests and Power"
+author: "John Hicks"
+institute: "Dept. of Political Science, UW-Madison"
+date: "10-30-2026"
+
+format:
+  revealjs:
+    embed-resources: true
+    html-math-method: katex
+    theme: default
+    slide-number: true
+    transition: none
+    code-fold: false
+    code-line-numbers: true
+    chalkboard: false
+    width: 1600
+    height: 900
+    incremental: true
+    fig-width: 10
+    fig-height: 4.5
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: false
+---
+
+<style>
+
+.reveal {
+  font-family: Arial, sans-serif;
+}
+
+/* ---------------------------------
+   Headings
+   --------------------------------- */
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #8B0000;
+}
+
+.reveal h2 {
+  background-color: #eeeeee;
+  padding: 10px 20px;
+}
+
+/* ---------------------------------
+   Slide numbers
+   --------------------------------- */
+
+.reveal .slide-number {
+  color: #666666;
+  font-size: 0.7em;
+}
+
+/* ---------------------------------
+   Code
+   --------------------------------- */
+
+.reveal pre {
+  font-size: 0.65em;
+}
+
+.reveal code {
+  font-family: "Fira Code", "Courier New", monospace;
+}
+
+/* ---------------------------------
+   Cascade / incremental reveals
+   --------------------------------- */
+
+.reveal .fragment {
+  transition: opacity 0.35s ease-in-out;
+}
+
+.reveal .fragment.visible {
+  opacity: 1;
+}
+
+/* ---------------------------------
+   Lists
+   --------------------------------- */
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.35em;
+}
+
+/* ---------------------------------
+   Images
+   --------------------------------- */
+
+.reveal img {
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+</style>
+
+```{r}
+#| include: false
+library(tidyverse)
+library(estimatr)
+library(patchwork)
+theme_set(theme_minimal(base_size = 16))
+
+uw_red  <- "#c5050c"
+alt_blue <- "#2166ac"
+set.seed(812)
+
+# Null density with the two-sided rejection region shaded. If `shift` is
+# given, also draw the sampling distribution of T when tau / SE = shift and
+# shade the part of it that lands in the rejection region (the power).
+plot_test <- function(shift = NULL, z = qnorm(0.975), xlim = c(-4, 6.5)) {
+  grid <- tibble(t = seq(xlim[1], xlim[2], length.out = 1000))
+  p <- ggplot(grid, aes(x = t)) +
+    geom_area(data = filter(grid, t >= z),  aes(y = dnorm(t)), fill = uw_red, alpha = 0.6) +
+    geom_area(data = filter(grid, t <= -z), aes(y = dnorm(t)), fill = uw_red, alpha = 0.6) +
+    geom_line(aes(y = dnorm(t)), linewidth = 1) +
+    geom_vline(xintercept = c(-z, z), linetype = "dashed")
+  if (!is.null(shift)) {
+    p <- p +
+      geom_area(data = filter(grid, t >= z), aes(y = dnorm(t - shift)),
+                fill = alt_blue, alpha = 0.35) +
+      geom_line(aes(y = dnorm(t - shift)), colour = alt_blue, linewidth = 1)
+  }
+  p + labs(x = "T", y = "Density")
+}
+```
+
+# Today
+
+## Today
+
+::: {.fragment}
+**1. Hypothesis testing review**
+
+Pretend the null is true. Calibrate the test so we're wrong 5% of the time
+:::
+
+::: {.fragment}
+**2. The variance of a difference in means**
+
+:::
+
+::: {.fragment}
+**3. Power, analytically**
+
+Imagine the effect is this big. How often do we reject?
+:::
+
+::: {.fragment}
+**4. Power, by simulation**
+
+:::
+
+---
+
+## A survey experiment
+
+Respondents read a short news story:
+
+> The United States is engaged in trade negotiations with the European Union. After the talks stalled, the United States **[launched economic sanctions / decided to take no action]**.
+
+- Then: *"How much do you approve of the way the U.S. government handled this situation?"* (0–100 slider)
+- **Treatment**: sanctions. **Control**: no action
+- A **pilot** with 200 respondents, 100 per condition (the data are made up)
+- Today's question: **how big should the real study be?**
+
+---
+
+## The pilot
+
+```{r}
+pilot <- read_csv("data/sanctions_pilot.csv")
+
+pilot |>
+  group_by(condition) |>
+  summarise(n = n(), mean = mean(support), sd = sd(support))
+```
+
+::: {.fragment}
+Same steps as the ANES example in lecture, for a difference in means:
+
+```{r}
+pilot_test <- pilot |>
+  summarise(est   = mean(support[treat == 1]) - mean(support[treat == 0]),
+            se    = sqrt(var(support[treat == 1]) / sum(treat == 1) +
+                         var(support[treat == 0]) / sum(treat == 0)),   # derived below
+            t     = est / se,
+            p     = 2 * pnorm(-abs(t)),
+            lower = est - qnorm(0.975) * se,
+            upper = est + qnorm(0.975) * se)
+```
+:::
+
+- Sanctions raise approval by about `r round(pilot_test$est, 1)` points, with $p =$ `r round(pilot_test$p, 3)`. The 95% CI includes 0
+- We fail to reject at 0.05. Does that mean sanctions don't matter?
+
+---
+
+# Hypothesis testing
+
+## Framework
+
+1. **Null and alternative**: $H_0: \tau = 0$, $H_a: \tau \neq 0$
+2. **Test statistic**: $T = \dfrac{\hat\tau - 0}{\widehat{SE}(\hat\tau)}$
+3. **Type I error rate**: $\alpha = 0.05$
+4. **Null distribution**: $T \overset{a}{\sim} \mathcal{N}(0, 1)$ (CLT, plus Slutsky because we plug in $\widehat{SE}$)
+5. **Rejection region**: $|T| > z_{1 - \alpha/2} = 1.96$
+6. **Compute** $T$ in the pilot: `r round(pilot_test$t, 2)`
+7. **Decide**: it's not in the rejection region, so we **fail to reject** $H_0$
+
+- Same as checking whether 0 is in the 95% CI: a CI is the set of nulls we'd fail to reject
+
+---
+
+## The rejection region
+
+```{r}
+#| echo: false
+#| fig-height: 4.6
+t_obs <- pilot_test$t
+
+plot_test() +
+  geom_vline(xintercept = t_obs, colour = alt_blue, linewidth = 1.2) +
+  annotate("text", x = t_obs + 0.1, y = 0.36, label = paste("pilot T =", round(t_obs, 2)),
+           hjust = 0, colour = alt_blue, size = 6) +
+  annotate("text", x = c(-2.6, 2.6), y = 0.06, label = "2.5%", colour = uw_red, size = 6)
+```
+
+- Red: the **rejection region**. Under $H_0$, $T$ lands there 5% of the time
+- The pilot's $T$ falls just short
+
+---
+
+## Two ways to be wrong
+
+|                    | $H_0$ **true**                  | $H_0$ **false**                     |
+|--------------------|---------------------------------|-------------------------------------|
+| **Retain** $H_0$   | Correct                         | **Type II** error (false negative)  |
+| **Reject** $H_0$   | **Type I** error (false positive) | Correct                           |
+
+- We **choose** $\alpha$, the **level** or **size** of the test. It's calibrated so that **when the null is true** we reject 5% of the time
+- **Power** $= 1 - P(\text{false negative})$. We **don't** choose it. It depends on the **true effect**, the **noise**, and the **sample size**
+- So power is always "power to detect an effect of size $\tau$". We have to say how big an effect we care about
+
+---
+
+## Calibration: imagine the null is true
+
+A hypothetical difference in means. We pick everything, including the truth:
+
+```{r}
+sim_t <- function(n1, n0, tau, sd1, sd0) {
+  y1 <- rnorm(n1, mean = tau, sd = sd1)
+  y0 <- rnorm(n0, mean = 0,   sd = sd0)
+  (mean(y1) - mean(y0)) / sqrt(var(y1) / n1 + var(y0) / n0)
+}
+
+t_null <- replicate(5000, sim_t(n1 = 100, n0 = 100, tau = 0, sd1 = 22, sd0 = 17))
+mean(abs(t_null) > qnorm(0.975))
+```
+
+- 5,000 pilots in a world where sanctions do **nothing**
+- We reject about 5% of the time. 
+
+---
+
+## Calibration: imagine the null is true
+
+```{r}
+#| echo: false
+#| fig-height: 4.8
+tibble(t = t_null, reject = abs(t) > qnorm(0.975)) |>
+  ggplot(aes(x = t)) +
+  geom_histogram(aes(y = after_stat(count / sum(count) / width), fill = reject),
+                 binwidth = 0.196, boundary = 0, colour = "white") +
+  stat_function(fun = dnorm, linewidth = 1) +
+  geom_vline(xintercept = c(-1.96, 1.96), linetype = "dashed") +
+  scale_fill_manual(values = c(`FALSE` = "grey70", `TRUE` = uw_red),
+                    labels = c("fail to reject", "reject"), name = NULL) +
+  labs(x = "Simulated T when the null is true", y = "Density")
+```
+
+- The simulated $T$'s follow the $\mathcal{N}(0, 1)$ curve. The red bars are the Type I errors
+
+---
+
+# The variance of a difference in means
+
+## The setup
+
+$$
+\hat\tau = \bar Y_1 - \bar Y_0
+$$
+
+- $n_1$ treated respondents, outcomes i.i.d. with variance $\sigma_1^2$
+- $n_0$ control respondents, outcomes i.i.d. with variance $\sigma_0^2$
+- Every $SE$ in today's power calculations comes from $\text{Var}(\hat\tau)$. So let's derive it
+
+---
+
+## Step 1: one mean
+
+$$
+\begin{aligned}
+\text{Var}(\bar Y_1) &= \text{Var}\left(\frac{1}{n_1} \sum_{i=1}^{n_1} Y_i\right) \\
+&= \frac{1}{n_1^2}\, \text{Var}\left(\sum_{i=1}^{n_1} Y_i\right) &&\text{constants come out squared} \\
+&= \frac{1}{n_1^2} \sum_{i=1}^{n_1} \text{Var}(Y_i) &&\text{independent: no covariance terms} \\
+&= \frac{n_1 \sigma_1^2}{n_1^2} = \frac{\sigma_1^2}{n_1} &&\text{identically distributed}
+\end{aligned}
+$$
+
+---
+
+## Step 2: the difference
+
+$$
+\begin{aligned}
+\text{Var}(\bar Y_1 - \bar Y_0) &= \text{Var}(\bar Y_1) + \text{Var}(\bar Y_0) - 2\,\text{Cov}(\bar Y_1, \bar Y_0) \\
+&= \frac{\sigma_1^2}{n_1} + \frac{\sigma_0^2}{n_0}
+\end{aligned}
+$$
+
+- $\text{Cov}(\bar Y_1, \bar Y_0) = 0$: different respondents, independent draws
+- The minus becomes a **plus**. Subtracting two noisy things adds their noise
+- Estimate it by plugging in the sample variances: $\widehat{SE} = \sqrt{s_1^2 / n_1 + s_0^2 / n_0}$
+
+---
+
+## Check: by hand vs. `lm_robust()`
+
+```{r}
+fit <- lm_robust(support ~ treat, data = pilot)
+
+c(by_hand = pilot_test$se, lm_robust = fit$std.error[["treat"]])
+c(by_hand = pilot_test$p,  lm_robust = fit$p.value[["treat"]])
+```
+
+- `lm_robust()`'s default SE (HC2) is exactly this formula
+- Its p-value is slightly larger because it uses a $t$ distribution instead of the normal (the small-sample correction from lecture)
+
+---
+
+# Power
+
+## Imagine the effect is this big
+
+If the true effect is $\tau$, then $\hat\tau \approx \mathcal{N}(\tau, SE^2)$, so
+
+$$
+T = \frac{\hat\tau}{SE} \approx \mathcal{N}\left(\frac{\tau}{SE},\ 1\right)
+$$
+
+- The **same rejection region**: we calibrated it under the null, and we don't move it
+- A **different distribution** for $T$: shifted right by $\tau / SE$
+- Power = the share of this shifted distribution that lands in the rejection region
+
+---
+
+## Imagine the effect is this big
+
+```{r}
+#| echo: false
+#| fig-height: 4.6
+plot_test(shift = 2.3) +
+  annotate("text", x = 3.4, y = 0.2, label = "power", colour = alt_blue, size = 6)
+```
+
+- Black: where $T$ falls if the null is true. Red area = $\alpha$
+- Blue: where $T$ falls if $\tau / SE = 2.3$. Blue area = power, here `r round(pnorm(2.3 - 1.96), 2)`
+
+---
+
+## The formula
+
+$$
+\text{Power} = P(T > z) + P(T < -z) = \Phi\left(\frac{\tau}{SE} - z\right) + \Phi\left(-\frac{\tau}{SE} - z\right), \qquad z = z_{1-\alpha/2}
+$$
+
+- $\Phi$ is the standard normal CDF (`pnorm()`), and $z_{1-\alpha/2} = \Phi^{-1}(1 - \alpha/2)$ (`qnorm()`), as in lecture
+- The second term is tiny unless $\tau$ is near 0, so $\text{Power} \approx \Phi(\tau / SE - 1.96)$
+- Everything runs through $\tau / SE$: **the effect measured in standard errors**
+
+::: {.fragment}
+```{r}
+power_dim <- function(tau, sd1, sd0, n1, n0, alpha = 0.05) {
+  se <- sqrt(sd1^2 / n1 + sd0^2 / n0)
+  z  <- qnorm(1 - alpha / 2)
+  pnorm(tau / se - z) + pnorm(-tau / se - z)
+}
+
+power_dim(tau = 5, sd1 = 22, sd0 = 17, n1 = 100, n0 = 100)
+```
+:::
+
+- If sanctions really raise approval by 5 points, the pilot had a `r round(100 * power_dim(5, 22, 17, 100, 100))`% chance of rejecting. Failing to reject tells us very little: an **uninformative** null, in lecture's terms
+- And with power this low, the pilots that *do* reject overstate the effect (the significance filter)
+
+---
+
+## Check: imagine the effect is 5 points
+
+Same `sim_t()` as before, but now the truth is $\tau = 5$:
+
+```{r}
+t_alt <- replicate(5000, sim_t(n1 = 100, n0 = 100, tau = 5, sd1 = 22, sd0 = 17))
+mean(abs(t_alt) > qnorm(0.975))
+```
+
+```{r}
+#| echo: false
+#| fig-height: 3.4
+tibble(t = t_alt, reject = abs(t) > qnorm(0.975)) |>
+  ggplot(aes(x = t)) +
+  geom_histogram(aes(fill = reject), binwidth = 0.2, boundary = 0, colour = "white") +
+  geom_vline(xintercept = c(-1.96, 1.96), linetype = "dashed") +
+  scale_fill_manual(values = c(`FALSE` = "grey70", `TRUE` = alt_blue),
+                    labels = c("fail to reject", "reject"), name = NULL) +
+  labs(x = "Simulated T when τ = 5", y = "Count")
+```
+
+- The formula and the simulation agree. Everything grey is a **Type II error**
+
+---
+
+## Effects in SD units
+
+- "5 points" means little without knowing the noise. Standardize: $\delta = \tau / \sigma$
+- With equal variances and an even split, $SE = 2\sigma / \sqrt n$, so
+
+$$
+\frac{\tau}{SE} = \frac{\tau}{2\sigma / \sqrt n} = \frac{\delta \sqrt n}{2}
+\qquad\Rightarrow\qquad
+\text{Power} \approx \Phi\left(\frac{\delta \sqrt n}{2} - 1.96\right)
+$$
+
+- Power depends only on $\delta$ and $n$. The units of $Y$ drop out
+
+---
+
+## Power curves
+
+```{r}
+#| fig-height: 4
+curves <- expand_grid(n = seq(20, 3000, by = 10), delta = c(0.1, 0.2, 0.3, 0.5)) |>
+  mutate(power = power_dim(tau = delta, sd1 = 1, sd0 = 1, n1 = n / 2, n0 = n / 2))
+
+ggplot(curves, aes(x = n, y = power, colour = factor(delta))) +
+  geom_line(linewidth = 1.2) +
+  geom_hline(yintercept = 0.8, linetype = "dashed") +
+  labs(x = "Total n", y = "Power", colour = "δ (SDs)")
+```
+
+- With `sd1 = sd0 = 1`, `tau` **is** $\delta$
+- Halve the effect and you need four times the sample
+
+---
+
+## Backing out $n$
+
+For 80% power, $\tau / SE$ has to put 80% of the blue curve past 1.96:
+
+$$
+\frac{\tau}{SE} = z_{0.975} + z_{0.80} = 1.96 + 0.84 = 2.80
+$$
+
+```{r}
+#| echo: false
+#| fig-height: 3.4
+plot_test(shift = 2.8) +
+  annotate("segment", x = 0, xend = 1.96, y = 0.44, yend = 0.44,
+           arrow = arrow(ends = "both", length = unit(0.2, "cm"))) +
+  annotate("segment", x = 1.96, xend = 2.8, y = 0.44, yend = 0.44, colour = alt_blue,
+           arrow = arrow(ends = "both", length = unit(0.2, "cm"))) +
+  annotate("text", x = 0.98, y = 0.47, label = "1.96", size = 5) +
+  annotate("text", x = 2.38, y = 0.47, label = "0.84", colour = alt_blue, size = 5)
+```
+
+- Set $\delta \sqrt n / 2 = 2.8$ and solve: $n = (5.6 / \delta)^2 \approx 31.4 / \delta^2$
+
+::: {.fragment}
+| $\delta$ | 0.5 | 0.3 | 0.2 | 0.1 |
+|---|---|---|---|---|
+| $n$ for 80% power | 126 | 349 | 784 | 3,136 |
+:::
+
+---
+
+## The minimum detectable effect
+
+Flip it around. Fix $n$ (the budget) and solve for $\tau$:
+
+$$
+\text{MDE} = 2.8 \times SE
+$$
+
+::: {.fragment}
+```{r}
+se_1000 <- sqrt(22^2 / 500 + 17^2 / 500)
+2.8 * se_1000
+```
+:::
+
+- With 1,000 respondents split evenly and the pilot's SDs, we'd detect a `r round(2.8 * se_1000, 1)`-point effect 80% of the timeI
+
+---
+
+## Where do the $\sigma$'s come from?
+
+- A pilot (ours), past studies with the same outcome, or a **worst case**
+- Binary outcomes have one: if $Y \in \{0, 1\}$ then $\sigma^2 = p(1 - p) \le 1/4$
+- So with an even split, $SE \le \sqrt{\frac{1/4}{n/2} + \frac{1/4}{n/2}} = \frac{1}{\sqrt n}$
+- $n = 1{,}000$: $SE \le 3.2$ points, MDE $\le 8.9$ percentage points. A good back-of-the-envelope
+- But it's conservative. In the pilot, `approve` (support > 50) has
+
+::: {.fragment}
+```{r}
+pilot |> group_by(condition) |> summarise(p = mean(approve), var = p * (1 - p))
+```
+:::
+
+- Close to the worst case here because $p$ is near 0.5. With $p = 0.1$, $\sigma^2 = 0.09$, not $0.25$
+
+---
+
+# Unequal variances
+
+## Who should get more respondents?
+
+- In the pilot the treated group is noisier: SD `r round(sd(pilot$support[pilot$treat == 1]), 1)` vs. `r round(sd(pilot$support[pilot$treat == 0]), 1)`
+- Why? Sanctions **split** respondents. Republicans approve more, Democrats barely move. Different effects add variance to the treated group
+- With $n$ fixed, an even split isn't the best we can do. Choose $n_1$ to minimize
+
+$$
+\text{Var}(\hat\tau) = \frac{\sigma_1^2}{n_1} + \frac{\sigma_0^2}{n - n_1}
+$$
+
+---
+
+## The optimal split
+
+Take the derivative with respect to $n_1$ and set it to zero:
+
+$$
+-\frac{\sigma_1^2}{n_1^2} + \frac{\sigma_0^2}{n_0^2} = 0
+\qquad\Rightarrow\qquad
+\frac{n_1}{n_0} = \frac{\sigma_1}{\sigma_0}
+$$
+
+- **Over-sample the noisier group**, in proportion to its **SD** (not its variance)
+- Share treated: $\sigma_1 / (\sigma_1 + \sigma_0)$
+- Same logic as allocating a survey across subgroups: spend respondents where the noise is
+
+---
+
+## The optimal split in the pilot
+
+```{r}
+#| fig-height: 3.6
+sd1 <- 22; sd0 <- 17
+split <- tibble(share = seq(0.2, 0.8, by = 0.01)) |>
+  mutate(se = sqrt(sd1^2 / (1000 * share) + sd0^2 / (1000 * (1 - share))))
+
+ggplot(split, aes(x = share, y = se)) +
+  geom_line(linewidth = 1.2) +
+  geom_vline(xintercept = c(0.5, sd1 / (sd1 + sd0)), linetype = c("dashed", "solid"),
+             colour = c("grey40", uw_red)) +
+  labs(x = "Share of 1,000 respondents treated", y = "SE of the difference in means")
+```
+
+- Optimum at `r round(sd1 / (sd1 + sd0), 2)` treated. But the curve is **flat** near the bottom: the SE falls from `r round(split$se[split$share == 0.5], 2)` to `r round(min(split$se), 2)`
+- Big gains only when the SDs are very different. If $\sigma_1 = 3\sigma_0$, the optimum is 75% treated and the SE is `r round(100 * (1 - sqrt(9 / 0.75 + 1 / 0.25) / sqrt(9 / 0.5 + 1 / 0.5)))`% smaller than with an even split
+
+---
+
+# Simulation
+
+## When you forget the formula
+
+1. **Write down a world**: $n$, the true effect, the noise, how treatment is assigned
+2. **Generate** a dataset from it
+3. **Analyze** it the way you actually will: estimate, SE, test
+4. **Repeat** many times
+5. **Power** = the share of datasets where you reject
+
+- We already did this with `sim_t()`
+- It works for **any** design and **any** estimator. The formula only covers the simple case
+
+---
+
+## A world that looks like the pilot
+
+```{r}
+make_world <- function(n) {
+  tibble(rep = rbinom(n, 1, 0.5)) |>
+    mutate(y0    = 35 + 20 * rep + rnorm(n, 0, 14),   # control: Republicans start higher
+           tau_i = 2 + 6 * rep + rnorm(n, 0, 12),     # effects: Republicans move more
+           y1    = y0 + tau_i)
+}
+```
+
+- Both potential outcomes for everyone. We can do that because we made them up
+- The average effect is $2 + 6 \times 0.5 = 5$ points. The SDs come from a very big world:
+
+::: {.fragment}
+```{r}
+big <- make_world(1e6)
+c(ate = mean(big$tau_i), sd1 = sd(big$y1), sd0 = sd(big$y0))
+```
+:::
+
+---
+
+## Assign, analyze, repeat
+
+```{r}
+assign_complete <- function(d) mutate(d, treat = sample(rep(0:1, length.out = n())))
+
+dim_t <- function(d) {
+  y1 <- d$y[d$treat == 1]
+  y0 <- d$y[d$treat == 0]
+  (mean(y1) - mean(y0)) / sqrt(var(y1) / length(y1) + var(y0) / length(y0))
+}
+
+sim_power <- function(n, assign = assign_complete, test = dim_t, reps = 1000) {
+  t <- replicate(reps, {
+    make_world(n) |>
+      assign() |>
+      mutate(y = if_else(treat == 1, y1, y0)) |>   # reveal one potential outcome
+      test()
+  })
+  mean(abs(t) > qnorm(0.975))
+}
+```
+
+::: {.fragment}
+```{r}
+sim_power(n = 500)
+power_dim(tau = 5, sd1 = sd(big$y1), sd0 = sd(big$y0), n1 = 250, n0 = 250)
+```
+:::
+
+---
+
+## Complication: block on party
+
+Party predicts approval. So randomize **within** party, and estimate within party:
+
+```{r}
+assign_block <- function(d) {
+  d |> group_by(rep) |> mutate(treat = sample(rep(0:1, length.out = n()))) |> ungroup()
+}
+
+block_t <- function(d) {
+  b <- d |>
+    group_by(rep) |>
+    summarise(w   = n() / nrow(d),
+              est = mean(y[treat == 1]) - mean(y[treat == 0]),
+              v   = var(y[treat == 1]) / sum(treat) + var(y[treat == 0]) / sum(1 - treat))
+  sum(b$w * b$est) / sqrt(sum(b$w^2 * b$v))
+}
+```
+
+- The estimate: a weighted average of the two within-party differences in means
+- The variance: each block's $\sigma_1^2 / n_1 + \sigma_0^2 / n_0$, weighted by $w_b^2$. The same derivation, once per block
+
+---
+
+## Complication: block on party
+
+```{r}
+c(complete = sim_power(n = 400),
+  blocked  = sim_power(n = 400, assign = assign_block, test = block_t))
+```
+
+- Same $n$, more power: blocking removes the party differences from the noise
+- The formula on the earlier slide doesn't know about blocks. The simulation does, because we analyzed the data the way we'd really analyze it
+
+---
+
+## Recap
+
+- **Testing**: assume the null, calibrate the rejection region so Type I errors happen $\alpha$ of the time
+- **Variance of a difference in means**: $\sigma_1^2 / n_1 + \sigma_0^2 / n_0$. Variances add, covariance is zero
+- **Power**: shift the distribution of $T$ by $\tau / SE$ and see how much lands in the rejection region
+- **80% power** needs $\tau / SE = 2.8$. MDE $= 2.8 \times SE$. In SD units, $n \approx 31.4 / \delta^2$
+- **Unequal variances**: $n_1 / n_0 = \sigma_1 / \sigma_0$. Over-sample the noisier group
+- **Simulation**: write down a world, generate, analyze, repeat.
+---
+
+# Exercise
+
+## Exercise
+
+Open `ps812_section8_exercise.qmd`.
+
+- Part 1: testing and the variance of a difference in means
+- Part 2: power by formula
+- Part 3: power by simulation
+
+---
+
+# Questions?

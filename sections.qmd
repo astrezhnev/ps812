@@ -62,7 +62,7 @@ Links become active as the materials for each week are posted.
 
 *Friday, October 30*
 
-*To be posted*
+- [Week 8 GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/sections/week8/)
 
 ### Week 9: Introduction to Regression
 
