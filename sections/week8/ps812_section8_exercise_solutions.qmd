@@ -1,0 +1,418 @@
+---
+title: "PS 812: Section 8 Exercise Solutions"
+date: "10-30-2026"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(tidyverse)
+library(estimatr)
+theme_set(theme_minimal(base_size = 13))
+
+set.seed(812)
+
+pilot <- read_csv("data/sanctions_pilot.csv")
+
+# A world that looks like the pilot (Part 3). Both potential outcomes for
+# everyone; the average effect is 2 + 6 * 0.5 = 5 points.
+make_world <- function(n) {
+  tibble(rep = rbinom(n, 1, 0.5)) |>
+    mutate(y0    = 35 + 20 * rep + rnorm(n, 0, 14),
+           tau_i = 2 + 6 * rep + rnorm(n, 0, 12),
+           y1    = y0 + tau_i)
+}
+```
+
+Data: `pilot` is a (made-up) pilot of a survey experiment with 200 respondents. Everyone read:
+
+> The United States is engaged in trade negotiations with the European Union. After the talks stalled, the United States **[imposed economic sanctions on the EU / decided to take no action]**.
+
+- `treat`: 1 = sanctions, 0 = no action (`condition` has the labels). 100 respondents per condition.
+- `support`: "How much do you approve of the way the U.S. government handled this situation?" (0–100)
+- `approve`: 1 if `support` > 50
+- `party`: Democrat or Republican
+
+Use $\alpha = 0.05$ and the normal approximation throughout.
+
+# Part 1: Testing and the variance of a difference in means
+
+## Task 1: the pilot
+
+Compute the number of respondents, the mean of `support`, and the SD of `support` in each condition. What is the difference in means?
+
+```{r}
+by_cond <- pilot |>
+  group_by(treat) |>
+  summarise(n = n(), mean = mean(support), sd = sd(support))
+by_cond
+
+tau_hat <- by_cond$mean[by_cond$treat == 1] - by_cond$mean[by_cond$treat == 0]
+tau_hat
+```
+
+Sanctions raise approval by about 4.9 points. The treated group is also noisier (SD 21.6 vs. 17.2).
+
+## Task 2: the test by hand
+
+a. Compute the standard error of the difference in means using $\sqrt{s_1^2 / n_1 + s_0^2 / n_0}$.
+b. Compute $T$ and the two-sided p-value using `pnorm()`. Do you reject $H_0: \tau = 0$?
+c. Check your answers against `lm_robust(support ~ treat, data = pilot)`. Why is the p-value slightly different?
+d. Compute the 95% confidence interval. Does it contain 0? Explain how that matches your decision in (b).
+
+```{r}
+se_hat <- sqrt(by_cond$sd[2]^2 / by_cond$n[2] + by_cond$sd[1]^2 / by_cond$n[1])
+t_obs  <- tau_hat / se_hat
+p_val  <- 2 * pnorm(-abs(t_obs))
+c(se = se_hat, t = t_obs, p = p_val)
+
+lm_robust(support ~ treat, data = pilot)
+```
+
+The SE and $T$ match exactly. $p \approx 0.074$ by the normal approximation, so we fail to reject at 0.05. `lm_robust()` reports 0.076 because it uses a $t$ distribution with 198 degrees of freedom, which has slightly fatter tails than the normal (the small-sample correction from lecture).
+
+```{r}
+c(lower = tau_hat - qnorm(0.975) * se_hat,
+  upper = tau_hat + qnorm(0.975) * se_hat)
+```
+
+The 95% CI runs from about -0.5 to 10.3, so it contains 0. That matches failing to reject: a $100(1 - \alpha)\%$ CI contains exactly the nulls we'd fail to reject with a level-$\alpha$ test. Both reject when $|\hat\tau - 0| > 1.96 \times \widehat{SE}$. (`lm_robust()`'s CI is a bit wider because it uses a $t$ critical value.)
+
+## Task 3: the derivation
+
+Suppose the $n_1$ treated outcomes are i.i.d. with variance $\sigma_1^2$, the $n_0$ control outcomes are i.i.d. with variance $\sigma_0^2$, and the two groups are independent.
+
+a. Show that $\text{Var}(\bar Y_1) = \sigma_1^2 / n_1$. Which step uses independence?
+b. Show that $\text{Var}(\bar Y_1 - \bar Y_0) = \sigma_1^2 / n_1 + \sigma_0^2 / n_0$.
+c. In a **within-subject** design, the same $n$ respondents read both vignettes (like the ANES Dem − Rep thermometer gap in lecture, where each respondent rates both parties), so $\bar Y_1$ and $\bar Y_0$ are computed on the same people. Which term in (b) is no longer zero? If a respondent who approves of sanctions also tends to approve of doing nothing, does that make the estimate more or less precise?
+
+a.
+$$
+\text{Var}(\bar Y_1) = \frac{1}{n_1^2} \text{Var}\left(\sum_{i=1}^{n_1} Y_i\right) = \frac{1}{n_1^2} \sum_{i=1}^{n_1} \text{Var}(Y_i) = \frac{n_1 \sigma_1^2}{n_1^2} = \frac{\sigma_1^2}{n_1}
+$$
+The second equality uses independence: the variance of a sum is the sum of the variances plus twice the sum of all pairwise covariances, and the covariances are zero.
+
+b.
+$$
+\text{Var}(\bar Y_1 - \bar Y_0) = \text{Var}(\bar Y_1) + \text{Var}(\bar Y_0) - 2\,\text{Cov}(\bar Y_1, \bar Y_0) = \frac{\sigma_1^2}{n_1} + \frac{\sigma_0^2}{n_0}
+$$
+since the groups are independent, so $\text{Cov}(\bar Y_1, \bar Y_0) = 0$. Note that $\text{Var}(-\bar Y_0) = (-1)^2 \text{Var}(\bar Y_0)$, so the variances add.
+
+c. $\text{Cov}(\bar Y_1, \bar Y_0)$ is no longer zero. If the same people give similar answers to both vignettes, the covariance is positive and $-2\,\text{Cov}$ **reduces** the variance: the estimate is more precise. (The usual worry with within-subject designs is not precision but that the first vignette changes how people answer the second.)
+
+## Task 4: imagine the null is true
+
+We can impose the null on the pilot itself: if sanctions did nothing, the `treat` labels are arbitrary. Shuffle `treat` with `sample()` 2,000 times and compute $T$ each time.
+
+a. In what share of the shuffles is $|T| > 1.96$?
+b. Plot a histogram of the shuffled $T$'s with the rejection region marked, and add a vertical line at the pilot's actual $T$.
+c. What share of the shuffled $T$'s are at least as large in absolute value as the pilot's? Compare to your p-value from Task 2.
+
+```{r}
+t_stat <- function(y, treat) {
+  y1 <- y[treat == 1]
+  y0 <- y[treat == 0]
+  (mean(y1) - mean(y0)) / sqrt(var(y1) / length(y1) + var(y0) / length(y0))
+}
+
+t_shuffle <- replicate(2000, t_stat(pilot$support, sample(pilot$treat)))
+
+mean(abs(t_shuffle) > 1.96)
+mean(abs(t_shuffle) >= abs(t_obs))
+```
+
+```{r}
+ggplot(tibble(t = t_shuffle), aes(x = t)) +
+  geom_histogram(binwidth = 0.2, boundary = 0, fill = "grey70", colour = "white") +
+  geom_vline(xintercept = c(-1.96, 1.96), linetype = "dashed") +
+  geom_vline(xintercept = t_obs, colour = "#c5050c", linewidth = 1) +
+  labs(x = "T with shuffled treatment labels", y = "Count")
+```
+
+About 5% of the shuffles reject: the test is calibrated. About 7-8% of shuffles produce a $T$ as extreme as the pilot's, close to the p-value from Task 2. (This is randomization inference.)
+
+# Part 2: Power by formula
+
+## Task 5: a power function
+
+Write a function `power_dim(tau, sd1, sd0, n1, n0, alpha = 0.05)` that returns the power of the two-sided test:
+
+$$
+\Phi\left(\frac{\tau}{SE} - z_{1-\alpha/2}\right) + \Phi\left(-\frac{\tau}{SE} - z_{1-\alpha/2}\right)
+$$
+
+Using the pilot's SDs and group sizes, what was the pilot's power to detect a true effect of 2, 5, and 10 points? What should we conclude from the non-significant result?
+
+```{r}
+power_dim <- function(tau, sd1, sd0, n1, n0, alpha = 0.05) {
+  se <- sqrt(sd1^2 / n1 + sd0^2 / n0)
+  z  <- qnorm(1 - alpha / 2)
+  pnorm(tau / se - z) + pnorm(-tau / se - z)
+}
+
+sd1 <- sd(pilot$support[pilot$treat == 1])
+sd0 <- sd(pilot$support[pilot$treat == 0])
+
+power_dim(tau = c(2, 5, 10), sd1 = sd1, sd0 = sd0, n1 = 100, n0 = 100)
+```
+
+The pilot had about 11% power for a 2-point effect, 44% for 5 points, and 95% for 10 points. Failing to reject tells us the effect probably isn't as large as 10 points, but says almost nothing about effects of 5 points or less. Not significant is not the same as no effect.
+
+## Task 6: power in SD units
+
+a. Let $\delta = \tau / \sigma$. With equal variances and an even split, show that $\tau / SE = \delta \sqrt n / 2$.
+b. Plot power against total $n$ (from 20 to 3,000) for $\delta = 0.1, 0.2, 0.3, 0.5$, with a dashed line at 0.8. (Hint: set `sd1 = sd0 = 1`.)
+c. For 80% power we need $\tau / SE = z_{0.975} + z_{0.80}$. Solve for $n$ as a function of $\delta$, compute it for each $\delta$, and check your answers on the plot.
+d. How does the $n$ for $\delta = 0.2$ change if we want 90% power instead? If we use $\alpha = 0.01$?
+
+a. $SE = \sqrt{\sigma^2 / (n/2) + \sigma^2 / (n/2)} = 2\sigma / \sqrt n$, so $\tau / SE = \tau \sqrt n / (2 \sigma) = \delta \sqrt n / 2$.
+
+```{r}
+curves <- expand_grid(n = seq(20, 3000, by = 10), delta = c(0.1, 0.2, 0.3, 0.5)) |>
+  mutate(power = power_dim(tau = delta, sd1 = 1, sd0 = 1, n1 = n / 2, n0 = n / 2))
+
+ggplot(curves, aes(x = n, y = power, colour = factor(delta))) +
+  geom_line(linewidth = 1) +
+  geom_hline(yintercept = 0.8, linetype = "dashed") +
+  labs(x = "Total n", y = "Power", colour = "δ")
+```
+
+c. $\delta \sqrt n / 2 = z_{0.975} + z_{0.80}$ gives $n = \left(2 (z_{0.975} + z_{0.80}) / \delta\right)^2$.
+
+```{r}
+n_needed <- function(delta, power = 0.8, alpha = 0.05) {
+  (2 * (qnorm(1 - alpha / 2) + qnorm(power)) / delta)^2
+}
+
+n_needed(c(0.1, 0.2, 0.3, 0.5))
+```
+
+About 3,140, 785, 350, and 126. These match where the curves cross 0.8.
+
+d.
+
+```{r}
+c(baseline = n_needed(0.2), power_90 = n_needed(0.2, power = 0.9),
+  alpha_01 = n_needed(0.2, alpha = 0.01))
+```
+
+90% power needs about 1,050 (a third more). $\alpha = 0.01$ needs about 1,170: a stricter test moves the rejection region out, so the alternative distribution has to shift further.
+
+## Task 7: the minimum detectable effect
+
+Your budget covers 1,500 respondents. Using the pilot's SDs and an even split:
+
+a. What is the MDE (80% power, $\alpha = 0.05$) in points?
+b. Express it in units of the control group's SD.
+c. Is the pilot's estimate larger or smaller than the MDE? What does that suggest about the full study?
+
+```{r}
+se_1500 <- sqrt(sd1^2 / 750 + sd0^2 / 750)
+mde <- (qnorm(0.975) + qnorm(0.8)) * se_1500
+c(mde = mde, mde_sd = mde / sd0)
+```
+
+The MDE is about 2.8 points, or 0.16 control-group SDs. The pilot estimate (4.9) is well above it, so if the true effect is anywhere near the pilot estimate, the full study is very likely to detect it. (But the pilot estimate itself is noisy, with a CI running from about -0.5 to 10.4.)
+
+## Task 8: a binary outcome
+
+Suppose you planned to analyze `approve` instead of `support`.
+
+a. With no pilot, use the worst case $\sigma^2 = 1/4$ in both groups. What is the MDE with 1,500 respondents split evenly?
+b. Compute $p(1 - p)$ in each condition of the pilot. How conservative was the worst case?
+
+```{r}
+mde_worst <- 2.8 * sqrt(0.25 / 750 + 0.25 / 750)
+mde_worst
+
+pilot |>
+  group_by(condition) |>
+  summarise(p = mean(approve), var = p * (1 - p))
+```
+
+About 7.2 percentage points. The pilot variances (0.22 and 0.25) are close to the worst case because both shares are between 0.3 and 0.5. The worst-case bound is only loose when $p$ is near 0 or 1.
+
+## Task 9: the optimal split
+
+a. Show that, with $n$ fixed, $\sigma_1^2 / n_1 + \sigma_0^2 / (n - n_1)$ is minimized when $n_1 / n_0 = \sigma_1 / \sigma_0$.
+b. Using the pilot's SDs, what share of the 1,500 respondents should be treated?
+c. Plot the SE against the share treated (0.2 to 0.8). How much does the optimal split lower the SE compared with an even split?
+d. Why is the treated group noisier in these data? (Hint: compare the effect for each party.)
+
+a. Differentiate with respect to $n_1$: $-\sigma_1^2 / n_1^2 + \sigma_0^2 / (n - n_1)^2 = 0$, so $\sigma_1^2 / n_1^2 = \sigma_0^2 / n_0^2$. Take square roots: $\sigma_1 / n_1 = \sigma_0 / n_0$, or $n_1 / n_0 = \sigma_1 / \sigma_0$.
+
+```{r}
+share_opt <- sd1 / (sd1 + sd0)
+share_opt
+
+split <- tibble(share = seq(0.2, 0.8, by = 0.01)) |>
+  mutate(se = sqrt(sd1^2 / (1500 * share) + sd0^2 / (1500 * (1 - share))))
+
+ggplot(split, aes(x = share, y = se)) +
+  geom_line(linewidth = 1) +
+  geom_vline(xintercept = c(0.5, share_opt), linetype = c("dashed", "solid")) +
+  labs(x = "Share treated", y = "SE")
+
+c(even = sqrt(sd1^2 / 750 + sd0^2 / 750),
+  optimal = sqrt(sd1^2 / (1500 * share_opt) + sd0^2 / (1500 * (1 - share_opt))))
+```
+
+b. About 56% treated.
+
+c. The SE falls by less than 1%. The curve is flat near its minimum, so a modest difference in SDs barely matters.
+
+d.
+
+```{r}
+pilot |>
+  group_by(party, condition) |>
+  summarise(mean = mean(support), sd = sd(support), .groups = "drop")
+```
+
+Republicans start out more approving and their approval rises more with sanctions, so the gap between the parties is bigger in the treated group. That extra between-party spread is extra variance in $Y$ among the treated.
+
+# Part 3: Power by simulation
+
+## Task 10: a hypothetical difference in means
+
+Write a function `sim_t(n1, n0, tau, sd1, sd0)` that draws `n1` treated outcomes from $\mathcal{N}(\tau, \sigma_1^2)$ and `n0` control outcomes from $\mathcal{N}(0, \sigma_0^2)$ and returns $T$.
+
+a. With 750 per group, the pilot's SDs, and $\tau = 3$, simulate 5,000 $T$'s. What share reject? Compare to `power_dim()`.
+b. Plot the simulated $T$'s, coloured by whether they reject.
+c. Repeat (a) with $\tau = 0$. What should the rejection rate be?
+
+```{r}
+sim_t <- function(n1, n0, tau, sd1, sd0) {
+  y1 <- rnorm(n1, mean = tau, sd = sd1)
+  y0 <- rnorm(n0, mean = 0,   sd = sd0)
+  (mean(y1) - mean(y0)) / sqrt(var(y1) / n1 + var(y0) / n0)
+}
+
+t_alt <- replicate(5000, sim_t(750, 750, tau = 3, sd1 = sd1, sd0 = sd0))
+c(simulated = mean(abs(t_alt) > 1.96),
+  formula   = power_dim(3, sd1, sd0, 750, 750))
+```
+
+```{r}
+tibble(t = t_alt, reject = abs(t) > 1.96) |>
+  ggplot(aes(x = t, fill = reject)) +
+  geom_histogram(binwidth = 0.2, boundary = 0, colour = "white") +
+  geom_vline(xintercept = c(-1.96, 1.96), linetype = "dashed") +
+  labs(x = "Simulated T when τ = 3", y = "Count")
+```
+
+```{r}
+t_null <- replicate(5000, sim_t(750, 750, tau = 0, sd1 = sd1, sd0 = sd0))
+mean(abs(t_null) > 1.96)
+```
+
+With $\tau = 3$ the simulation and formula agree at about 0.84. With $\tau = 0$ the rejection rate is about 0.05, which is $\alpha$.
+
+## Task 11: a simulated power curve
+
+For total $n$ = 100, 250, 500, 750, 1,000, and 1,500 (split evenly), simulate the power to detect $\tau = 3$ with 1,000 draws each. Plot the simulated points on top of the curve from `power_dim()`.
+
+```{r}
+sim_curve <- tibble(n = c(100, 250, 500, 750, 1000, 1500)) |>
+  mutate(power = map_dbl(n, \(k) mean(abs(replicate(1000, sim_t(k / 2, k / 2, 3, sd1, sd0))) > 1.96)))
+
+formula_curve <- tibble(n = seq(50, 1600, by = 10)) |>
+  mutate(power = power_dim(3, sd1, sd0, n / 2, n / 2))
+
+ggplot(formula_curve, aes(x = n, y = power)) +
+  geom_line(linewidth = 1) +
+  geom_point(data = sim_curve, colour = "#c5050c", size = 3) +
+  labs(x = "Total n", y = "Power")
+```
+
+The simulated points sit on the analytic curve, up to simulation noise.
+
+## Task 12: coin flips instead of fixed group sizes
+
+The setup chunk defines `make_world(n)`, a population that looks like the pilot, with both potential outcomes for everyone.
+
+a. Write a function that simulates one experiment of size `n` under **complete** randomization (exactly half treated), reveals the observed outcome, and returns $T$.
+b. Write a second version where each respondent is treated by an independent **coin flip** (`rbinom(n, 1, 0.5)`).
+c. Simulate the power of each at $n = 500$ with 1,000 draws. Does it matter?
+
+```{r}
+dim_t <- function(d) t_stat(d$y, d$treat)
+
+one_experiment <- function(n, assign) {
+  make_world(n) |>
+    mutate(treat = assign(n),
+           y = if_else(treat == 1, y1, y0)) |>
+    dim_t()
+}
+
+complete <- function(n) sample(rep(0:1, length.out = n))
+coin     <- function(n) rbinom(n, 1, 0.5)
+
+c(complete = mean(abs(replicate(1000, one_experiment(500, complete))) > 1.96),
+  coin     = mean(abs(replicate(1000, one_experiment(500, coin))) > 1.96))
+```
+
+Essentially no difference. Coin flips give group sizes like 240/260 instead of 250/250, and the SE barely changes near an even split (Task 9).
+
+## Task 13: blocking on party
+
+Party predicts approval. Now randomize **within** party: complete randomization among Democrats and separately among Republicans. Estimate the effect within each party and average the two estimates, weighting by each party's share of the sample. The SE is $\sqrt{\sum_b w_b^2 \widehat{SE}_b^2}$.
+
+a. Write the assignment and the estimator, and simulate the power at $n = 400$. Compare to complete randomization with the plain difference in means.
+b. Why does blocking help here?
+
+```{r}
+block_t <- function(d) {
+  b <- d |>
+    group_by(rep) |>
+    summarise(w   = n() / nrow(d),
+              est = mean(y[treat == 1]) - mean(y[treat == 0]),
+              v   = var(y[treat == 1]) / sum(treat) + var(y[treat == 0]) / sum(1 - treat))
+  sum(b$w * b$est) / sqrt(sum(b$w^2 * b$v))
+}
+
+one_blocked <- function(n) {
+  make_world(n) |>
+    group_by(rep) |>
+    mutate(treat = sample(rep(0:1, length.out = n()))) |>
+    ungroup() |>
+    mutate(y = if_else(treat == 1, y1, y0)) |>
+    block_t()
+}
+
+c(complete = mean(abs(replicate(1000, one_experiment(400, complete))) > 1.96),
+  blocked  = mean(abs(replicate(1000, one_blocked(400))) > 1.96))
+```
+
+Power rises from about 0.70 to about 0.86. Each within-party difference in means only has the noise **within** a party. The 20-point gap between Republicans and Democrats is no longer part of the variance of the estimate.
+
+## Bonus: power for heterogeneity
+
+In `make_world()`, sanctions raise approval by 2 points among Democrats and 8 among Republicans, so the difference in effects is 6 points, a little larger than the 5-point average effect.
+
+a. Simulate experiments with $n = 500$ and complete randomization. In each, estimate the difference between the Republican and Democratic effects and its SE, $\sqrt{\widehat{SE}_R^2 + \widehat{SE}_D^2}$. What is the power to detect the difference?
+b. Compare to the power to detect the average effect. Using the derivation from Task 3, explain why the SE of the difference in effects is so much larger than the SE of the average effect.
+
+```{r}
+het_t <- function(n) {
+  d <- make_world(n) |>
+    mutate(treat = complete(n), y = if_else(treat == 1, y1, y0))
+  b <- d |>
+    group_by(rep) |>
+    summarise(est = mean(y[treat == 1]) - mean(y[treat == 0]),
+              v   = var(y[treat == 1]) / sum(treat) + var(y[treat == 0]) / sum(1 - treat))
+  diff(b$est) / sqrt(sum(b$v))
+}
+
+c(heterogeneity = mean(abs(replicate(1000, het_t(500))) > 1.96),
+  average       = mean(abs(replicate(1000, one_experiment(500, complete))) > 1.96))
+```
+
+The average effect is detected about 80% of the time. The difference in effects is larger, but is detected only about half the time.
+
+Each party's effect uses half the sample, so its variance is about twice the variance of the overall estimate. The difference of two independent estimates adds their variances (Task 3b), doubling it again: four times the variance, twice the SE. Here it is closer to 1.6 times, because the within-party SDs are smaller than the overall SDs. The rule of thumb: to detect a difference in effects with the same power as an average effect of the same size, you need about four times the sample.
