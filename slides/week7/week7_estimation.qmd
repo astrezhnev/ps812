@@ -454,22 +454,24 @@ For an alternative proof that takes logs and applies L'Hôpital's rule, see @bli
 
 :::
 
-## Example: Sums of Bernoullis
+## Averaging gets rid of everything but mean and variance
 
 ```{r}
 #| echo: false
 #| output: asis
 
-# sqrt(n) (Ybar_n - p) for Bernoulli(0.2) draws: its MGF (left) and its PMF as
-# a histogram (right) morph toward e^(p(1-p) t^2/2) and the N(0, p(1-p)) density
-# as n steps from 1 to 400 (binom-anim/binom.js; data from binom-anim/make_binom.R)
+# sqrt(n) (Ybar_n - p) for Bernoulli(0.1) draws: as n steps from 1 to 400 its
+# standardized cumulants (left) go to the normal's 1, 0, 0 -- skewness like
+# 1/sqrt(n), excess kurtosis like 1/n -- and its PMF as a histogram (right)
+# morphs toward the N(0, p(1-p)) density (binom-anim/binom.js; data from
+# binom-anim/make_binom.R)
 cat("```{=html}",
     '<div class="bn-anim"></div>',
     "<script>",
     "(", readLines("binom-anim/binom.js"), ")(document.currentScript.previousElementSibling,",
     readLines("binom-anim/binom.json", warn = FALSE), ");",
     "</script>",
-    rep('<span class="fragment bn-step"></span>', 7),
+    rep('<span class="fragment bn-step"></span>', 9),
     "```", sep = "\n")
 ```
 

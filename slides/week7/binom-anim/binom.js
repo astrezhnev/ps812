@@ -1,16 +1,19 @@
 function (el, d) {
   // The CLT for Bernoulli(p) draws, in two panels that move together: on the
-  // left the MGF of sqrt(n) (Ybar_n - p) = (S_n - n p) / sqrt(n), on the right its PMF drawn as
-  // a histogram on the density scale. The first step draws in the limits
-  // (e^(sigma^2 t^2/2) and the N(0, sigma^2) density); each step after that
-  // raises n, and both blue curves morph toward the red ones while a counter
-  // ticks n up. Data from binom.json (built by make_binom.R). One stage per
-  // .bn-step fragment; stepping backwards runs each transition in reverse.
+  // left the standardized cumulants of sqrt(n) (Ybar_n - p) = (S_n - n p) / sqrt(n)
+  // as bars (variance, skewness, excess kurtosis), on the right its PMF drawn
+  // as a histogram on the density scale. The first step draws in the normal's
+  // values (cumulants 1, 0, 0 and the N(0, sigma^2) density); each step after
+  // that raises n, the variance bar holds while skewness shrinks like 1/sqrt(n)
+  // and excess kurtosis like 1/n, and the histogram morphs toward the density
+  // while a counter ticks n up. Data from binom.json (built by make_binom.R).
+  // One stage per .bn-step fragment; stepping backwards runs each transition
+  // in reverse.
   var NS = 'http://www.w3.org/2000/svg';
-  var W = 1000, H = 500;
+  var W = 1000, H = 520;
   var BLUE = '#0479a8', RED = '#c5050c', INK = '#333333', GREY = '#9a9a9a';
   var Y0 = 420, Y1 = 95;                           // panel baseline and top
-  var L = { x0: 50, x1: 465, lim: [-d.tlim, d.tlim], ymax: d.mgf_ymax };   // MGF panel
+  var L = { x0: 50, x1: 465, ymax: d.cum_ymax };                           // cumulant panel
   var R = { x0: 535, x1: 950, lim: [-d.slim, d.slim], ymax: d.pdf_ymax };  // PMF panel
   var NN = d.n.length;
 
@@ -37,12 +40,13 @@ function (el, d) {
     e.textContent = str;
     return e;
   }
-  // Text from [string, italic?, subscript] parts
+  // Text from [string, italic?, subscript, superscript] parts
   function rich(parts, attrs, parent) {
     var e = mk('text', attrs, parent);
     parts.forEach(function (s) {
       mk('tspan', s[1] ? { 'font-style': 'italic' } : {}, e).textContent = s[0];
       if (s[2]) mk('tspan', { 'baseline-shift': 'sub', 'font-size': '0.7em', 'font-style': 'italic' }, e).textContent = s[2];
+      if (s[3]) mk('tspan', { 'baseline-shift': 'super', 'font-size': '0.7em', 'font-style': 'italic' }, e).textContent = s[3];
     });
     return e;
   }
@@ -54,7 +58,7 @@ function (el, d) {
   }
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
-                        'aria-label': 'As n grows, the moment generating function of the scaled error of a sample mean of Bernoulli draws approaches the normal MGF, and its probability mass function approaches the normal density',
+                        'aria-label': 'As n grows, the skewness and excess kurtosis of the scaled error of a sample mean of Bernoulli draws shrink to zero while its variance stays fixed, and its probability mass function approaches the normal density',
                         style: 'width: 100%; height: auto; max-height: 540px; display: block; margin: 0 auto; font-family: inherit;' }, el);
   var defs = mk('defs', {}, svg);
   [['bn-clipL', L], ['bn-clipR', R]].forEach(function (c) {
@@ -71,39 +75,65 @@ function (el, d) {
   mk('line', { x1: 916, x2: 950, y1: 33, y2: 33, stroke: RED, 'stroke-width': 4, 'stroke-linecap': 'round' }, legLim);
   text('N(0, ' + d.sigma2 + ')', { x: 904, y: 40, 'text-anchor': 'end', 'font-size': 21, fill: INK }, legLim);
 
-  // Panels: zero line, baseline, a few ticks, a caption underneath
-  function axes(P, ticks, caption) {
-    mk('line', { x1: px(P, 0), x2: px(P, 0), y1: Y0, y2: Y1, stroke: GREY, 'stroke-width': 1.5, 'stroke-dasharray': '6 6' }, svg);
+  // Panels: baseline and a caption underneath; the PMF panel adds a zero line
+  // and ticks, the cumulant panel names each bar and how fast it shrinks
+  function axes(P, caption) {
     mk('line', { x1: P.x0, x2: P.x1, y1: Y0, y2: Y0, stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round' }, svg);
-    ticks.forEach(function (v) {
-      mk('line', { x1: px(P, v), x2: px(P, v), y1: Y0, y2: Y0 + 7, stroke: INK, 'stroke-width': 2 }, svg);
-      text(v < 0 ? '−' + -v : String(v), { x: px(P, v), y: Y0 + 30, 'text-anchor': 'middle', 'font-size': 19, fill: GREY }, svg);
-    });
-    rich(caption, { x: (P.x0 + P.x1) / 2, y: Y0 + 70, 'text-anchor': 'middle', 'font-size': 23, fill: INK }, svg);
+    rich(caption, { x: (P.x0 + P.x1) / 2, y: Y0 + 88, 'text-anchor': 'middle', 'font-size': 23, fill: INK }, svg);
   }
   // Captions name the plotted quantity, sqrt(n) (Ybar_n - p)
   var scaled = [['\u221An('], ['\u0232', true, 'n'], [' \u2212 '], ['p', true], [')']];
-  axes(L, ticks(d.tlim), [['MGF of ']].concat(scaled, [[' at '], ['t', true]]));
-  axes(R, ticks(d.slim), [['PMF of ']].concat(scaled, [[', as a histogram']]));
-  // Every MGF passes through (0, 1)
+  mk('line', { x1: px(R, 0), x2: px(R, 0), y1: Y0, y2: Y1, stroke: GREY, 'stroke-width': 1.5, 'stroke-dasharray': '6 6' }, svg);
+  ticks(d.slim).forEach(function (v) {
+    mk('line', { x1: px(R, v), x2: px(R, v), y1: Y0, y2: Y0 + 7, stroke: INK, 'stroke-width': 2 }, svg);
+    text(v < 0 ? '−' + -v : String(v), { x: px(R, v), y: Y0 + 30, 'text-anchor': 'middle', 'font-size': 19, fill: GREY }, svg);
+  });
+  axes(R, [['PMF of ']].concat(scaled, [[', as a histogram']]));
+  axes(L, [['Cumulants '], ['\u03ba', true, 'r'], [' / '], ['\u03c3', true, '', 'r'], [' of ']].concat(scaled));
+  // Variance stays at 1; the guide marks it
   mk('line', { x1: L.x0, x2: L.x1, y1: py(L, 1), y2: py(L, 1), stroke: GREY, 'stroke-width': 1, 'stroke-dasharray': '2 5' }, svg);
   text('1', { x: L.x0 - 12, y: py(L, 1) + 6, 'text-anchor': 'end', 'font-size': 19, fill: GREY }, svg);
+  text('0', { x: L.x0 - 12, y: Y0 + 6, 'text-anchor': 'end', 'font-size': 19, fill: GREY }, svg);
+  // One slot per cumulant: name and rate under the baseline
+  var SLOT = (L.x1 - L.x0) / d.kappa.length, BW = 64;
+  function cx(i) { return L.x0 + (i + 0.5) * SLOT; }
+  [['variance', 'fixed'], ['skewness', '\u221d 1/\u221an'], ['excess kurtosis', '\u221d 1/n']].forEach(function (c, i) {
+    text(c[0], { x: cx(i), y: Y0 + 28, 'text-anchor': 'middle', 'font-size': 19, fill: INK }, svg);
+    text(c[1], { x: cx(i), y: Y0 + 52, 'text-anchor': 'middle', 'font-size': 17, fill: GREY }, svg);
+  });
 
   // The binomial (blue) under the limits (red, drawn in on the first step)
   var gL = mk('g', { 'clip-path': 'url(#bn-clipL)' }, svg), gR = mk('g', { 'clip-path': 'url(#bn-clipR)' }, svg);
-  var mgf = mk('path', { fill: 'none', stroke: BLUE, 'stroke-width': 4.5, 'stroke-linejoin': 'round' }, gL);
+  var bars = d.kappa.map(function () {
+    return mk('rect', { x: 0, width: BW, fill: BLUE, 'fill-opacity': 0.25, stroke: BLUE, 'stroke-width': 2.5 }, gL);
+  });
+  var vals = d.kappa.map(function (v, i) {
+    return text('', { x: cx(i), 'text-anchor': 'middle', 'font-size': 20, fill: BLUE }, svg);
+  });
   var hist = mk('path', { fill: BLUE, 'fill-opacity': 0.25, stroke: BLUE, 'stroke-width': 2.5, 'stroke-linejoin': 'round' }, gR);
-  var limL = mk('path', { d: path(L, d.t, d.mgf_lim), fill: 'none', stroke: RED, 'stroke-width': 3.5, pathLength: 1,
-                          'stroke-dasharray': '1 1' }, gL);
+  // The normal's standardized cumulants: 1, then zeros
+  var normCum = d.kappa.map(function (v, i) { return i === 0 ? 1 : 0; });
+  var limL = mk('path', { d: normCum.map(function (v, i) {
+                            return 'M' + (cx(i) - BW / 2 - 12) + ' ' + py(L, v) + 'H' + (cx(i) + BW / 2 + 12);
+                          }).join(''),
+                          fill: 'none', stroke: RED, 'stroke-width': 4, 'stroke-linecap': 'round', pathLength: 1,
+                          'stroke-dasharray': '1 1' }, svg);
   var limR = mk('path', { d: path(R, d.s, d.pdf_lim), fill: 'none', stroke: RED, 'stroke-width': 3.5, pathLength: 1,
                           'stroke-dasharray': '1 1' }, gR);
-  mk('circle', { cx: px(L, 0), cy: py(L, 1), r: 6, fill: INK }, svg);
 
   // Draw state: k is a (fractional) index into d.n, lim how far the limits are drawn
   function render(k, lim) {
     var a = Math.floor(k), b = Math.min(a + 1, NN - 1), f = k - a;
     function mix(arr) { return arr[a].map(function (v, j) { return lerp(v, arr[b][j], f); }); }
-    mgf.setAttribute('d', path(L, d.t, mix(d.mgf)));
+    var n = Math.exp(lerp(Math.log(d.n[a]), Math.log(d.n[b]), f));
+    d.kappa.forEach(function (v, i) {
+      var c = v * Math.pow(n, -d.rate[i]), y = py(L, c);
+      bars[i].setAttribute('x', cx(i) - BW / 2);
+      bars[i].setAttribute('y', y);
+      bars[i].setAttribute('height', Y0 - y);
+      vals[i].setAttribute('y', y - 10);
+      vals[i].textContent = c.toFixed(2);
+    });
     var hs = path(R, d.s, mix(d.pmf));
     hist.setAttribute('d', 'M' + px(R, d.s[0]) + ' ' + Y0 + 'L' + hs.slice(1) + 'L' + px(R, d.s[d.s.length - 1]) + ' ' + Y0 + 'Z');
     [limL, limR].forEach(function (p) {
@@ -111,7 +141,7 @@ function (el, d) {
       p.setAttribute('opacity', lim > 0 ? 1 : 0);
     });
     legLim.setAttribute('opacity', lim);
-    counter.textContent = 'n = ' + Math.round(Math.exp(lerp(Math.log(d.n[a]), Math.log(d.n[b]), f)));
+    counter.textContent = 'n = ' + Math.round(n);
   }
 
   // ---- Stepping (one stage per .bn-step fragment) ----------------------------
