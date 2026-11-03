@@ -65,9 +65,7 @@ Adapted from @blackwell2025users, Ch. 2
 
 - Under **i.i.d random sampling** from the target population, the **central limit theorem** gives us...
 
-::: {.recap-result}
-$\sqrt{n}\left(\hat{\mu} - \mu\right) \xrightarrow{d} \mathcal{N}\left(0, \sigma^2\right)$
-:::
+$$\sqrt{n}\left(\hat{\mu} - \mu\right) \xrightarrow{d} \mathcal{N}\left(0, \sigma^2\right)$$
 
 - **Intuition**: Averaging washes out every feature of the distribution beyond the mean and variance:
   - And the **normal** is the distribution **fully defined** by mean and variance alone
