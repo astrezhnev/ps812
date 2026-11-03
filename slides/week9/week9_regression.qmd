@@ -370,7 +370,7 @@ base_plot() +
 - Binning worked because $X_i$ is **one** variable with **17** values, and we have thousands of respondents
 
 - What if we want the CEF given hostile sexism **and** gender, education, race, partisanship, ideology and age?
-  $$\mu(\mathbf{x}) = \mathbb{E}[Y_i \mid \mathbf{X}_i = \mathbf{x}] \qquad \mathbf{X}_i = (X_{i1}, X_{i2}, \dotsc, X_{id})$$
+  $$\mu(\mathbf{x}) = \mathbb{E}[Y_i \mid \mathbf{X}_i = \mathbf{x}] \qquad \mathbf{X}_i = (X_{i1}, X_{i2}, \dotsc, X_{ik})$$
 
   - Binning needs a separate mean for **every combination** of covariate values
   - And if we have a **continuous** covariate, nearly *every* respondent has a unique value of that covariate
@@ -478,8 +478,8 @@ cat('```{=html}',
 - A **weighted average** of the outcomes: the weights are non-negative, sum to $1$, and are larger for the observations closer to $\mathbf{x}$
 
 - The same kernels as in density estimation, $K_h(\mathbf{u}) = K(\mathbf{u}/h)$
-  - With $d$ dimensions, often use the **product kernel**: the product of covariate-specific kernels (which can be uniform/triangular/etc...) $K(\mathbf{u}) = \prod_{j=1}^d K(u_j)$ (with covariates on a common scale)
-  - Another approach is the "nearest neighbors" method: at each $x$, average the outcomes of the $k$ closest observations (based on some distance metric)
+  - With $k$ dimensions, often use the **product kernel**: the product of covariate-specific kernels (which can be uniform/triangular/etc...) $K(\mathbf{u}) = \prod_{j=1}^k K(u_j)$ (with covariates on a common scale)
+  - Another approach is the "nearest neighbors" method: at each $x$, average the outcomes of the $m$ closest observations (based on some distance metric)
 
 :::
 
@@ -629,13 +629,516 @@ base_plot(alpha = 0.04) +
 
 ## Best Linear Predictor
 
-## Ordinary Least Squares 
+::: {.incremental}
+
+- Let's restrict our focus to functions of $X$ that are **linear predictors** - that is, they're **linear** combinations of the covariates and some set of **parameters**
+  - With a single covariate
+
+    $$m(x) = \beta_0 + \beta_1 x$$
+
+  - With **many covariates**, we write
+
+    $$m(\mathbf{x}) = \beta_0 + \beta_1 x_1 + \dotsc + \beta_{k-1} x_{k-1} = \mathbf{x}^\prime\boldsymbol{\beta} \quad \mathbf{x} = (1, x_1, \dotsc, x_{k-1})^\prime \quad \boldsymbol{\beta} = (\beta_0, \beta_1, \dotsc, \beta_{k-1})^\prime$$
+
+- **Review**: Inner products
+
+    $$\underbrace{\mathbf{x}^\prime}_{1 \times k} \quad \underbrace{\boldsymbol{\beta}}_{k \times 1} = \begin{pmatrix} 1 & x_1 & x_2 & \cdots & x_{k-1} \end{pmatrix} \begin{pmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \vdots \\ \beta_{k-1} \end{pmatrix} = 1 \cdot \beta_0 + x_1 \beta_1 + x_2 \beta_2 + \dotsc + x_{k-1} \beta_{k-1}$$
+:::
+
+## Best Linear Predictor
+
+::: {.incremental}
+
+- The **best linear predictor** is the linear predictor that **minimizes** the expected squared prediction error
+
+  $$\boldsymbol{\beta} = \arg\min_{\mathbf{b} \in \mathbb{R}^k} \ \mathbb{E}\big[(Y_i - \mathbf{X}_i^\prime\mathbf{b})^2\big]$$
+
+- We found a **closed form solution** for the two-parameter case in a previous lecture
+
+  $$\beta_1 = \frac{\Cov(X_i, Y_i)}{\Var(X_i)} \qquad \beta_0 = \mathbb{E}[Y_i] - \beta_1\,\mathbb{E}[X_i]$$
+
+- Let's derive the **general form** for *many* covariates
+
+:::
+
+
+## Best Linear Predictor
+
+::: {.incremental}
+
+- We'll start by taking the derivative of the squared errors inside the expectation with respect to the **vector** of parameters
+
+  $$
+  \begin{aligned}
+  \frac{\partial}{\partial \mathbf{b}} (Y_i - \mathbf{X}_i^\prime\mathbf{b})^2 &= \begin{pmatrix} \frac{\partial}{\partial b_0} (Y_i - \mathbf{X}_i^\prime\mathbf{b})^2 \\ \vdots \\ \frac{\partial}{\partial b_{k-1}} (Y_i - \mathbf{X}_i^\prime\mathbf{b})^2 \end{pmatrix} = \begin{pmatrix} -2 \cdot 1 \cdot (Y_i - \mathbf{X}_i^\prime\mathbf{b}) \\ \vdots \\ -2 X_{i,k-1} (Y_i - \mathbf{X}_i^\prime\mathbf{b}) \end{pmatrix} \\[0.4em]
+  &= -2\,\mathbf{X}_i (Y_i - \mathbf{X}_i^\prime\mathbf{b}) = -2\,(\mathbf{X}_i Y_i - \mathbf{X}_i\mathbf{X}_i^\prime\mathbf{b})
+  \end{aligned}
+  $$
+
+- Review: outer products
+
+  $$\underbrace{\mathbf{X}_i}_{k \times 1} \quad \underbrace{\mathbf{X}_i^\prime}_{1 \times k} = \begin{pmatrix} 1 \\ X_{i1} \\ \vdots \\ X_{i,k-1} \end{pmatrix} \begin{pmatrix} 1 & X_{i1} & \cdots & X_{i,k-1} \end{pmatrix} = \begin{pmatrix} 1 & X_{i1} & \cdots & X_{i,k-1} \\ X_{i1} & X_{i1}^2 & \cdots & X_{i1} X_{i,k-1} \\ \vdots & \vdots & \ddots & \vdots \\ X_{i,k-1} & X_{i,k-1} X_{i1} & \cdots & X_{i,k-1}^2 \end{pmatrix}$$
+
+:::
+
+## Best Linear Predictor
+
+::: {.incremental}
+
+- Take the **expected value** and set it equal to $\mathbf{0}$ to solve for $\boldsymbol{\beta}$
+
+  $$
+  \begin{aligned}
+  \mathbb{E}\big[{-2}\,(\mathbf{X}_i Y_i - \mathbf{X}_i\mathbf{X}_i^\prime\boldsymbol{\beta})\big] &= \mathbf{0} \\
+  \mathbb{E}[\mathbf{X}_i Y_i] - \mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\,\boldsymbol{\beta} &= \mathbf{0} \\
+  \mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\,\boldsymbol{\beta} &= \mathbb{E}[\mathbf{X}_i Y_i] \\
+  \boldsymbol{\beta} &= \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\,\mathbb{E}[\mathbf{X}_i Y_i]
+  \end{aligned}
+  $$
+
+- What have we **assumed**? Essentially just **regularity conditions** that ensure the BLP **exists**
+  - Finite mean/variance for $Y$
+  - Finite means/variances/covariances for $\mathbf{X}$
+  - $(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime])^{-1}$ exists (no **perfect** linear dependence between covariates)
+
+:::
+
+## Projection error
+
+- What are the properties of the **error** between the true $Y_i$ and the **best linear predictor**?
+
+  $$e_i = Y_i - m(\mathbf{X}_i) = Y_i - \mathbf{X}_i^\prime\boldsymbol{\beta}$$
+
+- One very important property is that the projection errors are **uncorrelated** with the covariates
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[\mathbf{X}_i e_i] &= \mathbb{E}\big[\mathbf{X}_i (Y_i - \mathbf{X}_i^\prime\boldsymbol{\beta})\big] \\
+  &= \mathbb{E}[\mathbf{X}_i Y_i] - \mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\,\boldsymbol{\beta} \\
+  &= \mathbb{E}[\mathbf{X}_i Y_i] - \mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\mathbb{E}[\mathbf{X}_i Y_i] \\
+  &= \mathbb{E}[\mathbf{X}_i Y_i] - \mathbb{E}[\mathbf{X}_i Y_i] = \mathbf{0}
+  \end{aligned}
+  $$
+
+  $$\text{First entry of } \mathbf{X}_i \text{ is } 1 \;\Rightarrow\; \mathbb{E}[e_i] = 0 \;\Rightarrow\; \Cov(X_{ij}, e_i) = \mathbb{E}[X_{ij}\, e_i] - \mathbb{E}[X_{ij}]\,\mathbb{E}[e_i] = 0$$
+
+- This holds **mechanically** with respect to the BLP - no assumptions beyond the regularity conditions above!
+
+## Ordinary Least Squares
+
+::: {.incremental}
+
+- We have defined the **population** best linear predictor from a **minimization** problem
+
+  $$m(\mathbf{x}) = \mathbf{x}^\prime \boldsymbol{\beta} \qquad \boldsymbol{\beta} = \arg\min_{\mathbf{b} \in \mathbb{R}^k} \ \mathbb{E}\big[(Y_i - \mathbf{X}_i^\prime\mathbf{b})^2\big]$$
+
+- And we've written $\boldsymbol{\beta}$ as a function of population expectations, $\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]$ and $\mathbb{E}[\mathbf{X}_iY_i]$
+
+  $$\boldsymbol{\beta} = \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\,\mathbb{E}[\mathbf{X}_i Y_i]$$
+
+- How do we estimate $\boldsymbol{\beta}$ from an i.i.d. **sample** from the target population?
+  - **Plug-in principle again**: replace each population expectation with a **sample mean**
+
+  $$\hat{\boldsymbol{\beta}} = \left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)^{-1} \left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_iY_i\right)$$
+
+:::
+
+## Why "least squares"?
+
+::: {.incremental}
+
+- We get the same estimator by applying the plug-in principle to the **minimization problem**: minimize the **sample** mean of the squared errors
+
+  $$\hat{\boldsymbol{\beta}} = \arg\min_{\mathbf{b} \in \mathbb{R}^k} \ \frac{1}{n}\sum_{i=1}^n (Y_i - \mathbf{X}_i^\prime\mathbf{b})^2$$
+
+  - **Ordinary least squares** (OLS): the coefficients with the smallest **sum of squared residuals**
+
+- The same derivative as before but with a sample mean in place of the expectation gives the **normal equations**
+
+  $$\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i (Y_i - \mathbf{X}_i^\prime\hat{\boldsymbol{\beta}}) = \mathbf{0}$$
+
+- So the **residuals** $\hat{e}_i = Y_i - \mathbf{X}_i^\prime\hat{\boldsymbol{\beta}}$ have the sample version of the projection error property
+  - They average to $0$ and are uncorrelated with every covariate **in the sample**, by construction
+
+:::
+
+## OLS in matrix form
+
+::: {.incremental}
+
+- We'll typically talk about the **data** in terms of an $n$-length outcome vector and an $n \times k$ matrix of regressors - one **row** per respondent and one **column** per variable.
+
+  $$\underbrace{\mathbf{Y}}_{n \times 1} = \begin{pmatrix} Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{pmatrix} \qquad \underbrace{\mathbf{X}}_{n \times k} = \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix} = \begin{pmatrix} 1 & X_{11} & \cdots & X_{1,k-1} \\ 1 & X_{21} & \cdots & X_{2,k-1} \\ \vdots & \vdots & \ddots & \vdots \\ 1 & X_{n1} & \cdots & X_{n,k-1} \end{pmatrix}$$
+
+- The sums in $\hat{\boldsymbol{\beta}}$ are **matrix products**
+
+  $$\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime = \mathbf{X}^\prime\mathbf{X} \qquad \sum_{i=1}^n \mathbf{X}_iY_i = \mathbf{X}^\prime\mathbf{Y}$$
+
+- The $\frac{1}{n}$'s cancel, which gives the formula for OLS that you will often see:
+
+  $$\hat{\boldsymbol{\beta}} = (\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\mathbf{Y}$$
+
+:::
+
+## Review: matrix multiplication
+
+::: {.incremental}
+
+- A $p \times n$ matrix times an $n \times q$ matrix is $p \times q$. Entry $(j, l)$ is the **inner product** of row $j$ of the first and column $l$ of the second
+
+- Column $i$ of $\mathbf{X}^\prime$ is $\mathbf{X}_i$ and row $i$ of $\mathbf{X}$ is $\mathbf{X}_i^\prime$, so $\mathbf{X}^\prime\mathbf{X}$ is a **sum of outer products**
+
+  $$\underbrace{\mathbf{X}^\prime}_{k \times n} \quad \underbrace{\mathbf{X}}_{n \times k} = \begin{pmatrix} \mathbf{X}_1 & \mathbf{X}_2 & \cdots & \mathbf{X}_n \end{pmatrix} \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix} = \mathbf{X}_1\mathbf{X}_1^\prime + \mathbf{X}_2\mathbf{X}_2^\prime + \dotsc + \mathbf{X}_n\mathbf{X}_n^\prime$$
+
+- Written out, $\mathbf{X}^\prime\mathbf{X}$ holds the **sums of squares and cross-products** of the columns of $\mathbf{X}$
+
+  $$\mathbf{X}^\prime\mathbf{X} = \begin{pmatrix} n & \sum_i X_{i1} & \cdots & \sum_i X_{i,k-1} \\ \sum_i X_{i1} & \sum_i X_{i1}^2 & \cdots & \sum_i X_{i1}X_{i,k-1} \\ \vdots & \vdots & \ddots & \vdots \\ \sum_i X_{i,k-1} & \sum_i X_{i,k-1}X_{i1} & \cdots & \sum_i X_{i,k-1}^2 \end{pmatrix} \qquad \mathbf{X}^\prime\mathbf{Y} = \begin{pmatrix} \sum_i Y_i \\ \sum_i X_{i1}Y_i \\ \vdots \\ \sum_i X_{i,k-1}Y_i \end{pmatrix}$$
+
+:::
+
+## When does the OLS estimator exist?
+
+::: {.incremental}
+
+- For the BLP, we assumed $\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]$ is **invertible**
+  - The sample version of this is that $\mathbf{X}^\prime\mathbf{X}$ must be invertible
+
+- $\mathbf{X}^\prime\mathbf{X}$ is invertible if and only if $\mathbf{X}$ has **full column rank**
+
+  $$\text{rank}(\mathbf{X}) = k$$
+
+  - No column of $\mathbf{X}$ is a **linear combination** of the others
+    - We have no **perfect** collinearity
+  - And we need at least as many observations as coefficients, $n \geq k$
+
+- Without full rank there is no **unique** $\hat{\boldsymbol{\beta}}$ since there are **multiple** solutions which achieve the same minimum sum of squares.
+
+:::
+
+## Review: linear combinations and rank
+
+::: {.incremental}
+
+- A **linear combination** of the vectors $\mathbf{a}_1, \dotsc, \mathbf{a}_k$ is a weighted sum. A matrix times a vector is a linear combination of the matrix's **columns**
+
+  $$\mathbf{A}\mathbf{c} = c_1\mathbf{a}_1 + c_2\mathbf{a}_2 + \dotsc + c_k\mathbf{a}_k$$
+
+- The columns are **linearly independent** if the only combination equal to $\mathbf{0}$ is the trivial one: $\mathbf{A}\mathbf{c} = \mathbf{0} \implies \mathbf{c} = \mathbf{0}$
+
+- The **rank** of a matrix is the largest number of linearly independent columns it contains
+
+  $$\mathbf{A} = \begin{pmatrix} 1 & 2 & 3 \\ 1 & 0 & 1 \\ 1 & 5 & 6 \\ 1 & 1 & 2 \end{pmatrix} \qquad \mathbf{a}_1 + \mathbf{a}_2 - \mathbf{a}_3 = \mathbf{0} \qquad \text{rank}(\mathbf{A}) = 2 < 3$$
+
+:::
+
+## Example: dummy variables
+
+::: {.incremental}
+
+- Consider three party categories: **Democrat**, **Independent** and **Republican** 
+  - Code each category as a **dummy** (indicator) variable, e.g. $X_i^{\text{Rep}} = I(\text{party}_i = \text{Republican})$
+
+- What if we include an intercept **and** all three dummies?
+
+  $$\begin{array}{l|cccc} & 1 & X^{\text{Dem}} & X^{\text{Ind}} & X^{\text{Rep}} \\ \hline \text{Democrat} & 1 & 1 & 0 & 0 \\ \text{Republican} & 1 & 0 & 0 & 1 \\ \text{Independent} & 1 & 0 & 1 & 0 \\ \text{Democrat} & 1 & 1 & 0 & 0 \\ \vdots & \vdots & \vdots & \vdots & \vdots \end{array}$$
+
+  - Everyone is in exactly one category, so $X^{\text{Dem}} + X^{\text{Ind}} + X^{\text{Rep}} = 1$: the intercept column. The rank is $3 < 4$
+
+- If I include an intercept and **all** of these indicators, the OLS regression is undefined.
+  - The fix is to drop one category which is the **baseline**
+  - Each remaining dummy's coefficient compares its category to the baseline
+
+:::
+
+## Dummy variables in R
+
+```{r}
+anes <- anes |>
+  mutate(party = case_when(pid7 <= 3 ~ "Democrat", pid7 == 4 ~ "Independent",
+                           pid7 >= 5 ~ "Republican"),
+         dem = as.numeric(party == "Democrat"),
+         ind = as.numeric(party == "Independent"),
+         rep = as.numeric(party == "Republican"))
+
+# An intercept and all three dummies: R chooses a redundant column and drops it.
+round(coef(lm(ft_trump ~ hostile_sexism + dem + ind + rep, data = anes)), 2)
+
+# With factor variables, R automatically drops the first - by default the sort is alphabetical
+round(coef(lm(ft_trump ~ hostile_sexism + party, data = anes)), 2)
+```
 
 ## OLS with a single predictor
 
-## OLS is a plug-in estimator for the BLP
+```{r}
+#| label: ols-fits
+#| include: false
 
-## OLS in matrix form
+# The fits used in the figures and text from here on
+fit_hs <- lm(ft_trump ~ hostile_sexism, data = anes)
+fit_party <- lm(ft_trump ~ hostile_sexism + party, data = anes)
+fit_rr <- lm(ft_trump ~ hostile_sexism + racial_resentment, data = anes)
+f1 <- function(x) sprintf("%.1f", x)
+```
+
+::: {.incremental}
+
+- With one covariate, $\mathbf{X}_i = (1, X_i)^\prime$ and $k = 2$. Solving $\mathbf{X}^\prime\mathbf{X}\,\hat{\boldsymbol{\beta}} = \mathbf{X}^\prime\mathbf{Y}$ gives the plug-in version of the BLP we found before
+
+  $$\hat{\beta}_1 = \frac{\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n (X_i - \bar{X})^2} = \frac{\widehat{\Cov}(X_i, Y_i)}{\widehat{\Var}(X_i)} \qquad \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1\bar{X}$$
+
+- In R, `lm()` fits OLS (be careful with SEs here - they make the **classical** OLS assumptions - we'll talk about these next week)
+
+:::
+
+```{r}
+round(coef(lm(ft_trump ~ hostile_sexism, data = anes)), 2)
+```
+
+## OLS with a single predictor
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.6
+#| fig-align: center
+
+# The OLS line over the scatterplot, labeled with its equation
+b_hs <- coef(fit_hs)
+base_plot() +
+  geom_segment(aes(x = 0, xend = 1, y = b_hs[1], yend = b_hs[1] + b_hs[2]),
+               colour = "#c5050c", linewidth = 1.6) +
+  # The numbers go in as strings so plotmath keeps their trailing zeros
+  annotate("text", x = 0.03, y = 96, hjust = 0, size = 7, colour = "#c5050c", parse = TRUE,
+           label = sprintf("hat(Y) == '%.1f' + '%.1f' * X", b_hs[1], b_hs[2])) +
+  coord_cartesian(ylim = c(0, 100))
+```
+
+::: {.incremental}
+
+- $\hat{\beta}_1 = `r f1(b_hs[2])`$: respondents a quarter-point apart on the scale differ by `r f1(b_hs[2] / 4)` points on the thermometer, on average
+- $\hat{\beta}_0 = `r f1(b_hs[1])`$: the predicted thermometer rating at the **lowest** level of hostile sexism
+
+:::
+
+## Adding partisanship
+
+::: {.incremental}
+
+- Partisanship predicts **both** hostile sexism and feelings about Trump. Add the party dummies, with Democrats as the baseline
+
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 X_i^{\text{Ind}} + \hat{\beta}_3 X_i^{\text{Rep}}$$
+
+- Within each party, the fit is a **line** in $X_i$. The lines share a **slope** and have different **intercepts**
+
+  $$\begin{aligned} \text{Democrats:} \quad & \hat{\beta}_0 + \hat{\beta}_1 X_i \\ \text{Independents:} \quad & (\hat{\beta}_0 + \hat{\beta}_2) + \hat{\beta}_1 X_i \\ \text{Republicans:} \quad & (\hat{\beta}_0 + \hat{\beta}_3) + \hat{\beta}_1 X_i \end{aligned}$$
+
+- $\hat{\beta}_2$ and $\hat{\beta}_3$ are the **gaps** between the parallel lines: how much warmer Independents and Republicans are towards Trump than Democrats **with the same** level of hostile sexism
+
+:::
+
+## Adding partisanship
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.6
+#| fig-align: center
+
+# The parallel lines of the party-dummy fit over the scatterplot, with each
+# party's respondents in its color. Respondents in all three parties share
+# the 17 values of X, so each party's points are nudged sideways a little to
+# keep them from hiding one another
+party_cols <- c(Democrat = "#0479a8", Independent = "#b8860b", Republican = "#c5050c")
+b_p <- coef(fit_party)
+party_lines <- tibble(party = names(party_cols),
+                      a = b_p[1] + c(0, b_p["partyIndependent"], b_p["partyRepublican"]),
+                      b = b_p["hostile_sexism"])
+party_pts <- anes |>
+  filter(!is.na(party)) |>
+  mutate(x = hostile_sexism + c(Democrat = -0.014, Independent = 0, Republican = 0.014)[party])
+ggplot() +
+  geom_point(data = party_pts, aes(x, ft_trump, colour = party), alpha = 0.06, size = 3,
+             stroke = 0) +
+  geom_segment(data = party_lines, aes(x = 0, xend = 1, y = a, yend = a + b, colour = party),
+               linewidth = 1.6) +
+  geom_text(data = party_lines, aes(1.03, a + b, label = party, colour = party),
+            hjust = 0, size = 6) +
+  scale_colour_manual(values = party_cols, guide = "none") +
+  scale_x_continuous(breaks = seq(0, 1, 0.25)) +
+  scale_y_continuous(breaks = seq(0, 100, 25)) +
+  coord_cartesian(xlim = c(0, 1.2), ylim = c(0, 100)) +
+  labs(x = "Hostile sexism", y = "Trump thermometer") +
+  theme_reg
+```
+
+::: {.incremental}
+
+- The slope falls from `r f1(b_hs[2])` to `r f1(b_p["hostile_sexism"])`. After accounting for the explanatory power of partisanship, the relationship is smaller but **still there**
+
+:::
+
+## Interacting with partisanship
+
+::: {.incremental}
+
+- To let the **slope** on hostile sexism differ between parties too we add **interactions** - the products of $X_i$ with each dummy
+
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 X_i^{\text{Ind}} + \hat{\beta}_3 X_i^{\text{Rep}} + \hat{\beta}_4 X_i X_i^{\text{Ind}} + \hat{\beta}_5 X_i X_i^{\text{Rep}}$$
+
+- Within each party, the fit is still a line in $X_i$, but now each has its own intercept **and** slope
+
+  $$\begin{aligned} \text{Democrats:} \quad & \hat{\beta}_0 + \hat{\beta}_1 X_i \\ \text{Independents:} \quad & (\hat{\beta}_0 + \hat{\beta}_2) + (\hat{\beta}_1 + \hat{\beta}_4) X_i \\ \text{Republicans:} \quad & (\hat{\beta}_0 + \hat{\beta}_3) + (\hat{\beta}_1 + \hat{\beta}_5) X_i \end{aligned}$$
+
+- $\hat{\beta}_1$ is now the slope among **Democrats** (the baseline), and $\hat{\beta}_4$, $\hat{\beta}_5$ are **differences in slopes** relative to Democrats
+- With every interaction in, this is the **same** as fitting a separate OLS line within each party
+
+:::
+
+## Interacting with partisanship
+
+```{r}
+#| label: fit-party-int
+#| include: false
+fit_pint <- lm(ft_trump ~ hostile_sexism * party, data = anes)
+b_pi <- coef(fit_pint)
+# Each party's slope: the baseline slope plus its difference
+slope_p <- b_pi["hostile_sexism"] +
+  c(0, b_pi["hostile_sexism:partyIndependent"], b_pi["hostile_sexism:partyRepublican"])
+```
+
+```{r}
+# x * z in a formula adds x, z, and their product x:z
+round(coef(lm(ft_trump ~ hostile_sexism * party, data = anes)), 2)
+```
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 3.9
+#| fig-align: center
+
+# The party lines again, now each with its own slope
+party_int_lines <- tibble(party = names(party_cols),
+                          a = b_pi[1] + c(0, b_pi["partyIndependent"], b_pi["partyRepublican"]),
+                          b = slope_p)
+ggplot() +
+  geom_point(data = party_pts, aes(x, ft_trump, colour = party), alpha = 0.06, size = 3,
+             stroke = 0) +
+  geom_segment(data = party_int_lines, aes(x = 0, xend = 1, y = a, yend = a + b, colour = party),
+               linewidth = 1.6) +
+  geom_text(data = party_int_lines,
+            aes(1.03, a + b, label = sprintf("%s (slope %.1f)", party, b), colour = party),
+            hjust = 0, size = 5.5) +
+  scale_colour_manual(values = party_cols, guide = "none") +
+  scale_x_continuous(breaks = seq(0, 1, 0.25)) +
+  scale_y_continuous(breaks = seq(0, 100, 25)) +
+  coord_cartesian(xlim = c(0, 1.35), ylim = c(0, 100)) +
+  labs(x = "Hostile sexism", y = "Trump thermometer") +
+  theme_reg
+```
+
+## A second continuous covariate
+
+::: {.incremental}
+
+- **Racial resentment**: a three question measure from @kinder1996divided, also averaged and re-scaled to $[0, 1]$ 
+  - Correlated with hostile sexism: $r = `r sprintf("%.2f", cor(anes$hostile_sexism, anes$racial_resentment, use = "complete.obs"))`$
+
+- With two continuous covariates, the fit is a **plane** over $(X_{i1}, X_{i2})$
+
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_{i1} + \hat{\beta}_2 X_{i2}$$
+
+:::
+
+```{r}
+round(coef(lm(ft_trump ~ hostile_sexism + racial_resentment, data = anes)), 2)
+```
+
+::: {.incremental}
+
+- After partialling **racial resentment** out of both the outcome and hostile sexism, the slope on hostile sexism is `r f1(coef(fit_rr)[2])`, also down from the unconditional `r f1(b_hs[2])`
+
+:::
+
+## In three dimensions {.plane-slide}
+
+```{r}
+#| echo: false
+
+# The two-covariate OLS fit as a surface through the 3D scatterplot. The
+# animation (plane-anim/plane.js) turns the camera slowly while the slide is
+# up; its fragments fade in a surface and bend it from the coefficients
+# `from` into `beta` (each b0 + b1 x + b2 y + b3 xy), then draw the lines
+# along it where racial resentment is held fixed
+rr_pts <- anes |> filter(!is.na(racial_resentment))
+b_rr <- coef(fit_rr)
+
+plane_axis <- function(title, ...) {
+  list(title = list(text = title, font = list(size = 15)), gridcolor = "#d9d9d9",
+       zeroline = FALSE, showspikes = FALSE, showbackground = TRUE,
+       backgroundcolor = "#EFEFEF", tickfont = list(size = 12), tickangle = 0, ...)
+}
+
+plane_widget <- function(beta, from, titles) {
+  beta <- unname(c(beta, 0)[1:4])    # no interaction: b3 = 0
+  from <- unname(c(from, 0)[1:4])
+  surf <- function(h, r) beta[1] + beta[2] * h + beta[3] * r + beta[4] * h * r
+  # A fine grid, since with an interaction the surface is curved
+  pg <- seq(0, 1, 0.05)
+  plane_z <- outer(pg, pg, \(r, h) surf(h, r))   # rows are y
+  slice_rr <- c(0, 0.5, 1)
+  slices <- list(x = unlist(lapply(slice_rr, \(r) c(0, 1, NA))),
+                 y = unlist(lapply(slice_rr, \(r) c(r, r, NA))),
+                 z = unlist(lapply(slice_rr, \(r) c(surf(0, r), surf(1, r), NA))))
+
+  # Trace order matters: plane.js addresses traces by index
+  p <- plotly::plot_ly(width = 1000, height = 560) |>
+    plotly::add_trace(type = "scatter3d", mode = "markers", x = rr_pts$hostile_sexism,
+                      y = rr_pts$racial_resentment, z = rr_pts$ft_trump, opacity = 0.12,
+                      marker = list(size = 3, color = "#333333", line = list(width = 0)),
+                      hoverinfo = "skip") |>
+    plotly::add_surface(x = pg, y = pg, z = plane_z, opacity = 0.35, showscale = FALSE,
+                        colorscale = list(c(0, "#0479a8"), c(1, "#0479a8")),
+                        lighting = list(ambient = 1, diffuse = 0, specular = 0, fresnel = 0),
+                        hoverinfo = "skip", visible = FALSE) |>
+    plotly::add_trace(type = "scatter3d", mode = "lines", x = slices$x, y = slices$y,
+                      z = slices$z, line = list(color = "#c5050c", width = 7),
+                      connectgaps = FALSE, hoverinfo = "skip", visible = FALSE) |>
+    plotly::layout(
+      showlegend = FALSE,
+      paper_bgcolor = "#F7F7F7",
+      margin = list(l = 0, r = 0, t = 0, b = 0),
+      font = list(family = "Red Hat Text, sans-serif", color = "#333333"),
+      scene = list(
+        xaxis = plane_axis("Hostile sexism", range = c(0, 1), tickvals = c(0, 0.5, 1)),
+        yaxis = plane_axis("Racial resentment", range = c(0, 1), tickvals = c(0, 0.5, 1)),
+        zaxis = plane_axis("Trump thermometer", range = c(-12, 105),
+                           tickvals = seq(0, 100, 25)),
+        aspectmode = "manual", aspectratio = list(x = 1.6, y = 1.6, z = 1.15),
+        camera = list(projection = list(type = "orthographic")),   # set by the animation
+        dragmode = "turntable", hovermode = FALSE
+      )
+    ) |>
+    plotly::config(displayModeBar = FALSE, doubleClick = FALSE)
+
+  p <- htmlwidgets::onRender(
+    p,
+    paste(readLines("plane-anim/plane.js"), collapse = "\n"),
+    data = list(grid = pg, beta = beta, from = from, titles = titles)
+  )
+
+  # One empty fragment per animation step after the first
+  htmltools::tagList(
+    p,
+    lapply(seq_len(length(titles) - 1), function(i) htmltools::span(class = "fragment pl-step"))
+  )
+}
+
+# The plane rises from flat, at the mean of Y
+plane_widget(b_rr, from = mean(rr_pts$ft_trump),
+             titles = c("", "The regression plane", "Holding racial resentment fixed"))
+```
+
 
 ## Next week
 
