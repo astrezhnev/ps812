@@ -128,7 +128,7 @@ function (el, d, opts) {
     ticks.push({ v: v, g: g });
   }
   mk('text', { x: (X0 + X1) / 2, y: Y0 + 70, 'text-anchor': 'middle', 'font-size': 22, fill: INK }, svg).textContent =
-    'T = (Ȳ − μ₀) / SE(Ȳ)   (standard errors from the null)';
+    'T = (Ȳ − μ₀) / SE(Ȳ)';
 
   // ---- Readout (top right) and power table (top left) ------------------------
   var gRd = mk('g', {}, svg);

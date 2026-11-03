@@ -84,8 +84,6 @@ power_anim(0, 1)
 
 ## Where we've been
 
-- The **power** of the test is the area under the **true** distribution of $T$ in the rejection region
-
 ```{r}
 #| echo: false
 #| output: asis
@@ -93,8 +91,6 @@ power_anim(1, 6)
 ```
 
 ## Where we've been
-
-- With **low power**, significant estimates can have the **wrong sign** (Type S) and are always **too big** (Type M)
 
 ```{r}
 #| echo: false
@@ -154,31 +150,40 @@ cef_anim(0, 1)
 
 ## Regression
 
+:::{.incremental}
+
 - In the social sciences, we often want to understand how our **prediction** for an outcome variable $Y_i$ changes depending on the values of some set of covariates $\mathbf{X}_i$
   - **Description**: A parsimonious summary of the data
   - **Forecasting**: Given a *new* value of $\mathbf{X}_i$, what's our best prediction for $Y_i$?
   - **Adjustment for causal inference**: Can we **explain away** $Y_i$ with confounders $\mathbf{X}_i$ to make our causal assumptions more credible?
 
-- In all cases, our **quantity of interest** or **estimand** changes from a single parameter to a **function** - the **conditional expectation function**
+- In all cases, our **estimand** changes from a single parameter to a **function** 
+  - The **conditional expectation function**
 
   $$\mu(\mathbf{x}) = \mathbb{E}[Y_i \mid \mathbf{X}_i = \mathbf{x}]$$
+:::
 
 ## Running Example: Hostile sexism and support for Trump
 
 ::: {.incremental}
 
 - Do **gender attitudes** predict support for right-wing political candidates even after we adjust for partisanship?
-  - One particular attitude measured by political psychologists is **hostile sexism**: antagonism towards women seen as seeking power or challenging traditional gender roles [@glick1996ambivalent]
-  - In 2016, hostile sexism predicted support for Trump over Clinton even after adjusting for partisanship and other predictors [@winter2023hostile]. Additionally, it appears to contribute to the **education gap** in political attitudes among white voters [@schaffner2018understanding]
+  - One particular attitude measured by political psychologists is **hostile sexism**
+    - Antagonism towards women seen as seeking power or challenging traditional gender roles [@glick1996ambivalent]
+  - In 2016, hostile sexism predicted support for Trump over Clinton even after adjusting for partisanship and other predictors [@winter2023hostile]. 
+    - Additionally, it appears to contribute to the **education gap** in political attitudes among white voters [@schaffner2018understanding]
   - Does the relationship hold up in 2024?
 
 - **Outcome** $Y_i$: Trump feeling thermometer (0-100) from the 2024 ANES [@anes2024timeseries]
 
-- **Regressor** $X_i$: agreement with four statements, each on a 5-point scale, rescaled to $[0, 1]$ and averaged
-  1) Women interpret innocent remarks as sexist
-  2) Women seek to gain power by getting control over men
-  3) Women demanding equality are seeking special favors
-  4) Women complaining about discrimination cause more problems
+- **Regressor** $X_i$: responses to four statements, each on a 5-point scale, rescaled to $[0, 1]$ and averaged
+
+  ::: {style="font-size: 0.72em"}
+  1) "Many women interpret innocent remarks or acts as being sexist." (agree-disagree)
+  2) "Women seek to gain power by getting control over men." (agree-disagree)
+  3) "When women demand equality these days, how often are they actually seeking special favors?" (always-never)
+  4) "When women complain about discrimination, how often do they cause more problems than they solve?" (always-never)
+  :::
 
 :::
 
@@ -341,14 +346,14 @@ base_plot() +
 bins <- anes |>
   summarize(n = n(), mean = mean(ft_trump), se = sd(ft_trump) / sqrt(n),
             .by = hostile_sexism) |>
-  mutate(t_crit = qt(0.975, df = n - 1),   # small cells: t, not normal
+  mutate(t_crit = qt(0.975, df = n - 1),   # small bins: t, not normal
          lower = mean - t_crit * se,
          upper = mean + t_crit * se) |>
   arrange(hostile_sexism)
 
-# The 17 conditional means with t intervals, and each cell's size along the
+# The 17 conditional means with t intervals, and each bin's size along the
 # bottom. The y range is held at the thermometer's, so the two sparsest
-# cells' intervals run off the plot
+# bins' intervals run off the plot
 base_plot() +
   geom_pointrange(data = bins, aes(hostile_sexism, mean, ymin = lower, ymax = upper),
                   colour = "#0479a8", linewidth = 1.1, size = 0.7) +
@@ -376,7 +381,7 @@ base_plot() +
   - And if we have a **continuous** covariate, nearly *every* respondent has a unique value of that covariate
 
 - This is the **curse of dimensionality**
-  - As the number of covariates grows, the covariate **space** grows exponentially [@hastie2009elements]
+  - As the number of covariates grows, the covariate **space** grows exponentially
 
 :::
 
@@ -386,9 +391,9 @@ base_plot() +
 #| echo: false
 #| output: asis
 
-# Exact-match cells as covariates are added one at a time, among respondents
+# Exact-match bins as covariates are added one at a time, among respondents
 # with every covariate observed. "Alone" means the respondent is the only one
-# in their cell; cell sizes are averaged over respondents, not cells
+# in their bin; bin sizes are averaged over respondents, not bins
 cc <- anes |> drop_na(gender, college, race, pid7, ideo7, age)
 covs <- c(hostile_sexism = "Hostile sexism", gender = "+ gender", college = "+ college degree",
           race = "+ race", pid7 = "+ party ID (7 pt.)", ideo7 = "+ ideology (7 pt.)",
@@ -397,7 +402,7 @@ curse <- map_dfr(seq_along(covs), \(j) {
   v <- names(covs)[1:j]
   k <- cc |> add_count(across(all_of(v)), name = "k") |> pull(k)
   tibble(label = covs[j],
-         cells = prod(map_int(v, \(x) n_distinct(cc[[x]]))),
+         nbins = prod(map_int(v, \(x) n_distinct(cc[[x]]))),
          nonempty = nrow(distinct(cc, across(all_of(v)))),
          median_k = median(k),
          alone = mean(k == 1),
@@ -413,10 +418,10 @@ cat('```{=html}',
     ".reveal .curse-table table th { font-weight: 400; color: #646569; border-bottom: 1px solid #333; }",
     "</style>",
     '<div class="curse-table"><table>',
-    "<thead><tr><th>Conditioning on</th><th>Possible cells</th><th>Non-empty cells</th>",
-    "<th>Median cell size</th><th>Alone in cell</th><th>In a cell of &lt; 10</th></tr></thead>",
+    "<thead><tr><th>Conditioning on</th><th>Possible bins</th><th>Non-empty bins</th>",
+    "<th>Median bin size</th><th>Alone in bin</th><th>In a bin of &lt; 10</th></tr></thead>",
     "<tbody>",
-    paste0("<tr><td>", curse$label, "</td><td>", fmt(curse$cells), "</td><td>", fmt(curse$nonempty),
+    paste0("<tr><td>", curse$label, "</td><td>", fmt(curse$nbins), "</td><td>", fmt(curse$nonempty),
            "</td><td>", fmt(curse$median_k), "</td><td>", pct(curse$alone), "</td><td>",
            pct(curse$under10), "</td></tr>"),
     "</tbody></table></div>",
@@ -434,14 +439,14 @@ cat('```{=html}',
 
 ::: {.incremental}
 
-- To estimate $\mu(\mathbf{x})$ where we have little or no data, we have to use observations at **other** values of $\mathbf{X}_i$
+- To estimate $\mu(\mathbf{x})$ where we have little data, we have to use observations at **other** values of $\mathbf{X}_i$
 
 - That requires **assumptions** about how $\mu(\cdot)$ behaves between the points we observe. 
 - For example:
   - **Smoothness**: $\mu(\cdot)$ doesn't change much between nearby $\mathbf{x}$
   - **Functional form**: $\mu(\cdot)$ has a particular shape everywhere (e.g. a line)
 
-- This is why we need **models**. The more covariates, the more we need to impose structure **ex-ante**
+- This is why we need **models**. More covariates, more need to impose structure **ex-ante**
 
 - Some alternative estimation strategies:
   - **Kernel estimators**: Average the observations *near* $\mathbf{x}$ when estimating $\mu(\mathbf{x})$
@@ -478,8 +483,10 @@ cat('```{=html}',
 - A **weighted average** of the outcomes: the weights are non-negative, sum to $1$, and are larger for the observations closer to $\mathbf{x}$
 
 - The same kernels as in density estimation, $K_h(\mathbf{u}) = K(\mathbf{u}/h)$
-  - With $k$ dimensions, often use the **product kernel**: the product of covariate-specific kernels (which can be uniform/triangular/etc...) $K(\mathbf{u}) = \prod_{j=1}^k K(u_j)$ (with covariates on a common scale)
-  - Another approach is the "nearest neighbors" method: at each $x$, average the outcomes of the $m$ closest observations (based on some distance metric)
+  - With $k$ dimensions, often use the **product kernel**: $K(\mathbf{u}) = \prod_{j=1}^k K(u_j)$ (with covariates on a common scale)
+    -  The product of covariate-specific kernels (which can be uniform/triangular/etc...) 
+  - Another approach is the **"nearest neighbors"** method: at each $x$, average the outcomes of the $m$ closest observations (based on some distance metric)
+    - Larger windows in *sparser* parts of the covariate space.
 
 :::
 
@@ -631,14 +638,17 @@ base_plot(alpha = 0.04) +
 
 ::: {.incremental}
 
-- Let's restrict our focus to functions of $X$ that are **linear predictors** - that is, they're **linear** combinations of the covariates and some set of **parameters**
-  - With a single covariate
+- Let's restrict our focus to functions of $X$ that are **linear predictors** 
+  - That is, they're **linear** combinations of the covariates and some set of **parameters**
+- With a single covariate
 
-    $$m(x) = \beta_0 + \beta_1 x$$
+  $$m(x) = \beta_0 + \beta_1 x$$
 
-  - With **many covariates**, we write
+- With **many covariates**, we write
 
-    $$m(\mathbf{x}) = \beta_0 + \beta_1 x_1 + \dotsc + \beta_{k-1} x_{k-1} = \mathbf{x}^\prime\boldsymbol{\beta} \quad \mathbf{x} = (1, x_1, \dotsc, x_{k-1})^\prime \quad \boldsymbol{\beta} = (\beta_0, \beta_1, \dotsc, \beta_{k-1})^\prime$$
+  $$m(\mathbf{x}) = \beta_0 + \beta_1 x_1 + \dotsc + \beta_{k-1} x_{k-1} = \mathbf{x}^\prime\boldsymbol{\beta}$$
+
+    $$\mathbf{x} = (1, x_1, \dotsc, x_{k-1})^\prime \qquad \boldsymbol{\beta} = (\beta_0, \beta_1, \dotsc, \beta_{k-1})^\prime$$
 
 - **Review**: Inner products
 
@@ -666,7 +676,7 @@ base_plot(alpha = 0.04) +
 
 ::: {.incremental}
 
-- We'll start by taking the derivative of the squared errors inside the expectation with respect to the **vector** of parameters
+- We'll start by taking the **partial derivatives** of the squared errors inside the expectation with respect to the **parameters**
 
   $$
   \begin{aligned}
@@ -696,7 +706,8 @@ base_plot(alpha = 0.04) +
   \end{aligned}
   $$
 
-- What have we **assumed**? Essentially just **regularity conditions** that ensure the BLP **exists**
+- What have we **assumed**? 
+- Essentially just **regularity conditions** that ensure the BLP **exists**
   - Finite mean/variance for $Y$
   - Finite means/variances/covariances for $\mathbf{X}$
   - $(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime])^{-1}$ exists (no **perfect** linear dependence between covariates)
@@ -704,6 +715,8 @@ base_plot(alpha = 0.04) +
 :::
 
 ## Projection error
+
+::: {.incremental}
 
 - What are the properties of the **error** between the true $Y_i$ and the **best linear predictor**?
 
@@ -724,6 +737,8 @@ base_plot(alpha = 0.04) +
 
 - This holds **mechanically** with respect to the BLP - no assumptions beyond the regularity conditions above!
 
+:::
+
 ## Ordinary Least Squares
 
 ::: {.incremental}
@@ -737,7 +752,7 @@ base_plot(alpha = 0.04) +
   $$\boldsymbol{\beta} = \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\,\mathbb{E}[\mathbf{X}_i Y_i]$$
 
 - How do we estimate $\boldsymbol{\beta}$ from an i.i.d. **sample** from the target population?
-  - **Plug-in principle again**: replace each population expectation with a **sample mean**
+- **Plug-in principle again**: replace each population expectation with a **sample mean**
 
   $$\hat{\boldsymbol{\beta}} = \left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)^{-1} \left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_iY_i\right)$$
 
@@ -747,11 +762,12 @@ base_plot(alpha = 0.04) +
 
 ::: {.incremental}
 
-- We get the same estimator by applying the plug-in principle to the **minimization problem**: minimize the **sample** mean of the squared errors
+- We get the same estimator by applying the plug-in principle to the **minimization problem**
+  - Minimize the **sample** mean of the squared errors
 
   $$\hat{\boldsymbol{\beta}} = \arg\min_{\mathbf{b} \in \mathbb{R}^k} \ \frac{1}{n}\sum_{i=1}^n (Y_i - \mathbf{X}_i^\prime\mathbf{b})^2$$
 
-  - **Ordinary least squares** (OLS): the coefficients with the smallest **sum of squared residuals**
+- **Ordinary least squares** (OLS): the coefficients with the smallest **sum of squared residuals** (SSR)
 
 - The same derivative as before but with a sample mean in place of the expectation gives the **normal equations**
 
@@ -766,7 +782,8 @@ base_plot(alpha = 0.04) +
 
 ::: {.incremental}
 
-- We'll typically talk about the **data** in terms of an $n$-length outcome vector and an $n \times k$ matrix of regressors - one **row** per respondent and one **column** per variable.
+- We'll typically talk about the **data** in terms of an $n$-length outcome vector and an $n \times k$ matrix of regressors 
+  - One **row** per respondent and one **column** per variable.
 
   $$\underbrace{\mathbf{Y}}_{n \times 1} = \begin{pmatrix} Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{pmatrix} \qquad \underbrace{\mathbf{X}}_{n \times k} = \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix} = \begin{pmatrix} 1 & X_{11} & \cdots & X_{1,k-1} \\ 1 & X_{21} & \cdots & X_{2,k-1} \\ \vdots & \vdots & \ddots & \vdots \\ 1 & X_{n1} & \cdots & X_{n,k-1} \end{pmatrix}$$
 
@@ -774,7 +791,7 @@ base_plot(alpha = 0.04) +
 
   $$\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime = \mathbf{X}^\prime\mathbf{X} \qquad \sum_{i=1}^n \mathbf{X}_iY_i = \mathbf{X}^\prime\mathbf{Y}$$
 
-- The $\frac{1}{n}$'s cancel, which gives the formula for OLS that you will often see:
+- The $\frac{1}{n}$'s cancel, which gives the common formula for OLS that you will often see:
 
   $$\hat{\boldsymbol{\beta}} = (\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\mathbf{Y}$$
 
@@ -784,7 +801,8 @@ base_plot(alpha = 0.04) +
 
 ::: {.incremental}
 
-- A $p \times n$ matrix times an $n \times q$ matrix is $p \times q$. Entry $(j, l)$ is the **inner product** of row $j$ of the first and column $l$ of the second
+- A $p \times n$ matrix times an $n \times q$ matrix is $p \times q$. 
+  - Entry $(j, l)$ is the **inner product** of row $j$ of the first and column $l$ of the second
 
 - Column $i$ of $\mathbf{X}^\prime$ is $\mathbf{X}_i$ and row $i$ of $\mathbf{X}$ is $\mathbf{X}_i^\prime$, so $\mathbf{X}^\prime\mathbf{X}$ is a **sum of outer products**
 
@@ -836,15 +854,15 @@ base_plot(alpha = 0.04) +
 ::: {.incremental}
 
 - Consider three party categories: **Democrat**, **Independent** and **Republican** 
-  - Code each category as a **dummy** (indicator) variable, e.g. $X_i^{\text{Rep}} = I(\text{party}_i = \text{Republican})$
+  - Code each category as a **dummy** (indicator) variable, e.g. $Z_i^{\text{Rep}} = I(\text{party}_i = \text{Republican})$
 
 - What if we include an intercept **and** all three dummies?
 
-  $$\begin{array}{l|cccc} & 1 & X^{\text{Dem}} & X^{\text{Ind}} & X^{\text{Rep}} \\ \hline \text{Democrat} & 1 & 1 & 0 & 0 \\ \text{Republican} & 1 & 0 & 0 & 1 \\ \text{Independent} & 1 & 0 & 1 & 0 \\ \text{Democrat} & 1 & 1 & 0 & 0 \\ \vdots & \vdots & \vdots & \vdots & \vdots \end{array}$$
+  $$\begin{array}{l|cccc} & 1 & Z^{\text{Dem}} & Z^{\text{Ind}} & Z^{\text{Rep}} \\ \hline \text{Democrat} & 1 & 1 & 0 & 0 \\ \text{Republican} & 1 & 0 & 0 & 1 \\ \text{Independent} & 1 & 0 & 1 & 0 \\ \text{Democrat} & 1 & 1 & 0 & 0 \\ \vdots & \vdots & \vdots & \vdots & \vdots \end{array}$$
 
-  - Everyone is in exactly one category, so $X^{\text{Dem}} + X^{\text{Ind}} + X^{\text{Rep}} = 1$: the intercept column. The rank is $3 < 4$
+  - Everyone is in exactly one category, so $Z^{\text{Dem}} + Z^{\text{Ind}} + Z^{\text{Rep}} = 1$: the intercept column. The rank is $3 < 4$
 
-- If I include an intercept and **all** of these indicators, the OLS regression is undefined.
+- If I include an intercept and **all** of these indicators, the OLS solution is undefined.
   - The fix is to drop one category which is the **baseline**
   - Each remaining dummy's coefficient compares its category to the baseline
 
@@ -880,18 +898,19 @@ fit_rr <- lm(ft_trump ~ hostile_sexism + racial_resentment, data = anes)
 f1 <- function(x) sprintf("%.1f", x)
 ```
 
-::: {.incremental}
 
-- With one covariate, $\mathbf{X}_i = (1, X_i)^\prime$ and $k = 2$. Solving $\mathbf{X}^\prime\mathbf{X}\,\hat{\boldsymbol{\beta}} = \mathbf{X}^\prime\mathbf{Y}$ gives the plug-in version of the BLP we found before
+- With one covariate, $\mathbf{X}_i = (1, X_i)^\prime$ and $k = 2$. 
+  - Solving $\mathbf{X}^\prime\mathbf{X}\,\hat{\boldsymbol{\beta}} = \mathbf{X}^\prime\mathbf{Y}$ gives the plug-in version of the BLP we found before
 
   $$\hat{\beta}_1 = \frac{\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n (X_i - \bar{X})^2} = \frac{\widehat{\Cov}(X_i, Y_i)}{\widehat{\Var}(X_i)} \qquad \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1\bar{X}$$
 
-- In R, `lm()` fits OLS (be careful with SEs here - they make the **classical** OLS assumptions - we'll talk about these next week)
+## OLS with a single predictor
 
-:::
+- In R, `lm()` fits OLS
+  - Be careful with SEs here - they make the **classical** OLS assumptions - we'll talk about these next week
 
 ```{r}
-round(coef(lm(ft_trump ~ hostile_sexism, data = anes)), 2)
+summary(lm(ft_trump ~ hostile_sexism, data = anes))
 ```
 
 ## OLS with a single predictor
@@ -924,15 +943,18 @@ base_plot() +
 
 ::: {.incremental}
 
-- Partisanship predicts **both** hostile sexism and feelings about Trump. Add the party dummies, with Democrats as the baseline
+- Partisanship predicts **both** hostile sexism and feelings about Trump. 
+  - Add the party dummies, with Democrats as the baseline
 
-  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 X_i^{\text{Ind}} + \hat{\beta}_3 X_i^{\text{Rep}}$$
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i^{\text{Ind}} + \hat{\beta}_3 Z_i^{\text{Rep}}$$
 
 - Within each party, the fit is a **line** in $X_i$. The lines share a **slope** and have different **intercepts**
 
   $$\begin{aligned} \text{Democrats:} \quad & \hat{\beta}_0 + \hat{\beta}_1 X_i \\ \text{Independents:} \quad & (\hat{\beta}_0 + \hat{\beta}_2) + \hat{\beta}_1 X_i \\ \text{Republicans:} \quad & (\hat{\beta}_0 + \hat{\beta}_3) + \hat{\beta}_1 X_i \end{aligned}$$
 
-- $\hat{\beta}_2$ and $\hat{\beta}_3$ are the **gaps** between the parallel lines: how much warmer Independents and Republicans are towards Trump than Democrats **with the same** level of hostile sexism
+- $\hat{\beta}_2$ and $\hat{\beta}_3$ are the **gaps** between the parallel lines: 
+  - How much warmer Independents and Republicans are towards Trump than Democrats **with the same** level of hostile sexism
+  - Assuming a **common slope** on hostile sexism across the three types of partisans.
 
 :::
 
@@ -981,9 +1003,10 @@ ggplot() +
 
 ::: {.incremental}
 
-- To let the **slope** on hostile sexism differ between parties too we add **interactions** - the products of $X_i$ with each dummy
+- To let the **slope** on hostile sexism differ between parties too we add **interactions**
+  - The products of $X_i$ with each dummy
 
-  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 X_i^{\text{Ind}} + \hat{\beta}_3 X_i^{\text{Rep}} + \hat{\beta}_4 X_i X_i^{\text{Ind}} + \hat{\beta}_5 X_i X_i^{\text{Rep}}$$
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i^{\text{Ind}} + \hat{\beta}_3 Z_i^{\text{Rep}} + \hat{\beta}_4 X_i Z_i^{\text{Ind}} + \hat{\beta}_5 X_i Z_i^{\text{Rep}}$$
 
 - Within each party, the fit is still a line in $X_i$, but now each has its own intercept **and** slope
 
@@ -1033,6 +1056,70 @@ ggplot() +
   scale_x_continuous(breaks = seq(0, 1, 0.25)) +
   scale_y_continuous(breaks = seq(0, 100, 25)) +
   coord_cartesian(xlim = c(0, 1.35), ylim = c(0, 100)) +
+  labs(x = "Hostile sexism", y = "Trump thermometer") +
+  theme_reg
+```
+
+- Slopes actually aren't that different!
+
+## Interacting with education
+
+::: {.incremental}
+
+- Does the slope on hostile sexism differ by **education**? 
+  - Let $Z_i^{\text{Col}} = I(\text{college degree}_i)$ and add its product with $X_i$
+
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i^{\text{Col}} + \hat{\beta}_3 X_i Z_i^{\text{Col}}$$
+
+- Within each education group, the fit is a line in $X_i$ with its own intercept **and** slope
+
+  $$\begin{aligned} \text{No college degree:} \quad & \hat{\beta}_0 + \hat{\beta}_1 X_i \\ \text{College degree:} \quad & (\hat{\beta}_0 + \hat{\beta}_2) + (\hat{\beta}_1 + \hat{\beta}_3) X_i \end{aligned}$$
+
+- $\hat{\beta}_1$ is the slope among respondents **without** a degree (the baseline), and $\hat{\beta}_3$ is the **difference in slopes** for college graduates
+
+:::
+
+## Interacting with education
+
+```{r}
+#| label: fit-col-int
+#| include: false
+fit_cint <- lm(ft_trump ~ hostile_sexism * college, data = anes)
+b_ci <- coef(fit_cint)
+```
+
+```{r}
+round(coef(lm(ft_trump ~ hostile_sexism * college, data = anes)), 2)
+```
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 4.6
+#| fig-align: center
+
+# The two education groups' lines over the scatterplot, each group's
+# respondents in its color and nudged sideways as in the party figures
+col_cols <- c("No college degree" = "#b8860b", "College degree" = "#0479a8")
+col_lines <- tibble(group = names(col_cols),
+                    a = b_ci[1] + c(0, b_ci["college"]),
+                    b = b_ci["hostile_sexism"] + c(0, b_ci["hostile_sexism:college"]))
+col_pts <- anes |>
+  filter(!is.na(college)) |>
+  mutate(group = names(col_cols)[college + 1],
+         x = hostile_sexism + if_else(college == 1, 0.008, -0.008))
+ggplot() +
+  geom_point(data = col_pts, aes(x, ft_trump, colour = group), alpha = 0.06, size = 3,
+             stroke = 0) +
+  geom_segment(data = col_lines, aes(x = 0, xend = 1, y = a, yend = a + b, colour = group),
+               linewidth = 1.6) +
+  geom_text(data = col_lines,
+            aes(1.03, a + b, label = sprintf("%s (slope %.1f)", group, b), colour = group),
+            hjust = 0, vjust = c(1.2, -0.2), size = 5.5) +
+  scale_colour_manual(values = col_cols, guide = "none") +
+  scale_x_continuous(breaks = seq(0, 1, 0.25)) +
+  scale_y_continuous(breaks = seq(0, 100, 25)) +
+  coord_cartesian(xlim = c(0, 1.45), ylim = c(0, 105)) +
   labs(x = "Hostile sexism", y = "Trump thermometer") +
   theme_reg
 ```

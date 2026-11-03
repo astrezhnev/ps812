@@ -64,7 +64,6 @@ function (el, d, opts) {
   mk('line', { x1: MX, x2: MX, y1: Y0, y2: Y1, stroke: GREY, 'stroke-width': 1.5 }, gMg);
   mk('path', { d: side(MX, MU, SDY, 1, YL, YH, true), fill: BLUE, 'fill-opacity': 0.12 }, gMg);
   mk('path', { d: side(MX, MU, SDY, 1, YL, YH, false), fill: 'none', stroke: INK, 'stroke-width': 3, 'stroke-linejoin': 'round' }, gMg);
-  mk('text', { x: MX + 8, y: Y0 + 32, 'font-size': 19, fill: GREY }, gMg).textContent = 'density of Y';
 
   // ---- Points ---------------------------------------------------------------------
   d.x.forEach(function (x, i) {
