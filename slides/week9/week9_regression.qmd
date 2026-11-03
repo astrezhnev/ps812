@@ -1,0 +1,655 @@
+---
+title: "Week 9: Regression"
+subtitle: "PS 812 - Introduction to Statistical Methods in Political Science"
+author:
+  - name: "Anton Strezhnev"
+    affiliation: "University of Wisconsin-Madison"
+    email: strezhnev@wisc.edu
+date: "November 3, 2026"
+date-format: "MMMM D, YYYY"
+editor:
+  render-on-save: true
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    overview: true
+    navigation-mode: vertical
+    progress: false
+    controls: true
+    link-external-newwindow: true
+    footer: "PS 812 - University of Wisconsin-Madison"
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+execute:
+  cache: false
+  echo: true
+code:
+  execute:
+    - r
+    - python
+embed-resources: true
+bibliography: ../ps812.bib
+link-citations: true
+
+---
+
+## Welcome back! {.title-slide}
+
+<!-- MathJax macros for the whole deck. The reveal math plugin overwrites
+     window.MathJax, so a header config would be clobbered; defining them in
+     the first slide registers them before any later slide is typeset. The
+     wrapper takes up no space and renders nothing. -->
+::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
+$$
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Corr}{\text{Corr}}
+\newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
+$$
+:::
+
+## Where we've been
+
+```{r}
+#| label: power-setup
+#| include: false
+
+# Power and the Type S / Type M errors are one scene built up over several
+# slides (power-anim/power.js): each slide embeds the script with the stage it
+# opens on and the stage its last fragment reaches. The effect sizes are in
+# standard errors, delta = (mu - mu0) / SE(Ybar); 2.8 gives the conventional
+# 80% power and 0.25 an underpowered design like those in Gelman and Carlin
+power_data <- jsonlite::toJSON(list(alpha = 0.05, deltas = c(1, 2, 2.8, 4),
+                                    low = 0.25),
+                               auto_unbox = TRUE, digits = NA)
+power_anim <- function(from, to) {
+  cat("```{=html}",
+      '<div class="pw-anim"></div>',
+      "<script>",
+      "(", readLines("power-anim/power.js"), ")(document.currentScript.previousElementSibling,",
+      power_data, ", { from: ", from, ", to: ", to, " });",
+      "</script>",
+      rep('<span class="fragment pw-step"></span>', to - from),
+      "```", sep = "\n")
+}
+```
+
+```{r}
+#| echo: false
+#| output: asis
+power_anim(0, 1)
+```
+
+## Where we've been
+
+- The **power** of the test is the area under the **true** distribution of $T$ in the rejection region
+
+```{r}
+#| echo: false
+#| output: asis
+power_anim(1, 6)
+```
+
+## Where we've been
+
+- With **low power**, significant estimates can have the **wrong sign** (Type S) and are always **too big** (Type M)
+
+```{r}
+#| echo: false
+#| output: asis
+power_anim(6, 9)
+```
+
+::: {.attribution}
+@gelman2014beyond
+:::
+
+## Where we've been
+
+```{r}
+#| label: cef-setup
+#| include: false
+
+# A sample of 150 from a population whose CEF is linear,
+# E[Y | X] = 2 + 0.6 X with N(0, 1.2^2) errors and X ~ N(5, 1.6^2), so the
+# mean of Y is mu = 2 + 0.6 * 5 = 5. The horizontal line at mu pivots about
+# (E[X], E[Y]) into the CEF (cef-anim/cef.js): each slide embeds the script
+# with the stage it opens on and the stage its last fragment reaches
+set.seed(812)
+cef_pop <- list(b0 = 2, b1 = 0.6, sigma = 1.2, mux = 5, sdx = 1.6)
+cef_x <- rnorm(150, cef_pop$mux, cef_pop$sdx)
+cef_y <- cef_pop$b0 + cef_pop$b1 * cef_x + rnorm(150, 0, cef_pop$sigma)
+keep <- cef_x > 0 & cef_x < 10 & cef_y > 0 & cef_y < 10
+cef_data <- jsonlite::toJSON(c(cef_pop,
+                               list(x = round(cef_x[keep], 3), y = round(cef_y[keep], 3),
+                                    xlim = c(0, 10), ylim = c(0, 10))),
+                             auto_unbox = TRUE, digits = NA)
+cef_anim <- function(from, to) {
+  cat("```{=html}",
+      '<div class="cf-anim"></div>',
+      "<script>",
+      "(", readLines("cef-anim/cef.js"), ")(document.currentScript.previousElementSibling,",
+      cef_data, ", { from: ", from, ", to: ", to, " });",
+      "</script>",
+      rep('<span class="fragment cf-step"></span>', to - from),
+      "```", sep = "\n")
+}
+```
+
+```{r}
+#| echo: false
+#| output: asis
+cef_anim(0, 0)
+```
+
+## Where we're going
+
+```{r}
+#| echo: false
+#| output: asis
+cef_anim(0, 1)
+```
+
+## Regression
+
+- In the social sciences, we often want to understand how our **prediction** for an outcome variable $Y_i$ changes depending on the values of some set of covariates $\mathbf{X}_i$
+  - **Description**: A parsimonious summary of the data
+  - **Forecasting**: Given a *new* value of $\mathbf{X}_i$, what's our best prediction for $Y_i$?
+  - **Adjustment for causal inference**: Can we **explain away** $Y_i$ with confounders $\mathbf{X}_i$ to make our causal assumptions more credible?
+
+- In all cases, our **quantity of interest** or **estimand** changes from a single parameter to a **function** - the **conditional expectation function**
+
+  $$\mu(\mathbf{x}) = \mathbb{E}[Y_i \mid \mathbf{X}_i = \mathbf{x}]$$
+
+## Running Example: Hostile sexism and support for Trump
+
+::: {.incremental}
+
+- Do **gender attitudes** predict support for right-wing political candidates even after we adjust for partisanship?
+  - One particular attitude measured by political psychologists is **hostile sexism**: antagonism towards women seen as seeking power or challenging traditional gender roles [@glick1996ambivalent]
+  - In 2016, hostile sexism predicted support for Trump over Clinton even after adjusting for partisanship and other predictors [@winter2023hostile]. Additionally, it appears to contribute to the **education gap** in political attitudes among white voters [@schaffner2018understanding]
+  - Does the relationship hold up in 2024?
+
+- **Outcome** $Y_i$: Trump feeling thermometer (0-100) from the 2024 ANES [@anes2024timeseries]
+
+- **Regressor** $X_i$: agreement with four statements, each on a 5-point scale, rescaled to $[0, 1]$ and averaged
+  1) Women interpret innocent remarks as sexist
+  2) Women seek to gain power by getting control over men
+  3) Women demanding equality are seeking special favors
+  4) Women complaining about discrimination cause more problems
+
+:::
+
+## Marginal distributions
+
+```{r}
+#| label: anes-load
+#| include: false
+#| message: false
+
+library(tidyverse)
+# 2024 ANES: the Trump thermometer and the four-item hostile sexism scale
+# (data/prepare_data.R builds the extract from the full release)
+anes <- read_csv("data/anes24_sexism.csv") |>
+  filter(!is.na(ft_trump), !is.na(hostile_sexism))
+```
+
+```{r}
+#| label: reg-setup
+#| include: false
+
+theme_reg <- theme_minimal(base_size = 18) +
+  theme(panel.grid = element_blank(),
+        axis.line = element_line(colour = "#333333"),
+        strip.text = element_text(face = "bold"),
+        plot.background = element_rect(fill = "#F7F7F7", colour = NA))
+
+# X takes 17 values and the thermometer heaps at multiples of 5, so many
+# respondents share a point: a low alpha lets the stacks show as darker dots
+base_plot <- function(alpha = 0.06) {
+  ggplot() +
+    geom_point(data = anes, aes(hostile_sexism, ft_trump), colour = "#333333", alpha = alpha,
+               size = 3, stroke = 0) +
+    scale_x_continuous(breaks = seq(0, 1, 0.25)) +
+    scale_y_continuous(breaks = seq(0, 100, 25)) +
+    labs(x = "Hostile sexism", y = "Trump thermometer") +
+    theme_reg
+}
+```
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.8
+#| fig-align: center
+
+# One panel per variable, each on its own x range, with solid lines at the
+# means. The thermometer heaps at 0, 15, 30, ..., 85, 100, so its bins are
+# [0, 10), ..., [90, 100] as in week 8; hostile sexism gets one bar per value
+marg <- anes |>
+  select(ft_trump, hostile_sexism) |>
+  pivot_longer(everything(), names_to = "var", values_to = "value") |>
+  mutate(var = factor(var, levels = c("ft_trump", "hostile_sexism"),
+                      labels = c("Trump thermometer (Y)", "Hostile sexism (X)")))
+marg_means <- marg |> summarize(value = mean(value), .by = var)
+
+ggplot(marg, aes(x = value)) +
+  geom_histogram(data = \(d) filter(d, var == "Trump thermometer (Y)"), breaks = seq(0, 100, 10),
+                 closed = "left", fill = "#0479a8", colour = "#F7F7F7") +
+  geom_histogram(data = \(d) filter(d, var == "Hostile sexism (X)"), binwidth = 1 / 16, center = 0,
+                 fill = "#0479a8", colour = "#F7F7F7") +
+  geom_vline(data = marg_means, aes(xintercept = value), linewidth = 1.4, colour = "#333333") +
+  facet_wrap(~ var, nrow = 1, scales = "free_x") +
+  labs(x = NULL, y = "Number of respondents") +
+  theme_reg +
+  theme(strip.text = element_text(size = 20), panel.spacing.x = unit(2, "lines"))
+```
+
+## Hostile sexism and support for Trump
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 6
+#| fig-align: center
+
+base_plot()
+```
+
+## Why models?
+
+::: {.incremental}
+
+- It might seem like we can just use the same **sample mean** estimator as before but on **subsets of the data**
+  - With discrete covariates, **we can!**
+  - Regression is just taking a **conditional** mean.
+
+- Suppose we separated our respondents into two "bins": high sexism and low sexism
+  - Call respondents who agree with the statements on average ($X_i > 0.5$) **high** and those below **low**
+  - The CEF is just **two** distinct quantities.
+  - We can estimate each by a **sample mean** within its group
+
+    $$\hat{\mu}(\text{high}) = \frac{1}{n_{\text{high}}}\sum_{i : X_i > 0.5} Y_i \qquad \widehat{SE}\left(\hat{\mu}(\text{high})\right) = \frac{\hat{\sigma}_{\text{high}}}{\sqrt{n_{\text{high}}}}$$
+
+  - Everything from the last three weeks carries through.
+    - Under i.i.d. sampling from the target population, it's unbiased, consistent, asymptotically normal
+
+:::
+
+## Two groups
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.6
+#| fig-align: center
+
+two_groups <- anes |>
+  mutate(group = if_else(hostile_sexism > 0.5, "high", "low")) |>
+  summarize(n = n(), mean = mean(ft_trump), se = sd(ft_trump) / sqrt(n),
+            .by = group) |>
+  mutate(lower = mean - qnorm(0.975) * se, upper = mean + qnorm(0.975) * se)
+
+# Each group's mean as a step across its range of X, with its 95% CI shaded
+# and labeled. The step changes halfway between 0.5 and the next value, 0.5625
+cut_x <- 0.53125
+steps <- two_groups |>
+  mutate(xmin = if_else(group == "low", -0.02, cut_x),
+         xmax = if_else(group == "low", cut_x, 1.02),
+         label = sprintf("%s: %.1f  [%.1f, %.1f]\nn = %s", if_else(group == "low", "Low", "High"),
+                         mean, lower, upper, format(n, big.mark = ",", trim = TRUE)))
+base_plot() +
+  geom_rect(data = steps, aes(xmin = xmin, xmax = xmax, ymin = lower, ymax = upper),
+            fill = "#0479a8", alpha = 0.3) +
+  geom_segment(data = steps, aes(x = xmin, xend = xmax, y = mean, yend = mean),
+               colour = "#0479a8", linewidth = 1.6) +
+  geom_vline(xintercept = cut_x, linetype = "dashed", colour = "#333333") +
+  geom_label(data = steps, aes((xmin + xmax) / 2, mean + 12, label = label),
+             size = 5.5, colour = "#0479a8", fill = "#F7F7F7", label.size = 0, lineheight = 0.9)
+```
+
+::: {.incremental}
+
+- High-sexism respondents rate Trump `r with(two_groups, sprintf("%.1f", mean[group == "high"] - mean[group == "low"]))` points more warmly.
+
+:::
+
+## Binning on every value of $X$
+
+::: {.incremental}
+
+- Our hostile sexism measure only has **17** distinct values. We can calculate a conditional mean at **every** one
+  $$\hat{\mu}(x) = \frac{1}{n_x}\sum_{i : X_i = x} Y_i \qquad n_x = \sum_{i=1}^n I(X_i = x)$$
+
+- **No assumptions** about the shape of $\mu(x)$. Our estimator is fully **nonparametric**
+
+- But the precision at each $x$ depends **only** on $n_x$: $\widehat{SE}\left(\hat{\mu}(x)\right) = \hat{\sigma}_x / \sqrt{n_x}$
+  - Some bins are very small!
+
+:::
+
+## Binning on every value of $X$
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.6
+#| fig-align: center
+
+bins <- anes |>
+  summarize(n = n(), mean = mean(ft_trump), se = sd(ft_trump) / sqrt(n),
+            .by = hostile_sexism) |>
+  mutate(t_crit = qt(0.975, df = n - 1),   # small cells: t, not normal
+         lower = mean - t_crit * se,
+         upper = mean + t_crit * se) |>
+  arrange(hostile_sexism)
+
+# The 17 conditional means with t intervals, and each cell's size along the
+# bottom. The y range is held at the thermometer's, so the two sparsest
+# cells' intervals run off the plot
+base_plot() +
+  geom_pointrange(data = bins, aes(hostile_sexism, mean, ymin = lower, ymax = upper),
+                  colour = "#0479a8", linewidth = 1.1, size = 0.7) +
+  geom_text(data = bins, aes(hostile_sexism, -8, label = n), size = 4.2, colour = "#646569") +
+  coord_cartesian(ylim = c(-9, 103))
+```
+
+::: {.incremental}
+
+- Support rises until about $0.6$ and then appears to **level off**
+- We pay for flexibility with **variance**: the top two bins only hold `r bins$n[16]` and `r bins$n[17]` respondents!
+
+:::
+
+## The curse of dimensionality
+
+::: {.incremental}
+
+- Binning worked because $X_i$ is **one** variable with **17** values, and we have thousands of respondents
+
+- What if we want the CEF given hostile sexism **and** gender, education, race, partisanship, ideology and age?
+  $$\mu(\mathbf{x}) = \mathbb{E}[Y_i \mid \mathbf{X}_i = \mathbf{x}] \qquad \mathbf{X}_i = (X_{i1}, X_{i2}, \dotsc, X_{id})$$
+
+  - Binning needs a separate mean for **every combination** of covariate values
+  - And if we have a **continuous** covariate, nearly *every* respondent has a unique value of that covariate
+
+- This is the **curse of dimensionality**
+  - As the number of covariates grows, the covariate **space** grows exponentially [@hastie2009elements]
+
+:::
+
+## The curse of dimensionality
+
+```{r}
+#| echo: false
+#| output: asis
+
+# Exact-match cells as covariates are added one at a time, among respondents
+# with every covariate observed. "Alone" means the respondent is the only one
+# in their cell; cell sizes are averaged over respondents, not cells
+cc <- anes |> drop_na(gender, college, race, pid7, ideo7, age)
+covs <- c(hostile_sexism = "Hostile sexism", gender = "+ gender", college = "+ college degree",
+          race = "+ race", pid7 = "+ party ID (7 pt.)", ideo7 = "+ ideology (7 pt.)",
+          age = "+ age")
+curse <- map_dfr(seq_along(covs), \(j) {
+  v <- names(covs)[1:j]
+  k <- cc |> add_count(across(all_of(v)), name = "k") |> pull(k)
+  tibble(label = covs[j],
+         cells = prod(map_int(v, \(x) n_distinct(cc[[x]]))),
+         nonempty = nrow(distinct(cc, across(all_of(v)))),
+         median_k = median(k),
+         alone = mean(k == 1),
+         under10 = mean(k < 10))
+})
+fmt <- function(x) format(x, big.mark = ",", scientific = FALSE, trim = TRUE)
+pct <- function(x) sprintf("%.0f%%", 100 * x)
+cat('```{=html}',
+    "<style>",
+    ".reveal .curse-table table { border-collapse: collapse; margin: 0 auto; font-size: 0.72em; border-top: 2px solid #333; border-bottom: 2px solid #333; }",
+    ".reveal .curse-table table th, .reveal .curse-table table td { border: none; padding: 0.18em 0.7em; text-align: right; white-space: nowrap; }",
+    ".reveal .curse-table table td:first-child, .reveal .curse-table table th:first-child { text-align: left; }",
+    ".reveal .curse-table table th { font-weight: 400; color: #646569; border-bottom: 1px solid #333; }",
+    "</style>",
+    '<div class="curse-table"><table>',
+    "<thead><tr><th>Conditioning on</th><th>Possible cells</th><th>Non-empty cells</th>",
+    "<th>Median cell size</th><th>Alone in cell</th><th>In a cell of &lt; 10</th></tr></thead>",
+    "<tbody>",
+    paste0("<tr><td>", curse$label, "</td><td>", fmt(curse$cells), "</td><td>", fmt(curse$nonempty),
+           "</td><td>", fmt(curse$median_k), "</td><td>", pct(curse$alone), "</td><td>",
+           pct(curse$under10), "</td></tr>"),
+    "</tbody></table></div>",
+    "```", sep = "\n")
+```
+
+::: {.incremental}
+
+- `r fmt(nrow(cc))` respondents with every covariate observed. Once we condition on party ID and ideology, the typical respondent shares their covariate bin with only `r curse$median_k[6] - 1` others
+- Add age, and `r pct(curse$alone[7])` of respondents have *unique* covariate profiles.
+
+:::
+
+## Borrowing strength
+
+::: {.incremental}
+
+- To estimate $\mu(\mathbf{x})$ where we have little or no data, we have to use observations at **other** values of $\mathbf{X}_i$
+
+- That requires **assumptions** about how $\mu(\cdot)$ behaves between the points we observe. 
+- For example:
+  - **Smoothness**: $\mu(\cdot)$ doesn't change much between nearby $\mathbf{x}$
+  - **Functional form**: $\mu(\cdot)$ has a particular shape everywhere (e.g. a line)
+
+- This is why we need **models**. The more covariates, the more we need to impose structure **ex-ante**
+
+- Some alternative estimation strategies:
+  - **Kernel estimators**: Average the observations *near* $\mathbf{x}$ when estimating $\mu(\mathbf{x})$
+  - **Linear regression**: Assume a shape for $\mu(\cdot)$ and use **all** of the data to estimate the function.
+
+:::
+
+## Local averaging
+
+::: {.incremental}
+
+- Instead of averaging only the exact matches, average every observation within a **window** $h/2$ of $x$
+  $$\hat{\mu}(x) = \frac{\sum_{i=1}^n I\left(|X_i - x| \le \tfrac{h}{2}\right) Y_i}{\sum_{i=1}^n I\left(|X_i - x| \le \tfrac{h}{2}\right)}$$
+
+- This is the same idea as our **kernel density** estimator but applied to **regression**
+  - Calculate the mean at each $x$ using a window centered on $x$
+
+- The width $h$ is a **tuning parameter**
+  - Too small: few observations in each window $\leadsto$ **noisy** estimator
+  - Too large: we average over a region where $\mu(x)$ changes $\leadsto$ **bias**
+
+- Here, we're assuming a **uniform** kernel
+  - But as before, we can instead let the weight on each observation **fall** with its distance from $x$
+
+:::
+
+## Nadaraya-Watson kernel regression
+
+::: {.incremental}
+
+- The **Nadaraya-Watson** estimator [@nadaraya1964estimating; @watson1964smooth]
+  $$\hat{\mu}_h(\mathbf{x}) = \frac{\sum_{i=1}^n K_h(\mathbf{X}_i - \mathbf{x})\, Y_i}{\sum_{i=1}^n K_h(\mathbf{X}_i - \mathbf{x})} = \sum_{i=1}^n w_i(\mathbf{x})\, Y_i \qquad w_i(\mathbf{x}) = \frac{K_h(\mathbf{X}_i - \mathbf{x})}{\sum_{j=1}^n K_h(\mathbf{X}_j - \mathbf{x})}$$
+
+- A **weighted average** of the outcomes: the weights are non-negative, sum to $1$, and are larger for the observations closer to $\mathbf{x}$
+
+- The same kernels as in density estimation, $K_h(\mathbf{u}) = K(\mathbf{u}/h)$
+  - With $d$ dimensions, often use the **product kernel**: the product of covariate-specific kernels (which can be uniform/triangular/etc...) $K(\mathbf{u}) = \prod_{j=1}^d K(u_j)$ (with covariates on a common scale)
+  - Another approach is the "nearest neighbors" method: at each $x$, average the outcomes of the $k$ closest observations (based on some distance metric)
+
+:::
+
+## The kernel weights
+
+```{r}
+#| label: nw-setup
+#| include: false
+
+# The Gaussian-kernel bandwidth used in the figures, the same as in the R
+# example (leave-one-out cross-validation picks about 0.048)
+h_nw <- 0.05
+nw_at <- function(x0, h) {
+  w <- dnorm((anes$hostile_sexism - x0) / h)
+  sum(w * anes$ft_trump) / sum(w)
+}
+```
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.6
+#| fig-align: center
+
+# Gaussian weights around three target points at the chosen
+# bandwidth: each point's shade is its weight, the shaded bump along the
+# bottom is the kernel, and the large dot is the weighted mean. Many
+# respondents share each (x, y), and stacked transparent points would go dark
+# whatever their weight, so each distinct point is drawn once (faint grey
+# for where the data are, then ink shaded by its weight relative to K(0))
+x0s <- c(0.125, 0.5, 0.875)
+panel_lab <- sprintf("x = %s", x0s)
+pts <- distinct(anes, hostile_sexism, ft_trump)
+wts <- map_dfr(seq_along(x0s), \(j) {
+  pts |>
+    mutate(panel = factor(panel_lab[j], panel_lab),
+           w = dnorm((hostile_sexism - x0s[j]) / h_nw) / dnorm(0))
+})
+bumps <- map_dfr(seq_along(x0s), \(j) {
+  tibble(panel = factor(panel_lab[j], panel_lab), x = seq(0, 1, 0.002),
+         k = 30 * dnorm((x - x0s[j]) / h_nw) / dnorm(0))
+})
+est <- tibble(panel = factor(panel_lab, panel_lab), x = x0s,
+              fit = map_dbl(x0s, nw_at, h = h_nw))
+ggplot() +
+  geom_area(data = bumps, aes(x, k), fill = "#0479a8", alpha = 0.15) +
+  geom_point(data = pts, aes(hostile_sexism, ft_trump), colour = "#9a9a9a", alpha = 0.2,
+             size = 3, stroke = 0) +
+  geom_point(data = wts, aes(hostile_sexism, ft_trump, alpha = 0.9 * w), colour = "#333333",
+             size = 3, stroke = 0) +
+  geom_vline(data = est, aes(xintercept = x), linetype = "dashed", colour = "#0479a8") +
+  geom_point(data = est, aes(x, fit), colour = "#0479a8", size = 6) +
+  geom_label(data = est, aes(x, fit, label = sprintf("%.1f", fit)), nudge_y = 9,
+             size = 5.5, colour = "#0479a8", fill = "#F7F7F7", label.size = 0) +
+  scale_alpha_identity() +
+  facet_wrap(~ panel) +
+  scale_x_continuous(breaks = seq(0, 1, 0.5)) +
+  scale_y_continuous(breaks = seq(0, 100, 25)) +
+  labs(x = "Hostile sexism", y = "Trump thermometer") +
+  theme_reg
+```
+
+::: {.incremental}
+
+- Gaussian kernel, $h = `r sprintf("%.2f", h_nw)`$
+
+:::
+
+## Nadaraya-Watson in R
+
+```{r}
+# Nadaraya-Watson with a Gaussian kernel: a weighted mean of Y around x0
+nw <- function(x0, x, y, h) {
+  w <- dnorm((x - x0) / h)
+  sum(w * y) / sum(w)
+}
+
+grid <- (0:100) / 100
+nw_fit <- tibble(hostile_sexism = grid,
+                 fit = map_dbl(grid, nw, x = anes$hostile_sexism,
+                               y = anes$ft_trump, h = 0.05))
+nw_fit |> filter(hostile_sexism %in% c(0, 0.25, 0.5, 0.75, 1))
+```
+
+## Choosing the bandwidth
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.6
+#| fig-align: center
+
+# Nadaraya-Watson fits at a too-small bandwidth (which reproduces the bins),
+# the one used throughout and a too-large one, over the 17 bin means
+hs <- c(0.01, h_nw, 0.3)
+hs_lab <- c("h = 0.01: too small", sprintf("h = %.2f", h_nw), "h = 0.3: too large")
+fits <- map_dfr(seq_along(hs), \(j) {
+  tibble(panel = factor(hs_lab[j], hs_lab), x = (0:200) / 200,
+         fit = map_dbl(x, nw_at, h = hs[j]))
+})
+base_plot(alpha = 0.04) +
+  geom_point(data = bins, aes(hostile_sexism, mean), colour = "#333333", size = 2) +
+  geom_line(data = fits, aes(x, fit), colour = "#0479a8", linewidth = 1.5) +
+  facet_wrap(~ panel) +
+  scale_x_continuous(breaks = seq(0, 1, 0.5))
+```
+
+::: {.incremental}
+
+- The bias depends on how much $\mu(\cdot)$ **curves** and whether $\mathbf{X}_i$ are *lopsided* around $\mathbf{x}$
+- The variance depends on $\Var(Y_i \mid \mathbf{X}_i = \mathbf{x})$ and on how many observations are around $\mathbf{x}$
+
+:::
+
+## From a local to a global estimator
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5.6
+#| fig-align: center
+
+# The Nadaraya-Watson fit against the least squares line
+ols <- coef(lm(ft_trump ~ hostile_sexism, data = anes))
+nw_fit_h <- tibble(x = (0:200) / 200) |> mutate(fit = map_dbl(x, nw_at, h = h_nw))
+base_plot(alpha = 0.04) +
+  geom_line(data = nw_fit_h, aes(x, fit), colour = "#0479a8", linewidth = 1.6) +
+  geom_segment(aes(x = 0, xend = 1, y = ols[1], yend = ols[1] + ols[2]),
+               colour = "#c5050c", linewidth = 1.6) +
+  annotate("text", x = 0.97, y = 61, label = "Nadaraya-Watson", colour = "#0479a8",
+           size = 6, hjust = 1) +
+  annotate("text", x = 0.97, y = 105, label = "Least squares line", colour = "#c5050c",
+           size = 6, hjust = 1) +
+  coord_cartesian(ylim = c(0, 106))
+```
+
+::: {.incremental}
+
+- What if we **assume** the CEF is a line, $\mu(x) = \beta_0 + \beta_1 x$? 
+  - Regardless of how many values $X_i$ takes, we're only ever estimating **two** things
+- Every observation informs the fit at **every** $x$, so the line is more **precise**
+  - But at the cost of bias. Where $\mu(\cdot)$ bends, the line is **biased** for the true CEF
+
+:::
+
+## Linear regression and ordinary least squares
+
+## Best Linear Predictor
+
+## Ordinary Least Squares 
+
+## OLS with a single predictor
+
+## OLS is a plug-in estimator for the BLP
+
+## OLS in matrix form
+
+## Next week
+
+::: {.incremental}
+
+- **Inference for regression**
+  - The **sampling distribution** of the OLS estimator: consistency and asymptotic normality
+  - Confidence intervals and hypothesis tests for regression coefficients
+- **Standard errors** for OLS
+  - **Heteroskedasticity-consistent** ("robust") standard errors
+  - **Classical** OLS standard errors
+:::
+
+## References {.refs-slide}
+
+::: {#refs}
+:::
