@@ -1126,8 +1126,6 @@ ggplot() +
 
 ## A second continuous covariate
 
-::: {.incremental}
-
 - **Racial resentment**: a three question measure from @kinder1996divided, also averaged and re-scaled to $[0, 1]$ 
   - Correlated with hostile sexism: $r = `r sprintf("%.2f", cor(anes$hostile_sexism, anes$racial_resentment, use = "complete.obs"))`$
 
@@ -1135,17 +1133,13 @@ ggplot() +
 
   $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_{i1} + \hat{\beta}_2 X_{i2}$$
 
-:::
-
 ```{r}
 round(coef(lm(ft_trump ~ hostile_sexism + racial_resentment, data = anes)), 2)
 ```
 
-::: {.incremental}
 
 - After partialling **racial resentment** out of both the outcome and hostile sexism, the slope on hostile sexism is `r f1(coef(fit_rr)[2])`, also down from the unconditional `r f1(b_hs[2])`
 
-:::
 
 ## In three dimensions {.plane-slide}
 
