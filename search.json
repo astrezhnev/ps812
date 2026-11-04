@@ -371,6 +371,41 @@
     "text": "Adding partisanship\n\n\nThe slope falls from 94.0 to 32.7. After accounting for the explanatory power of partisanship, the relationship is smaller but still there"
   },
   {
+    "objectID": "slides/week9/week9_regression.html#interpreting-multiple-regression-coefficients",
+    "href": "slides/week9/week9_regression.html#interpreting-multiple-regression-coefficients",
+    "title": "Week 9: Regression",
+    "section": "Interpreting multiple regression coefficients",
+    "text": "Interpreting multiple regression coefficients\n\nWith a bivariate regression, interpreting the coefficient on a given \\(X_i\\) is straightforward\n\n\\(\\hat{\\beta}_1 = \\widehat{\\Cov}(X_i, Y_i)/\\widehat{\\Var}(X_i)\\) is the difference in the expected \\(Y_i\\) between respondents whose \\(X_i\\) differs by one unit\n\nHowever, with a multivariate regression, the coefficient captures a different relationship.\n\nThe difference in the expected \\(Y_i\\) between respondents whose \\(X_{i1}\\) differs by one unit holding the other covariates fixed.\nWe’ll often talk about relationships between \\(X\\) and \\(Y\\) after controlling for or conditioning on the other covariates\n\nWhat is OLS actually doing? We’re not physically controlling anything!\n\nThe Frisch-Waugh-Lovell theorem gives us a way of interpreting multivariate regression coefficients in terms of a residuals-on-residuals regression."
+  },
+  {
+    "objectID": "slides/week9/week9_regression.html#frisch-waugh-lovell-theorem",
+    "href": "slides/week9/week9_regression.html#frisch-waugh-lovell-theorem",
+    "title": "Week 9: Regression",
+    "section": "Frisch-Waugh-Lovell Theorem",
+    "text": "Frisch-Waugh-Lovell Theorem\n\nSplit the regressors into the one we care about, \\(X_{i1}\\), and everything else, \\(\\mathbf{W}_i\\) (which includes the intercept)\n\\[Y_i = \\hat{\\beta}_1 X_{i1} + \\mathbf{W}_i^\\prime\\hat{\\boldsymbol{\\gamma}} + \\hat{e}_i\\]\nFrisch-Waugh-Lovell (FWL): we can get the same \\(\\hat{\\beta}_1\\) from three regressions\n\nRegress \\(Y_i\\) on \\(\\mathbf{W}_i\\) and keep the residuals, \\(\\tilde{Y}_i\\)\nRegress \\(X_{i1}\\) on \\(\\mathbf{W}_i\\) and keep the residuals, \\(\\tilde{X}_{i1}\\)\nRegress \\(\\tilde{Y}_i\\) on \\(\\tilde{X}_{i1}\\). The slope is exactly \\(\\hat{\\beta}_1\\)\n\n\\[\\hat{\\beta}_1 = \\frac{\\widehat{\\Cov}(\\tilde{X}_{i1}, \\tilde{Y}_i)}{\\widehat{\\Var}(\\tilde{X}_{i1})}\\]"
+  },
+  {
+    "objectID": "slides/week9/week9_regression.html#what-fwl-tells-us",
+    "href": "slides/week9/week9_regression.html#what-fwl-tells-us",
+    "title": "Week 9: Regression",
+    "section": "What FWL tells us",
+    "text": "What FWL tells us\n\n\\(\\hat{\\beta}_1\\) only uses the variation in \\(X_{i1}\\) that is not linearly predicted by the other covariates to explain \\(Y_i\\)\n“Controlling for” \\(\\mathbf{W}_i\\) means partialling out its linear relationship with both \\(X_{i1}\\) and \\(Y_i\\)\nIf \\(X_{i1}\\) is uncorrelated with the other covariates in the sample, then adding those covariates doesn’t change \\(\\hat{\\beta}_1\\)\nRemember that the “partialling out” is linear\n\nIf \\(\\mathbf{W}_i\\) is related to \\(X_{i1}\\) or \\(Y_i\\) in a way that the linear regression does not capture, that relationship is still in the residuals and might be attributed to \\(X_{i1}\\)."
+  },
+  {
+    "objectID": "slides/week9/week9_regression.html#example-controlling-for-party",
+    "href": "slides/week9/week9_regression.html#example-controlling-for-party",
+    "title": "Week 9: Regression",
+    "section": "Example: controlling for party",
+    "text": "Example: controlling for party\n\nIn our example, \\(\\mathbf{W}_i\\) is the intercept plus the Independent and Republican dummies\n\nA regression on a full set of indicators predicts each category’s mean\n\nSo partialling out party just subtracts each respondent’s party mean\n\\[\\tilde{X}_{i1} = X_{i1} - \\bar{X}_{\\text{party}(i)} \\qquad \\tilde{Y}_i = Y_i - \\bar{Y}_{\\text{party}(i)}\\]\n\\(\\hat{\\beta}_1\\) is the slope using only the within-party variation\n\nDifferences in hostile sexism between the parties contribute nothing to \\(\\hat{\\beta}_1\\)"
+  },
+  {
+    "objectID": "slides/week9/week9_regression.html#fwl-in-r",
+    "href": "slides/week9/week9_regression.html#fwl-in-r",
+    "title": "Week 9: Regression",
+    "section": "FWL in R",
+    "text": "FWL in R\n\nanes_p &lt;- anes |&gt; filter(!is.na(party))   # the same respondents in every regression\n\n# The full regression\nround(coef(lm(ft_trump ~ hostile_sexism + party, data = anes_p)), 2)\n\n     (Intercept)   hostile_sexism partyIndependent  partyRepublican \n            0.06            32.67            22.03            58.82 \n\n# Steps 1 and 2: partial party out of the outcome and out of hostile sexism\nanes_p$y_tilde &lt;- resid(lm(ft_trump ~ party, data = anes_p))\nanes_p$x_tilde &lt;- resid(lm(hostile_sexism ~ party, data = anes_p))\n\n# Step 3: residuals on residuals\nround(coef(lm(y_tilde ~ x_tilde, data = anes_p)), 2)\n\n(Intercept)     x_tilde \n       0.00       32.67"
+  },
+  {
     "objectID": "slides/week9/week9_regression.html#interacting-with-partisanship",
     "href": "slides/week9/week9_regression.html#interacting-with-partisanship",
     "title": "Week 9: Regression",
@@ -413,6 +448,41 @@
     "text": "In three dimensions"
   },
   {
+    "objectID": "slides/week9/week9_regression.html#interacting-two-continuous-covariates",
+    "href": "slides/week9/week9_regression.html#interacting-two-continuous-covariates",
+    "title": "Week 9: Regression",
+    "section": "Interacting two continuous covariates",
+    "text": "Interacting two continuous covariates\n\nA linear interaction with two continuous covariates adds the product of hostile sexism and racial resentment to the equation.\n\\[\\hat{Y}_i = \\hat{\\beta}_0 + \\hat{\\beta}_1 X_{i1} + \\hat{\\beta}_2 X_{i2} + \\hat{\\beta}_3 X_{i1} X_{i2}\\]\nHolding \\(X_{i2}\\) at a value \\(x_2\\), we’re still estimating a line for \\(X_{i1}\\), but its slope now depends on \\(x_2\\)\n\\[\\big[\\hat{\\beta}_0 + \\hat{\\beta}_1 (x_1 + 1) + \\hat{\\beta}_2 x_2 + \\hat{\\beta}_3 (x_1 + 1) x_2\\big] - \\big[\\hat{\\beta}_0 + \\hat{\\beta}_1 x_1 + \\hat{\\beta}_2 x_2 + \\hat{\\beta}_3 x_1 x_2\\big] = \\hat{\\beta}_1 + \\hat{\\beta}_3 x_2\\]\n\nThe marginal ‘effect’ of \\(X_{i1}\\) at \\(X_{i2} = x_2\\). (be careful though, this is just a slope, not yet a causal claim).\n\\(\\hat{\\beta}_1\\) alone is the slope at \\(X_{i2} = 0\\) - sometimes this is meaningful, sometimes it isn’t!\n\n\n\nround(coef(lm(ft_trump ~ hostile_sexism * racial_resentment, data = anes)), 2)\n\n                     (Intercept)                   hostile_sexism \n                           -7.00                            41.42 \n               racial_resentment hostile_sexism:racial_resentment \n                           54.87                            17.33"
+  },
+  {
+    "objectID": "slides/week9/week9_regression.html#the-interaction-surface",
+    "href": "slides/week9/week9_regression.html#the-interaction-surface",
+    "title": "Week 9: Regression",
+    "section": "The interaction surface",
+    "text": "The interaction surface"
+  },
+  {
+    "objectID": "slides/week9/week9_regression.html#marginal-effects-plot",
+    "href": "slides/week9/week9_regression.html#marginal-effects-plot",
+    "title": "Week 9: Regression",
+    "section": "Marginal effects plot",
+    "text": "Marginal effects plot\n\n\nThe slope on hostile sexism rises from 41.4 at the lowest racial resentment to 58.8 at the highest, a straight line with slope \\(\\hat{\\beta}_3 = 17.3\\)\n\nThe band is a 95% confidence interval (using next week’s robust standard errors)\n\nThe gray bars show where the data are. Always plot the marginal effect against the distribution of the moderator"
+  },
+  {
+    "objectID": "slides/week9/week9_regression.html#careful-with-linear-interactions",
+    "href": "slides/week9/week9_regression.html#careful-with-linear-interactions",
+    "title": "Week 9: Regression",
+    "section": "Careful with linear interactions!",
+    "text": "Careful with linear interactions!\n\n\\(\\hat{\\beta}_1 + \\hat{\\beta}_3 x_2\\) assumes the slope on \\(X_{i1}\\) changes at a constant rate in \\(X_{i2}\\)\n\nWhere few respondents have a given \\(X_{i2}\\) (weak common support), the predicted marginal effect relies heavily on the functional form assumption!\n\nHainmueller et al. (2019) recommend a check that just uses bins of the effect modifier\n\nEstimate separate slopes and intercepts within each bin"
+  },
+  {
+    "objectID": "slides/week9/week9_regression.html#binned-marginal-effects",
+    "href": "slides/week9/week9_regression.html#binned-marginal-effects",
+    "title": "Week 9: Regression",
+    "section": "Binned marginal effects",
+    "text": "Binned marginal effects\n\n\nThe bins differ from the linear interaction results!\n\nThe slope is steepest in the middle tercile (64.9) and flattest in the top one (39.8), where the linear interaction puts its largest slope (57.3)\nThe linear interaction forced a monotone pattern onto a hump\n\nLikely because the thermometer is bounded:\n\nLittle room to move at either end, so the marginal “effects” get compressed."
+  },
+  {
     "objectID": "slides/week9/week9_regression.html#next-week",
     "href": "slides/week9/week9_regression.html#next-week",
     "title": "Week 9: Regression",
@@ -424,7 +494,7 @@
     "href": "slides/week9/week9_regression.html#references",
     "title": "Week 9: Regression",
     "section": "References",
-    "text": "References\n\n\nAmerican National Election Studies. 2026. ANES 2024 Time Series Study Full Release. https://electionstudies.org/data-center/2024-time-series-study/.\n\n\nGelman, Andrew, and John Carlin. 2014. “Beyond Power Calculations: Assessing Type s (Sign) and Type m (Magnitude) Errors.” Perspectives on Psychological Science 9 (6): 641–51. https://doi.org/10.1177/1745691614551642.\n\n\nGlick, Peter, and Susan T. Fiske. 1996. “The Ambivalent Sexism Inventory: Differentiating Hostile and Benevolent Sexism.” Journal of Personality and Social Psychology 70 (3): 491–512. https://doi.org/10.1037/0022-3514.70.3.491.\n\n\nKinder, Donald R., and Lynn M. Sanders. 1996. Divided by Color: Racial Politics and Democratic Ideals. University of Chicago Press.\n\n\nNadaraya, E. A. 1964. “On Estimating Regression.” Theory of Probability and Its Applications 9 (1): 141–42. https://doi.org/10.1137/1109020.\n\n\nSchaffner, Brian F., Matthew MacWilliams, and Tatishe Nteta. 2018. “Understanding White Polarization in the 2016 Vote for President: The Sobering Role of Racism and Sexism.” Political Science Quarterly 133 (1): 9–34. https://doi.org/10.1002/polq.12737.\n\n\nWatson, Geoffrey S. 1964. “Smooth Regression Analysis.” Sankhyā: The Indian Journal of Statistics, Series A 26 (4): 359–72.\n\n\nWinter, Nicholas J. G. 2023. “Hostile Sexism, Benevolent Sexism, and American Elections.” Politics & Gender 19 (2): 427–56. https://doi.org/10.1017/S1743923X22000010."
+    "text": "References\n\n\nAmerican National Election Studies. 2026. ANES 2024 Time Series Study Full Release. https://electionstudies.org/data-center/2024-time-series-study/.\n\n\nGelman, Andrew, and John Carlin. 2014. “Beyond Power Calculations: Assessing Type s (Sign) and Type m (Magnitude) Errors.” Perspectives on Psychological Science 9 (6): 641–51. https://doi.org/10.1177/1745691614551642.\n\n\nGlick, Peter, and Susan T. Fiske. 1996. “The Ambivalent Sexism Inventory: Differentiating Hostile and Benevolent Sexism.” Journal of Personality and Social Psychology 70 (3): 491–512. https://doi.org/10.1037/0022-3514.70.3.491.\n\n\nHainmueller, Jens, Jonathan Mummolo, and Yiqing Xu. 2019. “How Much Should We Trust Estimates from Multiplicative Interaction Models? Simple Tools to Improve Empirical Practice.” Political Analysis 27 (2): 163–92. https://doi.org/10.1017/pan.2018.46.\n\n\nKinder, Donald R., and Lynn M. Sanders. 1996. Divided by Color: Racial Politics and Democratic Ideals. University of Chicago Press.\n\n\nNadaraya, E. A. 1964. “On Estimating Regression.” Theory of Probability and Its Applications 9 (1): 141–42. https://doi.org/10.1137/1109020.\n\n\nSchaffner, Brian F., Matthew MacWilliams, and Tatishe Nteta. 2018. “Understanding White Polarization in the 2016 Vote for President: The Sobering Role of Racism and Sexism.” Political Science Quarterly 133 (1): 9–34. https://doi.org/10.1002/polq.12737.\n\n\nWatson, Geoffrey S. 1964. “Smooth Regression Analysis.” Sankhyā: The Indian Journal of Statistics, Series A 26 (4): 359–72.\n\n\nWinter, Nicholas J. G. 2023. “Hostile Sexism, Benevolent Sexism, and American Elections.” Politics & Gender 19 (2): 427–56. https://doi.org/10.1017/S1743923X22000010."
   },
   {
     "objectID": "slides/week7/week7_estimation.html#welcome-back",
