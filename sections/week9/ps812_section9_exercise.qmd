@@ -1,0 +1,200 @@
+---
+title: "PS 812: Section 9 Exercise"
+author: "YOUR NAME"
+date: "11-06-2026"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| eval: true
+library(tidyverse)
+theme_set(theme_minimal(base_size = 13))
+
+set.seed(812)
+
+anes <- read_csv("data/anes24_sexism.csv") |>
+  filter(!is.na(ft_trump), !is.na(hostile_sexism)) |>
+  select(ft_trump, hostile_sexism)
+```
+
+Data: `anes` is the 2024 ANES extract from this week's lecture, keeping the respondents who answered both questions.
+
+- `ft_trump`: Trump feeling thermometer (0-100)
+- `hostile_sexism`: the four-item hostile sexism scale, rescaled to run from 0 to 1. It takes 17 distinct values
+
+We ignore the survey weights throughout, as lecture did for these regressions.
+
+# Part 1: Binned scatterplots and the line
+
+## Task 1: the CEF at each value
+
+$X$ is discrete here, so we can estimate the CEF with no binning at all.
+
+a. Compute the mean of `ft_trump` and the number of respondents at each value of `hostile_sexism`. Save this as `cef`.
+b. Plot the means on top of a faded scatterplot of the raw data, with point size showing the number of respondents. (`geom_jitter()` will help with the raw data.)
+c. Which values of `hostile_sexism` have the fewest respondents?
+
+```{r}
+
+```
+
+## Task 2: a binned scatterplot
+
+a. Write a function `bin_means(data, k)` that cuts `hostile_sexism` into `k` **equal-width** bins with `cut_interval(hostile_sexism, n = k)`, then returns the mean of `hostile_sexism`, the mean of `ft_trump`, and the number of respondents in each bin.
+b. Plot the bin means for `k = 5` on top of the means from Task 1.
+c. We used `ntile()` for bins in the slides. What goes wrong with `ntile()` when $X$ has only 17 distinct values? (Hint: count how many bins contain respondents with `hostile_sexism` equal to 0.375.)
+
+```{r}
+
+```
+
+## Task 3: overlay the line
+
+a. Add the OLS line to your plot from Task 2 with `geom_smooth(method = "lm", se = FALSE)`.
+b. Compute the slope and intercept with `cov()`, `var()`, and `mean()`, and check them against `lm()`. Interpret the slope.
+c. Plot the gap: at each of the 17 values, the mean from Task 1 minus the line. Use `geom_segment()` to connect each gap to zero. Where does the line miss, and by how much? Does the shape of the misses look random?
+
+```{r}
+
+```
+
+# Part 2: Bias and variance
+
+For this part, treat the 4,584 respondents as the **population**, and draw i.i.d. samples with `slice_sample(anes, n = n, replace = TRUE)`. Now the truth is known: the CEF is your `cef` table from Task 1 and the BLP is the `lm()` line from Task 3.
+
+Throughout, the target is the CEF at $x_0 = 0.75$.
+
+## Task 4: pictures of many samples
+
+a. Draw 100 samples with $n = 500$. In each, compute the means in 4 equal-width bins and the OLS line. (`cut_interval()` can't guarantee the same bins from sample to sample, so use `cut(hostile_sexism, breaks = seq(0, 1, length.out = k + 1), include.lowest = TRUE)` here.)
+b. Make two plots, one with the 100 lines and one with the 100 sets of bin means (connected, with `alpha = 0.2`), each with the true CEF on top.
+c. Describe the bias and variance of each estimator in words, using the plots.
+
+```{r}
+
+```
+
+## Task 5: three estimators of one number
+
+Write three functions. Each takes a sample and returns an estimate of $\mu(0.75)$:
+
+- `est_exact(s)`: the mean of `ft_trump` among respondents with `hostile_sexism` exactly equal to 0.75
+- `est_window(s, h)`: the mean of `ft_trump` among respondents with $|X_i - 0.75| \le h / 2$. (Use `h = 0.5`.)
+- `est_line(s)`: the OLS line evaluated at $x = 0.75$
+
+a. For each estimator, simulate 2,000 samples with $n = 500$. Compute the bias, the variance, and the MSE. (Some samples might have nobody at exactly 0.75. How many? Drop those.)
+b. Check that bias$^2$ + variance equals the MSE, computed directly as the average of $(\hat\mu - \mu)^2$.
+c. Which estimator has the lowest bias? The lowest variance? The lowest MSE?
+
+```{r}
+
+```
+
+## Task 6: more data
+
+Repeat Task 5 with $n = 4{,}000$.
+
+a. What happens to the bias of each estimator? To its variance? Explain why they respond differently to $n$.
+b. Does the ranking by MSE change? What does this imply about how many bins to use as your sample grows?
+
+```{r}
+
+```
+
+## Task 7: the tuning parameter
+
+Compute the bias$^2$, variance, and MSE of `est_window()` for `h` = 0.0625, 0.125, 0.25, 0.5, 1, 1.5 at $n = 500$. Plot all three against `h`, with a horizontal line at the MSE of `est_line()`. Which `h` is best? What estimator does `h = 1.5` give you?
+
+```{r}
+
+```
+
+# Part 3: Confidence intervals
+
+From here on, go back to treating `anes` as our data, all 4,584 respondents, until Task 12.
+
+## Task 8: error bars on bin means
+
+a. Extend `bin_means()` so it also returns the standard error $s_b / \sqrt{n_b}$ and a 95% CI for each bin.
+b. Plot `k = 5` and `k = 17` side by side with `geom_errorbar()`. Which bins have the widest intervals, and why?
+
+```{r}
+
+```
+
+## Task 9: bins are a regression
+
+Create a factor with 5 equal-width bins. Fit `lm(ft_trump ~ 0 + bin, data = anes)`. Show that the coefficients match the bin means in your table from Task 8. What changes if you fit it with an intercept, `ft_trump ~ bin`? How would you get the mean of the third bin from that fit?
+
+```{r}
+
+```
+
+## Task 10: the slope
+
+a. Compute the slope, its standard error, and its 95% CI by hand, as in the slides. Report the slope and its CI in a sentence that a reader could understand.
+b. Check your slope and standard error against `summary(lm(ft_trump ~ hostile_sexism, data = anes))`. These standard errors assume the noise is the same at every $x$. Check that: plot the SD of `ft_trump` at each value of `hostile_sexism`. Does it look constant?
+
+```{r}
+
+```
+
+## Task 11: the band
+
+a. Compute `var_0` and `cov_01` by hand, as in the slides. Use them with `var_1` from Task 10 to compute the SE of the line at each of 100 values of $x$ from 0 to 1, using
+
+$$
+\widehat{\text{Var}}\big(\hat m(x)\big) = \widehat{\text{Var}}(\hat\beta_0) + x^2 \, \widehat{\text{Var}}(\hat\beta_1) + 2x \, \widehat{\text{Cov}}(\hat\beta_0, \hat\beta_1)
+$$
+
+b. Why can't we just add the first two terms? What's the sign of the covariance, and why? What happens to your band if you drop that term?
+c. Draw the band with `geom_ribbon()`. Where is it narrowest? Why there?
+d. Check your SEs against `predict(fit, newdata = ..., se.fit = TRUE)`, where `fit` is your `lm()` fit from Task 10.
+e. Overlay `geom_smooth(method = "lm")`. Does its band match yours?
+f. What share of respondents fall inside your band? Why isn't it 95%?
+
+```{r}
+
+```
+
+## Task 12: what does the interval cover?
+
+Back to treating `anes` as the population. Let $x_0 = 0.75$, so the true BLP $m(0.75)$ and the true CEF $\mu(0.75)$ are both known.
+
+a. How far apart are $m(0.75)$ and $\mu(0.75)$?
+b. For $n$ = 100, 500, 2,000, and 10,000, draw 1,000 samples and build a 95% CI for the line at $x_0$ by hand. (Wrap your calculations from Tasks 10 and 11 in a function first.) What share of them cover $m(0.75)$? What share cover $\mu(0.75)$?
+c. Plot both shares against $n$. Explain what you see.
+d. In the same samples, does the CI for the slope cover the population slope about 95% of the time?
+
+```{r}
+
+```
+
+## Task 13: put it together
+
+a. On one plot, show the raw data (faded), the line with its band, and the 17 means from Task 1 with their 95% CIs. (Use $t$ critical values, `qt(0.975, n - 1)`, because some of these groups are small. Lecture's slide does the same.)
+b. Add a quadratic with `geom_smooth(method = "lm", formula = y ~ poly(x, 2))`. Does it do a better job at the top of the scale? Is its band wider there than the line's? Why?
+c. Your coauthor writes: "the 95% CI shows that respondents at the very top of the hostile sexism scale rate Trump between 97 and 103 on average, on a 0-100 scale." Use your plot to explain to them what went wrong. Be specific about bias, variance, and what the CI does and doesn't measure.
+
+```{r}
+
+```
+
+## Bonus: a band for the whole line
+
+The band aims to cover $m(x)$ 95% of the time **at each** $x$.
+
+a. With $n = 500$, draw 1,000 samples. In each, check whether the band contains the population line at **all** of the 17 values of $X$. What share of samples pass?
+b. In each sample, compute the largest $|\hat m(x) - m(x)| / \widehat{SE}(\hat m(x))$ across the 17 values. What's the 95th percentile of this across samples? How does it compare to 1.96?
+c. Redraw your band from Task 11 with this new critical value. In one sentence, what does this wider band promise that the narrower one doesn't?
+
+```{r}
+
+```
