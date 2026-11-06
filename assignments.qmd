@@ -64,4 +64,6 @@ Links become active as each problem set is assigned.
 
 *Assigned Tuesday, November 3 -- due Tuesday, November 17*
 
-*To be posted*
+- [Problem Set 5 `.html`](https://www.antonstrezhnev.com/ps812/psets/ps5/ps812_problem_set_5.html)
+- [Problem Set 5 Github Repository](https://github.com/astrezhnev/ps812/tree/main/psets/ps5/)
+- [Problem Set 5 `.zip` archive](https://github.com/astrezhnev/ps812/raw/main/psets/ps5/ps812_problem_set_5.zip)
