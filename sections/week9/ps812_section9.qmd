@@ -1,0 +1,943 @@
+---
+title: "PS 812"
+subtitle: "Section 9: Binned Scatterplots, Bias and Variance, and Confidence Intervals for the Line"
+author: "John Hicks"
+institute: "Dept. of Political Science, UW-Madison"
+date: "11-06-2026"
+
+format:
+  revealjs:
+    embed-resources: true
+    html-math-method: katex
+    theme: default
+    slide-number: true
+    transition: none
+    code-fold: false
+    code-line-numbers: true
+    chalkboard: false
+    width: 1600
+    height: 900
+    incremental: true
+    fig-width: 10
+    fig-height: 4.5
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: false
+---
+
+# Today
+
+<style>
+
+.reveal {
+  font-family: Arial, sans-serif;
+}
+
+/* ---------------------------------
+   Headings
+   --------------------------------- */
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #8B0000;
+}
+
+.reveal h2 {
+  background-color: #eeeeee;
+  padding: 10px 20px;
+}
+
+/* ---------------------------------
+   Slide numbers
+   --------------------------------- */
+
+.reveal .slide-number {
+  color: #666666;
+  font-size: 0.7em;
+}
+
+/* ---------------------------------
+   Code
+   --------------------------------- */
+
+.reveal pre {
+  font-size: 0.65em;
+}
+
+.reveal code {
+  font-family: "Fira Code", "Courier New", monospace;
+}
+
+/* ---------------------------------
+   Cascade / incremental reveals
+   --------------------------------- */
+
+.reveal .fragment {
+  transition: opacity 0.35s ease-in-out;
+}
+
+.reveal .fragment.visible {
+  opacity: 1;
+}
+
+/* ---------------------------------
+   Lists
+   --------------------------------- */
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.35em;
+}
+
+/* ---------------------------------
+   Images
+   --------------------------------- */
+
+.reveal img {
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+</style>
+
+```{r}
+#| include: false
+library(tidyverse)
+library(patchwork)
+theme_set(theme_minimal(base_size = 16))
+
+uw_red   <- "#c5050c"
+alt_blue <- "#2166ac"
+set.seed(812)
+
+lab_x <- "% non-Hispanic white"
+lab_y <- "Clinton vote share (%)"
+```
+
+
+## Today
+
+::: {.fragment}
+**1. Binned scatterplots, again**
+
+Cut, average, plot. Then overlay the regression line
+:::
+
+::: {.fragment}
+**2. Bias and variance**
+
+Lecture's heuristic, measured: what do more bins cost, and what does the line cost?
+:::
+
+::: {.fragment}
+**3. Confidence intervals for bins and for the line**
+
+Error bars, the slope, and the band that `geom_smooth()` draws
+:::
+
+::: {.fragment}
+**4. What the band doesn't tell you**
+
+A confidence interval measures variance. It knows nothing about bias
+:::
+
+---
+
+## Data
+
+Back to the county returns from section 6:
+
+```{r}
+election <- read_csv("data/prez_election_2016_vote.csv") |>
+  mutate(voteshare = 100 * candidatevotes / totalvotes) |>
+  filter(!is.na(voteshare), !is.na(pctWhiteNH))
+
+nrow(election)
+```
+
+- One row per county: Clinton's share of the vote and the % non-Hispanic white
+- Same question as week 4: how does the average vote share change with $X$?
+
+
+# Binned scatterplots: review
+
+## Cut, average, plot
+
+No two counties share a value of $X$, so we average **near** $x$ instead of **at** $x$. Wrap it in a function, since we'll want many values of $k$:
+
+```{r}
+bin_means <- function(data, k) {
+  data |>
+    mutate(bin = ntile(pctWhiteNH, k)) |>         # k bins with equal counts
+    group_by(bin) |>
+    summarise(x_lo = min(pctWhiteNH), x_hi = max(pctWhiteNH),
+              x = mean(pctWhiteNH), y = mean(voteshare), n = n())
+}
+
+binned <- bin_means(election, 20)
+head(binned, 3)
+```
+
+- One row per bin. This is its own data frame, so it's its own `ggplot` layer
+
+---
+
+## The picture
+
+```{r}
+#| fig-height: 4.6
+ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point(size = 1, alpha = 0.12) +
+  geom_point(data = binned, aes(x = x, y = y), colour = uw_red, size = 3.5) +
+  labs(x = lab_x, y = lab_y)
+```
+
+---
+
+## Overlaying the line
+
+We held off on `geom_smooth()` in section 6. Now we know what it fits:
+
+```{r}
+#| fig-height: 3.3
+ggplot(election, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point(size = 1, alpha = 0.12) +
+  geom_smooth(method = "lm", se = FALSE, colour = "black", linewidth = 1.2) +
+  geom_point(data = binned, aes(x = x, y = y), colour = uw_red, size = 3.5) +
+  labs(x = lab_x, y = lab_y)
+```
+
+- `method = "lm"`: OLS. `se = FALSE`: no band, for now
+
+---
+
+## It's the same line three ways
+
+From section 6, from lecture, and from `geom_smooth()`:
+
+```{r}
+beta_1 <- cov(election$pctWhiteNH, election$voteshare) / var(election$pctWhiteNH)
+beta_0 <- mean(election$voteshare) - beta_1 * mean(election$pctWhiteNH)
+ols_all <- lm(voteshare ~ pctWhiteNH, data = election)
+
+rbind(by_hand = c(beta_0, beta_1), lm = coef(ols_all))
+```
+
+- $\hat\beta_1 = \widehat{\text{Cov}}(X, Y) / \widehat{\text{Var}}(X)$: the plug-in estimator of the best linear predictor
+- Two very different estimators of the same relationship: 20 means, or 2 coefficients
+
+---
+
+## Where does the line miss?
+
+```{r}
+#| fig-width: 8
+#| fig-height: 2.7
+binned |>
+  mutate(gap = y - (beta_0 + beta_1 * x)) |>
+  ggplot(aes(x = x, y = gap)) +
+  geom_hline(yintercept = 0) +
+  geom_segment(aes(xend = x, yend = 0), colour = "grey60") +
+  geom_point(colour = uw_red, size = 3.5) +
+  labs(x = lab_x, y = "Bin mean minus line")
+```
+
+- The line is a little **too low** at the left, **too high** around 50-75% white, and about right after that
+- Not random: the misses have a **shape**. The CEF bends and the line can't
+
+
+# Bias and variance
+
+## Bias-Variance Tradeoff
+
+$$
+\text{MSE}(\hat\mu(x)) = \mathbb{E}\big[(\hat\mu(x) - \mu(x))^2\big] = \text{Bias}(\hat\mu(x))^2 + \text{Var}(\hat\mu(x))
+$$
+
+- **Few, wide bins**: lots of counties per mean (low variance), but each mean averages over a region where $\mu(x)$ changes (bias)
+- **Many, narrow bins**: little averaging over different $x$'s (low bias), but few counties per mean (high variance)
+- **The line**: 2 numbers, and every county informs the fit at every $x$ (very low variance). But where $\mu(x)$ bends, it's biased
+- Today: put numbers on this. To measure bias, **we have to know the truth**
+
+---
+
+## A population we can check against
+
+Treat the 3,114 counties as the **population**. Then the best linear predictor is known, and we can draw samples from it:
+
+```{r}
+ols_pop <- lm(voteshare ~ pctWhiteNH, data = election)      # m(x): the true BLP
+
+# mu(x): a smooth stand-in for the true CEF, a local average over nearby counties
+# (don't worry about this now)
+cef_pop <- loess(voteshare ~ pctWhiteNH, data = election, span = 0.3, degree = 1)
+election <- mutate(election, mu = fitted(cef_pop))
+
+samp <- slice_sample(election, n = 300, replace = TRUE)     # one i.i.d. sample
+```
+
+- À la the ANES "population" in lecture last week
+- With replacement, so every draw is i.i.d.
+- No two counties share an $x$, so "the" population CEF needs some smoothing. We call this curve the truth
+
+---
+
+## The truth, and one sample
+
+```{r}
+#| echo: false
+#| fig-height: 4.3
+grid <- tibble(pctWhiteNH = seq(min(election$pctWhiteNH), max(election$pctWhiteNH), length.out = 300))
+grid <- mutate(grid, mu = predict(cef_pop, newdata = grid), m = predict(ols_pop, newdata = grid))
+
+ggplot() +
+  geom_point(data = samp, aes(pctWhiteNH, voteshare), size = 1.6, alpha = 0.35) +
+  geom_line(data = grid, aes(pctWhiteNH, mu), colour = uw_red, linewidth = 1.4) +
+  geom_line(data = grid, aes(pctWhiteNH, m), linewidth = 1.2, linetype = "dashed") +
+  annotate("text", x = 20, y = 76, label = "CEF~mu(x)", parse = TRUE, colour = uw_red, size = 6, hjust = 0) +
+  annotate("text", x = 5, y = 52, label = "BLP~m(x)", parse = TRUE, size = 6, hjust = 0) +
+  coord_cartesian(ylim = c(0, 95)) +
+  labs(x = lab_x, y = lab_y)
+```
+
+- We never see these two curves in practice. We see the grey points
+
+---
+
+## Three estimators, one sample
+
+```{r}
+#| echo: false
+#| fig-height: 3.9
+plot_steps <- function(k) {
+  b <- bin_means(samp, k)
+  ggplot() +
+    geom_point(data = samp, aes(pctWhiteNH, voteshare), size = 0.8, alpha = 0.2) +
+    geom_line(data = grid, aes(pctWhiteNH, mu), colour = "black", linewidth = 0.9) +
+    geom_segment(data = b, aes(x = x_lo, xend = x_hi, y = y, yend = y),
+                 colour = uw_red, linewidth = 1.3) +
+    coord_cartesian(ylim = c(0, 95)) +
+    scale_x_continuous(breaks = c(0, 50, 100)) +
+    labs(title = paste0(k, " bins (", b$n[1], " per bin)"), x = lab_x, y = NULL)
+}
+p_line <- ggplot() +
+  geom_point(data = samp, aes(pctWhiteNH, voteshare), size = 0.8, alpha = 0.2) +
+  geom_line(data = grid, aes(pctWhiteNH, mu), colour = "black", linewidth = 0.9) +
+  geom_smooth(data = samp, aes(pctWhiteNH, voteshare), method = "lm", se = FALSE,
+              colour = uw_red, linewidth = 1.3) +
+  coord_cartesian(ylim = c(0, 95)) +
+  scale_x_continuous(breaks = c(0, 50, 100)) +
+  labs(title = "The line", x = lab_x, y = lab_y)
+p_line + plot_steps(5) + plot_steps(40)
+```
+
+- Black: the truth. Red: the estimate from this one sample
+- Which is best? We can't tell from one sample. Bias and variance are about **repeated** samples
+
+---
+
+## Writing the estimators down
+
+Each one takes a sample and returns its estimate of the CEF at the points `at`:
+
+```{r}
+#| include: false
+fit_bins <- function(s, k, at) {
+  b <- bin_means(s, k)
+  b$y[cut(at, c(-Inf, b$x_hi[-k], Inf), labels = FALSE)]
+}
+
+fit_line <- function(s, at) {
+  b <- coef(lm(voteshare ~ pctWhiteNH, data = s))
+  b[[1]] + b[[2]] * at
+}
+```
+
+```{r}
+#| eval: false
+fit_bins <- function(s, k, at) {
+  b <- bin_means(s, k)
+  # return the mean of the bin each point in `at` falls into
+}
+
+fit_line <- function(s, at) {
+  b <- coef(lm(voteshare ~ pctWhiteNH, data = s))
+  b[[1]] + b[[2]] * at
+}
+```
+
+- No model for the bins: just a step function through the bin means
+- Same function signature for both, so we can hand either one to a simulation
+
+---
+
+## 100 samples of 300 counties
+
+```{r}
+#| echo: false
+#| fig-height: 3.9
+draw_fits <- function(estimator, n = 300, reps = 100) {
+  map(1:reps, \(r) {
+    s <- slice_sample(election, n = n, replace = TRUE)
+    tibble(draw = r, x = grid$pctWhiteNH, fit = estimator(s, grid$pctWhiteNH))
+  }) |> list_rbind()
+}
+
+set.seed(812)
+fits_100 <- bind_rows(
+  draw_fits(fit_line)                   |> mutate(est = "The line"),
+  draw_fits(\(s, at) fit_bins(s, 3, at))  |> mutate(est = "3 bins"),
+  draw_fits(\(s, at) fit_bins(s, 10, at)) |> mutate(est = "10 bins"),
+  draw_fits(\(s, at) fit_bins(s, 40, at)) |> mutate(est = "40 bins")
+) |>
+  mutate(est = factor(est, levels = c("The line", "3 bins", "10 bins", "40 bins")))
+
+ggplot(fits_100, aes(x = x, y = fit)) +
+  geom_line(aes(group = draw), colour = uw_red, alpha = 0.18) +
+  geom_line(data = grid, aes(pctWhiteNH, mu), colour = "black", linewidth = 1) +
+  facet_wrap(~ est, nrow = 1) +
+  scale_x_continuous(breaks = c(0, 50, 100)) +
+  coord_cartesian(ylim = c(0, 95)) +
+  labs(x = lab_x, y = lab_y)
+```
+
+- **Bias**: does the red cloud sit on the black curve? **Variance**: how wide is the cloud?
+- The line and 3 bins are tight but off. 40 bins is on target but all over the place
+
+---
+
+## Now the numbers
+
+Average over the counties in the population:
+
+```{r}
+score <- function(estimator, n, reps = 300) {
+  fits <- replicate(reps, {
+    s <- slice_sample(election, n = n, replace = TRUE)
+    estimator(s, election$pctWhiteNH)                # one column per sample
+  })
+  tibble(n = n,
+         bias2    = mean((rowMeans(fits) - election$mu)^2),
+         variance = mean(apply(fits, 1, var)),
+         mse      = bias2 + variance)
+}
+```
+
+```{r}
+#| include: false
+set.seed(812)
+line_scores <- map(c(300, 3000), \(n) score(fit_line, n)) |> list_rbind()
+ks <- c(2, 3, 4, 5, 7, 10, 15, 20, 30, 50)
+bin_scores <- expand_grid(k = ks, n = c(300, 3000)) |>
+  mutate(res = map2(k, n, \(k, n) score(\(s, at) fit_bins(s, k, at), n))) |>
+  select(k, res) |> unnest(res)
+```
+
+- Run it for the line and for $k$ from 2 to 50, at $n = 300$ and $n = 3{,}000$
+- Bias$^2$ and variance at each county's $x$, then averaged. Counties count equally, so the dense right side counts more
+- Bias$^2$ bottoms out above zero at large $k$, because our "truth" is a smooth stand-in, not the exact local averages
+
+---
+
+## The tradeoff, $n = 300$
+
+```{r}
+#| echo: false
+#| fig-height: 3.9
+scores_300 <- filter(bin_scores, n == 300)
+line_300   <- filter(line_scores, n == 300)
+best_300   <- slice_min(scores_300, mse, n = 1)
+
+scores_300 |>
+  select(k, Bias2 = bias2, Variance = variance, MSE = mse) |>
+  pivot_longer(-k) |>
+  ggplot(aes(x = k, y = value, colour = name)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  geom_hline(yintercept = line_300$mse, linetype = "dashed") +
+  annotate("text", x = 30, y = line_300$mse + 2.6, label = "MSE of the line", size = 5.5) +
+  annotate("text", x = 3.5, y = 44, label = "MSE", colour = "black", size = 6, hjust = 0) +
+  annotate("text", x = 3.1, y = 24, label = "Bias^2", parse = TRUE, colour = uw_red, size = 6, hjust = 1) +
+  annotate("text", x = 40, y = 13.5, label = "Variance", colour = alt_blue, size = 6) +
+  scale_x_log10(breaks = ks) +
+  scale_colour_manual(values = c(Bias2 = uw_red, Variance = alt_blue, MSE = "black"), guide = "none") +
+  labs(x = "Number of bins (k)", y = "Squared points")
+```
+
+- More bins: bias falls, variance rises. Best at about $k =$ `r best_300$k`, with MSE `r round(best_300$mse, 1)`
+- The line is **wrong** (bias$^2$ `r round(line_300$bias2, 1)`) but still beats every $k$ (MSE `r round(line_300$mse, 1)`). Being stable can be worth more than being right
+
+---
+
+## More data moves the answer
+
+```{r}
+#| echo: false
+#| fig-height: 3.5
+line_3000 <- filter(line_scores, n == 3000)
+best_3000 <- bin_scores |> filter(n == 3000) |> slice_min(mse, n = 1)
+
+ggplot(bin_scores, aes(x = k, y = mse, colour = factor(n))) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  geom_hline(data = line_scores, aes(yintercept = mse, colour = factor(n)), linetype = "dashed") +
+  annotate("text", x = 2, y = line_300$mse + 1.8, label = "the line, n = 300", colour = uw_red, size = 5, hjust = 0) +
+  annotate("text", x = 2, y = line_3000$mse - 1.8, label = "the line, n = 3,000", colour = alt_blue, size = 5, hjust = 0) +
+  annotate("text", x = 30, y = 21.5, label = "bins, n = 300", colour = uw_red, size = 5, hjust = 0.5) +
+  annotate("text", x = 40, y = 9.5, label = "bins, n = 3,000", colour = alt_blue, size = 5, hjust = 0.5) +
+  scale_x_log10(breaks = ks) +
+  scale_colour_manual(values = c(`300` = uw_red, `3000` = alt_blue), guide = "none") +
+  coord_cartesian(ylim = c(0, 30)) +
+  labs(x = "Number of bins (k)", y = "MSE")
+```
+
+- With more data, variance shrinks for everything, but the line's bias **stays**. Best $k$ rises to about `r best_3000$k`, and now bins beat the line (MSE `r round(best_3000$mse, 1)` vs. `r round(line_3000$mse, 1)`)
+- So $k$ should grow with $n$, like the histogram bins in week 7.
+
+
+# Confidence intervals
+
+## From many samples to one
+
+- We just saw the sampling variation because we had the whole population
+- In practice we have **one** sample. Same logic as week 8: estimate the $SE$, then
+
+$$
+\text{estimate} \pm 1.96 \times \widehat{SE}
+$$
+
+- So what are the estimates? Three of them, in order:
+  1. A **bin mean**
+  2. The **slope**
+  3. The **line at $x$**, $\hat\beta_0 + \hat\beta_1 x$
+- From here on, `samp` plays the part of our data: 300 counties
+
+---
+
+## A bin mean is just a mean
+
+So we already know its SE, $s_b / \sqrt{n_b}$:
+
+```{r}
+bin_ci <- function(data, k) {
+  data |>
+    mutate(bin = ntile(pctWhiteNH, k)) |>
+    group_by(bin) |>
+    summarise(x = mean(pctWhiteNH), y = mean(voteshare), n = n(),
+              se = sd(voteshare) / sqrt(n)) |>
+    mutate(lower = y - qnorm(0.975) * se, upper = y + qnorm(0.975) * se)
+}
+
+bins_10 <- bin_ci(samp, 10)
+bins_10 |> head(3)
+```
+
+- Same as any CI for a mean from week 8, one bin at a time
+
+---
+
+## Error bars with `geom_errorbar()`
+
+```{r}
+#| fig-height: 3.8
+ggplot(bins_10, aes(x = x, y = y, ymin = lower, ymax = upper)) +
+  geom_errorbar(colour = uw_red, width = 2, linewidth = 1) +
+  geom_point(colour = uw_red, size = 2.8) +
+  expand_limits(x = 100) +
+  labs(x = lab_x, y = lab_y)
+```
+
+- `geom_errorbar()` needs `x`, `ymin`, `ymax`, and `geom_point()` adds `y`. Same four numbers as the table
+
+---
+
+## More bins, wider intervals
+
+```{r}
+#| echo: false
+#| fig-height: 3.8
+map(c(5, 10, 40), \(k) bin_ci(samp, k) |> mutate(k = paste(k, "bins"))) |>
+  list_rbind() |>
+  mutate(k = factor(k, levels = c("5 bins", "10 bins", "40 bins"))) |>
+  ggplot(aes(x = x, y = y, ymin = lower, ymax = upper)) +
+  geom_errorbar(colour = uw_red, width = 1.5, linewidth = 0.8) +
+  geom_point(colour = uw_red, size = 1.6) +
+  facet_wrap(~ k) +
+  scale_x_continuous(breaks = c(25, 50, 75, 100)) +
+  coord_cartesian(ylim = c(0, 95)) +
+  labs(x = lab_x, y = lab_y)
+```
+
+- The price of flexibility, now visible in one sample. Go from 5 to 40 bins and $n_b$ falls 8-fold, so intervals are $\sqrt 8 \approx 2.8$ times wider
+- With 40 bins, only 7 or 8 counties per bin. Use $t$ critical values there (week 8), or don't use 40 bins
+
+---
+
+## Bins are a regression too
+
+Regress $Y$ on a set of bin dummies, with no intercept. OLS returns the bin means:
+
+```{r}
+samp_b <- mutate(samp, bin = factor(ntile(pctWhiteNH, 10)))
+fit_bin <- lm(voteshare ~ 0 + bin, data = samp_b)
+
+tibble(by_hand_mean = bins_10$y, ols_coef = coef(fit_bin)) |>
+  head(3)
+```
+
+- So a binned scatterplot and a line are both OLS. They differ in **how many coefficients** we spend on $X$
+
+---
+
+## A confidence interval for the slope
+
+```{r}
+x <- samp$pctWhiteNH
+y <- samp$voteshare
+n <- nrow(samp)
+
+beta_1 <- cov(x, y) / var(x)
+beta_0 <- mean(y) - beta_1 * mean(x)
+e <- y - (beta_0 + beta_1 * x)                 # residuals
+
+sigma2 <- sum(e^2) / (n - 2)                   # residual variance
+var_1  <- sigma2 / sum((x - mean(x))^2)
+se_1   <- sqrt(var_1)
+
+lower_1 <- beta_1 - qnorm(0.975) * se_1
+upper_1 <- beta_1 + qnorm(0.975) * se_1
+c(estimate = beta_1, se = se_1, lower = lower_1, upper = upper_1)
+```
+
+- Bigger residuals mean a bigger SE. A wider spread of $X$ means a smaller one. Lecture covers why next week
+
+---
+
+## Reading the interval
+
+- A one-point increase in % white is associated with a change in Clinton's vote share of between `r round(lower_1, 2)` and `r round(upper_1, 2)` points, on average
+- In this example we know the population slope, $\beta_1 =$ `r round(coef(ols_pop)[2], 2)`. This interval happens to contain it
+- Careful: a CI needs a sampling thought experiment. Fit this to **all** 3,114 counties and we'd have to imagine them as draws from something larger
+
+---
+
+## Does it work? 100 samples
+
+```{r}
+#| echo: false
+#| fig-height: 4.3
+# The by-hand calculations from the slides, as a function for the simulations
+ols_hand <- function(x, y) {
+  n <- length(x)
+  sxx <- sum((x - mean(x))^2)
+  b1 <- sum((x - mean(x)) * y) / sxx
+  b0 <- mean(y) - b1 * mean(x)
+  sigma2 <- sum((y - (b0 + b1 * x))^2) / (n - 2)
+  list(b0 = b0, b1 = b1,
+       var_0 = sigma2 * (1 / n + mean(x)^2 / sxx),
+       var_1 = sigma2 / sxx,
+       cov_01 = -mean(x) * sigma2 / sxx)
+}
+beta_pop <- coef(ols_pop)[[2]]
+
+set.seed(812)
+slope_draws <- map(1:2000, \(r) {
+  s <- slice_sample(election, n = 300, replace = TRUE)
+  f <- ols_hand(s$pctWhiteNH, s$voteshare)
+  z <- qnorm(0.975)
+  tibble(draw = r, est = f$b1,
+         lower = f$b1 - z * sqrt(f$var_1), upper = f$b1 + z * sqrt(f$var_1))
+}) |>
+  list_rbind() |>
+  mutate(covers = lower <= beta_pop & upper >= beta_pop)
+
+slope_draws |>
+  slice(1:100) |>
+  ggplot(aes(x = draw, y = est, ymin = lower, ymax = upper, colour = covers)) +
+  geom_errorbar(width = 0.5) +
+  geom_point(size = 1) +
+  geom_hline(yintercept = beta_pop, linewidth = 0.9) +
+  scale_colour_manual(values = c(`TRUE` = alt_blue, `FALSE` = uw_red), guide = "none") +
+  labs(x = "Sample", y = "95% CI for the slope")
+```
+
+- Over 2,000 samples of 300, the interval covers $\beta_1$ `r round(100 * mean(slope_draws$covers), 1)`% of the time. A bit short of 95%, because these SEs assume the same noise at every $x$, and counties are noisier on the left
+- This is the ring toss from lecture: the truth (black) stays put, the intervals move
+
+---
+
+## From the slope to the line
+
+At any $x$, the fitted line is a sum of two estimates:
+
+$$
+\hat m(x) = \hat\beta_0 + \hat\beta_1 x
+$$
+
+so its variance is the variance of a sum, with $x$ as a constant:
+
+$$
+\widehat{\text{Var}}\big(\hat m(x)\big) = \widehat{\text{Var}}(\hat\beta_0) + x^2 \, \widehat{\text{Var}}(\hat\beta_1) + 2x \, \widehat{\text{Cov}}(\hat\beta_0, \hat\beta_1)
+$$
+
+- Same rule as the difference in means in week 8, but now the **covariance term doesn't vanish**: the two coefficients come from the same data
+
+---
+
+## The band, by hand
+
+We have `var_1`. Add the other two pieces, compute the interval at a grid of $x$'s, then draw it with `geom_ribbon()`:
+
+```{r}
+var_0  <- sigma2 * (1 / n + mean(x)^2 / sum((x - mean(x))^2))
+cov_01 <- -mean(x) * var_1
+
+band <- tibble(pctWhiteNH = seq(min(samp$pctWhiteNH), max(samp$pctWhiteNH), length.out = 200)) |>
+  mutate(fit   = beta_0 + beta_1 * pctWhiteNH,
+         se    = sqrt(var_0 + pctWhiteNH^2 * var_1 + 2 * pctWhiteNH * cov_01),
+         lower = fit - qnorm(0.975) * se,
+         upper = fit + qnorm(0.975) * se)
+```
+
+- `se` depends on `pctWhiteNH`, so the interval has a different width at every $x$
+- `lower` and `upper` are the columns `geom_ribbon()` will want
+
+---
+
+## The band, drawn
+
+```{r}
+#| fig-height: 3.9
+ggplot(band, aes(x = pctWhiteNH)) +
+  geom_point(data = samp, aes(y = voteshare), size = 1, alpha = 0.25) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = uw_red, alpha = 0.3) +
+  geom_line(aes(y = fit), colour = uw_red, linewidth = 1.1) +
+  labs(x = lab_x, y = lab_y)
+```
+
+---
+
+## Why is it a bow tie?
+
+```{r}
+#| echo: false
+#| fig-height: 3.7
+set.seed(812)
+lines_100 <- draw_fits(fit_line)
+xbar <- mean(election$pctWhiteNH)
+ybar <- mean(election$voteshare)
+
+ggplot(lines_100, aes(x = x, y = fit)) +
+  geom_line(aes(group = draw), colour = uw_red, alpha = 0.2) +
+  geom_line(data = grid, aes(pctWhiteNH, m), linewidth = 1.1) +
+  annotate("point", x = xbar, y = ybar, size = 4) +
+  annotate("text", x = xbar + 3, y = ybar + 12, label = "(mean of X, mean of Y)", size = 5.5, hjust = 0.5) +
+  coord_cartesian(ylim = c(15, 85)) +
+  labs(x = lab_x, y = lab_y)
+```
+
+- Every OLS line passes through $(\bar X, \bar Y)$. Samples move that point a little and tilt the line around it
+- So the band is **narrowest near** $\bar X$ and fans out toward the edges, especially the sparse left end. Here $\bar X =$ `r round(mean(samp$pctWhiteNH))`, and the SE runs from `r round(min(band$se), 2)` to `r round(max(band$se), 2)`
+
+---
+
+## The shortcuts
+
+```{r}
+#| eval: false
+fit <- lm(voteshare ~ pctWhiteNH, data = samp)
+predict(fit, newdata = band, se.fit = TRUE)   # 1. the same SEs as our formula
+geom_smooth(method = "lm", se = TRUE)         # 2. draws a band for you
+```
+
+```{r}
+#| echo: false
+#| fig-height: 3.3
+fit <- lm(voteshare ~ pctWhiteNH, data = samp)
+pred <- predict(fit, newdata = band, se.fit = TRUE, interval = "confidence")
+stopifnot(max(abs(pred$se.fit - band$se)) < 1e-8)    # the slide says these match
+
+# geom_smooth(method = "lm") computes this same interval. Drawn as two lines,
+# because its own band would hide under the by-hand ribbon.
+smooth_band <- as_tibble(pred$fit) |>
+  mutate(pctWhiteNH = band$pctWhiteNH)
+
+ggplot(band, aes(x = pctWhiteNH)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = uw_red, alpha = 0.3) +
+  geom_line(data = smooth_band, aes(y = lwr), linetype = "dashed") +
+  geom_line(data = smooth_band, aes(y = upr), linetype = "dashed") +
+  geom_line(aes(y = fit), colour = uw_red, linewidth = 1) +
+  labs(x = lab_x, y = lab_y)
+```
+
+- Red: our band. Dashed: `predict()` and `geom_smooth()`. Same SEs, so they sit right on top of it
+
+---
+
+## Observations are still missed!
+
+```{r}
+#| echo: false
+#| fig-height: 4.5
+inside <- samp |>
+  mutate(se = sqrt(var_0 + pctWhiteNH^2 * var_1 + 2 * pctWhiteNH * cov_01),
+         fit = beta_0 + beta_1 * pctWhiteNH,
+         inside = abs(voteshare - fit) <= qnorm(0.975) * se)
+
+ggplot(band, aes(x = pctWhiteNH)) +
+  geom_point(data = inside, aes(y = voteshare, colour = inside), size = 1.8, alpha = 0.7) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = uw_red, alpha = 0.3) +
+  scale_colour_manual(values = c(`TRUE` = uw_red, `FALSE` = "grey60"), guide = "none") +
+  labs(x = lab_x, y = lab_y)
+```
+
+---
+
+## Coverage at each $x$ and for the whole line
+
+```{r}
+#| echo: false
+#| fig-height: 3.3
+at <- grid$pctWhiteNH
+truth <- grid$m
+
+set.seed(812)
+tstats <- replicate(1000, {
+  s <- slice_sample(election, n = 300, replace = TRUE)
+  f <- ols_hand(s$pctWhiteNH, s$voteshare)
+  abs(f$b0 + f$b1 * at - truth) / sqrt(f$var_0 + at^2 * f$var_1 + 2 * at * f$cov_01)
+})
+pointwise <- rowMeans(tstats <= qnorm(0.975))
+whole     <- mean(apply(tstats, 2, max) <= qnorm(0.975))
+crit_all  <- quantile(apply(tstats, 2, max), 0.95)
+
+ggplot(tibble(x = at, coverage = pointwise), aes(x, coverage)) +
+  geom_line(colour = uw_red, linewidth = 1.2) +
+  geom_hline(yintercept = 0.95, linetype = "dashed") +
+  annotate("point", x = 50, y = whole, size = 4) +
+  annotate("text", x = 52, y = whole, label = paste0("whole line inside the band: ", round(100 * whole), "%"),
+           size = 5.5, hjust = 0) +
+  coord_cartesian(ylim = c(0.8, 1)) +
+  labs(x = lab_x, y = "Coverage of m(x)")
+```
+
+- At **each** $x$, the band covers $m(x)$ between `r round(100 * min(pointwise))`% and `r round(100 * max(pointwise))`% of the time (red). Off from 95% because of that same noise assumption
+- But the **whole** true line sits inside in only `r round(100 * whole)`% of samples: more than one $x$ gives more chances to miss. A band for the whole line needs about $\pm$ `r round(crit_all, 2)` SEs here, wider than $\pm$ 1.96
+
+
+# What the band doesn't tell you
+
+## All 3,114 counties
+
+```{r}
+#| echo: false
+#| fig-height: 3.9
+f_all <- ols_hand(election$pctWhiteNH, election$voteshare)
+se_at <- function(x) sqrt(f_all$var_0 + x^2 * f_all$var_1 + 2 * x * f_all$cov_01)
+
+band_all <- grid |>
+  transmute(pctWhiteNH, fit = f_all$b0 + f_all$b1 * pctWhiteNH,
+            lower = fit - qnorm(0.975) * se_at(pctWhiteNH),
+            upper = fit + qnorm(0.975) * se_at(pctWhiteNH))
+bins_all <- bin_ci(election, 20) |>
+  mutate(line = f_all$b0 + f_all$b1 * x,
+         line_lo = line - qnorm(0.975) * se_at(x), line_hi = line + qnorm(0.975) * se_at(x),
+         overlap = lower <= line_hi & upper >= line_lo)
+
+ggplot(band_all, aes(x = pctWhiteNH)) +
+  geom_point(data = election, aes(y = voteshare), size = 0.8, alpha = 0.06) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "black", alpha = 0.3) +
+  geom_line(aes(y = fit), linewidth = 1) +
+  geom_errorbar(data = bins_all, aes(x = x, ymin = lower, ymax = upper),
+                colour = uw_red, width = 1.5, linewidth = 1) +
+  geom_point(data = bins_all, aes(x = x, y = y), colour = uw_red, size = 2) +
+  labs(x = lab_x, y = lab_y)
+```
+
+- A very tight band around the line. And `r sum(!bins_all$overlap)` of the 20 bin-mean intervals don't overlap it
+- Both are 95% intervals. They're answering **different questions**
+
+---
+
+## Spending another coefficient
+
+`geom_smooth()` can fit any formula, so a quadratic is one argument away:
+
+```{r}
+#| eval: false
+geom_smooth(method = "lm", formula = y ~ poly(x, 2))
+```
+
+```{r}
+#| echo: false
+#| fig-height: 3.5
+ggplot(samp, aes(x = pctWhiteNH, y = voteshare)) +
+  geom_point(size = 1, alpha = 0.25) +
+  geom_smooth(method = "lm", formula = y ~ x, colour = "black", fill = "black", alpha = 0.2) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), colour = uw_red, fill = uw_red, alpha = 0.3) +
+  geom_line(data = grid, aes(y = mu), linetype = "dotted", linewidth = 1) +
+  labs(x = lab_x, y = lab_y)
+```
+
+```{r}
+#| echo: false
+fit_quad <- function(s, at) {
+  f <- lm(voteshare ~ poly(pctWhiteNH, 2, raw = TRUE), data = s)
+  predict(f, newdata = tibble(pctWhiteNH = at))
+}
+set.seed(812)
+quad_300 <- score(fit_quad, 300)
+```
+
+- Black: the line. Red: the quadratic. Dotted: the truth. Red tracks it better but is wider where data are sparse: MSE `r round(quad_300$mse, 1)` vs. `r round(line_300$mse, 1)` for the line
+- Line, quadratic, bins: one tradeoff. More coefficients, less bias, more variance
+
+---
+
+## Which plot should you show?
+
+Binned means and the line **together**, each with its uncertainty:
+
+```{r}
+#| echo: false
+#| fig-height: 3.9
+ggplot(band, aes(x = pctWhiteNH)) +
+  geom_point(data = samp, aes(y = voteshare), size = 1, alpha = 0.15) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.3) +
+  geom_line(aes(y = fit), linewidth = 1) +
+  geom_errorbar(data = bins_10, aes(x = x, ymin = lower, ymax = upper), colour = uw_red, width = 2) +
+  geom_point(data = bins_10, aes(x = x, y = y), colour = uw_red, size = 2) +
+  labs(x = lab_x, y = lab_y)
+```
+
+- The **line** is one precise summary, and its band says how sure we are of **that** summary
+- The **bins** check whether the summary is any good. Report a slope with no bins, and the reader can't tell
+
+---
+
+## Recap
+
+- **Binned scatterplots** estimate the CEF with no shape assumption. `geom_smooth(method = "lm")` adds the BLP on top
+- **Bias vs. variance**: more bins lowers bias and raises variance. The line is the low-variance extreme, and with small $n$ it can win even though it's wrong
+- **More data**: variance falls, bias doesn't. So use more bins as $n$ grows
+- **CIs**: a bin mean is a mean. The line at $x$ is a sum of two estimates, so include the covariance
+- **The band** is a bow tie, is for the **average** at $x$, and holds at each $x$, not all at once
+- **CIs measure variance only**. The band covers the BLP, and it can miss the CEF
+
+
+# Exercise
+
+## Exercise
+
+Open `ps812_section9_exercise.qmd`. We switch to the hostile sexism data from lecture.
+
+- Part 1: binned scatterplots and the line
+- Part 2: bias and variance, by simulation
+- Part 3: confidence intervals for bins and the line
+
+
+# Questions?
