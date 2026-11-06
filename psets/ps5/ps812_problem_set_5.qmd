@@ -1,0 +1,109 @@
+---
+title: 'PS 812: Problem Set 5'
+author: "YOUR NAME"
+date: "November 3, 2026"
+output:
+  html_document:
+    df_print: paged
+code:
+  execute:
+    - r
+    - python
+embed-resources: true
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Useful packages
+library(tidyverse)
+library(haven)
+```
+
+
+> This problem set is due at 11:59pm on **Tuesday, November 17**. Please submit your solutions via [Gradescope](https://www.gradescope.com/). Upload both a rendered `.html` file saved as "Yourlastname_Yourfirstinitial_pset5.html" and the corresponding Quarto file saved as "Yourlastname_Yourfirstinitial_pset5.qmd". We recommend editing the provided `.qmd` file directly and writing your answers and code in line with the questions. We should be able to run your code without error messages. You are strongly encouraged to discuss the problems with other students, but each student must write up their own answers and code. In order to receive credit, homework submissions must be substantially started and all work must be shown.
+
+# Problem 1
+
+@washington2008female examines the socializing effect that being the parent to a daughter has on legislators' voting behavior. The paper argues that having more daughters increases a legislator's propensity to support feminist policies. The complete citation is
+
+> Washington, Ebonya L. 2008. "Female Socialization: How Daughters Affect Their Legislator Fathers' Voting on Women's Issues." *American Economic Review* 98 (1): 311–32. <https://doi.org/10.1257/aer.98.1.311>
+
+You will be replicating some of the tables from the paper, so please be sure to refer to the paper if you have questions about which variables to include.
+
+The code below will load in the dataset:
+
+```{r, message=F}
+library(tidyverse)
+library(haven)
+library(ggplot2)
+library(sandwich)
+
+# Read in the data, dropping missing observations
+washington <- read_dta("data/washington.dta") %>% filter(!is.na(totchi))
+```
+
+This data contains observations on all legislators from the 105th Congress.
+
+Below is a description of some of the variables in the data
+
+- `name` - Name of legislator
+- `statabb` - Abbreviation of state
+- `district` - Number of congressional district
+- `aauw` - AAUW voting score (higher values = more feminist voting record)
+- `ngirls` - Legislator's total number of daughters
+- `totchi` - Legislator's total number of children
+- `repub` - Indicator variable denoting whether the legislator is a Republican (1 = Republican, 0 = Democrat/Independent)
+- `female` - Indicator for whether the legislator is female
+- `white` - Indicator for whether the legislator is white
+- `age` - Legislator's age
+- `srvlng` - Legislator's service length
+- `demvote` - Democratic vote share in the legislator's district (in the last election)
+- `rgroup` - Legislator's religion (0 = None, 1 = Protestant, 2 = Catholic, 3 = Other Christian, 4 = Other religion)
+- `region` - Census region (numeric indicator)
+
+## Part A
+
+Regress the legislator's AAUW score on the number of girls that that legislator has. Estimate HC0 robust standard errors. For each coefficient, calculate the asymptotic p-value for the null hypothesis that the coefficient is equal to $0$. Present your results in a table.
+
+Provide a substantive interpretation the coefficient on the number of girls. Do we reject the null hypothesis that this coefficient is $0$ at the $\alpha = .05$ level.
+
+## Part B
+
+Create a **binned** scatterplot of AAUW score on the total number of girls. Overlay the OLS regression line on top of this scatterplot and plot a 95% confidence interval (HC0 robust) for the regression line. 
+
+Discuss whether you think this BLP is a good approximation for the true CEF.
+
+## Part C
+
+Now, replicate column 2 of Table 2 in @washington2008female. Note that the regression also includes a set of "fixed effects" (indicator variables) for each unique value of 'total children' and a set of fixed effects for region that are not reported but mentioned in a footnote. The intercept is also omitted from the table.
+
+Estimate HC0 robust standard errors. For each coefficient, calculate the asymptotic p-value for the null hypothesis that the coefficient is equal to $0$. Present your results in a table. 
+
+You can check your answer using the paper - you should get identical estimates for the coefficients. Explain why your standard errors are different. What approach did the author use to estimate the standard errors?
+
+Provide a substantive interpretation the coefficient on the number of girls. Do we reject the null hypothesis that this coefficient is $0$ at the $\alpha = .05$ level.
+
+## Part D
+
+Instead of including number of daughters as a single regressor, we will relax the assumption that the difference in expected AAUW vote score is the same for every additional daughter (going from 0 to 1 daughters, from 1 to 2, and so on). 
+
+Create indicator variables for legislators that have 0, 1, 2, 3, and 4+ girls. Re-estimate the model from Part C, replacing the number of girls with these indicator variables (with $0$ girls as the omitted category), and estimate HC0 robust standard errors. Present your results in a table. Does the assumption that each additional daughter increases expected AAUW score by the same amount seem reasonable?
+
+## Part E
+
+Using the model from Part C, compute the leverage $h_{ii}$ of every observation (the diagonal elements of the hat matrix $\mathbf{X}(\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime$). Which legislators have the highest leverage? Two observations should have a leverage of exactly $1$ - which legislators are they, and what about the model gives them a leverage of $1$? What is the residual for these two observations?
+
+Re-estimate the model from Part C dropping the two observations with a leverage of $1$. How do the coefficient on the number of girls and its estimated standard error change? Explain why
+
+## Part F
+
+Now we'll take a look at the factors that predict the independent variable of interest. Regress the number of girls that a legislator has on all of the covariates included in the model in Part C **except** for the total number of children. Then estimate the same regression also **including** the total number of children as a regressor. Estimate HC0 robust standard errors for both regressions. Calculate the asymptotic p-value for the null hypothesis that the coefficient is equal to $0$ and present your results in a table - put the estimates from each model side-by-side (as is common in regression tables).
+
+Compare the two regressions. How does adjusting for the total number of children change the estimated coefficients on the other regressors? Explain what is happening.
+
+
+# References
+
+::: {#refs}
+:::
