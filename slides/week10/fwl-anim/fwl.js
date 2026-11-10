@@ -13,7 +13,10 @@ function (el, d, opts) {
   //   4        regress X1 on X2: the group means of X1
   //   5        keep the residuals: each point slides by its group's mean of X1;
   //            the slope steepens to the multiple regression's beta_1
-  //   6        the points return, and the multiple regression draws one line
+  //   6        Y goes back to the raw outcome, X1 stays residualized: the
+  //            slope doesn't move, since ~X1 is uncorrelated with the group
+  //            means of Y. Only X1 needs partialling out
+  //   7        the points return, and the multiple regression draws one line
   //            per group, all with that slope
   // Residuals are drawn with the grand mean added back so the points stay in
   // place on the plot; the axes relabel to the residual scale. Data: d.x, d.y,
@@ -127,9 +130,11 @@ function (el, d, opts) {
     { cl: 1, my: 1, ry: 1, mx: 0, rx: 0, bk: 0, cap: 3 },
     { cl: 1, my: 1, ry: 1, mx: 1, rx: 0, bk: 0, cap: 4 },
     { cl: 1, my: 1, ry: 1, mx: 1, rx: 1, bk: 0, cap: 5 },
-    { cl: 1, my: 1, ry: 1, mx: 1, rx: 1, bk: 1, cap: 6 }
+    { cl: 1, my: 1, ry: 0, mx: 1, rx: 1, bk: 0, cap: 6, ux: 1 },
+    { cl: 1, my: 1, ry: 0, mx: 1, rx: 1, bk: 1, cap: 7, ux: 1 }
   ];
-  var DUR = [0, 800, 900, 2200, 900, 2200, 2000];
+  STAGES.forEach(function (st) { if (st.ux == null) st.ux = 0; });   // ux: Y has been un-residualized
+  var DUR = [0, 800, 900, 2200, 900, 2200, 2000, 2000];
   var FROM = opts.from || 0, TO = opts.to == null ? STAGES.length - 1 : opts.to;
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
@@ -197,20 +202,21 @@ function (el, d, opts) {
   // ---- Right margin: what we just did, the live slope, and its history ---------------
   var CAPS = [['Regress Y on X_1'], ['Color by the', 'covariate X_2'], ['Regress Y on X_2:', 'the group means'],
               ['Keep the residuals', '~Y = Y − ^Y(X_2)'], ['Regress X_1 on X_2:', 'the group means'],
-              ['Keep the residuals', '~X_1 = X_1 − ^X_1(X_2)'], ['Regress Y on X_1, X_2:', 'one slope, every group']];
+              ['Keep the residuals', '~X_1 = X_1 − ^X_1(X_2)'], ['Only X_1 needs it:', 'regress Y on ~X_1'],
+              ['Regress Y on X_1, X_2:', 'one slope, every group']];
   var caps = CAPS.map(function (lines) {
     var g = mk('g', {}, svg), t = mk('text', { x: PX0, y: 70, 'font-size': 25, 'font-weight': 600, fill: INK }, g);
     rich(t, lines.map(function (s, j) { return [{ x: PX0, dy: j ? 32 : 0 }, s]; }));
     return g;
   });
   var roSl = mk('text', { x: PX0, y: 190, 'font-size': 30, 'font-weight': 600, fill: INK }, svg);
-  var HIST = [['Y on X_1', B_POOL], ['~Y on X_1', B_Y], ['~Y on ~X_1', B_XY]];
+  var HIST = [['Y on X_1', B_POOL], ['~Y on X_1', B_Y], ['~Y on ~X_1', B_XY], ['Y on ~X_1', ols(xt, d.y).b]];
   var hist = HIST.map(function (h, j) {
     var g = mk('g', {}, svg), t = mk('text', { x: PX0, y: 260 + 38 * j, 'font-size': 24, fill: INK }, g);
     rich(t, [[{}, h[0] + ':'], [{ x: PX0 + 160, 'font-weight': 600 }, fmt(h[1])]]);
     return g;
   });
-  var hist4 = mk('text', { x: PX0, y: 260 + 38 * 3, 'font-size': 24, fill: INK }, svg);
+  var hist4 = mk('text', { x: PX0, y: 260 + 38 * 4, 'font-size': 24, fill: INK }, svg);
   rich(hist4, [[{}, 'Y on X_1, X_2:']]);
   mk('tspan', { x: PX0 + 160, 'font-weight': 600 }, hist4).textContent = fmt(d.b1);
   rich(mk('text', { x: PX0, y: 236, 'font-size': 20, fill: GREY }, svg), [[{}, 'Slope on X_1']]);
@@ -248,7 +254,7 @@ function (el, d, opts) {
       mX[k].setAttribute('x1', px(xk)); mX[k].setAttribute('x2', px(xk));
       mX[k].setAttribute('y1', py(ya)); mX[k].setAttribute('y2', py(yb));
     }
-    gMy.setAttribute('opacity', my * (1 - clamp((st.ry - 0.6) * 2.5)));
+    gMy.setAttribute('opacity', st.ux > 0 ? 0 : my * (1 - clamp((st.ry - 0.6) * 2.5)));
     gMx.setAttribute('opacity', mxT * (1 - clamp((st.rx - 0.6) * 2.5)));
 
     // Axes relabel to the residual scale as each variable is partialled out
@@ -260,8 +266,9 @@ function (el, d, opts) {
     roSl.textContent = 'slope = ' + fmt(f.b);
     roSl.setAttribute('opacity', 1 - bk);
     hist[0].setAttribute('opacity', 1);
-    hist[1].setAttribute('opacity', clamp((st.ry - 0.9) * 10));
+    hist[1].setAttribute('opacity', st.ux > 0 ? 1 : clamp((st.ry - 0.9) * 10));
     hist[2].setAttribute('opacity', clamp((st.rx - 0.9) * 10));
+    hist[3].setAttribute('opacity', clamp((st.ux - 0.9) * 10));
     hist4.setAttribute('opacity', bk);
   }
 

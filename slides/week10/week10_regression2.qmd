@@ -151,7 +151,7 @@ ols_anim(0, 7)
 
 - With a **bivariate** regression, interpreting the coefficient on $X_i$ is straightforward
   
-  $$\hat{\beta}_1 = \widehat{\Cov}(X_i, Y_i)/\widehat{\Var}(X_i)$$
+  $$\hat{\beta}_1 = \frac{\widehat{\Cov}(X_i, Y_i)}{\widehat{\Var}(X_i)}$$
   
 - The difference in the expectation of $Y_i$ between respondents whose $X_i$ differs by **one unit**
 
@@ -170,7 +170,7 @@ ols_anim(0, 7)
 
 - However, with a **multivariate** regression, the coefficient captures a different relationship.
 
-  - The difference in the expected $Y_i$ between respondents whose $X_{i1}$ differs by one unit **holding the other covariates fixed**.
+- The difference in the expected $Y_i$ between respondents whose $X_{i1}$ differs by one unit **holding the other covariates fixed**.
 
   $$
   \begin{aligned}
@@ -180,11 +180,11 @@ ols_anim(0, 7)
   \end{aligned}
   $$
 
-  - We'll often talk about relationships between $X$ and $Y$ after **controlling for** or **conditioning on** the other covariates
+  - We'll often talk about interpreting $\beta_1$ in terms of the relationships between $X$ and $Y$ after **controlling for** or **conditioning on** the other covariates
 
 - What is OLS **actually doing**? 
   - We're not physically controlling anything!
-  - The **Frisch-Waugh-Lovell** theorem gives us a way of interpreting multivariate regression coefficients in terms of a **residuals**-on-**residuals** regression.
+  - The **Frisch-Waugh-Lovell** theorem gives us a way of thinking about multivariate regression coefficients in terms of a **residuals**-on-**residuals** regression.
 
 :::
 
@@ -199,7 +199,9 @@ ols_anim(0, 7)
 - **Frisch-Waugh-Lovell (FWL)**: we can get the same $\hat{\beta}_1$ from three regressions
   1. Regress $Y_i$ on $\mathbf{X}_{i,-1}$ and keep the residuals, $\tilde{Y}_i$
   2. Regress $X_{i1}$ on $\mathbf{X}_{i,-1}$ and keep the residuals, $\tilde{X}_{i1}$
-  3. Regress $\tilde{Y}_i$ on $\tilde{X}_{i1}$. The slope is **exactly** $\hat{\beta}_1$
+  3. Regress $\tilde{Y}_i$ on $\tilde{X}_{i1}$. 
+
+- The slope is **exactly** $\hat{\beta}_1$
 
   $$\hat{\beta}_1 = \frac{\widehat{\Cov}(\tilde{X}_{i1}, \tilde{Y}_i)}{\widehat{\Var}(\tilde{X}_{i1})}$$
 
@@ -214,8 +216,7 @@ ols_anim(0, 7)
 - $\hat{\beta}_1$ only uses the variation in $X_{i1}$ that is **not linearly predicted** by the other covariates to explain $Y_i$
 
 - "Controlling for" $\mathbf{X}_{i,-1}$ means **partialling out** its linear relationship with both $X_{i1}$ and $Y_i$
-
-- If $X_{i1}$ is **uncorrelated** with the other covariates in the sample, then adding those covariates doesn't change $\hat{\beta}_1$
+  - If $X_{i1}$ is **uncorrelated** with the other covariates in the sample, then adding those covariates doesn't change $\hat{\beta}_1$
 
 - Remember that the "partialling out" is **linear**
   - If $\mathbf{X}_{i,-1}$ is related to $X_{i1}$ or $Y_i$ in a way that the linear regression does not capture, that relationship is still in the residuals and might be attributed to $X_{i1}$.
@@ -257,7 +258,7 @@ fwl_anim <- function(from, to) {
 ```{r}
 #| echo: false
 #| output: asis
-fwl_anim(0, 6)
+fwl_anim(0, 7)
 ```
 
 ## Example: controlling for party
@@ -420,20 +421,30 @@ ggplot() +
 
 ## A second continuous covariate
 
-- **Racial resentment**: a three question measure from @kinder1996divided, also averaged and re-scaled to $[0, 1]$ 
+::: {.incremental}
+
+- **Racial resentment**: a three question measure from @kinder1996divided, also averaged and re-scaled to $[0, 1]$
   - Correlated with hostile sexism: $r = `r sprintf("%.2f", cor(anes$hostile_sexism, anes$racial_resentment, use = "complete.obs"))`$
 
 - With two continuous covariates, the fit is a **plane** over $(X_{i1}, X_{i2})$
 
   $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_{i1} + \hat{\beta}_2 X_{i2}$$
 
+:::
+
+::: {.fragment}
+
 ```{r}
 round(coef(lm(ft_trump ~ hostile_sexism + racial_resentment, data = anes)), 2)
 ```
 
+:::
+
+::: {.incremental}
 
 - After partialling **racial resentment** out of both the outcome and hostile sexism, the slope on hostile sexism is `r f1(coef(fit_rr)[2])`, also down from the unconditional `r f1(b_hs[2])`
 
+:::
 
 ## In three dimensions {.plane-slide}
 
@@ -591,6 +602,7 @@ me_plot <- function(bins = FALSE) {
 }
 ```
 
+::: {.incremental}
 
 - A linear interaction with two **continuous** covariates adds the **product** of hostile sexism and racial resentment to the equation.
 
@@ -603,10 +615,15 @@ me_plot <- function(bins = FALSE) {
   - The **marginal 'effect'** of $X_{i1}$ at $X_{i2} = x_2$. (be careful though, this is just a **slope** - we're not yet making a causal claim).
   - $\hat{\beta}_1$ alone is the slope at $X_{i2} = 0$ - sometimes this is meaningful, sometimes it isn't!
 
+:::
+
+::: {.fragment}
 
 ```{r}
 round(coef(lm(ft_trump ~ hostile_sexism * racial_resentment, data = anes)), 2)
 ```
+
+:::
 
 ## The interaction surface {.plane-slide}
 
@@ -633,7 +650,7 @@ me_plot()
 ::: {.incremental}
 
 - The slope on hostile sexism rises from `r f1(b_ri[2])` at the lowest racial resentment to `r f1(b_ri[2] + b_ri[4])` at the highest, a **straight line** with slope $\hat{\beta}_3 = `r f1(b_ri[4])`$
-  - The band is a 95% confidence interval (using the robust HC0 standard errors we'll derive later)
+  - The band is a 95% confidence interval (using robust HC0 SEs)
 - The gray bars show where the **data** are. Always plot the marginal effect against the distribution of the moderator
 
 :::
