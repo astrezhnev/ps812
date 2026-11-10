@@ -717,13 +717,13 @@ me_plot(bins = TRUE)
 
   $$\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime \xrightarrow{p} \mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime] \qquad \frac{1}{n}\sum_{i=1}^n \mathbf{X}_i e_i \xrightarrow{p} \mathbb{E}[\mathbf{X}_i e_i] = \mathbf{0}$$
 
-  - The second limit is $\mathbf{0}$ by the projection error property, which holds for the BLP **mechanically**
+  - Last week we showed that the prediction errors are orthogonal to $X_i$ for the BLP **mechanically**
 
-- The inverse is a **continuous** function at an invertible $\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]$, so by the **continuous mapping theorem**
+- The inverse is a **continuous** function, so by the **continuous mapping theorem**
 
   $$\hat{\boldsymbol{\beta}} \xrightarrow{p} \boldsymbol{\beta} + \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\,\mathbf{0} = \boldsymbol{\beta}$$
 
-- Really, we just need an LLN to apply to our sample plug-ins
+- Really, we just need **an LLN** to apply to our sample plug-ins
   - So relaxations of i.i.d that still let us invoke LLN/CLT are fine
   - (e.g. clustered sampling, spatial correlation that dissipates over sufficient distances, etc...)
 
@@ -738,11 +738,11 @@ me_plot(bins = TRUE)
 
   $$\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) = \underbrace{\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)^{-1}}_{\xrightarrow{p}\ \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}} \ \underbrace{\sqrt{n}\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i e_i - \mathbf{0}\right)}_{\xrightarrow{d}\ \mathcal{N}(\mathbf{0},\ \boldsymbol{\Omega})}$$
 
-- The $\mathbf{X}_i e_i$ are i.i.d. $k \times 1$ random vectors with mean $\mathbf{0}$, so a **multivariate CLT** applies to their sample mean, with
+- A **multivariate CLT** applies to the sample mean of the i.i.d. $\mathbf{X}_ie_i$ random vectors and
 
   $$\boldsymbol{\Omega} = \Var(\mathbf{X}_i e_i) = \mathbb{E}[e_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime]$$
 
-- By **Slutsky's theorem** (with finite fourth moments of $Y_i$ and $\mathbf{X}_i$)
+- By **Slutsky's theorem**
 
 ::: {.recap-result .fragment}
 $\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d} \mathcal{N}\Big(\mathbf{0},\ \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\,\boldsymbol{\Omega}\,\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\Big)$
@@ -787,7 +787,7 @@ $\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d}
 
   $$\boldsymbol{\Omega} = \Var(\mathbf{X}_i e_i) = \mathbb{E}\big[(\mathbf{X}_i e_i)(\mathbf{X}_i e_i)^\prime\big] - \underbrace{\mathbb{E}[\mathbf{X}_i e_i]\,\mathbb{E}[\mathbf{X}_i e_i]^\prime}_{\mathbf{0}} = \mathbb{E}[e_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime]$$
 
-- Written out, each respondent contributes $\mathbf{X}_i\mathbf{X}_i^\prime$ **weighted** by their squared error
+- Each respondent contributes $\mathbf{X}_i\mathbf{X}_i^\prime$ **weighted** by their squared error
 
   $$\small \underbrace{\mathbf{X}_i e_i}_{k \times 1} \quad \underbrace{(\mathbf{X}_i e_i)^\prime}_{1 \times k} = e_i^2 \begin{pmatrix} 1 \\ X_{i1} \\ \vdots \\ X_{i,k-1} \end{pmatrix} \begin{pmatrix} 1 & X_{i1} & \cdots & X_{i,k-1} \end{pmatrix} = \begin{pmatrix} e_i^2 & e_i^2 X_{i1} & \cdots & e_i^2 X_{i,k-1} \\ e_i^2 X_{i1} & e_i^2 X_{i1}^2 & \cdots & e_i^2 X_{i1} X_{i,k-1} \\ \vdots & \vdots & \ddots & \vdots \\ e_i^2 X_{i,k-1} & e_i^2 X_{i,k-1} X_{i1} & \cdots & e_i^2 X_{i,k-1}^2 \end{pmatrix}$$
 
@@ -797,7 +797,7 @@ $\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d}
 
 ::: {.incremental}
 
-- **Plug-in principle**, one more time: replace each expectation with a sample mean and each unobserved $e_i$ with its **residual** $\hat{e}_i = Y_i - \mathbf{X}_i^\prime\hat{\boldsymbol{\beta}}$
+- **Plug-in principle** again: replace each expectation with a sample mean and each unobserved $e_i$ with its **residual** $\hat{e}_i = Y_i - \mathbf{X}_i^\prime\hat{\boldsymbol{\beta}}$
 
   $$\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime = \frac{1}{n}\mathbf{X}^\prime\mathbf{X} \qquad \widehat{\boldsymbol{\Omega}} = \frac{1}{n}\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime$$
 
@@ -813,13 +813,14 @@ $\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d}
 
 ::: {.incremental}
 
-- The filling is also a matrix product. Put the squared residuals on the diagonal of an $n \times n$ matrix $\widehat{\mathbf{D}}$
+- The filling is also a matrix product. We can write it in terms of an $n \times n$ matrix $\widehat{\mathbf{D}}$
 
   $$\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime = \underbrace{\mathbf{X}^\prime}_{k \times n} \ \underbrace{\widehat{\mathbf{D}}}_{n \times n} \ \underbrace{\mathbf{X}}_{n \times k} = \begin{pmatrix} \mathbf{X}_1 & \mathbf{X}_2 & \cdots & \mathbf{X}_n \end{pmatrix} \begin{pmatrix} \hat{e}_1^2 & 0 & \cdots & 0 \\ 0 & \hat{e}_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \hat{e}_n^2 \end{pmatrix} \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix}$$
 
-- $\widehat{\mathbf{D}}$ scales column $i$ of $\mathbf{X}^\prime$ by $\hat{e}_i^2$, and what's left is a **weighted** sum of outer products
 
-  $$\small \mathbf{X}^\prime\widehat{\mathbf{D}}\mathbf{X} = \begin{pmatrix} \hat{e}_1^2\mathbf{X}_1 & \hat{e}_2^2\mathbf{X}_2 & \cdots & \hat{e}_n^2\mathbf{X}_n \end{pmatrix} \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix} = \begin{pmatrix} \sum_i \hat{e}_i^2 & \sum_i \hat{e}_i^2 X_{i1} & \cdots & \sum_i \hat{e}_i^2 X_{i,k-1} \\ \sum_i \hat{e}_i^2 X_{i1} & \sum_i \hat{e}_i^2 X_{i1}^2 & \cdots & \sum_i \hat{e}_i^2 X_{i1}X_{i,k-1} \\ \vdots & \vdots & \ddots & \vdots \\ \sum_i \hat{e}_i^2 X_{i,k-1} & \sum_i \hat{e}_i^2 X_{i,k-1}X_{i1} & \cdots & \sum_i \hat{e}_i^2 X_{i,k-1}^2 \end{pmatrix}$$
+- **Off-diagonals** are $0$: under **i.i.d. sampling**, $e_i$ and $e_j$ are independent
+- **Diagonals** $\sigma_i^2 = \mathbb{E}[e_i^2 \mid \mathbf{X}_i]$ can differ across respondents with different $\mathbf{X}_i$
+- The HC0 estimator plugs in $\hat{e}_i^2$ for each $\sigma_i^2$
 
 :::
 
@@ -829,7 +830,7 @@ $\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d}
 
   $$\underbrace{\widehat{\Var}(\hat{\boldsymbol{\beta}})}_{k \times k} = \underbrace{(\mathbf{X}^\prime\mathbf{X})^{-1}}_{k \times k} \ \underbrace{\mathbf{X}^\prime\widehat{\mathbf{D}}\mathbf{X}}_{k \times k} \ \underbrace{(\mathbf{X}^\prime\mathbf{X})^{-1}}_{k \times k}$$
 
-- For the full regression, with both attitude measures **and** the party dummies
+- Let's take a look at this with a complete regression with both attitude measures **and** the party dummies
 
 ```{r}
 fit_full <- lm(ft_trump ~ hostile_sexism + racial_resentment + party, data = anes)
@@ -871,7 +872,7 @@ round(sqrt(diag(V_sw)), 3)
 
 ::: {.incremental}
 
-- Asymptotic normality gives us the same tools as before
+- Asymptotic normality lets us use the same approach to testing as before
 
   $$\frac{\hat{\beta}_j - \beta_j}{\widehat{SE}(\hat{\beta}_j)} \xrightarrow{d} \mathcal{N}(0, 1) \qquad \widehat{SE}(\hat{\beta}_j) = \sqrt{\big[\widehat{\Var}(\hat{\boldsymbol{\beta}})\big]_{jj}}$$
 
@@ -892,7 +893,7 @@ cbind(round(cbind(estimate = b, se = se_hc0,
 
 ## Comparing robust SEs with `lm()` defaults
 
-- `coeftest()` from `lmtest` redoes the coefficient tests with whatever variance estimator we hand it
+- `coeftest()` from `lmtest` will implement the tests with whatever variance covariance matrix we want to give it
 
 ```{r}
 #| message: false
@@ -968,14 +969,23 @@ Outcome: Trump thermometer. Democrats are the omitted party baseline. Standard e
 - The **estimates** are identical. Only the **standard errors** change
 - The robust SEs are **larger** for every slope
   - `r sprintf("%.0f", 100 * (ct_hc0["partyIndependent", 2] / ct_lm["partyIndependent", 2] - 1))`% larger for the Independent dummy
-- Why does `lm()` give **smaller** standard errors?
-  - It makes an extra **assumption**...
+- Why are they larger?
 
 :::
 
 :::
 
 ::::
+
+---
+
+::: {.statement style="height: 640px; flex-direction: column;"}
+| *T-stat looks too good.*
+| *Use robust standard errors—*
+| *significance gone.*
+
+[— Keisuke Hirano]{style="font-size: 0.6em; margin-top: 1.2em;"}
+:::
 
 ## Homoskedasticity
 
@@ -986,12 +996,13 @@ Outcome: Trump thermometer. Democrats are the omitted party baseline. Standard e
   $$\mathbb{E}[e_i^2 \mid \mathbf{X}_i] = \sigma^2$$
 
   - The variance of the errors is **constant** at every value of the covariates
+  - In matrix form, $\mathbb{E}[\mathbf{e}\mathbf{e}^\prime \mid \mathbf{X}] = \sigma^2\mathbf{I}_n$: the same $\sigma^2$ in every diagonal entry
 
 - Under homoskedasticity, the filling simplifies by the **law of iterated expectations**
 
   $$\boldsymbol{\Omega} = \mathbb{E}[e_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime] = \mathbb{E}\big[\mathbb{E}[e_i^2 \mid \mathbf{X}_i]\,\mathbf{X}_i\mathbf{X}_i^\prime\big] = \sigma^2\,\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]$$
 
-- And the sandwich simplifies
+- And the sandwich reduces to...
 
   $$\Var(\hat{\boldsymbol{\beta}}) \approx \frac{1}{n}\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\,\sigma^2\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\,\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1} = \frac{\sigma^2}{n}\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}$$
 
