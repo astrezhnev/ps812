@@ -200,10 +200,10 @@ function (el, d, opts) {
   }
 
   // ---- Right margin: what we just did, the live slope, and its history ---------------
-  var CAPS = [['Regress Y on X_1'], ['Color by the', 'covariate X_2'], ['Regress Y on X_2:', 'the group means'],
-              ['Keep the residuals', '~Y = Y − ^Y(X_2)'], ['Regress X_1 on X_2:', 'the group means'],
-              ['Keep the residuals', '~X_1 = X_1 − ^X_1(X_2)'], ['Only X_1 needs it:', 'regress Y on ~X_1'],
-              ['Regress Y on X_1, X_2:', 'one slope, every group']];
+  var CAPS = [['Regress Y on X_1'], [], ['Regress Y on X_2'],
+              ['Keep the residuals', '~Y = Y − ^Y(X_2)'], ['Regress X_1 on X_2'],
+              ['Keep the residuals', '~X_1 = X_1 − ^X_1(X_2)'], ['Regress Y on ~X_1'],
+              ['Regress Y on X_1, X_2']];
   var caps = CAPS.map(function (lines) {
     var g = mk('g', {}, svg), t = mk('text', { x: PX0, y: 70, 'font-size': 25, 'font-weight': 600, fill: INK }, g);
     rich(t, lines.map(function (s, j) { return [{ x: PX0, dy: j ? 32 : 0 }, s]; }));

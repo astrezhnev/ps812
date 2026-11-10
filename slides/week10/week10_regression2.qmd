@@ -130,7 +130,7 @@ ols_anim(0, 7)
 
 - We'll show that under i.i.d. sampling, OLS is consistent for the **Best Linear Predictor**
   - The linear combination of $X_i$ that *minimizes* the mean squared prediction error.
-- But we want to estimate the **CEF** $\mu(\mathbf{x})$
+- But we want to estimate the **CEF** $\mathbb{E}[Y_i \mid \mathbf{X}_i]$
   - When is OLS consistent for the **conditional expectation function**?
 - When the **CEF** is the **BLP**!
 
@@ -170,7 +170,8 @@ ols_anim(0, 7)
 
 - However, with a **multivariate** regression, the coefficient captures a different relationship.
 
-- The difference in the expected $Y_i$ between respondents whose $X_{i1}$ differs by one unit **holding the other covariates fixed**.
+- The difference in the expected $Y_i$ between respondents whose $X_{i1}$ differs by one unit...
+  - ...**holding the other covariates fixed**.
 
   $$
   \begin{aligned}
@@ -301,7 +302,7 @@ round(coef(lm(y_tilde ~ x_tilde, data = anes_p)), 2)
 - To let the **slope** on hostile sexism differ between parties too we add **interactions**
   - The products of $X_i$ with each dummy
 
-  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i^{\text{Ind}} + \hat{\beta}_3 Z_i^{\text{Rep}} + \hat{\beta}_4 X_i Z_i^{\text{Ind}} + \hat{\beta}_5 X_i Z_i^{\text{Rep}}$$
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 X_i^{\text{Ind}} + \hat{\beta}_3 X_i^{\text{Rep}} + \hat{\beta}_4 X_i X_i^{\text{Ind}} + \hat{\beta}_5 X_i X_i^{\text{Rep}}$$
 
 - Within each party, the fit is still a line in $X_i$, but now each has its own intercept **and** slope
 
@@ -362,9 +363,9 @@ ggplot() +
 ::: {.incremental}
 
 - Does the slope on hostile sexism differ by **education**? 
-  - Let $Z_i^{\text{Col}} = I(\text{college degree}_i)$ and add its product with $X_i$
+  - Let $X_i^{\text{Col}} = I(\text{college degree}_i)$ and add its product with $X_i$
 
-  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i^{\text{Col}} + \hat{\beta}_3 X_i Z_i^{\text{Col}}$$
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 X_i^{\text{Col}} + \hat{\beta}_3 X_i X_i^{\text{Col}}$$
 
 - Within each education group, the fit is a line in $X_i$ with its own intercept **and** slope
 
