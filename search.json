@@ -2608,7 +2608,7 @@
     "href": "slides/week10/week10_regression2.html#estimating-the-variance-1",
     "title": "Week 10: Regression, part 2",
     "section": "Estimating the variance",
-    "text": "Estimating the variance\n\nThe filling is also a matrix product. We can write it in terms of an \\(n \\times n\\) matrix \\(\\widehat{\\mathbf{D}}\\)\n\\[\\sum_{i=1}^n \\hat{e}_i^2\\,\\mathbf{X}_i\\mathbf{X}_i^\\prime = \\underbrace{\\mathbf{X}^\\prime}_{k \\times n} \\ \\underbrace{\\widehat{\\mathbf{D}}}_{n \\times n} \\ \\underbrace{\\mathbf{X}}_{n \\times k} = \\begin{pmatrix} \\mathbf{X}_1 & \\mathbf{X}_2 & \\cdots & \\mathbf{X}_n \\end{pmatrix} \\begin{pmatrix} \\hat{e}_1^2 & 0 & \\cdots & 0 \\\\ 0 & \\hat{e}_2^2 & \\cdots & 0 \\\\ \\vdots & \\vdots & \\ddots & \\vdots \\\\ 0 & 0 & \\cdots & \\hat{e}_n^2 \\end{pmatrix} \\begin{pmatrix} \\mathbf{X}_1^\\prime \\\\ \\mathbf{X}_2^\\prime \\\\ \\vdots \\\\ \\mathbf{X}_n^\\prime \\end{pmatrix}\\]\nOff-diagonals are \\(0\\): under i.i.d. sampling, \\(e_i\\) and \\(e_j\\) are independent\nDiagonals \\(\\sigma_i^2 = \\mathbb{E}[e_i^2 \\mid \\mathbf{X}_i]\\) can differ across respondents with different \\(\\mathbf{X}_i\\)\nThe HC0 estimator plugs in \\(\\hat{e}_i^2\\) for each \\(\\sigma_i^2\\)"
+    "text": "Estimating the variance\n\nThe filling is also a matrix product. We can write it in terms of an \\(n \\times n\\) matrix \\(\\widehat{\\mathbf{D}}\\)\n\\[\\sum_{i=1}^n \\hat{e}_i^2\\,\\mathbf{X}_i\\mathbf{X}_i^\\prime = \\underbrace{\\mathbf{X}^\\prime}_{k \\times n} \\ \\underbrace{\\widehat{\\mathbf{D}}}_{n \\times n} \\ \\underbrace{\\mathbf{X}}_{n \\times k} = \\begin{pmatrix} \\mathbf{X}_1 & \\mathbf{X}_2 & \\cdots & \\mathbf{X}_n \\end{pmatrix} \\begin{pmatrix} \\hat{e}_1^2 & 0 & \\cdots & 0 \\\\ 0 & \\hat{e}_2^2 & \\cdots & 0 \\\\ \\vdots & \\vdots & \\ddots & \\vdots \\\\ 0 & 0 & \\cdots & \\hat{e}_n^2 \\end{pmatrix} \\begin{pmatrix} \\mathbf{X}_1^\\prime \\\\ \\mathbf{X}_2^\\prime \\\\ \\vdots \\\\ \\mathbf{X}_n^\\prime \\end{pmatrix}\\]\n\\(\\widehat{\\mathbf{D}}\\) is a plug-in estimator of the \\(n \\times n\\) variance-covariance matrix of the errors, \\(\\mathbb{E}[\\mathbf{e}\\mathbf{e}^\\prime \\mid \\mathbf{X}]\\)\n\nOff-diagonals are \\(0\\): under i.i.d. sampling, \\(e_i\\) and \\(e_j\\) are independent\nDiagonals \\(\\sigma_i^2 = \\mathbb{E}[e_i^2 \\mid \\mathbf{X}_i]\\) can differ across respondents with different \\(\\mathbf{X}_i\\)\nThe HC0 estimator plugs in \\(\\hat{e}_i^2\\) for each \\(\\sigma_i^2\\)"
   },
   {
     "objectID": "slides/week10/week10_regression2.html#hc0-by-hand",
@@ -2644,6 +2644,13 @@
     "title": "Week 10: Regression, part 2",
     "section": "Comparing robust SEs with lm() defaults",
     "text": "Comparing robust SEs with lm() defaults\n\n\n\n\n\n\n\n\nlm() default\nRobust (HC0)\n\n\n\n(1)\n(2)\n\n\n\n\nIntercept\n−4.33***\n−4.33***\n\n\n\n(0.71)\n(0.56)\n\n\nHostile sexism\n24.15***\n24.15***\n\n\n\n(1.86)\n(2.03)\n\n\nRacial resentment\n19.62***\n19.62***\n\n\n\n(1.41)\n(1.57)\n\n\nIndependent\n19.42***\n19.42***\n\n\n\n(1.42)\n(1.84)\n\n\nRepublican\n53.28***\n53.28***\n\n\n\n(0.86)\n(1.04)\n\n\nN\n4,562\n4,562\n\n\nR²\n0.68\n0.68\n\n\n\n\n\nOutcome: Trump thermometer. Democrats are the omitted party baseline. Standard errors in parentheses. Two-sided tests of H₀: βj = 0: * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001.\n\n\n\nThe estimates are identical. Only the standard errors change\nThe robust SEs are larger for every slope\n\n30% larger for the Independent dummy\n\nWhy are they larger?"
+  },
+  {
+    "objectID": "slides/week10/week10_regression2.html#section",
+    "href": "slides/week10/week10_regression2.html#section",
+    "title": "Week 10: Regression, part 2",
+    "section": "",
+    "text": "T-stat looks too good.\nUse robust standard errors—\nsignificance gone.\n— Keisuke Hirano"
   },
   {
     "objectID": "slides/week10/week10_regression2.html#homoskedasticity",
