@@ -1,0 +1,1176 @@
+---
+title: "Week 10: Regression, part 2"
+subtitle: "PS 812 - Introduction to Statistical Methods in Political Science"
+author:
+  - name: "Anton Strezhnev"
+    affiliation: "University of Wisconsin-Madison"
+    email: strezhnev@wisc.edu
+date: "November 10, 2026"
+date-format: "MMMM D, YYYY"
+editor:
+  render-on-save: true
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    overview: true
+    navigation-mode: vertical
+    progress: false
+    controls: true
+    link-external-newwindow: true
+    footer: "PS 812 - University of Wisconsin-Madison"
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+execute:
+  cache: false
+  echo: true
+code:
+  execute:
+    - r
+    - python
+embed-resources: true
+bibliography: ../ps812.bib
+link-citations: true
+
+---
+
+## Welcome back! {.title-slide}
+
+<!-- MathJax macros for the whole deck. The reveal math plugin overwrites
+     window.MathJax, so a header config would be clobbered; defining them in
+     the first slide registers them before any later slide is typeset. The
+     wrapper takes up no space and renders nothing. -->
+::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
+$$
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Corr}{\text{Corr}}
+\newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
+$$
+:::
+
+```{r}
+#| label: setup
+#| include: false
+#| message: false
+
+# Carried over from week 9: the data, the plot theme, the fits and the party
+# colors that the slides from "Example: controlling for party" onward use
+library(tidyverse)
+options(width = 110)    # the code font is small, so let printed output run wider
+
+# 2024 ANES: the Trump thermometer and the four-item hostile sexism scale
+# (data/prepare_data.R builds the extract from the full release)
+anes <- read_csv("data/anes24_sexism.csv") |>
+  filter(!is.na(ft_trump), !is.na(hostile_sexism)) |>
+  mutate(party = case_when(pid7 <= 3 ~ "Democrat", pid7 == 4 ~ "Independent",
+                           pid7 >= 5 ~ "Republican"))
+
+theme_reg <- theme_minimal(base_size = 18) +
+  theme(panel.grid = element_blank(),
+        axis.line = element_line(colour = "#333333"),
+        strip.text = element_text(face = "bold"),
+        plot.background = element_rect(fill = "#F7F7F7", colour = NA))
+
+fit_hs <- lm(ft_trump ~ hostile_sexism, data = anes)
+fit_rr <- lm(ft_trump ~ hostile_sexism + racial_resentment, data = anes)
+b_hs <- coef(fit_hs)
+f1 <- function(x) sprintf("%.1f", x)
+
+# Each party's respondents in its color. Respondents in all three parties
+# share the 17 values of X, so each party's points are nudged sideways a
+# little to keep them from hiding one another
+party_cols <- c(Democrat = "#0479a8", Independent = "#b8860b", Republican = "#c5050c")
+party_pts <- anes |>
+  filter(!is.na(party)) |>
+  mutate(x = hostile_sexism + c(Democrat = -0.014, Independent = 0, Republican = 0.014)[party])
+```
+
+## Ordinary Least Squares
+
+```{r}
+#| label: ols-setup
+#| include: false
+
+# A small fake sample for the least squares animation (ols-anim/ols.js): a
+# horizontal line at c0, its residuals and their squares, the line moving to
+# the OLS fit, then the OLS residuals lifted out and chained to show they sum
+# to zero. The script takes the stage it opens on and the stage its last
+# fragment reaches
+set.seed(1)
+ols_x <- sort(round(runif(12, 1, 9), 2))
+ols_y <- round(2 + 0.6 * ols_x + rnorm(12, 0, 1.2), 2)
+ols_b <- coef(lm(ols_y ~ ols_x))
+ols_data <- jsonlite::toJSON(list(x = ols_x, y = ols_y, c0 = 7.5,
+                                  b0 = unname(ols_b[1]), b1 = unname(ols_b[2]),
+                                  xlim = c(0, 10), ylim = c(0, 10)),
+                             auto_unbox = TRUE, digits = NA)
+ols_anim <- function(from, to) {
+  cat("```{=html}",
+      '<div class="ol-anim"></div>',
+      "<script>",
+      "(", readLines("ols-anim/ols.js"), ")(document.currentScript.previousElementSibling,",
+      ols_data, ", { from: ", from, ", to: ", to, " });",
+      "</script>",
+      rep('<span class="fragment ol-step"></span>', to - from),
+      "```", sep = "\n")
+}
+```
+
+```{r}
+#| echo: false
+#| output: asis
+ols_anim(0, 7)
+```
+
+## OLS for estimating the CEF
+
+::: {.incremental}
+
+- We'll show that under i.i.d. sampling, OLS is consistent for the **Best Linear Predictor**
+  - The linear combination of $X_i$ that *minimizes* the mean squared prediction error.
+- But we want to estimate the **CEF** $\mu(\mathbf{x})$
+  - When is OLS consistent for the **conditional expectation function**?
+- When the **CEF** is the **BLP**!
+
+  $$\mathbb{E}[Y_i \mid \mathbf{X}_i] = \mathbf{X}_i^\prime\boldsymbol{\beta}$$
+
+- When is the CEF linear?
+  - **Saturated** models: every covariate is discrete and there is a dummy for every combination of values (e.g. the three party categories)
+  - Otherwise, linearity is an **assumption** about the functional form
+  - Remember, this is *linearity in parameters* given a particular $\mathbf{X}$
+    - Adding more terms to $\mathbf{X}$ may make linearity more plausible!
+
+
+:::
+
+## Interpreting multiple regression coefficients
+
+::: {.incremental}
+
+- With a **bivariate** regression, interpreting the coefficient on $X_i$ is straightforward
+  
+  $$\hat{\beta}_1 = \widehat{\Cov}(X_i, Y_i)/\widehat{\Var}(X_i)$$
+  
+- The difference in the expectation of $Y_i$ between respondents whose $X_i$ differs by **one unit**
+
+  $$
+  \begin{aligned}
+  \mathbb{E}[Y_i \mid X_i = x + 1] - \mathbb{E}[Y_i \mid X_i = x] &= \big(\beta_0 + \beta_1 (x + 1)\big) - \big(\beta_0 + \beta_1 x\big) \\
+  &= \beta_1
+  \end{aligned}
+  $$
+
+:::
+
+## Interpreting multiple regression coefficients
+
+::: {.incremental}
+
+- However, with a **multivariate** regression, the coefficient captures a different relationship.
+
+  - The difference in the expected $Y_i$ between respondents whose $X_{i1}$ differs by one unit **holding the other covariates fixed**.
+
+  $$
+  \begin{aligned}
+  &\mathbb{E}[Y_i \mid X_{i1} = x_1 + 1, X_{i2} = x_2, \dotsc, X_{i,k-1} = x_{k-1}] - \mathbb{E}[Y_i \mid X_{i1} = x_1, X_{i2} = x_2, \dotsc, X_{i,k-1} = x_{k-1}] \\
+  &\qquad = \big(\beta_0 + \beta_1 (x_1 + 1) + \beta_2 x_2 + \dotsc + \beta_{k-1} x_{k-1}\big) - \big(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dotsc + \beta_{k-1} x_{k-1}\big) \\
+  &\qquad = \beta_1
+  \end{aligned}
+  $$
+
+  - We'll often talk about relationships between $X$ and $Y$ after **controlling for** or **conditioning on** the other covariates
+
+- What is OLS **actually doing**? 
+  - We're not physically controlling anything!
+  - The **Frisch-Waugh-Lovell** theorem gives us a way of interpreting multivariate regression coefficients in terms of a **residuals**-on-**residuals** regression.
+
+:::
+
+## Frisch-Waugh-Lovell Theorem
+
+::: {.incremental}
+
+- Split the regressors into the one we care about, $X_{i1}$, and **everything else**, $\mathbf{X}_{i,-1}$ (which includes the intercept)
+
+  $$Y_i = \hat{\beta}_1 X_{i1} + \mathbf{X}_{i,-1}^\prime\hat{\boldsymbol{\beta}}_{-1} + \hat{e}_i$$
+
+- **Frisch-Waugh-Lovell (FWL)**: we can get the same $\hat{\beta}_1$ from three regressions
+  1. Regress $Y_i$ on $\mathbf{X}_{i,-1}$ and keep the residuals, $\tilde{Y}_i$
+  2. Regress $X_{i1}$ on $\mathbf{X}_{i,-1}$ and keep the residuals, $\tilde{X}_{i1}$
+  3. Regress $\tilde{Y}_i$ on $\tilde{X}_{i1}$. The slope is **exactly** $\hat{\beta}_1$
+
+  $$\hat{\beta}_1 = \frac{\widehat{\Cov}(\tilde{X}_{i1}, \tilde{Y}_i)}{\widehat{\Var}(\tilde{X}_{i1})}$$
+
+
+:::
+
+
+## What FWL tells us
+
+::: {.incremental}
+
+- $\hat{\beta}_1$ only uses the variation in $X_{i1}$ that is **not linearly predicted** by the other covariates to explain $Y_i$
+
+- "Controlling for" $\mathbf{X}_{i,-1}$ means **partialling out** its linear relationship with both $X_{i1}$ and $Y_i$
+
+- If $X_{i1}$ is **uncorrelated** with the other covariates in the sample, then adding those covariates doesn't change $\hat{\beta}_1$
+
+- Remember that the "partialling out" is **linear**
+  - If $\mathbf{X}_{i,-1}$ is related to $X_{i1}$ or $Y_i$ in a way that the linear regression does not capture, that relationship is still in the residuals and might be attributed to $X_{i1}$.
+
+:::
+
+## Visualizing FWL
+
+```{r}
+#| label: fwl-setup
+#| include: false
+
+# A Simpson's paradox for the FWL animation (fwl-anim/fwl.js), after
+# ryxcommar's "Frisch-Waugh-Lovell theorem, animated": three groups of X2 whose
+# means of X1 and Y rise together, while Y falls with X1 within each group.
+# Partialling X2 out of Y and then out of X1 turns the pooled slope (about
+# +0.6) into the within-group slope of Y ~ X1 + X2 (about -0.7)
+set.seed(2)
+fwl_g <- rep(1:3, each = 15)
+fwl_m <- c(2.5, 5, 7.5)[fwl_g]
+fwl_x <- round(fwl_m + rnorm(45, 0, 1.1), 2)
+fwl_y <- round(fwl_m - 0.8 * (fwl_x - fwl_m) + rnorm(45, 0, 0.5), 2)
+fwl_b1 <- unname(coef(lm(fwl_y ~ fwl_x + factor(fwl_g)))[2])
+fwl_data <- jsonlite::toJSON(list(x = fwl_x, y = fwl_y, g = fwl_g, b1 = fwl_b1,
+                                  xlim = c(0, 10), ylim = c(0, 10)),
+                             auto_unbox = TRUE, digits = NA)
+fwl_anim <- function(from, to) {
+  cat("```{=html}",
+      '<div class="fw-anim"></div>',
+      "<script>",
+      "(", readLines("fwl-anim/fwl.js"), ")(document.currentScript.previousElementSibling,",
+      fwl_data, ", { from: ", from, ", to: ", to, " });",
+      "</script>",
+      rep('<span class="fragment fw-step"></span>', to - from),
+      "```", sep = "\n")
+}
+```
+
+```{r}
+#| echo: false
+#| output: asis
+fwl_anim(0, 6)
+```
+
+## Example: controlling for party
+
+::: {.incremental}
+
+- In our example, $\mathbf{X}_{i,-1}$ is the intercept plus the Independent and Republican dummies
+  - A regression on a **full set** of indicators predicts each category's **mean**
+
+- So partialling out party just subtracts each respondent's **party mean**
+
+  $$\tilde{X}_{i1} = X_{i1} - \bar{X}_{\text{party}(i)} \qquad \tilde{Y}_i = Y_i - \bar{Y}_{\text{party}(i)}$$
+
+- $\hat{\beta}_1$ is the slope using only the **within-party** variation
+  - Differences in hostile sexism **between** the parties contribute nothing to $\hat{\beta}_1$
+
+:::
+
+## FWL in R
+
+```{r}
+anes_p <- anes |> filter(!is.na(party))   # the same respondents in every regression
+
+# The full regression
+round(coef(lm(ft_trump ~ hostile_sexism + party, data = anes_p)), 2)
+
+# Steps 1 and 2: partial party out of the outcome and out of hostile sexism
+anes_p$y_tilde <- resid(lm(ft_trump ~ party, data = anes_p))
+anes_p$x_tilde <- resid(lm(hostile_sexism ~ party, data = anes_p))
+
+# Step 3: residuals on residuals
+round(coef(lm(y_tilde ~ x_tilde, data = anes_p)), 2)
+```
+
+
+## Interacting with partisanship
+
+::: {.incremental}
+
+- To let the **slope** on hostile sexism differ between parties too we add **interactions**
+  - The products of $X_i$ with each dummy
+
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i^{\text{Ind}} + \hat{\beta}_3 Z_i^{\text{Rep}} + \hat{\beta}_4 X_i Z_i^{\text{Ind}} + \hat{\beta}_5 X_i Z_i^{\text{Rep}}$$
+
+- Within each party, the fit is still a line in $X_i$, but now each has its own intercept **and** slope
+
+  $$\begin{aligned} \text{Democrats:} \quad & \hat{\beta}_0 + \hat{\beta}_1 X_i \\ \text{Independents:} \quad & (\hat{\beta}_0 + \hat{\beta}_2) + (\hat{\beta}_1 + \hat{\beta}_4) X_i \\ \text{Republicans:} \quad & (\hat{\beta}_0 + \hat{\beta}_3) + (\hat{\beta}_1 + \hat{\beta}_5) X_i \end{aligned}$$
+
+- $\hat{\beta}_1$ is now the slope among **Democrats** (the baseline), and $\hat{\beta}_4$, $\hat{\beta}_5$ are **differences in slopes** relative to Democrats
+- With every interaction in, this is the **same** as fitting a separate OLS line within each party
+
+:::
+
+## Interacting with partisanship
+
+```{r}
+#| label: fit-party-int
+#| include: false
+fit_pint <- lm(ft_trump ~ hostile_sexism * party, data = anes)
+b_pi <- coef(fit_pint)
+# Each party's slope: the baseline slope plus its difference
+slope_p <- b_pi["hostile_sexism"] +
+  c(0, b_pi["hostile_sexism:partyIndependent"], b_pi["hostile_sexism:partyRepublican"])
+```
+
+```{r}
+# x * z in a formula adds x, z, and their product x:z
+round(coef(lm(ft_trump ~ hostile_sexism * party, data = anes)), 2)
+```
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 3.9
+#| fig-align: center
+
+# The party lines again, now each with its own slope
+party_int_lines <- tibble(party = names(party_cols),
+                          a = b_pi[1] + c(0, b_pi["partyIndependent"], b_pi["partyRepublican"]),
+                          b = slope_p)
+ggplot() +
+  geom_point(data = party_pts, aes(x, ft_trump, colour = party), alpha = 0.06, size = 3,
+             stroke = 0) +
+  geom_segment(data = party_int_lines, aes(x = 0, xend = 1, y = a, yend = a + b, colour = party),
+               linewidth = 1.6) +
+  geom_text(data = party_int_lines,
+            aes(1.03, a + b, label = sprintf("%s (slope %.1f)", party, b), colour = party),
+            hjust = 0, size = 5.5) +
+  scale_colour_manual(values = party_cols, guide = "none") +
+  scale_x_continuous(breaks = seq(0, 1, 0.25)) +
+  scale_y_continuous(breaks = seq(0, 100, 25)) +
+  coord_cartesian(xlim = c(0, 1.35), ylim = c(0, 100)) +
+  labs(x = "Hostile sexism", y = "Trump thermometer") +
+  theme_reg
+```
+
+- Slopes actually aren't that different!
+
+## Interacting with education
+
+::: {.incremental}
+
+- Does the slope on hostile sexism differ by **education**? 
+  - Let $Z_i^{\text{Col}} = I(\text{college degree}_i)$ and add its product with $X_i$
+
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i^{\text{Col}} + \hat{\beta}_3 X_i Z_i^{\text{Col}}$$
+
+- Within each education group, the fit is a line in $X_i$ with its own intercept **and** slope
+
+  $$\begin{aligned} \text{No college degree:} \quad & \hat{\beta}_0 + \hat{\beta}_1 X_i \\ \text{College degree:} \quad & (\hat{\beta}_0 + \hat{\beta}_2) + (\hat{\beta}_1 + \hat{\beta}_3) X_i \end{aligned}$$
+
+- $\hat{\beta}_1$ is the slope among respondents **without** a degree (the baseline), and $\hat{\beta}_3$ is the **difference in slopes** for college graduates
+
+:::
+
+## Interacting with education
+
+```{r}
+#| label: fit-col-int
+#| include: false
+fit_cint <- lm(ft_trump ~ hostile_sexism * college, data = anes)
+b_ci <- coef(fit_cint)
+```
+
+```{r}
+round(coef(lm(ft_trump ~ hostile_sexism * college, data = anes)), 2)
+```
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 4.6
+#| fig-align: center
+
+# The two education groups' lines over the scatterplot, each group's
+# respondents in its color and nudged sideways as in the party figures
+col_cols <- c("No college degree" = "#b8860b", "College degree" = "#0479a8")
+col_lines <- tibble(group = names(col_cols),
+                    a = b_ci[1] + c(0, b_ci["college"]),
+                    b = b_ci["hostile_sexism"] + c(0, b_ci["hostile_sexism:college"]))
+col_pts <- anes |>
+  filter(!is.na(college)) |>
+  mutate(group = names(col_cols)[college + 1],
+         x = hostile_sexism + if_else(college == 1, 0.008, -0.008))
+ggplot() +
+  geom_point(data = col_pts, aes(x, ft_trump, colour = group), alpha = 0.06, size = 3,
+             stroke = 0) +
+  geom_segment(data = col_lines, aes(x = 0, xend = 1, y = a, yend = a + b, colour = group),
+               linewidth = 1.6) +
+  geom_text(data = col_lines,
+            aes(1.03, a + b, label = sprintf("%s (slope %.1f)", group, b), colour = group),
+            hjust = 0, vjust = c(1.2, -0.2), size = 5.5) +
+  scale_colour_manual(values = col_cols, guide = "none") +
+  scale_x_continuous(breaks = seq(0, 1, 0.25)) +
+  scale_y_continuous(breaks = seq(0, 100, 25)) +
+  coord_cartesian(xlim = c(0, 1.45), ylim = c(0, 105)) +
+  labs(x = "Hostile sexism", y = "Trump thermometer") +
+  theme_reg
+```
+
+## A second continuous covariate
+
+- **Racial resentment**: a three question measure from @kinder1996divided, also averaged and re-scaled to $[0, 1]$ 
+  - Correlated with hostile sexism: $r = `r sprintf("%.2f", cor(anes$hostile_sexism, anes$racial_resentment, use = "complete.obs"))`$
+
+- With two continuous covariates, the fit is a **plane** over $(X_{i1}, X_{i2})$
+
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_{i1} + \hat{\beta}_2 X_{i2}$$
+
+```{r}
+round(coef(lm(ft_trump ~ hostile_sexism + racial_resentment, data = anes)), 2)
+```
+
+
+- After partialling **racial resentment** out of both the outcome and hostile sexism, the slope on hostile sexism is `r f1(coef(fit_rr)[2])`, also down from the unconditional `r f1(b_hs[2])`
+
+
+## In three dimensions {.plane-slide}
+
+```{r}
+#| echo: false
+
+# The two-covariate OLS fit as a surface through the 3D scatterplot. The
+# animation (plane-anim/plane.js) turns the camera slowly while the slide is
+# up; its fragments fade in a surface and bend it from the coefficients
+# `from` into `beta` (each b0 + b1 x + b2 y + b3 xy), then draw the lines
+# along it where racial resentment is held fixed
+rr_pts <- anes |> filter(!is.na(racial_resentment))
+b_rr <- coef(fit_rr)
+
+plane_axis <- function(title, ...) {
+  list(title = list(text = title, font = list(size = 15)), gridcolor = "#d9d9d9",
+       zeroline = FALSE, showspikes = FALSE, showbackground = TRUE,
+       backgroundcolor = "#EFEFEF", tickfont = list(size = 12), tickangle = 0, ...)
+}
+
+plane_widget <- function(beta, from, titles) {
+  beta <- unname(c(beta, 0)[1:4])    # no interaction: b3 = 0
+  from <- unname(c(from, 0)[1:4])
+  surf <- function(h, r) beta[1] + beta[2] * h + beta[3] * r + beta[4] * h * r
+  # A fine grid, since with an interaction the surface is curved
+  pg <- seq(0, 1, 0.05)
+  plane_z <- outer(pg, pg, \(r, h) surf(h, r))   # rows are y
+  slice_rr <- c(0, 0.5, 1)
+  slices <- list(x = unlist(lapply(slice_rr, \(r) c(0, 1, NA))),
+                 y = unlist(lapply(slice_rr, \(r) c(r, r, NA))),
+                 z = unlist(lapply(slice_rr, \(r) c(surf(0, r), surf(1, r), NA))))
+
+  # Trace order matters: plane.js addresses traces by index
+  p <- plotly::plot_ly(width = 1000, height = 560) |>
+    plotly::add_trace(type = "scatter3d", mode = "markers", x = rr_pts$hostile_sexism,
+                      y = rr_pts$racial_resentment, z = rr_pts$ft_trump, opacity = 0.12,
+                      marker = list(size = 3, color = "#333333", line = list(width = 0)),
+                      hoverinfo = "skip") |>
+    plotly::add_surface(x = pg, y = pg, z = plane_z, opacity = 0.35, showscale = FALSE,
+                        colorscale = list(c(0, "#0479a8"), c(1, "#0479a8")),
+                        lighting = list(ambient = 1, diffuse = 0, specular = 0, fresnel = 0),
+                        hoverinfo = "skip", visible = FALSE) |>
+    plotly::add_trace(type = "scatter3d", mode = "lines", x = slices$x, y = slices$y,
+                      z = slices$z, line = list(color = "#c5050c", width = 7),
+                      connectgaps = FALSE, hoverinfo = "skip", visible = FALSE) |>
+    plotly::layout(
+      showlegend = FALSE,
+      paper_bgcolor = "#F7F7F7",
+      margin = list(l = 0, r = 0, t = 0, b = 0),
+      font = list(family = "Red Hat Text, sans-serif", color = "#333333"),
+      scene = list(
+        xaxis = plane_axis("Hostile sexism", range = c(0, 1), tickvals = c(0, 0.5, 1)),
+        yaxis = plane_axis("Racial resentment", range = c(0, 1), tickvals = c(0, 0.5, 1)),
+        zaxis = plane_axis("Trump thermometer", range = c(-12, 105),
+                           tickvals = seq(0, 100, 25)),
+        aspectmode = "manual", aspectratio = list(x = 1.6, y = 1.6, z = 1.15),
+        camera = list(projection = list(type = "orthographic")),   # set by the animation
+        dragmode = "turntable", hovermode = FALSE
+      )
+    ) |>
+    plotly::config(displayModeBar = FALSE, doubleClick = FALSE)
+
+  p <- htmlwidgets::onRender(
+    p,
+    paste(readLines("plane-anim/plane.js"), collapse = "\n"),
+    data = list(grid = pg, beta = beta, from = from, titles = titles)
+  )
+
+  # One empty fragment per animation step after the first
+  htmltools::tagList(
+    p,
+    lapply(seq_len(length(titles) - 1), function(i) htmltools::span(class = "fragment pl-step"))
+  )
+}
+
+# The plane rises from flat, at the mean of Y
+plane_widget(b_rr, from = mean(rr_pts$ft_trump),
+             titles = c("", "The regression plane", "Holding racial resentment fixed"))
+```
+
+## Interacting two continuous covariates
+
+```{r}
+#| label: fit-rr-int
+#| include: false
+
+# The hostile sexism x racial resentment interaction and its marginal effect
+# of hostile sexism, b1 + b3 z, over the range of racial resentment, with a
+# 95% band from HC0 (robust) standard errors
+fit_rint <- lm(ft_trump ~ hostile_sexism * racial_resentment, data = rr_pts)
+b_ri <- coef(fit_rint)
+V_ri <- sandwich::vcovHC(fit_rint, type = "HC0")
+me_line <- tibble(z = seq(0, 1, 0.01)) |>
+  mutate(est = b_ri[2] + b_ri[4] * z,
+         se = sqrt(V_ri[2, 2] + z^2 * V_ri[4, 4] + 2 * z * V_ri[2, 4]),
+         lo = est - 1.96 * se, hi = est + 1.96 * se)
+
+# The binning estimator of Hainmueller, Mummolo and Xu: terciles of racial
+# resentment, each with its own intercept, slope on hostile sexism, slope on
+# racial resentment and interaction, with racial resentment centered at the
+# bin's median so that each bin's slope on hostile sexism is the marginal
+# effect at that median
+rr_bin <- rr_pts |>
+  mutate(bin = cut(racial_resentment, quantile(racial_resentment, 0:3 / 3),
+                   include.lowest = TRUE, labels = c("Low", "Middle", "High"))) |>
+  mutate(med = median(racial_resentment), zc = racial_resentment - med, .by = bin)
+fit_bin <- lm(ft_trump ~ 0 + bin + bin:hostile_sexism + bin:zc + bin:hostile_sexism:zc,
+              data = rr_bin)
+V_bin <- sandwich::vcovHC(fit_bin, type = "HC0")
+alpha_j <- paste0("bin", levels(rr_bin$bin), ":hostile_sexism")
+me_bins <- tibble(bin = levels(rr_bin$bin), z = sort(unique(rr_bin$med)),
+                  est = coef(fit_bin)[alpha_j], se = sqrt(diag(V_bin)[alpha_j]),
+                  lo = est - 1.96 * se, hi = est + 1.96 * se,
+                  lin = b_ri[2] + b_ri[4] * z)
+
+# How many respondents sit at each of racial resentment's 13 values: drawn as
+# a histogram along the bottom of the marginal effects plots, scaled so the
+# tallest bar is 18 points high
+rr_hist <- count(rr_pts, z = racial_resentment) |> mutate(h = 18 * n / max(n))
+
+# Floor and ceiling of the thermometer in the outer terciles
+rr_floor <- with(filter(rr_bin, bin == "Low"), mean(ft_trump == 0))
+rr_ceil <- with(filter(rr_bin, bin == "High"), mean(ft_trump == 100))
+pct <- function(x) sprintf("%.0f%%", 100 * x)
+
+me_plot <- function(bins = FALSE) {
+  p <- ggplot() +
+    geom_rect(data = rr_hist, aes(xmin = z - 0.03, xmax = z + 0.03, ymin = 0, ymax = h),
+              fill = "#d9d9d9") +
+    annotate("text", x = 0.5, y = 21, label = "Respondents at each level of racial resentment",
+             size = 4.5, colour = "#777777") +
+    geom_ribbon(data = me_line, aes(z, ymin = lo, ymax = hi), fill = "#c5050c", alpha = 0.15) +
+    geom_line(data = me_line, aes(z, est), colour = "#c5050c", linewidth = 1.6) +
+    annotate("text", x = 1.02, y = tail(me_line$est, 1), label = "Linear\ninteraction",
+             hjust = 0, size = 5.5, colour = "#c5050c", lineheight = 0.9)
+  if (bins) {
+    p <- p +
+      geom_errorbar(data = me_bins, aes(z, ymin = lo, ymax = hi), width = 0.025,
+                    colour = "#0479a8", linewidth = 1.1) +
+      geom_point(data = me_bins, aes(z, est), colour = "#0479a8", fill = "#0479a8",
+                 shape = 21, size = 4.5, stroke = 1.5) +
+      # Each label on the side of its interval away from the line
+      geom_text(data = me_bins,
+                aes(z, if_else(est < lin, lo, hi), label = paste(bin, "tercile"),
+                    vjust = if_else(est < lin, 1.8, -0.8)),
+                size = 5, colour = "#0479a8")
+  }
+  p +
+    scale_x_continuous(breaks = seq(0, 1, 0.25)) +
+    scale_y_continuous(breaks = seq(0, 80, 20)) +
+    coord_cartesian(xlim = c(0, 1.12), ylim = c(0, 88)) +
+    labs(x = "Racial resentment",
+         y = "Marginal effect of\nhostile sexism") +
+    theme_reg
+}
+```
+
+
+- A linear interaction with two **continuous** covariates adds the **product** of hostile sexism and racial resentment to the equation.
+
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_{i1} + \hat{\beta}_2 X_{i2} + \hat{\beta}_3 X_{i1} X_{i2}$$
+
+- Holding $X_{i2}$ at a value $x_2$, we're still estimating a **line** for $X_{i1}$, but its slope now **depends on** $x_2$
+
+  $$\big[\hat{\beta}_0 + \hat{\beta}_1 (x_1 + 1) + \hat{\beta}_2 x_2 + \hat{\beta}_3 (x_1 + 1) x_2\big] - \big[\hat{\beta}_0 + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \hat{\beta}_3 x_1 x_2\big] = \hat{\beta}_1 + \hat{\beta}_3 x_2$$
+
+  - The **marginal 'effect'** of $X_{i1}$ at $X_{i2} = x_2$. (be careful though, this is just a **slope** - we're not yet making a causal claim).
+  - $\hat{\beta}_1$ alone is the slope at $X_{i2} = 0$ - sometimes this is meaningful, sometimes it isn't!
+
+
+```{r}
+round(coef(lm(ft_trump ~ hostile_sexism * racial_resentment, data = anes)), 2)
+```
+
+## The interaction surface {.plane-slide}
+
+```{r}
+#| echo: false
+
+# The same animation as before: the OLS plane bends into the interaction
+# surface, and the lines where racial resentment is held fixed at 0, 0.5 and
+# 1 now have different slopes, b1 + b3 z
+plane_widget(b_ri, from = b_rr,
+             titles = c("", "Adding the interaction", "Holding racial resentment fixed"))
+```
+
+## Marginal effects plot
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 4.6
+#| fig-align: center
+me_plot()
+```
+
+::: {.incremental}
+
+- The slope on hostile sexism rises from `r f1(b_ri[2])` at the lowest racial resentment to `r f1(b_ri[2] + b_ri[4])` at the highest, a **straight line** with slope $\hat{\beta}_3 = `r f1(b_ri[4])`$
+  - The band is a 95% confidence interval (using the robust HC0 standard errors we'll derive later)
+- The gray bars show where the **data** are. Always plot the marginal effect against the distribution of the moderator
+
+:::
+
+## Careful with linear interactions!
+
+::: {.incremental}
+
+- $\hat{\beta}_1 + \hat{\beta}_3 x_2$ assumes the slope on $X_{i1}$ changes at a **constant rate** in $X_{i2}$
+  - Where few respondents have a given $X_{i2}$ (**weak common support**), the predicted marginal effect relies heavily on the functional form assumption!
+
+- @hainmueller2019much recommend a check that just uses **bins** of the effect modifier
+  - Estimate separate slopes and intercepts **within each bin**
+  - Think of what we did before: comparing the **noisy** binning approach with the **efficient** but potentially **biased** regression
+
+:::
+
+## Binned marginal effects
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 4.6
+#| fig-align: center
+me_plot(bins = TRUE)
+```
+
+::: {.incremental}
+
+- The bins differ from the linear interaction results!
+  - The slope is **steepest** in the middle tercile (`r f1(me_bins$est[2])`) and **flattest** in the top one (`r f1(me_bins$est[3])`), where the linear interaction puts its largest slope (`r f1(me_bins$lin[3])`)
+  - The linear interaction **forced** a monotone pattern onto a hump
+- Likely because the thermometer is **bounded**: 
+  - Little room to move at either end, so the marginal "effects" get compressed at the tails.
+
+:::
+
+## Consistency of OLS
+
+::: {.incremental}
+
+- We've made a few regularity assumptions to ensure the **BLP** exists
+
+- What do we need to make OLS **consistent** for the BLP?
+  - Just i.i.d. sampling from the **target** population
+
+- Write $Y_i$ in terms of the **projection error**, $Y_i = \mathbf{X}_i^\prime\boldsymbol{\beta} + e_i$, and substitute it into $\hat{\boldsymbol{\beta}}$
+
+  $$
+  \begin{aligned}
+  \hat{\boldsymbol{\beta}} &= \left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)^{-1}\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\big(\mathbf{X}_i^\prime\boldsymbol{\beta} + e_i\big)\right) \\
+  &= \left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)^{-1}\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)\boldsymbol{\beta} + \left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)^{-1}\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i e_i\right) \\
+  &= \boldsymbol{\beta} + \left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)^{-1}\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i e_i\right)
+  \end{aligned}
+  $$
+
+:::
+
+## Consistency of OLS
+
+::: {.incremental}
+
+- By the **law of large numbers**, each sample mean converges to its population mean
+
+  $$\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime \xrightarrow{p} \mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime] \qquad \frac{1}{n}\sum_{i=1}^n \mathbf{X}_i e_i \xrightarrow{p} \mathbb{E}[\mathbf{X}_i e_i] = \mathbf{0}$$
+
+  - The second limit is $\mathbf{0}$ by the projection error property, which holds for the BLP **mechanically**
+
+- The inverse is a **continuous** function at an invertible $\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]$, so by the **continuous mapping theorem**
+
+  $$\hat{\boldsymbol{\beta}} \xrightarrow{p} \boldsymbol{\beta} + \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\,\mathbf{0} = \boldsymbol{\beta}$$
+
+- Really, we just need an LLN to apply to our sample plug-ins
+  - So relaxations of i.i.d that still let us invoke LLN/CLT are fine
+  - (e.g. clustered sampling, spatial correlation that dissipates over sufficient distances, etc...)
+
+:::
+
+## Asymptotic normality of OLS
+
+::: {.incremental}
+
+- For the sample mean, the **CLT** gave us $\sqrt{n}(\hat{\mu} - \mu) \xrightarrow{d} \mathcal{N}(0, \sigma^2)$. The same idea applies to $\hat{\boldsymbol{\beta}}$
+- Multiply the decomposition by $\sqrt{n}$
+
+  $$\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) = \underbrace{\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)^{-1}}_{\xrightarrow{p}\ \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}} \ \underbrace{\sqrt{n}\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i e_i - \mathbf{0}\right)}_{\xrightarrow{d}\ \mathcal{N}(\mathbf{0},\ \boldsymbol{\Omega})}$$
+
+- The $\mathbf{X}_i e_i$ are i.i.d. $k \times 1$ random vectors with mean $\mathbf{0}$, so a **multivariate CLT** applies to their sample mean, with
+
+  $$\boldsymbol{\Omega} = \Var(\mathbf{X}_i e_i) = \mathbb{E}[e_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime]$$
+
+- By **Slutsky's theorem** (with finite fourth moments of $Y_i$ and $\mathbf{X}_i$)
+
+::: {.recap-result .fragment}
+$\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d} \mathcal{N}\Big(\mathbf{0},\ \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\,\boldsymbol{\Omega}\,\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\Big)$
+:::
+
+:::
+
+## The asymptotic variance
+
+::: {.incremental}
+
+- Now let's obtain $\Var(\hat{\boldsymbol{\beta}})$ - the **variance-covariance** matrix of the **sampling distribution** of $\hat{\boldsymbol{\beta}}$
+  - For a $k \times k$ non-random matrix $\mathbf{A}$ and a random vector $\mathbf{Z}$, $\Var(\mathbf{A}\mathbf{Z}) = \mathbf{A}\,\Var(\mathbf{Z})\,\mathbf{A}^\prime$
+    - This is the "matrix" equivalent of "squaring" a constant: $\Var(aZ) = a^2\Var(Z)$
+- Applying this to $\hat{\boldsymbol{\beta}} - \boldsymbol{\beta} = \frac{1}{\sqrt{n}} \cdot \sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big)$
+
+  $$\Var(\hat{\boldsymbol{\beta}}) = \frac{1}{n}\Var\Bigg(\underbrace{\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime\right)^{-1}}_{\mathbf{A}\ \xrightarrow{p}\ \big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}} \ \underbrace{\sqrt{n}\left(\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i e_i - \mathbf{0}\right)}_{\mathbf{Z}\ \xrightarrow{d}\ \mathcal{N}(\mathbf{0},\ \boldsymbol{\Omega})}\Bigg)$$
+
+- The result is a **sandwich**: two slices of **bread** around the **filling**
+
+  $$\underbrace{\Var(\hat{\boldsymbol{\beta}})}_{k \times k} \approx \frac{1}{n} \underbrace{\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}}_{k \times k} \ \underbrace{\boldsymbol{\Omega}}_{k \times k} \ \underbrace{\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}}_{k \times k}$$
+
+:::
+
+## The variance-covariance matrix
+
+::: {.incremental}
+
+- Written out, the **variance-covariance matrix** of $\hat{\boldsymbol{\beta}}$ is
+
+  $$\Var(\hat{\boldsymbol{\beta}}) = \begin{pmatrix} \Var(\hat{\beta}_0) & \Cov(\hat{\beta}_0, \hat{\beta}_1) & \cdots & \Cov(\hat{\beta}_0, \hat{\beta}_{k-1}) \\ \Cov(\hat{\beta}_1, \hat{\beta}_0) & \Var(\hat{\beta}_1) & \cdots & \Cov(\hat{\beta}_1, \hat{\beta}_{k-1}) \\ \vdots & \vdots & \ddots & \vdots \\ \Cov(\hat{\beta}_{k-1}, \hat{\beta}_0) & \Cov(\hat{\beta}_{k-1}, \hat{\beta}_1) & \cdots & \Var(\hat{\beta}_{k-1}) \end{pmatrix}$$
+
+  - The **standard error** of $\hat{\beta}_j$ is the square root of the corresponding **diagonal** entry
+
+:::
+
+## The filling
+
+::: {.incremental}
+
+- $\mathbb{E}[\mathbf{X}_i e_i] = \mathbf{0}$, so $\boldsymbol{\Omega}$ is the expectation of an **outer product**
+
+  $$\boldsymbol{\Omega} = \Var(\mathbf{X}_i e_i) = \mathbb{E}\big[(\mathbf{X}_i e_i)(\mathbf{X}_i e_i)^\prime\big] - \underbrace{\mathbb{E}[\mathbf{X}_i e_i]\,\mathbb{E}[\mathbf{X}_i e_i]^\prime}_{\mathbf{0}} = \mathbb{E}[e_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime]$$
+
+- Written out, each respondent contributes $\mathbf{X}_i\mathbf{X}_i^\prime$ **weighted** by their squared error
+
+  $$\small \underbrace{\mathbf{X}_i e_i}_{k \times 1} \quad \underbrace{(\mathbf{X}_i e_i)^\prime}_{1 \times k} = e_i^2 \begin{pmatrix} 1 \\ X_{i1} \\ \vdots \\ X_{i,k-1} \end{pmatrix} \begin{pmatrix} 1 & X_{i1} & \cdots & X_{i,k-1} \end{pmatrix} = \begin{pmatrix} e_i^2 & e_i^2 X_{i1} & \cdots & e_i^2 X_{i,k-1} \\ e_i^2 X_{i1} & e_i^2 X_{i1}^2 & \cdots & e_i^2 X_{i1} X_{i,k-1} \\ \vdots & \vdots & \ddots & \vdots \\ e_i^2 X_{i,k-1} & e_i^2 X_{i,k-1} X_{i1} & \cdots & e_i^2 X_{i,k-1}^2 \end{pmatrix}$$
+
+:::
+
+## Estimating the variance
+
+::: {.incremental}
+
+- **Plug-in principle**, one more time: replace each expectation with a sample mean and each unobserved $e_i$ with its **residual** $\hat{e}_i = Y_i - \mathbf{X}_i^\prime\hat{\boldsymbol{\beta}}$
+
+  $$\frac{1}{n}\sum_{i=1}^n \mathbf{X}_i\mathbf{X}_i^\prime = \frac{1}{n}\mathbf{X}^\prime\mathbf{X} \qquad \widehat{\boldsymbol{\Omega}} = \frac{1}{n}\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime$$
+
+- Plug these into the sandwich (the $n$'s cancel)
+
+  $$\widehat{\Var}(\hat{\boldsymbol{\beta}}) = \frac{1}{n}\left(\frac{1}{n}\mathbf{X}^\prime\mathbf{X}\right)^{-1}\left(\frac{1}{n}\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime\right)\left(\frac{1}{n}\mathbf{X}^\prime\mathbf{X}\right)^{-1} = (\mathbf{X}^\prime\mathbf{X})^{-1}\left(\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime\right)(\mathbf{X}^\prime\mathbf{X})^{-1}$$
+
+- This is the **heteroskedasticity-consistent** (HC0) or Eicker-Huber-White estimator - usually called **robust** standard errors
+
+:::
+
+## Estimating the variance
+
+::: {.incremental}
+
+- The filling is also a matrix product. Put the squared residuals on the diagonal of an $n \times n$ matrix $\widehat{\mathbf{D}}$
+
+  $$\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime = \underbrace{\mathbf{X}^\prime}_{k \times n} \ \underbrace{\widehat{\mathbf{D}}}_{n \times n} \ \underbrace{\mathbf{X}}_{n \times k} = \begin{pmatrix} \mathbf{X}_1 & \mathbf{X}_2 & \cdots & \mathbf{X}_n \end{pmatrix} \begin{pmatrix} \hat{e}_1^2 & 0 & \cdots & 0 \\ 0 & \hat{e}_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \hat{e}_n^2 \end{pmatrix} \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix}$$
+
+- $\widehat{\mathbf{D}}$ scales column $i$ of $\mathbf{X}^\prime$ by $\hat{e}_i^2$, and what's left is a **weighted** sum of outer products
+
+  $$\small \mathbf{X}^\prime\widehat{\mathbf{D}}\mathbf{X} = \begin{pmatrix} \hat{e}_1^2\mathbf{X}_1 & \hat{e}_2^2\mathbf{X}_2 & \cdots & \hat{e}_n^2\mathbf{X}_n \end{pmatrix} \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix} = \begin{pmatrix} \sum_i \hat{e}_i^2 & \sum_i \hat{e}_i^2 X_{i1} & \cdots & \sum_i \hat{e}_i^2 X_{i,k-1} \\ \sum_i \hat{e}_i^2 X_{i1} & \sum_i \hat{e}_i^2 X_{i1}^2 & \cdots & \sum_i \hat{e}_i^2 X_{i1}X_{i,k-1} \\ \vdots & \vdots & \ddots & \vdots \\ \sum_i \hat{e}_i^2 X_{i,k-1} & \sum_i \hat{e}_i^2 X_{i,k-1}X_{i1} & \cdots & \sum_i \hat{e}_i^2 X_{i,k-1}^2 \end{pmatrix}$$
+
+:::
+
+## HC0 by hand
+
+- The HC0 variance estimator is a $k \times k$ sandwich
+
+  $$\underbrace{\widehat{\Var}(\hat{\boldsymbol{\beta}})}_{k \times k} = \underbrace{(\mathbf{X}^\prime\mathbf{X})^{-1}}_{k \times k} \ \underbrace{\mathbf{X}^\prime\widehat{\mathbf{D}}\mathbf{X}}_{k \times k} \ \underbrace{(\mathbf{X}^\prime\mathbf{X})^{-1}}_{k \times k}$$
+
+- For the full regression, with both attitude measures **and** the party dummies
+
+```{r}
+fit_full <- lm(ft_trump ~ hostile_sexism + racial_resentment + party, data = anes)
+
+X <- model.matrix(fit_full)           # n x k: intercept, two attitudes, two party dummies
+dim(X)
+e_hat <- resid(fit_full)
+
+bread <- solve(t(X) %*% X)            # (X'X)^{-1}, k x k
+D <- diag(e_hat^2)                    # n x n, squared residuals on the diagonal
+filling <- t(X) %*% D %*% X           # X'DX, k x k
+V_hc0 <- bread %*% filling %*% bread  # k x k
+
+round(sqrt(diag(V_hc0)), 3)           # standard errors: the square roots of the diagonal
+```
+
+
+## HC0 with `sandwich`
+
+- The `sandwich` package computes these for any `lm()` fit
+
+```{r}
+library(sandwich)
+V_sw <- vcovHC(fit_full, type = "HC0")
+round(sqrt(diag(V_sw)), 3)
+```
+
+::: {.incremental}
+
+- Careful: the **default** in `vcovHC` is `type = "HC3"` which is a small-sample correction
+  - "Robust" standard errors are **consistent** but not **unbiased** - in small samples they tend to be **too small**. 
+  - Many corrections proposed in the literature.
+  - `HC1` rescales HC0 by $n/(n - k)$ (Stata's `, robust`)
+  - `HC2` and `HC3` rescale each $\hat{e}_i^2$ by how much observation $i$ pulls on its own fit
+
+:::
+
+## Confidence intervals and tests
+
+::: {.incremental}
+
+- Asymptotic normality gives us the same tools as before
+
+  $$\frac{\hat{\beta}_j - \beta_j}{\widehat{SE}(\hat{\beta}_j)} \xrightarrow{d} \mathcal{N}(0, 1) \qquad \widehat{SE}(\hat{\beta}_j) = \sqrt{\big[\widehat{\Var}(\hat{\boldsymbol{\beta}})\big]_{jj}}$$
+
+- 95% **confidence interval**: $\hat{\beta}_j \pm 1.96 \times \widehat{SE}(\hat{\beta}_j)$
+- **Test** of $H_0: \beta_j = 0$: $t = \hat{\beta}_j / \widehat{SE}(\hat{\beta}_j)$, with two-sided p-value $2\big(1 - \Phi(|t|)\big)$
+
+:::
+
+```{r}
+b <- coef(fit_full)
+se_hc0 <- sqrt(diag(V_sw))
+t_hc0 <- b / se_hc0
+cbind(round(cbind(estimate = b, se = se_hc0,
+                  lower = b - qnorm(0.975) * se_hc0, upper = b + qnorm(0.975) * se_hc0,
+                  t = t_hc0), 3),
+      p = signif(2 * pnorm(-abs(t_hc0)), 3))
+```
+
+## Comparing robust SEs with `lm()` defaults
+
+- `coeftest()` from `lmtest` redoes the coefficient tests with whatever variance estimator we hand it
+
+```{r}
+#| message: false
+library(lmtest)
+coeftest(fit_full)                                           # lm() defaults
+coeftest(fit_full, vcov = vcovHC(fit_full, type = "HC0"))    # robust (HC0)
+```
+
+## Comparing robust SEs with `lm()` defaults
+
+:::: {.columns}
+
+::: {.column width="55%"}
+
+```{r}
+#| echo: false
+#| output: asis
+
+# The two fits as a regression table, as in week 8: one column per variance
+# estimator, the standard error in parentheses beneath its estimate, and
+# N and R^2 below a rule
+ct_lm <- coeftest(fit_full)
+ct_hc0 <- coeftest(fit_full, vcov = vcovHC(fit_full, type = "HC0"))
+coef_lab <- c("(Intercept)" = "Intercept", hostile_sexism = "Hostile sexism",
+              racial_resentment = "Racial resentment", partyIndependent = "Independent",
+              partyRepublican = "Republican")
+stars <- function(p) case_when(p < 0.001 ~ "***", p < 0.01 ~ "**", p < 0.05 ~ "*", .default = "")
+num <- function(x) sub("^-", "−", sprintf("%.2f", x))
+row <- function(label, cells, class = "") {
+  paste0('<tr class="', class, '"><td>', label, "</td>",
+         paste0("<td>", cells, "</td>", collapse = ""), "</tr>")
+}
+coef_rows <- unlist(lapply(names(coef_lab), function(v) {
+  ct <- list(ct_lm, ct_hc0)
+  c(row(coef_lab[[v]], sapply(ct, \(m) paste0(num(m[v, 1]), "<sup>", stars(m[v, 4]), "</sup>"))),
+    row("", sapply(ct, \(m) paste0("(", num(m[v, 2]), ")")), "se"))
+}))
+cat('```{=html}',
+    "<style>",
+    ".reveal .reg-table table { border-collapse: collapse; margin: 0 auto; font-size: 0.74em; border-top: 2px solid #333; border-bottom: 2px solid #333; }",
+    ".reveal .reg-table table th, .reveal .reg-table table td { border: none; padding: 0.12em 0.6em; text-align: center; white-space: nowrap; }",
+    ".reveal .reg-table table td:first-child { text-align: left; }",
+    ".reveal .reg-table table th { font-weight: 400; }",
+    ".reveal .reg-table table thead tr:last-child th { border-bottom: 1px solid #333; color: #646569; }",
+    ".reveal .reg-table table .se td { color: #646569; padding-bottom: 0.4em; }",
+    ".reveal .reg-table table .gof td { border-top: 1px solid #333; }",
+    ".reveal .reg-table table sup { font-size: 0.7em; }",
+    "</style>",
+    '<div class="reg-table"><table>',
+    "<thead>",
+    "<tr><th></th><th><code>lm()</code> default</th><th>Robust (HC0)</th></tr>",
+    "<tr><th></th><th>(1)</th><th>(2)</th></tr>",
+    "</thead>",
+    "<tbody>",
+    coef_rows,
+    row("N", rep(format(nobs(fit_full), big.mark = ","), 2), "gof"),
+    row("R²", rep(sprintf("%.2f", summary(fit_full)$r.squared), 2)),
+    "</tbody>",
+    "</table></div>",
+    "```", sep = "\n")
+```
+
+::: {style="font-size: 0.6em; color: #646569;"}
+Outcome: Trump thermometer. Democrats are the omitted party baseline. Standard errors in parentheses. Two-sided tests of H₀: β~j~ = 0: \* p < 0.05, \*\* p < 0.01, \*\*\* p < 0.001.
+:::
+
+:::
+
+::: {.column width="45%"}
+
+::: {.incremental}
+
+- The **estimates** are identical. Only the **standard errors** change
+- The robust SEs are **larger** for every slope
+  - `r sprintf("%.0f", 100 * (ct_hc0["partyIndependent", 2] / ct_lm["partyIndependent", 2] - 1))`% larger for the Independent dummy
+- Why does `lm()` give **smaller** standard errors?
+  - It makes an extra **assumption**...
+
+:::
+
+:::
+
+::::
+
+## Homoskedasticity
+
+::: {.incremental}
+
+- The **classical** OLS model adds an assumption about the errors: **homoskedasticity**
+
+  $$\mathbb{E}[e_i^2 \mid \mathbf{X}_i] = \sigma^2$$
+
+  - The variance of the errors is **constant** at every value of the covariates
+
+- Under homoskedasticity, the filling simplifies by the **law of iterated expectations**
+
+  $$\boldsymbol{\Omega} = \mathbb{E}[e_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime] = \mathbb{E}\big[\mathbb{E}[e_i^2 \mid \mathbf{X}_i]\,\mathbf{X}_i\mathbf{X}_i^\prime\big] = \sigma^2\,\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]$$
+
+- And the sandwich simplifies
+
+  $$\Var(\hat{\boldsymbol{\beta}}) \approx \frac{1}{n}\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}\,\sigma^2\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\,\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1} = \frac{\sigma^2}{n}\big(\mathbb{E}[\mathbf{X}_i\mathbf{X}_i^\prime]\big)^{-1}$$
+
+  $$\Var(\hat{\boldsymbol{\beta}}) \approx \frac{1}{n}\sigma^2\left(\frac{1}{n}\mathbf{X}^\prime\mathbf{X}\right)^{-1} = \sigma^2(\mathbf{X}^\prime\mathbf{X})^{-1}$$
+
+:::
+
+## Is homoskedasticity plausible?
+
+```{r}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 4.4
+#| fig-align: center
+
+# The residuals from the full fit by party, jittered, with a bar at +/- one
+# residual SD around zero
+res_party <- tibble(party = model.frame(fit_full)$party, e = e_hat)
+res_sd <- res_party |> summarize(sd = sd(e), n = n(), .by = party)
+ggplot(res_party, aes(x = party, y = e, colour = party)) +
+  geom_jitter(width = 0.25, height = 0, alpha = 0.08, size = 2, stroke = 0) +
+  geom_errorbar(data = res_sd, aes(x = party, ymin = -sd, ymax = sd), inherit.aes = FALSE,
+                width = 0.35, linewidth = 1.4, colour = "#333333") +
+  geom_label(data = res_sd, aes(x = party, y = 0, label = sprintf("SD = %.1f", sd)),
+             inherit.aes = FALSE, nudge_x = 0.33, size = 6, colour = "#333333",
+             fill = "#F7F7F7", label.size = 0) +
+  scale_colour_manual(values = party_cols, guide = "none") +
+  coord_flip() +
+  labs(x = NULL, y = "Residual from the full regression") +
+  theme_reg
+```
+
+::: {.incremental}
+
+- No! The residuals are far more **spread out** for Independents and Republicans than for Democrats
+  - What we'd expect for a bounded thermometer: `r sprintf("%.0f", 100 * mean(anes$ft_trump[anes$party %in% "Democrat"] == 0))`% of Democrats rate Trump at exactly **0**
+  - Can't go any lower!
+
+:::
+
+## Estimating $\sigma^2$
+
+::: {.incremental}
+
+- A natural plug-in for $\sigma^2$ is $\frac{1}{n}\sum_{i=1}^n \hat{e}_i^2$. 
+  - But like the plug-in sample variance, it is **biased** downward: OLS picks $\hat{\boldsymbol{\beta}}$ to make the residuals small **in this sample**
+- The **unbiased** estimator divides by $n - k$, the number of observations minus the number of coefficients
+
+  $$\hat{\sigma}^2 = \frac{1}{n - k}\sum_{i=1}^n \hat{e}_i^2$$
+
+- Related to our earlier results for the unbiased population variance estimator
+  - There we divided by $n-1$
+  - Here since each estimated coefficient "uses up" one **degree of freedom**, we divide by $n-k$.
+- The **classical** OLS variance estimator is therefore
+
+  $$\widehat{\Var}(\hat{\boldsymbol{\beta}}) = \hat{\sigma}^2(\mathbf{X}^\prime\mathbf{X})^{-1}$$ 
+
+
+- Default for `summary(lm())`
+
+
+:::
+
+## Robust or classical?
+
+::: {.incremental}
+
+- **HC** standard errors are consistent whether or not the errors are homoskedastic
+  - **Classical** standard errors are only consistent under homoskedasticity
+
+- If homoskedasticity **does** hold, the classical estimator is more precise.
+  - But it's rarely a credible assumption!
+
+- In practice: **default** to robust standard errors
+  - In 813, we'll talk more about the `HC2` correction (default in `lm_robust()` in the `estimatr` package).
+  - "Agnostic" regression
+
+:::
+
+## The classical linear model
+
+::: {.incremental}
+
+- Many textbooks start from a much stronger set of assumptions. Conditional on the $n \times k$ matrix $\mathbf{X}$
+  1. **Linearity**: $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \mathbf{e}$ with $\mathbb{E}[\mathbf{e} \mid \mathbf{X}] = \mathbf{0}$. The CEF **is** linear
+  2. **Full rank**: $\mathbf{X}^\prime\mathbf{X}$ is invertible
+  3. **Spherical errors**: $\Var(\mathbf{e} \mid \mathbf{X}) = \sigma^2\mathbf{I}_n$. Homoskedastic and uncorrelated across observations
+  4. (Sometimes) **Normality**: $\mathbf{e} \mid \mathbf{X} \sim \mathcal{N}(\mathbf{0}, \sigma^2\mathbf{I}_n)$
+
+- The benefit of this is that we get **exact** finite-sample results instead of asymptotic approximations
+  - Under 1-3, OLS is **unbiased** and its variance is **exactly** the classical formula
+
+  $$\mathbb{E}[\hat{\boldsymbol{\beta}} \mid \mathbf{X}] = \boldsymbol{\beta} \qquad \Var(\hat{\boldsymbol{\beta}} \mid \mathbf{X}) = (\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\,\underbrace{\Var(\mathbf{e} \mid \mathbf{X})}_{\sigma^2\mathbf{I}_n}\,\mathbf{X}(\mathbf{X}^\prime\mathbf{X})^{-1} = \sigma^2(\mathbf{X}^\prime\mathbf{X})^{-1}$$
+
+- Our "agnostic" approach so far needed only i.i.d. sampling and the regularity conditions
+  - OLS estimates the **BLP**, whatever the CEF looks like, and the robust variance is valid for asymptotic inference on the **BLP**
+
+:::
+
+## The Gauss-Markov theorem
+
+::: {.incremental}
+
+- Under assumptions 1-3, OLS is the **B**est **L**inear **U**nbiased **E**stimator (**BLUE**)
+  - **Linear**: $\tilde{\boldsymbol{\beta}} = \mathbf{C}\mathbf{Y}$ for some $k \times n$ matrix $\mathbf{C}$ that depends only on $\mathbf{X}$. OLS has $\mathbf{C} = (\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime$
+  - **Unbiased**: $\mathbb{E}[\tilde{\boldsymbol{\beta}} \mid \mathbf{X}] = \mathbf{C}\mathbf{X}\boldsymbol{\beta} = \boldsymbol{\beta}$ for every $\boldsymbol{\beta}$, which requires $\mathbf{C}\mathbf{X} = \mathbf{I}_k$
+  - **Best**: no other linear unbiased estimator has a smaller variance for any coefficient (or linear combination of coefficients)
+
+- **Proof sketch**: write an alternative estimator that deviates from OLS: $\mathbf{C} = (\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime + \mathbf{D}$. 
+  - Unbiasedness requires $\mathbf{D}\mathbf{X} = \mathbf{0}$, so the cross terms drop out
+
+  $$\small \Var(\tilde{\boldsymbol{\beta}} \mid \mathbf{X}) = \sigma^2\mathbf{C}\mathbf{C}^\prime = \sigma^2\big[(\mathbf{X}^\prime\mathbf{X})^{-1} + \underbrace{(\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\mathbf{D}^\prime}_{\mathbf{0}} + \underbrace{\mathbf{D}\mathbf{X}(\mathbf{X}^\prime\mathbf{X})^{-1}}_{\mathbf{0}} + \mathbf{D}\mathbf{D}^\prime\big] = \Var(\hat{\boldsymbol{\beta}} \mid \mathbf{X}) + \sigma^2\mathbf{D}\mathbf{D}^\prime$$
+
+  - The $j$th diagonal entry of $\mathbf{D}\mathbf{D}^\prime$ is a sum of squares, $\sum_i D_{ji}^2 \geq 0$, so every coefficient's variance can only go **up**
+
+:::
+
+## What BLUE does and doesn't buy us
+
+::: {.incremental}
+
+- "Best" only among estimators that are **linear** in $\mathbf{Y}$ **and** **unbiased**
+  - A **biased** estimator can have a lower mean squared error (e.g. a penalized regression)
+
+- It depends on **homoskedasticity**:
+  - **Weighted** least squares, which down-weights the noisier observations, can do better if we know the form of the heteroskedasticity
+  - And the classical standard errors are **wrong**
+
+- It needs a **linear CEF** for unbiasedness
+  - Without it, OLS is still consistent for the **BLP**, but the finite-sample results no longer hold
+
+:::
+
+## Hierarchy of assumptions
+
+<!-- Each column is something we want from OLS; each row an assumption; a
+     check means that goal needs that assumption. Reading left to right, every
+     column needs everything the one before it did, plus one more row. -->
+```{=html}
+<style>
+.reveal .assume-table table { border-collapse: collapse; margin: 0.2em auto 0; font-size: 0.6em; border-top: 2px solid #333; border-bottom: 2px solid #333; }
+.reveal .assume-table th, .reveal .assume-table td { border: none; padding: 0.35em 0.6em; text-align: center; vertical-align: bottom; }
+.reveal .assume-table th { font-weight: 600; line-height: 1.2; border-bottom: 1px solid #333; }
+.reveal .assume-table td:first-child { text-align: left; white-space: nowrap; }
+.reveal .assume-table td.y { color: #c5050c; font-weight: 700; font-size: 1.2em; }
+.reveal .assume-table tr.sep td { border-top: 1px solid #d9d9d9; }
+.reveal .assume-table .sub { display: block; font-weight: 400; color: #646569; }
+</style>
+<div class="assume-table"><table>
+<thead><tr>
+  <th></th>
+  <th>Compute<br>\(\hat{\boldsymbol{\beta}}\)</th>
+  <th>Consistent<br>for the BLP</th>
+  <th>Asymptotic<br>inference on the BLP<span class="sub">(robust SEs)</span></th>
+  <th>Unbiased<br>for the CEF</th>
+  <th>BLUE<span class="sub">(classical SEs)</span></th>
+  <th>Exact<br>finite-sample inference<span class="sub">(\(t_{n-k}\))</span></th>
+</tr></thead>
+<tbody>
+  <tr><td>No perfect collinearity</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+  <tr class="sep"><td>i.i.d. sampling + regularity conditions</td><td></td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+  <tr class="sep"><td>Linear CEF, \(\mathbb{E}[e_i \mid \mathbf{X}_i] = 0\)</td><td></td><td></td><td></td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+  <tr class="sep"><td>Homoskedasticity, \(\Var(e_i \mid \mathbf{X}_i) = \sigma^2\)</td><td></td><td></td><td></td><td></td><td class="y">✓</td><td class="y">✓</td></tr>
+  <tr class="sep"><td>Normal errors</td><td></td><td></td><td></td><td></td><td></td><td class="y">✓</td></tr>
+</tbody>
+</table></div>
+```
+
+::: {.incremental}
+
+- **Very little** gets us the BLP and valid (asymptotic) inference on it: i.i.d. sampling, robust standard errors and a CLT
+- Saying anything about the **CEF** itself requires it to be linear (in whatever $\mathbf{X}$ we provide).
+- Homoskedasticity and normality get **efficiency** and **exact** small-sample inference, but they're rarely credible
+
+:::
+
+## Next week
+
+::: {.incremental}
+
+- Wrapping up **inference** for regression
+  - **Wald** tests of several coefficients at once
+
+- More regression mechanics
+  - Regression as a **linear smoother** of $\mathbf{Y}$
+  - Regression as a kind of **"weighting"** estimator
+  - Leverage and influential observations
+  - Diagnosing your regression
+
+- **Problem Set 5** due Tuesday, November 17
+
+- **Second Midterm Exam** on Wednesday, November 18
+
+:::
+
+## References {.refs-slide}
+
+::: {#refs}
+:::

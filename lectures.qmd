@@ -63,9 +63,10 @@ Links become active as the materials for each week are posted.
 - [Week 9 Github Repository](https://github.com/astrezhnev/ps812/tree/main/slides/week9/)
 - [Week 9 `.html` slides](https://www.antonstrezhnev.com/ps812/slides/week9/week9_regression.html)
 
-### Week 10: Inference for Regression
+### Week 10: Regression, part 2
 
-*To be posted*
+- [Week 10 Github Repository](https://github.com/astrezhnev/ps812/tree/main/slides/week10/)
+- [Week 10 `.html` slides](https://www.antonstrezhnev.com/ps812/slides/week10/week10_regression2.html)
 
 ### Week 11: Interpreting Regressions
 
