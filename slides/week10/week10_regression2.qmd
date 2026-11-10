@@ -817,10 +817,10 @@ $\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d}
 
   $$\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime = \underbrace{\mathbf{X}^\prime}_{k \times n} \ \underbrace{\widehat{\mathbf{D}}}_{n \times n} \ \underbrace{\mathbf{X}}_{n \times k} = \begin{pmatrix} \mathbf{X}_1 & \mathbf{X}_2 & \cdots & \mathbf{X}_n \end{pmatrix} \begin{pmatrix} \hat{e}_1^2 & 0 & \cdots & 0 \\ 0 & \hat{e}_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \hat{e}_n^2 \end{pmatrix} \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix}$$
 
-
-- **Off-diagonals** are $0$: under **i.i.d. sampling**, $e_i$ and $e_j$ are independent
-- **Diagonals** $\sigma_i^2 = \mathbb{E}[e_i^2 \mid \mathbf{X}_i]$ can differ across respondents with different $\mathbf{X}_i$
-- The HC0 estimator plugs in $\hat{e}_i^2$ for each $\sigma_i^2$
+- $\widehat{\mathbf{D}}$ is a **plug-in** estimator of the $n \times n$ **variance-covariance matrix of the errors**, $\mathbb{E}[\mathbf{e}\mathbf{e}^\prime \mid \mathbf{X}]$
+  - **Off-diagonals** are $0$: under **i.i.d. sampling**, $e_i$ and $e_j$ are independent
+  - **Diagonals** $\sigma_i^2 = \mathbb{E}[e_i^2 \mid \mathbf{X}_i]$ can differ across respondents with different $\mathbf{X}_i$
+  - The HC0 estimator plugs in $\hat{e}_i^2$ for each $\sigma_i^2$
 
 :::
 
@@ -977,9 +977,9 @@ Outcome: Trump thermometer. Democrats are the omitted party baseline. Standard e
 
 ::::
 
----
+##
 
-::: {.statement style="height: 640px; flex-direction: column;"}
+::: {.statement style="height: 560px; flex-direction: column;"}
 | *T-stat looks too good.*
 | *Use robust standard errors—*
 | *significance gone.*
