@@ -327,3 +327,17 @@ strong {
 .reveal .plane-slide h2 {
   margin-bottom: 0.1em;
 }
+
+// Three error variance-covariance matrices side by side (homoskedastic / HC / clustered)
+
+.reveal .sigma-cols {
+  font-size: 0.8em;
+
+  mjx-container[display="true"] {
+    margin: 0.3em 0 !important;
+  }
+
+  ul {
+    margin-top: 0.2em;
+  }
+}

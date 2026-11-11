@@ -814,11 +814,13 @@ $\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d}
 
 ::: {.incremental}
 
-- The filling is also a matrix product. We can write it in terms of an $n \times n$ matrix $\widehat{\mathbf{D}}$
+- You'll often see the filling written as an equivalent matrix product involving a $n \times n$ matrix $\widehat{\mathbf{D}}$
+  - The diagonals are $\hat{e}_i^2$
+  - The off-diagonals are $0$
 
   $$\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime = \underbrace{\mathbf{X}^\prime}_{k \times n} \ \underbrace{\widehat{\mathbf{D}}}_{n \times n} \ \underbrace{\mathbf{X}}_{n \times k} = \begin{pmatrix} \mathbf{X}_1 & \mathbf{X}_2 & \cdots & \mathbf{X}_n \end{pmatrix} \begin{pmatrix} \hat{e}_1^2 & 0 & \cdots & 0 \\ 0 & \hat{e}_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \hat{e}_n^2 \end{pmatrix} \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix}$$
 
-- $\widehat{\mathbf{D}}$ is a **plug-in** estimator of the $n \times n$ **variance-covariance matrix of the errors**, $\mathbb{E}[\mathbf{e}\mathbf{e}^\prime \mid \mathbf{X}]$
+- Later on, we'll connect this to the **variance-covariance matrix of the errors** in the classical regression setting
   - **Off-diagonals** are $0$: under **i.i.d. sampling**, $e_i$ and $e_j$ are independent
   - **Diagonals** $\sigma_i^2 = \mathbb{E}[e_i^2 \mid \mathbf{X}_i]$ can differ across respondents with different $\mathbf{X}_i$
   - The HC0 estimator plugs in $\hat{e}_i^2$ for each $\sigma_i^2$
@@ -891,6 +893,164 @@ cbind(round(cbind(estimate = b, se = se_hc0,
                   t = t_hc0), 3),
       p = signif(2 * pnorm(-abs(t_hc0)), 3))
 ```
+
+## The sampling distribution of a line
+
+```{r}
+#| label: samp-setup
+#| include: false
+
+# Repeated samples from one heteroskedastic population (the error SD grows
+# with X) for the sampling distribution animation (samp-anim/samp.js): the
+# points of the first few samples, and the OLS fit of every sample
+set.seed(812)
+sd_S <- 300; sd_n <- 25; sd_K <- 8
+sd_t <- c(2, 0.6)
+sd_draws <- lapply(seq_len(sd_S), function(s) {
+  x <- runif(sd_n, 2, 8)
+  y <- sd_t[1] + sd_t[2] * x + rnorm(sd_n, 0, 0.2 + 0.2 * x)
+  list(x = round(x, 3), y = round(y, 3), b = unname(coef(lm(y ~ x))))
+})
+sd_data <- jsonlite::toJSON(list(px = lapply(sd_draws[1:sd_K], `[[`, "x"),
+                                 py = lapply(sd_draws[1:sd_K], `[[`, "y"),
+                                 b0 = round(sapply(sd_draws, function(s) s$b[1]), 4),
+                                 b1 = round(sapply(sd_draws, function(s) s$b[2]), 4),
+                                 t0 = sd_t[1], t1 = sd_t[2],
+                                 xlim = c(0, 10), ylim = c(0, 10)),
+                            auto_unbox = TRUE, digits = NA)
+samp_anim <- function(from, to) {
+  cat("```{=html}",
+      '<div class="sd-anim"></div>',
+      "<script>",
+      "(", readLines("samp-anim/samp.js"), ")(document.currentScript.previousElementSibling,",
+      sd_data, ", { from: ", from, ", to: ", to, " });",
+      "</script>",
+      rep('<span class="fragment sd-step"></span>', to - from),
+      "```", sep = "\n")
+}
+```
+
+```{r}
+#| echo: false
+#| output: asis
+samp_anim(0, 7)
+```
+
+## Standard errors for a bivariate regression
+
+::: {.incremental}
+
+- With one regressor, the OLS slope is
+
+  $$\hat{\beta}_1 = \frac{\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n (X_i - \bar{X})^2} = \frac{\sum_{i=1}^n (X_i - \bar{X})\,Y_i}{\sum_{i=1}^n (X_i - \bar{X})^2}$$
+
+- Substitute $Y_i = \beta_0 + \beta_1 X_i + e_i$. Because $\sum_i (X_i - \bar{X}) = 0$ and $\sum_i (X_i - \bar{X})X_i = \sum_i (X_i - \bar{X})^2$
+
+  $$\hat{\beta}_1 = \beta_1 + \frac{\sum_{i=1}^n (X_i - \bar{X})\,e_i}{\sum_{i=1}^n (X_i - \bar{X})^2}$$
+
+:::
+
+## Standard errors for a bivariate regression
+
+::: {.incremental}
+
+- Divide the top and the bottom by $n$
+
+  $$\hat{\beta}_1 - \beta_1 = \frac{\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})\,e_i}{\underbrace{\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})^2}_{\xrightarrow{p}\ \Var(X_i)}}$$
+
+  - The numerator is (approximately) a sample mean of the i.i.d. $(X_i - \mu_X)e_i$, which have mean $0$ and variance $\mathbb{E}[(X_i - \mu_X)^2 e_i^2]$
+
+- Connecting back to our **sandwich** estimator:
+
+  $$\Var(\hat{\beta}_1) \approx \frac{1}{n}\,\frac{\overbrace{\mathbb{E}\big[(X_i - \mu_X)^2 e_i^2\big]}^{\text{filling}}}{\underbrace{\Var(X_i)^2}_{\text{bread}}}$$
+
+:::
+
+## Standard errors for a bivariate regression
+
+::: {.incremental}
+
+- **Plug-in**: replace the expectations with sample means and $e_i$ with $\hat{e}_i$
+
+  $$\widehat{SE}(\hat{\beta}_1) = \sqrt{\frac{\sum_{i=1}^n (X_i - \bar{X})^2\,\hat{e}_i^2}{\Big(\sum_{i=1}^n (X_i - \bar{X})^2\Big)^2}}$$
+
+- Our precision for the slope is **greater** when we have...
+  - ...a larger $n$
+  - ...more **spread** in $X_i$
+  - ...smaller errors, especially **far** from $\bar{X}$ since each $\hat{e}_i^2$ is weighted by $(X_i - \bar{X})^2$
+
+:::
+
+## Uncertainty about $\hat{Y}$
+
+::: {.incremental}
+
+- Given our standard errors for $\hat{\beta}_0$ and $\hat{\beta}_1$, we may want to know how precise our BLP estimate of $Y$ is at a given $x$
+
+  $$\hat{Y}(x) = \hat{\beta}_0 + \hat{\beta}_1 x$$
+
+- This is a sum of two random variables, so we need the full **variance-covariance matrix** of $\hat{\boldsymbol{\beta}}$
+
+  $$\Var\big(\hat{Y}(x)\big) = \Var(\hat{\beta}_0) + x^2\,\Var(\hat{\beta}_1) + 2x\,\Cov(\hat{\beta}_0, \hat{\beta}_1)$$
+
+  - Plug in the HC0 estimates of all three!
+- To get the intuition for how the variance changes, re-write the line as: $\hat{Y}(x) = \bar{Y} + \hat{\beta}_1\,(x - \bar{X})$
+  - We have uncertainty about $\bar{Y}$
+  - **and** we have uncertainty about how the **slope** as we move away from $\bar{X}$
+  - So the sampling variance is smallest near $\bar{X}$ and grows as we move away from it, giving a **"bowtie"** shape to the confidence intervals.
+
+:::
+
+## Confidence interval for the regression line
+
+:::: {.columns}
+
+::: {.column width="52%"}
+
+```{r}
+# HC0 vcov of the intercept and slope
+V <- vcovHC(fit_hs, type = "HC0")
+V
+
+grid <- seq(0, 1, by = 0.01)
+se_fit <- sqrt(V[1, 1] + grid^2 * V[2, 2] +
+                2 * grid * V[1, 2])
+
+line_ci <- tibble(x = grid,
+                  fit = b_hs[1] + b_hs[2] * grid,
+                  lower = fit - 1.96 * se_fit,
+                  upper = fit + 1.96 * se_fit)
+head(line_ci, 3)
+```
+
+:::
+
+::: {.column width="48%"}
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 7
+p_line <- ggplot(line_ci, aes(x, fit)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#0479a8", alpha = 0.3) +
+  geom_line(colour = "#0479a8", linewidth = 1.3) +
+  labs(x = NULL, y = "Predicted Trump\nthermometer") +
+  theme_reg
+p_band <- ggplot(line_ci, aes(x)) +
+  geom_ribbon(aes(ymin = lower - fit, ymax = upper - fit), fill = "#0479a8", alpha = 0.3) +
+  geom_hline(yintercept = 0, colour = "#0479a8", linewidth = 1.3) +
+  geom_vline(xintercept = mean(anes$hostile_sexism), linetype = "dashed", colour = "#9a9a9a") +
+  annotate("text", x = mean(anes$hostile_sexism) + 0.02, y = max(line_ci$upper - line_ci$fit),
+           label = "bar(X)", parse = TRUE, hjust = 0, vjust = 1, size = 6, colour = "#666666") +
+  labs(x = "Hostile sexism", y = "95% CI around\nthe fitted line") +
+  theme_reg
+patchwork::wrap_plots(p_line, p_band, ncol = 1) +
+  patchwork::plot_annotation(theme = theme(plot.background = element_rect(fill = "#F7F7F7", colour = NA)))
+```
+
+:::
+
+::::
 
 ## Comparing robust SEs with `lm()` defaults
 
@@ -997,7 +1157,6 @@ Outcome: Trump thermometer. Democrats are the omitted party baseline. Standard e
   $$\mathbb{E}[e_i^2 \mid \mathbf{X}_i] = \sigma^2$$
 
   - The variance of the errors is **constant** at every value of the covariates
-  - In matrix form, $\mathbb{E}[\mathbf{e}\mathbf{e}^\prime \mid \mathbf{X}] = \sigma^2\mathbf{I}_n$: the same $\sigma^2$ in every diagonal entry
 
 - Under homoskedasticity, the filling simplifies by the **law of iterated expectations**
 
@@ -1102,6 +1261,45 @@ ggplot(res_party, aes(x = party, y = e, colour = party)) +
   - OLS estimates the **BLP**, whatever the CEF looks like, and the robust variance is valid for asymptotic inference on the **BLP**
 
 :::
+
+## SEs and assumptions about the error variances
+
+- With a linear CEF, the filling is built from the **variance-covariance matrix of the errors** $\boldsymbol{\Sigma} = \Var(\mathbf{e} \mid \mathbf{X})$
+
+  $$\Var(\hat{\boldsymbol{\beta}} \mid \mathbf{X}) = (\mathbf{X}^\prime\mathbf{X})^{-1}\,\mathbf{X}^\prime\boldsymbol{\Sigma}\mathbf{X}\,(\mathbf{X}^\prime\mathbf{X})^{-1}$$
+
+- Each standard error estimator assumes a different $\boldsymbol{\Sigma}$
+
+:::: {.columns .sigma-cols}
+
+::: {.column width="31%"}
+**Homoskedastic**
+
+$$\small \begin{pmatrix} \sigma^2 & 0 & \cdots & 0 \\ 0 & \sigma^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \sigma^2 \end{pmatrix}$$
+
+- Same variance, no covariances
+- Plug in $\hat{\sigma}^2$: **classical**
+:::
+
+::: {.column width="31%" .fragment}
+**Heteroskedastic**
+
+$$\small \begin{pmatrix} \sigma_1^2 & 0 & \cdots & 0 \\ 0 & \sigma_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \sigma_n^2 \end{pmatrix}$$
+
+- Own variance, no covariances
+- Plug in $\hat{e}_i^2$: **HC**
+:::
+
+::: {.column width="38%" .fragment}
+**Clustered**
+
+$$\small \left(\begin{array}{ccc|ccc|c} \sigma_1^2 & \sigma_{12} & \cdots & 0 & 0 & \cdots & \cdots \\ \sigma_{12} & \sigma_2^2 & \cdots & 0 & 0 & \cdots & \cdots \\ \vdots & \vdots & \ddots & \vdots & \vdots & & \\ \hline 0 & 0 & \cdots & \sigma_j^2 & \sigma_{jk} & \cdots & \cdots \\ 0 & 0 & \cdots & \sigma_{jk} & \sigma_k^2 & \cdots & \cdots \\ \vdots & \vdots & & \vdots & \vdots & \ddots & \\ \hline \vdots & \vdots & & \vdots & \vdots & & \ddots \end{array}\right)$$
+
+- Covariances **within** clusters, none **across**
+- Plug in $\hat{e}_i\hat{e}_j$ within clusters: **cluster-robust**
+:::
+
+::::
 
 ## The Gauss-Markov theorem
 

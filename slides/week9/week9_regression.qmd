@@ -854,13 +854,13 @@ base_plot(alpha = 0.04) +
 ::: {.incremental}
 
 - Consider three party categories: **Democrat**, **Independent** and **Republican** 
-  - Code each category as a **dummy** (indicator) variable, e.g. $Z_i^{\text{Rep}} = I(\text{party}_i = \text{Republican})$
+  - Code each category as a **dummy** (indicator) variable, e.g. $X_i^{\text{Rep}} = I(\text{party}_i = \text{Republican})$
 
 - What if we include an intercept **and** all three dummies?
 
-  $$\begin{array}{l|cccc} & 1 & Z^{\text{Dem}} & Z^{\text{Ind}} & Z^{\text{Rep}} \\ \hline \text{Democrat} & 1 & 1 & 0 & 0 \\ \text{Republican} & 1 & 0 & 0 & 1 \\ \text{Independent} & 1 & 0 & 1 & 0 \\ \text{Democrat} & 1 & 1 & 0 & 0 \\ \vdots & \vdots & \vdots & \vdots & \vdots \end{array}$$
+  $$\begin{array}{l|cccc} & 1 & X^{\text{Dem}} & X^{\text{Ind}} & X^{\text{Rep}} \\ \hline \text{Democrat} & 1 & 1 & 0 & 0 \\ \text{Republican} & 1 & 0 & 0 & 1 \\ \text{Independent} & 1 & 0 & 1 & 0 \\ \text{Democrat} & 1 & 1 & 0 & 0 \\ \vdots & \vdots & \vdots & \vdots & \vdots \end{array}$$
 
-  - Everyone is in exactly one category, so $Z^{\text{Dem}} + Z^{\text{Ind}} + Z^{\text{Rep}} = 1$: the intercept column. The rank is $3 < 4$
+  - Everyone is in exactly one category, so $X^{\text{Dem}} + X^{\text{Ind}} + X^{\text{Rep}} = 1$: the intercept column. The rank is $3 < 4$
 
 - If I include an intercept and **all** of these indicators, the OLS solution is undefined.
   - The fix is to drop one category which is the **baseline**
@@ -946,7 +946,7 @@ base_plot() +
 - Partisanship predicts **both** hostile sexism and feelings about Trump. 
   - Add the party dummies, with Democrats as the baseline
 
-  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i^{\text{Ind}} + \hat{\beta}_3 Z_i^{\text{Rep}}$$
+  $$\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 X_i^{\text{Ind}} + \hat{\beta}_3 X_i^{\text{Rep}}$$
 
 - Within each party, the fit is a **line** in $X_i$. The lines share a **slope** and have different **intercepts**
 
