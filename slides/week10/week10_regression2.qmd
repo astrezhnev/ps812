@@ -804,7 +804,10 @@ $\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d}
 
 - Plug these into the sandwich (the $n$'s cancel)
 
-  $$\widehat{\Var}(\hat{\boldsymbol{\beta}}) = \frac{1}{n}\left(\frac{1}{n}\mathbf{X}^\prime\mathbf{X}\right)^{-1}\left(\frac{1}{n}\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime\right)\left(\frac{1}{n}\mathbf{X}^\prime\mathbf{X}\right)^{-1} = (\mathbf{X}^\prime\mathbf{X})^{-1}\left(\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime\right)(\mathbf{X}^\prime\mathbf{X})^{-1}$$
+  $$\begin{aligned}
+  \widehat{\Var}(\hat{\boldsymbol{\beta}}) &= \frac{1}{n}\left(\frac{1}{n}\mathbf{X}^\prime\mathbf{X}\right)^{-1}\left(\frac{1}{n}\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime\right)\left(\frac{1}{n}\mathbf{X}^\prime\mathbf{X}\right)^{-1} \\
+  &= (\mathbf{X}^\prime\mathbf{X})^{-1}\left(\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime\right)(\mathbf{X}^\prime\mathbf{X})^{-1}
+  \end{aligned}$$
 
 - This is the **heteroskedasticity-consistent** (HC0) or Eicker-Huber-White estimator - usually called **robust** standard errors
 
@@ -815,8 +818,6 @@ $\sqrt{n}\big(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta}\big) \xrightarrow{d}
 ::: {.incremental}
 
 - You'll often see the filling written as an equivalent matrix product involving a $n \times n$ matrix $\widehat{\mathbf{D}}$
-  - The diagonals are $\hat{e}_i^2$
-  - The off-diagonals are $0$
 
   $$\sum_{i=1}^n \hat{e}_i^2\,\mathbf{X}_i\mathbf{X}_i^\prime = \underbrace{\mathbf{X}^\prime}_{k \times n} \ \underbrace{\widehat{\mathbf{D}}}_{n \times n} \ \underbrace{\mathbf{X}}_{n \times k} = \begin{pmatrix} \mathbf{X}_1 & \mathbf{X}_2 & \cdots & \mathbf{X}_n \end{pmatrix} \begin{pmatrix} \hat{e}_1^2 & 0 & \cdots & 0 \\ 0 & \hat{e}_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \hat{e}_n^2 \end{pmatrix} \begin{pmatrix} \mathbf{X}_1^\prime \\ \mathbf{X}_2^\prime \\ \vdots \\ \mathbf{X}_n^\prime \end{pmatrix}$$
 
@@ -884,6 +885,8 @@ round(sqrt(diag(V_sw)), 3)
 
 :::
 
+::: {.fragment}
+
 ```{r}
 b <- coef(fit_full)
 se_hc0 <- sqrt(diag(V_sw))
@@ -893,6 +896,8 @@ cbind(round(cbind(estimate = b, se = se_hc0,
                   t = t_hc0), 3),
       p = signif(2 * pnorm(-abs(t_hc0)), 3))
 ```
+
+:::
 
 ## The sampling distribution of a line
 
@@ -956,11 +961,12 @@ samp_anim(0, 7)
 
 - Divide the top and the bottom by $n$
 
-  $$\hat{\beta}_1 - \beta_1 = \frac{\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})\,e_i}{\underbrace{\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})^2}_{\xrightarrow{p}\ \Var(X_i)}}$$
+  $$\hat{\beta}_1 - \beta_1 = \frac{\overbrace{\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})\,e_i}^{\approx\ \frac{1}{n}\sum_{i=1}^n (X_i - \mu_X)\,e_i}}{\underbrace{\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})^2}_{\xrightarrow{p}\ \Var(X_i)}}$$
 
-  - The numerator is (approximately) a sample mean of the i.i.d. $(X_i - \mu_X)e_i$, which have mean $0$ and variance $\mathbb{E}[(X_i - \mu_X)^2 e_i^2]$
-
-- Connecting back to our **sandwich** estimator:
+- Since $\bar{X} \xrightarrow{p} \mu_X$, the numerator behaves like a sample mean of the i.i.d. $(X_i - \mu_X)e_i$, which have mean $0$ and variance $\mathbb{E}[(X_i - \mu_X)^2 e_i^2]$
+- The variance of a sample mean of $n$ i.i.d. terms is $\frac{1}{n}$ times the variance of one term
+  - ...and the denominator is (approximately) the constant $\Var(X_i)$, so it comes out squared
+- And we get the **sandwich** estimator in scalar form:
 
   $$\Var(\hat{\beta}_1) \approx \frac{1}{n}\,\frac{\overbrace{\mathbb{E}\big[(X_i - \mu_X)^2 e_i^2\big]}^{\text{filling}}}{\underbrace{\Var(X_i)^2}_{\text{bread}}}$$
 
@@ -970,11 +976,16 @@ samp_anim(0, 7)
 
 ::: {.incremental}
 
-- **Plug-in**: replace the expectations with sample means and $e_i$ with $\hat{e}_i$
+- **Plug-in**: replace the expectations with sample means and $e_i$ with $\hat{e}_i$ (the $n$'s cancel)
 
-  $$\widehat{SE}(\hat{\beta}_1) = \sqrt{\frac{\sum_{i=1}^n (X_i - \bar{X})^2\,\hat{e}_i^2}{\Big(\sum_{i=1}^n (X_i - \bar{X})^2\Big)^2}}$$
+  $$\begin{aligned}
+  \widehat{\Var}(\hat{\beta}_1) &= \frac{1}{n}\,\frac{\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})^2\,\hat{e}_i^2}{\Big(\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})^2\Big)^2} \\
+  &= \frac{\sum_{i=1}^n (X_i - \bar{X})^2\,\hat{e}_i^2}{\Big(\sum_{i=1}^n (X_i - \bar{X})^2\Big)^2}
+  \end{aligned}$$
 
-- Our precision for the slope is **greater** when we have...
+  and $\widehat{SE}(\hat{\beta}_1) = \sqrt{\widehat{\Var}(\hat{\beta}_1)}$
+
+- Our **standard error** for the slope is **smaller** when we have...
   - ...a larger $n$
   - ...more **spread** in $X_i$
   - ...smaller errors, especially **far** from $\bar{X}$ since each $\hat{e}_i^2$ is weighted by $(X_i - \bar{X})^2$
@@ -991,12 +1002,12 @@ samp_anim(0, 7)
 
 - This is a sum of two random variables, so we need the full **variance-covariance matrix** of $\hat{\boldsymbol{\beta}}$
 
-  $$\Var\big(\hat{Y}(x)\big) = \Var(\hat{\beta}_0) + x^2\,\Var(\hat{\beta}_1) + 2x\,\Cov(\hat{\beta}_0, \hat{\beta}_1)$$
+  $$\Var\bigg(\hat{Y}(x)\bigg) = \Var(\hat{\beta}_0) + x^2\,\Var(\hat{\beta}_1) + 2x\,\Cov(\hat{\beta}_0, \hat{\beta}_1)$$
 
   - Plug in the HC0 estimates of all three!
 - To get the intuition for how the variance changes, re-write the line as: $\hat{Y}(x) = \bar{Y} + \hat{\beta}_1\,(x - \bar{X})$
-  - We have uncertainty about $\bar{Y}$
-  - **and** we have uncertainty about how the **slope** as we move away from $\bar{X}$
+  - At $\bar{X}$, we have uncertainty about $\bar{Y}$
+  - **And** we have uncertainty about how the **slope**, which matters more as we move away from $\bar{X}$
   - So the sampling variance is smallest near $\bar{X}$ and grows as we move away from it, giving a **"bowtie"** shape to the confidence intervals.
 
 :::

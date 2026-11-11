@@ -8,7 +8,7 @@ function (el, d, opts) {
   //   2        six more samples in quick succession
   //   3        the rest of the samples: their lines fill in, the points fade
   //   4        the true line E[Y | X] on top
-  //   5        a histogram of the slopes in the right margin, with its SD
+  //   5        a histogram of the slopes in the right margin, with its SE
   //   6        the intercepts: where each line crosses X = 0, and their histogram
   //   7        the middle 95% of the fitted lines at each X: narrowest at the
   //            mean of X, widening away from it
@@ -183,7 +183,7 @@ function (el, d, opts) {
     mk('line', { x1: PX0, x2: PX1, y1: base, y2: base, stroke: GREY, 'stroke-width': 2 }, g);
     mk('line', { x1: hx(truth), x2: hx(truth), y1: base, y2: base + 12, stroke: RED, 'stroke-width': 4 }, g);
     var t = mk('text', { x: PX0, y: top, 'font-size': 24, fill: INK }, g);
-    rich(t, [[{ 'font-style': 'italic', 'font-weight': 600 }, label], [{ dx: 14 }, 'SD = ' + sdv.toFixed(2)]]);
+    rich(t, [[{ 'font-style': 'italic', 'font-weight': 600 }, label], [{ dx: 14 }, 'SE = ' + sdv.toFixed(2)]]);
     return { g: g, bars: bars, base: base };
   }
   var hS = hist(d.b1, d.t1, 200, 72, '^β_1', BLUE);
