@@ -2717,12 +2717,12 @@ function (el, d, opts) {
 <ul>
 <li class="fragment"><p>Consider three party categories: <strong>Democrat</strong>, <strong>Independent</strong> and <strong>Republican</strong></p>
 <ul>
-<li class="fragment">Code each category as a <strong>dummy</strong> (indicator) variable, e.g. <span class="math inline">\(Z_i^{\text{Rep}} = I(\text{party}_i = \text{Republican})\)</span></li>
+<li class="fragment">Code each category as a <strong>dummy</strong> (indicator) variable, e.g. <span class="math inline">\(X_i^{\text{Rep}} = I(\text{party}_i = \text{Republican})\)</span></li>
 </ul></li>
 <li class="fragment"><p>What if we include an intercept <strong>and</strong> all three dummies?</p>
-<p><span class="math display">\[\begin{array}{l|cccc} &amp; 1 &amp; Z^{\text{Dem}} &amp; Z^{\text{Ind}} &amp; Z^{\text{Rep}} \\ \hline \text{Democrat} &amp; 1 &amp; 1 &amp; 0 &amp; 0 \\ \text{Republican} &amp; 1 &amp; 0 &amp; 0 &amp; 1 \\ \text{Independent} &amp; 1 &amp; 0 &amp; 1 &amp; 0 \\ \text{Democrat} &amp; 1 &amp; 1 &amp; 0 &amp; 0 \\ \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \end{array}\]</span></p>
+<p><span class="math display">\[\begin{array}{l|cccc} &amp; 1 &amp; X^{\text{Dem}} &amp; X^{\text{Ind}} &amp; X^{\text{Rep}} \\ \hline \text{Democrat} &amp; 1 &amp; 1 &amp; 0 &amp; 0 \\ \text{Republican} &amp; 1 &amp; 0 &amp; 0 &amp; 1 \\ \text{Independent} &amp; 1 &amp; 0 &amp; 1 &amp; 0 \\ \text{Democrat} &amp; 1 &amp; 1 &amp; 0 &amp; 0 \\ \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \end{array}\]</span></p>
 <ul>
-<li class="fragment">Everyone is in exactly one category, so <span class="math inline">\(Z^{\text{Dem}} + Z^{\text{Ind}} + Z^{\text{Rep}} = 1\)</span>: the intercept column. The rank is <span class="math inline">\(3 &lt; 4\)</span></li>
+<li class="fragment">Everyone is in exactly one category, so <span class="math inline">\(X^{\text{Dem}} + X^{\text{Ind}} + X^{\text{Rep}} = 1\)</span>: the intercept column. The rank is <span class="math inline">\(3 &lt; 4\)</span></li>
 </ul></li>
 <li class="fragment"><p>If I include an intercept and <strong>all</strong> of these indicators, the OLS solution is undefined.</p>
 <ul>
@@ -2812,7 +2812,7 @@ F-statistic:  1546 on 1 and 4582 DF,  p-value: &lt; 2.2e-16</code></pre>
 <ul>
 <li class="fragment">Add the party dummies, with Democrats as the baseline</li>
 </ul>
-<p><span class="math display">\[\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i^{\text{Ind}} + \hat{\beta}_3 Z_i^{\text{Rep}}\]</span></p></li>
+<p><span class="math display">\[\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i + \hat{\beta}_2 X_i^{\text{Ind}} + \hat{\beta}_3 X_i^{\text{Rep}}\]</span></p></li>
 <li class="fragment"><p>Within each party, the fit is a <strong>line</strong> in <span class="math inline">\(X_i\)</span>. The lines share a <strong>slope</strong> and have different <strong>intercepts</strong></p>
 <p><span class="math display">\[\begin{aligned} \text{Democrats:} \quad &amp; \hat{\beta}_0 + \hat{\beta}_1 X_i \\ \text{Independents:} \quad &amp; (\hat{\beta}_0 + \hat{\beta}_2) + \hat{\beta}_1 X_i \\ \text{Republicans:} \quad &amp; (\hat{\beta}_0 + \hat{\beta}_3) + \hat{\beta}_1 X_i \end{aligned}\]</span></p></li>
 <li class="fragment"><p><span class="math inline">\(\hat{\beta}_2\)</span> and <span class="math inline">\(\hat{\beta}_3\)</span> are the <strong>gaps</strong> between the parallel lines:</p>
