@@ -1275,7 +1275,7 @@ ggplot(res_party, aes(x = party, y = e, colour = party)) +
 
 ## SEs and assumptions about the error variances
 
-- With a linear CEF, the filling is built from the **variance-covariance matrix of the errors** $\boldsymbol{\Sigma} = \Var(\mathbf{e} \mid \mathbf{X})$
+- With a linear CEF, the "filling" of the sandwich variance can be written in terms of the **variance-covariance matrix of the errors** $\boldsymbol{\Sigma} = \Var(\mathbf{e} \mid \mathbf{X})$
 
   $$\Var(\hat{\boldsymbol{\beta}} \mid \mathbf{X}) = (\mathbf{X}^\prime\mathbf{X})^{-1}\,\mathbf{X}^\prime\boldsymbol{\Sigma}\mathbf{X}\,(\mathbf{X}^\prime\mathbf{X})^{-1}$$
 
@@ -1288,7 +1288,7 @@ ggplot(res_party, aes(x = party, y = e, colour = party)) +
 
 $$\small \begin{pmatrix} \sigma^2 & 0 & \cdots & 0 \\ 0 & \sigma^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \sigma^2 \end{pmatrix}$$
 
-- Same variance, no covariances
+- Constant variance + no cross-unit covariance
 - Plug in $\hat{\sigma}^2$: **classical**
 :::
 
@@ -1297,7 +1297,7 @@ $$\small \begin{pmatrix} \sigma^2 & 0 & \cdots & 0 \\ 0 & \sigma^2 & \cdots & 0 
 
 $$\small \begin{pmatrix} \sigma_1^2 & 0 & \cdots & 0 \\ 0 & \sigma_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \sigma_n^2 \end{pmatrix}$$
 
-- Own variance, no covariances
+- Non-constant variance + no cross-unit covariance
 - Plug in $\hat{e}_i^2$: **HC**
 :::
 
@@ -1306,7 +1306,7 @@ $$\small \begin{pmatrix} \sigma_1^2 & 0 & \cdots & 0 \\ 0 & \sigma_2^2 & \cdots 
 
 $$\small \left(\begin{array}{ccc|ccc|c} \sigma_1^2 & \sigma_{12} & \cdots & 0 & 0 & \cdots & \cdots \\ \sigma_{12} & \sigma_2^2 & \cdots & 0 & 0 & \cdots & \cdots \\ \vdots & \vdots & \ddots & \vdots & \vdots & & \\ \hline 0 & 0 & \cdots & \sigma_j^2 & \sigma_{jk} & \cdots & \cdots \\ 0 & 0 & \cdots & \sigma_{jk} & \sigma_k^2 & \cdots & \cdots \\ \vdots & \vdots & & \vdots & \vdots & \ddots & \\ \hline \vdots & \vdots & & \vdots & \vdots & & \ddots \end{array}\right)$$
 
-- Covariances **within** clusters, none **across**
+- **Arbitrary** correlation within clusters but none **across**
 - Plug in $\hat{e}_i\hat{e}_j$ within clusters: **cluster-robust**
 :::
 
