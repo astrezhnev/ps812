@@ -1,0 +1,1108 @@
+---
+title: "PS 812"
+subtitle: "Section 10: Midterm Review, Regression Tables, and Marginal Effects"
+author: "John Hicks"
+institute: "Dept. of Political Science, UW-Madison"
+date: "11-13-2026"
+
+format:
+  revealjs:
+    embed-resources: true
+    html-math-method: katex
+    theme: default
+    slide-number: true
+    transition: none
+    code-fold: false
+    code-line-numbers: true
+    chalkboard: false
+    width: 1600
+    height: 900
+    incremental: true
+    fig-width: 10
+    fig-height: 4.5
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: false
+---
+
+# Today
+
+<style>
+
+.reveal {
+  font-family: Arial, sans-serif;
+}
+
+/* ---------------------------------
+   Headings
+   --------------------------------- */
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: #8B0000;
+}
+
+.reveal h2 {
+  background-color: #eeeeee;
+  padding: 10px 20px;
+}
+
+/* ---------------------------------
+   Slide numbers
+   --------------------------------- */
+
+.reveal .slide-number {
+  color: #666666;
+  font-size: 0.7em;
+}
+
+/* ---------------------------------
+   Code
+   --------------------------------- */
+
+.reveal pre {
+  font-size: 0.65em;
+}
+
+.reveal div.sourceCode pre code,
+.reveal pre code {
+  max-height: 720px !important;
+}
+
+.reveal code {
+  font-family: "Fira Code", "Courier New", monospace;
+}
+
+/* ---------------------------------
+   Cascade / incremental reveals
+   --------------------------------- */
+
+.reveal .fragment {
+  transition: opacity 0.35s ease-in-out;
+}
+
+.reveal .fragment.visible {
+  opacity: 1;
+}
+
+/* ---------------------------------
+   Lists
+   --------------------------------- */
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.35em;
+}
+
+/* ---------------------------------
+   Images
+   --------------------------------- */
+
+.reveal img {
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+/* ---------------------------------
+   Review slides: denser text
+   --------------------------------- */
+
+.reveal .review {
+  font-size: 0.8em;
+}
+
+/* ---------------------------------
+   Tables from modelsummary / gt
+   --------------------------------- */
+
+.reveal .small-table table {
+  font-size: 0.75em;
+}
+
+.reveal .tiny-table table {
+  font-size: 0.5em;
+}
+
+</style>
+
+```{r}
+#| include: false
+library(tidyverse)
+library(patchwork)
+theme_set(theme_minimal(base_size = 16))
+
+uw_red   <- "#c5050c"
+alt_blue <- "#2166ac"
+set.seed(812)
+options(width = 95)
+```
+
+::: {.notes}
+- Welcome. Quick agenda on the next slide, then straight into review
+:::
+
+
+## Today
+
+::: {.fragment}
+**1. Midterm review: weeks 5 to 9** (~25 min)
+
+One slide per week, then your questions. No practice problems
+:::
+
+::: {.fragment}
+**2. Regression tables** with `modelsummary`
+
+How to make one and how to read one
+:::
+
+::: {.fragment}
+**3. Coefficient plots**
+
+And why they mislead when regressors are on different scales
+:::
+
+::: {.fragment}
+**4. Marginal effects** with `marginaleffects`
+
+When a coefficient isn't the answer, and visualizing interactions
+:::
+
+::: {.fragment}
+**5. Getting tables and figures out of R** (if time, otherwise next week)
+:::
+
+::: {.notes}
+- First half is the midterm review: a map of weeks 5 to 9, not new material. Aim for ~25 minutes, then questions
+- No practice problems today. Point them to the problem sets for that
+- Second half is applied R they'll need for final papers: tables, coefficient plots, marginal effects
+- If running long, section 5 (getting things out of R) moves to next week
+:::
+
+
+# Midterm review
+
+::: {.notes}
+- One slide per week. For each: what's the one idea you'd need on the exam?
+- Encourage them to interrupt. Questions are more useful than me reading slides
+:::
+
+## Week 5: Estimands {.review}
+
+- The **estimand** is the target quantity, stated **before** you pick a method: a unit-level quantity, plus the target population to average it over
+- **Descriptive** estimands summarize the world as it is ($\mathbb{E}[Y]$, $\mathbb{E}[Y \mid X = x]$). **Causal** estimands compare **potential outcomes**:
+
+$$
+\tau_i = Y_i(1) - Y_i(0) \qquad \text{ATE} = \mathbb{E}[Y_i(1) - Y_i(0)]
+$$
+
+- **Fundamental problem of causal inference**: we see at most one of $Y_i(1)$, $Y_i(0)$ for each unit
+- **Identification**: with infinite data, could we learn $\theta$? This means writing $\theta$ in terms of the **observable** distribution. **Estimation** is the separate, finite-sample question
+- **Ignorability**, $\{Y_i(1), Y_i(0)\} \perp\!\!\!\perp D_i$, is what lets $\mathbb{E}[Y_i(1)] = \mathbb{E}[Y_i \mid D_i = 1]$. **Conditional** ignorability gives the same thing within levels of $X$
+
+::: {.notes}
+- Order of operations: **estimand → identification → estimation**. A lot of exam mistakes come from mixing these up
+- Estimand = a unit-level quantity + a target population. E.g. the ATE among registered voters
+- Fundamental problem: we never see Y(1) and Y(0) for the same unit. Causal inference is a missing-data problem
+- Identification is an infinite-data question: can we write θ in terms of observables? Estimation is the finite-sample question
+- Ignorability: treatment is independent of the potential outcomes, so the treated group's average is a valid stand-in for everyone's Y(1). The conditional version is the same idea within levels of X
+- It's **untestable**. You defend it with how treatment was assigned. It also needs overlap (both treated and untreated at every X)
+- Check question: "Can you test ignorability with your data?" (No.)
+:::
+
+---
+
+## Week 6: Estimators are random variables {.review}
+
+- Draw a new sample and you get a new $\hat\theta_n$. Its distribution across samples is the **sampling distribution**
+- Properties of that distribution:
+  - **Bias**: $\mathbb{E}[\hat\theta_n] - \theta$
+  - **Variance** $\text{Var}(\hat\theta_n)$, and the **standard error** $SE = \sqrt{\text{Var}(\hat\theta_n)}$, the SD of the sampling distribution, **not** of $Y$
+  - **MSE** $= \mathbb{E}[(\hat\theta_n - \theta)^2] = \text{Bias}^2 + \text{Var}$
+- For an i.i.d. sample mean: $\mathbb{E}[\bar Y_n] = \mu$ (linearity + identically distributed) and $\text{Var}(\bar Y_n) = \sigma^2 / n$ (independence, so no covariances)
+- **Consistency**: $\hat\theta_n \xrightarrow{p} \theta$, meaning $\Pr(|\hat\theta_n - \theta| \ge \epsilon) \to 0$ for every $\epsilon > 0$
+- **WLLN**: $\bar Y_n \xrightarrow{p} \mu$. Proof: Chebyshev gives $\Pr(|\bar Y_n - \mu| \ge \epsilon) \le \frac{\sigma^2}{n\epsilon^2} \to 0$
+
+::: {.notes}
+- Key shift: θ is fixed, θ̂ is random, because the sample is random
+- **SE vs SD**: the SE is the spread of the sampling distribution, not the spread of Y. The SE shrinks with n, the SD of Y doesn't. Very common mix-up
+- MSE = bias² + variance. This trade-off keeps coming back (bins, bandwidths)
+- E[Ȳ] = μ needs only linearity + identical distribution. Var(Ȳ) = σ²/n also needs **independence** (the covariance terms drop out)
+- Consistency is a **definition** (a property an estimator may have). The WLLN is a **theorem** that the sample mean has it
+- Chebyshev proof: the bound σ²/(nε²) has n in the denominator, so it goes to 0
+:::
+
+---
+
+## Bias and consistency {.review}
+
+**To find a bias**, compute $\mathbb{E}[\hat\theta_n]$ and subtract $\theta$. The tool depends on the estimator:
+
+- **An average of $g(Y_i)$** (transform each draw, *then* average), like $\frac{1}{n}\sum_i Y_i^2$: **linearity** reduces it to one draw, $\mathbb{E}\big[\frac{1}{n}\sum_i g(Y_i)\big] = \mathbb{E}[g(Y_i)]$. Then **LOTUS**, $\mathbb{E}[g(Y)] = \sum_y g(y) \Pr(Y = y)$, using the PMF of **the variable you actually sampled**
+- **The square of an average** (average first, *then* square), $\bar Y_n^2 = \big(\frac{1}{n}\sum_i Y_i\big)^2$: the square sits outside the sum, so linearity can't reduce it to one draw. Instead rearrange the variance formula with $X = \bar Y_n$: $\mathbb{E}[\bar Y_n^2] = \text{Var}(\bar Y_n) + \mathbb{E}[\bar Y_n]^2 = \frac{\sigma^2}{n} + \mu^2$
+  - It overshoots $\mu^2$ by $\frac{\sigma^2}{n}$, the sampling variance of $\bar Y_n$. This is the term that biases the plug-in variance
+- **Any other nonlinear function of an average**, like $1/\bar Y_n$: no exact answer, but $\mathbb{E}[g(X)] \neq g(\mathbb{E}[X])$, so expect bias. **Jensen** gives the direction: if $g$ is convex, $\mathbb{E}[g(X)] \ge g(\mathbb{E}[X])$, strictly if $g$ is strictly convex and $X$ isn't constant
+
+**To show consistency**:
+
+- Write the estimator as an average of i.i.d. things → **WLLN**
+- Then any continuous function of it → **continuous mapping theorem**: $X_n \xrightarrow{p} x \Rightarrow g(X_n) \xrightarrow{p} g(x)$. Sums, products, ratios (nonzero denominator) too
+- Or: if $\text{Bias} \to 0$ **and** $\text{Var} \to 0$, the MSE goes to 0, and the estimator is consistent
+
+::: {.notes}
+- Recipe slide. For bias, the tool depends on **where the nonlinearity sits**
+- Case 1, average of g(Yᵢ): transform each draw, then average. Linearity pulls E inside, so it reduces to one draw, then LOTUS. Use the PMF of the variable **actually sampled**
+- Case 2, square of the average: average first, then square. Example: Y = {0, 2}. Square of the average = 1, average of the squares = 2
+  - Linearity can't get inside the square, so rearrange the variance formula: E[Ȳ²] = Var(Ȳ) + E[Ȳ]² = σ²/n + μ²
+  - It overshoots μ² by σ²/n. That's exactly why the plug-in variance is biased (next slide)
+- Case 3, other nonlinear g: no exact answer. Jensen only gives the direction. 1/x is convex for x > 0, so E[1/Ȳ] ≥ 1/μ
+- Consistency recipe: WLLN for averages, then CMT for continuous functions. Or bias → 0 and variance → 0
+- Worked example: plug-in variance = (avg of squares) − (square of avg). WLLN on each piece, CMT on the combination → σ². The square root by CMT again → σ
+:::
+
+---
+
+## Unbiased and consistent are different properties {.review}
+
+- **Biased but consistent**: the plug-in variance, $\mathbb{E}[\hat\sigma^2_n] = \frac{n-1}{n}\sigma^2$, but $\hat\sigma^2_n \xrightarrow{p} \sigma^2$
+  - Same pattern for any $g(\bar Y_n)$ with nonlinear $g$: the CMT gives consistency, but $\mathbb{E}[g(\bar Y_n)] \neq g(\mu)$
+- **Unbiased but not consistent**: use only the first observation, $\hat\mu = Y_1$. $\mathbb{E}[Y_1] = \mu$, but its variance is $\sigma^2$ at every $n$
+- Unbiasedness is about the **center** of the sampling distribution at a **fixed** $n$. Consistency is about where it **collapses** as $n \to \infty$
+
+::: {.notes}
+- Two separate properties. Think of a 2×2
+- Biased but consistent: plug-in variance. The bias is −σ²/n, which vanishes. That's the reason for the n − 1 correction
+- Unbiased but inconsistent: Y₁. Centered correctly, but it never concentrates because it ignores the other n − 1 draws
+- One-liner: unbiased = **centered** at a fixed n. Consistent = **collapses** onto the truth as n grows
+- Ask: "Is the sample mean both?" (Yes.)
+:::
+
+---
+
+## Week 7: CLT and plug-in {.review}
+
+- **Convergence in distribution**: the CDFs converge. **CLT**: for i.i.d. $Y_i$ with finite variance,
+
+$$
+\sqrt{n}(\bar Y_n - \mu) \xrightarrow{d} \mathcal{N}(0, \sigma^2) \qquad \text{so} \qquad \bar Y_n \overset{a}{\sim} \mathcal{N}(\mu, \sigma^2/n)
+$$
+
+- Why $\sqrt n$: it's the only scaling where the variance neither vanishes nor explodes. So $\bar Y_n - \mu = O_p(1/\sqrt n)$
+- **Slutsky**: $X_n \xrightarrow{d} X$ and $Y_n \xrightarrow{p} c$ give $X_n / Y_n \xrightarrow{d} X / c$. This is why plugging in $\hat\sigma$ for $\sigma$ is fine in large samples
+- **Plug-in principle**: write $\theta = T(F)$, then estimate with $T(\hat F_n)$, swapping in the empirical CDF. Means, variances, covariances, quantiles, regression coefficients
+- **Densities** break the plug-in (the ECDF is a step function), so we smooth. Bin width in a histogram and bandwidth in a KDE: **bias-variance tradeoff**
+
+::: {.notes}
+- WLLN says **where** Ȳ goes. The CLT says the **shape** of its fluctuations around μ
+- Why √n: scale by n and the variance explodes. Don't scale and it vanishes. √n keeps it at σ²
+- Slutsky in practice, for the t-statistic √n(Ȳ − μ)/σ̂:
+  - X_n = √n(Ȳ − μ) → N(0, σ²) by the CLT
+  - Y_n = σ̂ → c = σ by WLLN + CMT
+  - Ratio → N(0, σ²)/σ = N(0, 1)
+- Flag: Slutsky's "Y_n" is **not the data**. It's the plugged-in estimate. And c must be a nonzero constant. That's why we scale by √n instead of dividing by the estimated SE, which goes to 0
+- Plug-in principle: write the estimand as a function of F, then swap in the ECDF
+- Densities break this (the ECDF is a step function), so we smooth. The bandwidth is the bias-variance trade-off again
+:::
+
+---
+
+## Week 8: Confidence intervals {.review}
+
+$$
+\hat\theta_n \pm z_{1 - \alpha/2} \times \widehat{SE} \qquad (z_{0.975} = 1.96)
+$$
+
+- A 95% CI is a **procedure** that covers $\theta$ in 95% of repeated samples. A **realized** interval either contains $\theta$ or it doesn't
+- Not "a 95% chance $\theta$ is in **this** interval": $\theta$ is fixed, the interval is random
+- Coverage relies on the CLT (asymptotic normality) and on a consistent $\widehat{SE}$
+- **Small $n$**: use $t_{n-1}$ critical values. Exact when $Y$ is normal, wider than $\pm 1.96$, and the gap closes as $n$ grows
+- **One-sided** intervals put all of $\alpha$ in one tail: $\hat\theta_n - z_{1-\alpha} \widehat{SE}$, with $z_{0.95} = 1.645$
+
+::: {.notes}
+- The formula comes straight from CLT + Slutsky
+- Interpretation is the exam favorite. The **procedure** covers θ in 95% of repeated samples. A realized interval either contains θ or it doesn't. θ is fixed, the interval is random
+- Coverage needs both the normal approximation **and** a consistent SE. If the SE is wrong (e.g. treating clustered data as i.i.d.), coverage fails even with huge n
+- Small n: t critical values, fatter tails, and they converge to 1.96
+- One-sided: put all of α in one tail, so 1.645
+:::
+
+---
+
+## Week 8: Hypothesis tests {.review}
+
+- $H_0: \theta = \theta_0$ vs. $H_1$. Test statistic $T = (\hat\theta_n - \theta_0) / \widehat{SE} \overset{a}{\sim} \mathcal{N}(0, 1)$ **under $H_0$**
+- **Size** $\alpha = \Pr(\text{reject} \mid H_0)$, the Type I error rate. **Power** $= \Pr(\text{reject} \mid H_1) = 1 - \Pr(\text{Type II})$
+- **p-value**: the probability, **if $H_0$ were true**, of a test statistic at least as extreme as the one observed. It is **not** $\Pr(H_0 \text{ true})$
+- **Duality**: reject $H_0: \theta = \theta_0$ at level $\alpha$ $\iff$ $\theta_0$ is outside the $1 - \alpha$ CI
+- **Multiple testing**: with $m$ true nulls at $\alpha$ each, the chance of at least one false rejection (FWER) grows fast
+  - **Bonferroni**: reject if $p_j \le \alpha / m$
+  - **Holm**: sort $p_{(1)} \le \dots \le p_{(m)}$. Reject while $p_{(k)} \le \alpha / (m - k + 1)$, and stop at the first failure. Same FWER control, more power
+
+::: {.notes}
+- Everything about the test statistic's distribution is computed **under H₀**
+- Size = Type I error rate. Power = chance of rejecting when H₀ is false. Power rises with n, effect size, and lower noise
+- p-value is **not** P(H₀ is true). This wrong statement shows up on every exam
+- Duality: this is what stars on a regression table mean. We'll use it in an hour
+- Multiple testing: with 20 true nulls at α = 0.05, P(at least one false rejection) = 1 − 0.95²⁰ ≈ 64%
+- Bonferroni: simple but conservative. Holm: compare the smallest p to α/m, the next to α/(m − 1), and so on, and stop at the first failure. Same FWER control, never less power
+:::
+
+---
+
+## Week 9: Regression {.review}
+
+- The estimand is now the **CEF**, $\mu(x)$. Averaging at every $x$ fails with many covariates (**curse of dimensionality**), so we **borrow strength**: local averaging (kernels, bandwidth = bias-variance again) or a global model
+- **BLP**: $\boldsymbol\beta = \arg\min_{\mathbf b} \mathbb{E}[(Y_i - \mathbf X_i'\mathbf b)^2] = \mathbb{E}[\mathbf X_i \mathbf X_i']^{-1}\mathbb{E}[\mathbf X_i Y_i]$. **OLS** is its plug-in: $\hat{\boldsymbol\beta} = (\mathbf X'\mathbf X)^{-1}\mathbf X'\mathbf Y$
+- OLS exists iff $\mathbf X$ has **full column rank**: no regressor is a linear combination of the others (e.g. the dummy-variable trap)
+- **Interpretation**: $\hat\beta_1$ is the difference in predicted $Y$ for a one-unit difference in $X_1$, **holding the other regressors fixed**
+- **FWL**: $\hat\beta_1$ = slope from regressing $Y$-residuals on $X_1$-residuals, after partialling out the rest. It only uses variation in $X_1$ the others can't **linearly** predict
+- **Interactions**: in $\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_2$, the slope on $X_1$ is $\beta_1 + \beta_3 x_2$. $\beta_1$ alone is the slope **at $x_2 = 0$**
+
+::: {.notes}
+- The estimand moves to the CEF, μ(x)
+- Curse of dimensionality: too few observations at each x, so we borrow strength. Local (kernels) or global (a linear model)
+- BLP is a **population** object, and OLS is its plug-in. Same plug-in idea as week 7. The BLP exists even if the CEF isn't linear
+- Full rank: e.g. an intercept + a dummy for every category = the dummy-variable trap
+- "Holding fixed" is about the model's predictions. It's not a causal claim on its own
+- FWL: we'll see it live in the tables, when the coefficient shrinks as controls are added
+- Interactions: β₁ alone is the slope at x₂ = 0, which may not be a meaningful value. Sets up the marginal effects section
+:::
+
+---
+
+
+## Questions?
+
+::: {.notes}
+- Take questions for ~5 minutes
+- If it's quiet, prompts: consistency vs WLLN? What are X, Y and c in Slutsky for a t-stat? SE vs SD?
+- Watch the clock. Move on by about the 30-minute mark
+:::
+
+
+# Regression tables
+
+::: {.notes}
+- Switch from theory to practice. Every empirical paper has a table like this
+- Goal: be able to make one and to read one
+:::
+
+## Data
+
+Same ANES data as last week: Trump thermometer, hostile sexism, and racial resentment (both scaled 0 to 1), plus covariates
+
+```{r}
+anes <- read_csv("data/anes24_sexism.csv") |>
+  mutate(woman = as.integer(gender == "Woman")) |>
+  drop_na(ft_trump, hostile_sexism, racial_resentment, pid7, educ)
+
+nrow(anes)
+```
+
+- One sample for every model, so the columns of the table are comparable
+- Otherwise, adding a control with missing values silently changes the sample too
+
+::: {.notes}
+- Same ANES data as last week. Hostile sexism and racial resentment both run 0 to 1, so a coefficient is a min-to-max difference
+- Why drop_na up front: lm() drops rows model by model, silently. Then each column is a different sample, and a coefficient change mixes "added a control" with "changed the sample"
+- We'll see exactly that problem in the bad table at the end
+:::
+
+---
+
+## Four models
+
+```{r}
+library(fixest)
+
+m1 <- feols(ft_trump ~ hostile_sexism,
+            data = anes, vcov = "hetero")
+m2 <- feols(ft_trump ~ hostile_sexism + racial_resentment,
+            data = anes, vcov = "hetero")
+m3 <- feols(ft_trump ~ hostile_sexism + racial_resentment | pid7,
+            data = anes, vcov = "hetero")
+m4 <- feols(ft_trump ~ hostile_sexism + racial_resentment | pid7 + educ,
+            data = anes, vcov = "hetero")
+```
+
+- `feols()` is `lm()` with two conveniences:
+  - `| pid7` adds a dummy for every value of `pid7` (**fixed effects**) without printing 7 coefficients
+  - `vcov = "hetero"` gives **robust** standard errors, the ones from this week's lecture
+- `summary(m2)` is fine for you. It isn't fine for a paper
+
+::: {.notes}
+- A sequence of specifications: bivariate, + racial resentment, + party FE, + education FE
+- Fixed effects = a dummy for every pid7 value, absorbed so they aren't printed. Same as factor(pid7) in lm()
+- vcov = "hetero" gives robust SEs (HC1 in fixest)
+- Note: party enters as categories here. In the kitchen-sink model later it enters linearly (1 to 7). That's a modeling choice
+:::
+
+
+---
+
+## The default table
+
+```{r}
+#| output: false
+library(modelsummary)
+
+models <- list(m1, m2, m3, m4)
+modelsummary(models)
+```
+
+::: {.notes}
+- modelsummary() takes a **list** of models
+- Show the default first, so they can see what we're fixing
+:::
+
+---
+
+## The default table
+
+::: {.tiny-table}
+```{r}
+#| echo: false
+modelsummary(models)
+```
+:::
+
+::: {.notes}
+- Ask the room what they'd change before telling them
+- Raw variable names, every fit statistic, too many decimals, no stars, no note on SEs
+- Don't dwell. We fix all of this in the next few slides
+:::
+
+---
+
+## Reading a regression table
+
+::: {.small-table}
+```{r}
+#| echo: false
+modelsummary(models, stars = TRUE, gof_map = c("nobs", "r.squared"), fmt = 1,
+             coef_rename = c(hostile_sexism = "Hostile sexism", racial_resentment = "Racial resentment"))
+```
+:::
+
+- **Columns are models**, rows are coefficients. Standard errors in parentheses below each estimate
+- Both scales run 0 to 1, so `r round(coef(m1)[["hostile_sexism"]], 1)` means the **least** and **most** hostile sexist respondents differ by `r round(coef(m1)[["hostile_sexism"]])` points on the thermometer, on average
+- Read **across**: the coefficient falls to `r round(coef(m2)[["hostile_sexism"]])`, then `r round(coef(m3)[["hostile_sexism"]])`, as we partial out racial resentment and then party (FWL)
+- Stars test $H_0: \beta = 0$. Week 8 duality: a star means the 95% CI excludes 0
+
+::: {.notes}
+- Structure: columns are models, rows are coefficients, SEs in parentheses underneath
+- Column 1: the 0 to 1 scale means the coefficient is the average thermometer gap between the least and most hostile-sexist respondents. An association, not an effect
+- Read across: the coefficient shrinks as racial resentment, then party, are partialled out. FWL: it only uses the variation in hostile sexism the controls can't linearly predict, and hostile sexism is correlated with both
+- Stars: by duality, a star means the 95% CI excludes 0. Stars say nothing about **size**
+:::
+
+---
+
+## Making it presentable
+
+```{r}
+#| output-location: slide
+models <- list("Bivariate" = m1,
+               "+ RR" = m2,
+               "+ Party" = m3,
+               "+ Educ." = m4)
+
+cmap <- c(hostile_sexism = "Hostile sexism",
+          racial_resentment = "Racial resentment",
+          `(Intercept)` = "Constant")
+
+modelsummary(models,
+             coef_map = cmap,
+             gof_map = c("nobs", "r.squared"),
+             stars = c("*" = 0.05, "**" = 0.01),
+             fmt = 1,
+             notes = "Robust standard errors in parentheses.")
+```
+
+- Named list → column names
+- `coef_map`: renames, **orders**, and **drops** anything not listed
+- `gof_map`: which goodness-of-fit rows to keep
+
+::: {.notes}
+- output-location: slide, so the code is here and the table is on the next slide
+- Three arguments do most of the work: a named list (column names), coef_map, gof_map
+- coef_map **drops** anything not listed. Useful, but don't hide something a reader needs
+- Always say which SEs in a note. fmt = 1 is enough on a 0 to 100 scale
+- (Next slide: the rendered table. Point out how much cleaner it is.)
+:::
+
+---
+
+## Other things you'll want
+
+```{r}
+#| eval: false
+# CIs instead of SEs underneath
+modelsummary(models, statistic = "conf.int")
+
+# Estimate and SE on one line, nothing underneath
+modelsummary(models, estimate = "{estimate}{stars} ({std.error})", statistic = NULL)
+
+# Robust SEs for lm() models, chosen at table time
+modelsummary(list(lm(ft_trump ~ hostile_sexism, data = anes)), vcov = "HC2")
+
+# Extra rows you compute yourself
+rows <- tibble(term = "Mean of outcome", `(1)` = "38.5")
+attr(rows, "position") <- 4                     # where the row goes
+modelsummary(models, add_rows = rows)
+
+# The table as a data frame, to check row numbers before styling
+modelsummary(models, output = "dataframe")
+```
+
+::: {.notes}
+- Reference slide. Don't read every line. Tell them it's here for later
+- Highlights: CIs instead of SEs, one-line estimate (SE), choosing robust SEs at table time for lm(), add_rows for custom rows
+- output = "dataframe" is the one to remember: it shows the row numbering you'll need for gt styling
+:::
+
+---
+
+## A publication-style table: the setup
+
+```{r}
+gm_list <- list(
+  list(raw = "nobs",      clean = "Observations", fmt = \(x) format(x, big.mark = ",")),
+  list(raw = "r.squared", clean = "R-squared",    fmt = 2),
+  list(raw = "FE: pid7",  clean = "Party ID fixed effects",  fmt = 0),
+  list(raw = "FE: educ",  clean = "Education fixed effects", fmt = 0))
+
+rows <- tibble(term = "Mean of outcome",
+               `(1)` = "", `(2)` = "", `(3)` = "", `(4)` = "")
+rows[1, 2:5] <- as.list(rep(sprintf("%.1f", mean(anes$ft_trump)), 4))
+attr(rows, "position") <- 4
+```
+
+- `gof_map` as a list of lists: rename **and** format each row. The `FE:` rows mark fixed effects with an `X`
+- `add_rows`: anything the model doesn't report. Here, the outcome mean, so readers can tell whether 20 points is a lot
+
+::: {.notes}
+- gof_map as a list of lists: raw name, clean label, and how to format it. The FE rows show an X when the FE is included
+- add_rows: things the model doesn't report. Here the outcome mean, so readers can judge whether a 20-point gap is big (the mean is ~38)
+- position = 4 puts it right after the coefficient rows. Check with output = "dataframe"
+:::
+
+---
+
+## A publication-style table: the code
+
+```{r}
+library(gt)
+
+tab <- modelsummary(list(m1, m2, m3, m4),
+                    estimate = "{estimate}{stars} ({std.error})", statistic = NULL,
+                    fmt = 2, coef_map = cmap, gof_map = gm_list, add_rows = rows,
+                    output = "gt") |>                                   # hand it off to gt
+  cols_width(2:5 ~ px(170)) |>
+  opt_table_font(font = list("Times New Roman", "serif")) |>
+  tab_spanner(label = "Trump thermometer", columns = 2:5, level = 1) |>
+  tab_spanner(label = "OLS", columns = 2:5, level = 2) |>
+  fmt(columns = 2:5, rows = 7:8,                                        # the FE rows:
+      fns = \(x) if_else(x == "X", "Yes", "No")) |>                    # X -> Yes, blank -> No
+  tab_options(table.border.top.style = "double",          table.border.top.color = "black",
+              table.border.bottom.style = "double",       table.border.bottom.color = "black",
+              column_labels.border.top.style = "double",  column_labels.border.top.color = "black",
+              column_labels.border.bottom.style = "double", column_labels.border.bottom.color = "black") |>
+  tab_style(cell_borders(style = "hidden"), locations = cells_body(rows = c(2, 5:8))) |>
+  tab_style(cell_borders(sides = "top", style = "double", color = "black", weight = px(3)),
+            locations = cells_body(rows = 4))
+```
+
+::: {.notes}
+- Don't go line by line. The structure: modelsummary() gets the **content** right, then hand off to gt for the **look**
+- gt layers: column widths, font, spanners (outcome, then estimator), FE rows X → Yes/No, double rules
+- Warning: the hard-coded row numbers (7:8, etc.) are fragile. Add a coefficient and everything shifts. Re-check with output = "dataframe"
+:::
+
+---
+
+## A publication-style table: the result
+
+```{r}
+#| echo: false
+tab |> tab_options(table.font.size = px(28))    # bigger for the slide only
+```
+
+```{r}
+#| eval: false
+gtsave(tab, "tab_main.png")    # also .html, .tex, .docx, .pdf
+```
+
+- `output = "gt"` returns a **gt table**, so every `gt` function works from there
+- Rows are numbered as in `output = "dataframe"`. Leave borders on any row that touches a rule you want to keep
+
+::: {.notes}
+- The finished table. The font bump is for the slide only
+- gtsave() writes PNG, HTML, LaTeX, Word, PDF
+- Tip from the bullet: if you hide borders on a row, leave them on any row touching a rule you want to keep
+:::
+
+
+# Coefficient plots
+
+::: {.notes}
+- Same information as the table, shown visually. Plus one big pitfall when the regressors are on different scales
+:::
+
+## `modelplot()`
+
+```{r}
+#| fig-height: 3.5
+modelplot(models, coef_map = rev(cmap[1:2])) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  labs(x = "Coefficient and 95% CI", colour = NULL) +
+  theme_minimal(base_size = 16)
+```
+
+- Same arguments as `modelsummary()`, and it returns a `ggplot`, so `+` works
+- `coef_map` is reversed because ggplot draws the first level at the bottom
+
+::: {.notes}
+- Same arguments as modelsummary(), returns a ggplot, so you can add layers with +
+- rev(): ggplot draws the first level at the bottom, so reverse to keep table order top-down
+- The dashed line at 0 is the visual significance check
+:::
+
+---
+
+## By hand
+
+```{r}
+#| output-location: slide
+#| fig-height: 5
+coefs <- map(models, \(m) broom::tidy(m, conf.int = TRUE)) |>
+  list_rbind(names_to = "model") |>
+  filter(term == "hostile_sexism") |>
+  mutate(model = fct_inorder(model))
+
+ggplot(coefs, aes(x = estimate, y = fct_rev(model))) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high),
+                  colour = uw_red, size = 0.8, linewidth = 1.2) +
+  expand_limits(x = 0) +
+  labs(x = "Coefficient on hostile sexism (95% CI)", y = NULL) +
+  theme_minimal(base_size = 18)
+```
+
+- `broom::tidy()` turns any model into a data frame of estimates. Then it's just `ggplot`
+- One coefficient across specifications: the plot version of reading across the table
+
+::: {.notes}
+- For full control: broom::tidy() each model, stack them, filter one term, then a geom_pointrange
+- One coefficient across specifications: the visual version of "reading across" the table
+- expand_limits(x = 0) keeps 0 on the axis. That's an honest choice, so the reader can always see the reference line
+- (Next slide: the plot.)
+:::
+
+---
+
+## Reading a coefficient plot
+
+- **Point**: the estimate. **Line**: the 95% CI
+- **Crosses the dashed line at 0**: can't reject $H_0: \beta = 0$ at 5%. Same information as the stars, but you can also see **how big** and **how uncertain**
+- Overlapping CIs **do not** imply the coefficients aren't significantly different from each other. Testing a difference needs the SE of the difference (and its covariance term)
+- Coefficients on one plot invite comparisons of **size**. Those comparisons only make sense if a "one-unit change" means something comparable for each variable
+
+::: {.notes}
+- Point = estimate, line = 95% CI. Crossing 0 = no star
+- **Overlap trap**: two CIs can overlap even when the difference is significant. Testing a difference needs the SE of the difference, including the covariance
+- Across nested models on the same data, the estimates are strongly correlated. So eyeballing overlap across specifications is especially misleading
+- Last bullet sets up the next slides: size comparisons need comparable units
+:::
+
+---
+
+## The kitchen-sink model
+
+```{r}
+anes_ks <- anes |> drop_na(age, ideo7, econ)
+
+m_ks <- lm(ft_trump ~ hostile_sexism + racial_resentment + age + pid7 + ideo7 +
+             econ + college + woman, data = anes_ks)
+
+labels <- c(hostile_sexism = "Hostile sexism (0-1)", racial_resentment = "Racial resentment (0-1)",
+            age = "Age (years)", pid7 = "Party ID (1-7)", ideo7 = "Ideology (1-7)",
+            econ = "Economy worse (1-5)", college = "College degree", woman = "Woman")
+
+round(coef(m_ks), 2)
+```
+
+- Every regressor is on its **own** scale. A one-unit change is the whole range of hostile sexism, one year of age, or one step on a 7-point scale
+
+::: {.notes}
+- One model with everything. drop_na on the extra variables first, same reasoning as before
+- Look at the scales: 0 to 1, years, 1 to 7, 1 to 5, and dummies. "One unit" means wildly different things
+- Party ID enters linearly here, which is an assumption
+:::
+
+---
+
+## A nonsensical coefficient plot
+
+```{r}
+#| fig-height: 4.2
+modelplot(m_ks, coef_map = rev(labels), vcov = "HC2") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  labs(x = "Coefficient (one-unit change) and 95% CI") +
+  theme_minimal(base_size = 16)
+```
+
+- It looks like hostile sexism matters more than party ID, and age doesn't matter at all
+- But Strong Democrat to Strong Republican is **6** units of `pid7`: $6 \times$ `r round(coef(m_ks)["pid7"], 1)` $\approx$ `r round(6 * coef(m_ks)["pid7"])` points. And 18 to 80 is **62** years of age
+
+::: {.notes}
+- Ask first: "Going by this plot, what matters most?" Let them answer
+- Then the reveal: the party ID coefficient is **per step**. Strong D to strong R is 6 steps, so multiply by 6. Age is per year, and the range is 62 years
+- The plot compares apples to oranges. Nothing is wrong with the model, only with the comparison
+:::
+
+---
+
+## Rescale, then plot
+
+Gelman (2008): subtract the mean and divide each continuous regressor by **two** SDs. Then a "one-unit change" is low (−1 SD) to high (+1 SD), and is comparable to a 0/1 dummy
+
+```{r}
+rescale_2sd <- function(x) (x - mean(x)) / (2 * sd(x))
+
+anes_std <- anes_ks |>
+  mutate(across(c(hostile_sexism, racial_resentment, age, pid7, ideo7, econ), rescale_2sd))
+
+m_std <- lm(ft_trump ~ hostile_sexism + racial_resentment + age + pid7 + ideo7 +
+              econ + college + woman, data = anes_std)
+```
+
+- Leave the **binary** variables alone: their one-unit change is already the comparison you want
+- The fit is identical: same predictions, $R^2$, and $t$-statistics. Only the **units** of the coefficients change
+- An alternative when scales have natural endpoints: put everything on 0 to 1, so each coefficient is a min-to-max difference
+
+::: {.notes}
+- Gelman (2008): center, then divide by **2 SD**. Why 2: a 50/50 binary has SD 0.5, so 2 SD = 1, the same as a 0/1 dummy's one-unit change
+- Leave binaries alone
+- It's a linear change of units: same predictions, R², and t-statistics. Only the coefficients' units (and the intercept) change
+- Alternative when scales have meaningful endpoints: put everything on 0 to 1
+:::
+
+---
+
+## Before and after
+
+```{r}
+#| echo: false
+#| fig-height: 4.6
+#| fig-width: 14
+std_labels <- labels |>
+  str_replace("\\(0-1\\)|\\(years\\)|\\(1-7\\)|\\(1-5\\)", "(2 SD)")
+names(std_labels) <- names(labels)
+
+p_raw <- modelplot(m_ks, coef_map = rev(labels), vcov = "HC2", colour = "grey30") +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  labs(title = "Original units", x = "Coefficient and 95% CI") +
+  theme_minimal(base_size = 16)
+p_std <- modelplot(m_std, coef_map = rev(std_labels), vcov = "HC2", colour = uw_red) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  labs(title = "Rescaled by 2 SD", x = "Coefficient and 95% CI") +
+  theme_minimal(base_size = 16)
+p_raw + p_std
+```
+
+- Now **party ID** dominates (`r round(coef(m_std)["pid7"])` points), as you'd expect for a feeling thermometer about a presidential candidate. Hostile sexism is `r round(coef(m_std)["hostile_sexism"], 1)`
+- The ranking of "what matters" depends on choices about units. **Make them on purpose and say what they are**
+
+::: {.notes}
+- Left: original units. Right: rescaled
+- Party ID now dominates, which is what you'd expect for a thermometer about a presidential candidate
+- The point: "what matters most" depends on the units you choose. 2 SD isn't the "right" answer. It's a choice, so make it on purpose and say it in the caption
+:::
+
+
+# Marginal effects
+
+::: {.notes}
+- When a coefficient isn't the quantity you actually care about
+:::
+
+## When is a coefficient the answer?
+
+In a linear model with no interactions or transformations, the slope of the prediction with respect to $X_1$ **is** $\beta_1$:
+
+$$
+\frac{\partial}{\partial x_1}\big(\beta_0 + \beta_1 x_1 + \beta_2 x_2\big) = \beta_1
+$$
+
+```{r}
+library(marginaleffects)
+
+fit_add <- lm(ft_trump ~ hostile_sexism + racial_resentment, data = anes)
+avg_slopes(fit_add)
+```
+
+- Same numbers as column (2) of the table (up to the SEs, which `lm()` computes the classical way). So for this model, `marginaleffects` adds nothing
+- It starts to matter once the slope **depends on where you are**: interactions and polynomials
+
+::: {.notes}
+- Additive linear model: the derivative with respect to x₁ is β₁ everywhere, so avg_slopes() just reproduces the coefficient
+- SEs differ slightly from the table: lm() classical here vs. fixest robust there
+- The package earns its keep once the slope **depends on where you are**: interactions, polynomials (and logits, later)
+:::
+
+---
+
+## The vocabulary
+
+- **Predictions**: the model's fitted $\hat Y$ at some values of $X$
+- **Comparisons**: the difference in predictions between two values of $X$ (e.g. hostile sexism 0 vs. 1)
+- **Slopes**: the derivative $\partial \hat Y / \partial X$, the "marginal effect"
+- Each can be computed **per row** of the data (`slopes()`), **averaged** (`avg_slopes()`), or **plotted** (`plot_slopes()`). Same for `predictions()` and `comparisons()`
+- Every function returns standard errors and CIs, using the model's variance-covariance matrix. No more computing $\text{Var}(\hat\beta_1) + x^2\,\text{Var}(\hat\beta_3) + 2x\,\text{Cov}(\cdot)$ by hand, which is what we did for the band last week
+- "Effect" is the package's word. Without a design that identifies a causal effect, read it as a **slope**
+
+::: {.notes}
+- Three quantities: predictions, comparisons, slopes. Three ways to get them: per row, averaged, plotted
+- SEs come from the model's vcov (delta method). This replaces the by-hand variance formula from last week's band
+- "Effect" is just the package's name. Without an identification argument (week 5, ignorability), call it a slope or an association
+:::
+
+---
+
+## Interactions: the slope depends on the moderator
+
+```{r}
+fit_col <- lm(ft_trump ~ hostile_sexism * college, data = anes)
+round(coef(fit_col), 2)
+
+avg_slopes(fit_col, variables = "hostile_sexism", by = "college", vcov = "HC2")
+```
+
+- `college = 0`: the slope is $\hat\beta_1$. `college = 1`: it's $\hat\beta_1 + \hat\beta_3$, **with an SE** for the sum
+- The coefficient table never shows you the second number directly
+
+::: {.notes}
+- Hostile sexism × college. Slope for non-college = β̂₁. For college = β̂₁ + β̂₃
+- by = "college" gives both slopes with SEs. The SE of the sum needs the covariance, which isn't in the coefficient table
+- Ask: "From the coefficient table alone, could you tell whether the slope among college grads is significant?" (No.)
+:::
+
+---
+
+## Polynomials: two coefficients, one slope
+
+```{r}
+fit_quad <- lm(ft_trump ~ hostile_sexism + I(hostile_sexism^2), data = anes)
+round(coef(fit_quad), 2)
+
+avg_slopes(fit_quad, variables = "hostile_sexism", vcov = "HC2")
+```
+
+```{r}
+#| include: false
+b_q <- coef(fit_quad)
+quad_avg <- avg_slopes(fit_quad, variables = "hostile_sexism")$estimate
+```
+
+- The slope on hostile sexism is $\hat\beta_1 + 2\hat\beta_2 x$. Neither coefficient alone is "the slope", and $\hat\beta_1 =$ `r round(b_q[["hostile_sexism"]], 1)` is only the slope at $x = 0$
+- `avg_slopes()` averages $\hat\beta_1 + 2\hat\beta_2 x$ over the respondents: `r round(quad_avg, 1)`, with an SE
+
+::: {.notes}
+- Quadratic: the slope is β̂₁ + 2β̂₂x. Neither coefficient alone is "the slope"
+- β̂₁ is the slope at x = 0, the least hostile-sexist respondents only
+- avg_slopes() evaluates the slope at each respondent's x and averages, with an SE
+:::
+
+---
+
+## Polynomials: the slope changes along $X$
+
+```{r}
+#| fig-height: 3.6
+plot_slopes(fit_quad, variables = "hostile_sexism", condition = "hostile_sexism", vcov = "HC2") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(x = "Hostile sexism", y = "Slope of hostile sexism") +
+  theme_minimal(base_size = 20)
+```
+
+- The slope falls from `r round(b_q[["hostile_sexism"]])` at the bottom of the scale to `r round(b_q[["hostile_sexism"]] + 2 * b_q[["I(hostile_sexism^2)"]])` at the top: the thermometer runs out of room near 100, as in the lecture's binned estimates
+- Reporting $\hat\beta_1$ as "the effect" would overstate the slope for almost everyone. The **average** slope is one honest summary
+
+::: {.notes}
+- The slope falls across the range of hostile sexism. A ceiling effect: the thermometer tops out at 100
+- Reporting β̂₁ as "the effect" overstates it for almost everyone
+- The average slope is one honest one-number summary. The plot is the fuller picture
+:::
+
+---
+
+## Visualizing interactions: predictions
+
+```{r}
+#| fig-height: 3.8
+plot_predictions(fit_col, condition = list("hostile_sexism", college = 0:1), vcov = "HC2") +
+  labs(x = "Hostile sexism", y = "Predicted Trump thermometer", colour = "College", fill = "College")
+```
+
+- One line per value of the moderator, with 95% bands. Different slopes = the interaction
+
+::: {.notes}
+- Predicted thermometer across hostile sexism, one line per college value, with 95% bands
+- Non-parallel lines = the interaction
+- Often the easiest version for a general audience
+:::
+
+---
+
+## Visualizing interactions: the marginal effects plot
+
+```{r}
+#| output-location: slide
+#| fig-height: 5
+fit_rr <- lm(ft_trump ~ hostile_sexism * racial_resentment, data = anes)
+
+plot_slopes(fit_rr, variables = "hostile_sexism", condition = "racial_resentment", vcov = "HC2") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_rug(data = anes, aes(x = jitter(racial_resentment, amount = 0.01)),
+           inherit.aes = FALSE, alpha = 0.05) +
+  labs(x = "Racial resentment", y = "Slope of hostile sexism") +
+  theme_minimal(base_size = 20)
+```
+
+- The lecture's plot, in one call. The rug shows **where the data are**
+- Still a straight line by construction: check it with the binned estimator from lecture before believing it
+
+::: {.notes}
+- Continuous moderator: the slope of hostile sexism as a function of racial resentment. Same plot as lecture, one call
+- The rug shows where the data are. Don't interpret the slope where there's no data (extrapolation). Jitter is just for overplotting
+- A linear interaction forces a straight line by construction. Check it with the binned estimator from lecture before believing it
+- (Next slide: the plot.)
+:::
+
+---
+
+## Taking control of the plot
+
+```{r}
+#| output-location: slide
+#| fig-height: 5
+me <- plot_slopes(fit_rr,
+                  variables = "hostile_sexism",
+                  condition = "racial_resentment",
+                  vcov = "HC2", draw = FALSE)
+
+ggplot(me, aes(x = racial_resentment, y = estimate)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high),
+              fill = uw_red, alpha = 0.2) +
+  geom_line(colour = uw_red, linewidth = 1.2) +
+  labs(x = "Racial resentment",
+       y = "Slope of hostile sexism\non the Trump thermometer") +
+  theme_minimal(base_size = 18)
+```
+
+- `draw = FALSE` returns the data behind the plot. Then style it like any other `ggplot`
+
+::: {.notes}
+- draw = FALSE returns the data frame behind the plot, then it's ordinary ggplot
+- Same pattern as broom::tidy() earlier: get the numbers out as data, then plot them however you like
+- (Next slide: the styled plot.)
+:::
+
+
+# Getting it out of R
+
+::: {.notes}
+- Check the clock. If short on time, skip to the last slide and push this to next week
+:::
+
+## Tables
+
+```{r}
+#| eval: false
+modelsummary(models, output = "tab_main.tex")     # LaTeX: \input{} it in your paper
+modelsummary(models, output = "tab_main.docx")    # Word
+modelsummary(models, output = "tab_main.png")     # an image, for slides
+gtsave(tab, "tab_main.png")                       # after gt styling
+```
+
+- In a Quarto document, just call `modelsummary()` in a chunk. It picks the right format for HTML or PDF output
+- Write tables **from code**, never by copying numbers. When the data change, you re-run and every number updates
+
+::: {.notes}
+- The output format comes from the file extension. For LaTeX, \input{} the .tex file in the paper
+- In Quarto, just call modelsummary() in a chunk. It picks the right format
+- Main message: **never copy numbers by hand**. Re-run the code and every number updates
+:::
+
+---
+
+## Figures
+
+```{r}
+#| eval: false
+p <- p_raw + p_std
+ggsave("fig_coefplot.pdf", p, width = 6.5, height = 4)            # vector: LaTeX papers
+ggsave("fig_coefplot.png", p, width = 6.5, height = 4, dpi = 300)  # raster: Word, slides
+```
+
+- Set `width` and `height` to the size the figure will **appear** at (6.5 in. is a page width). Then the font sizes come out right, instead of being shrunk or blown up
+- In Quarto: `#| fig-width:`, `#| fig-height:`, and `#| fig-cap:`, with a `fig-` label for cross-references
+
+::: {.notes}
+- PDF (vector) for LaTeX papers. PNG at 300 dpi for Word and slides
+- Set width/height to the size it'll **appear** at (6.5 in. = page width) so the fonts come out right
+- In Quarto: fig-width, fig-height, fig-cap, plus a fig- label for cross-references
+:::
+
+---
+
+## What's wrong with this table?
+
+```{r}
+#| echo: false
+# A deliberately bad table: raw names, p-values that look like SEs, five
+# decimals, no notes, every fit statistic, samples that change across
+# columns, and an unexplained interaction in column (4)
+anes_raw <- read_csv("data/anes24_sexism.csv")
+
+bad <- list(
+  lm(ft_trump ~ hostile_sexism, data = anes_raw),
+  lm(ft_trump ~ hostile_sexism + racial_resentment + age, data = anes_raw),
+  lm(ft_trump ~ hostile_sexism + racial_resentment + age + pid7 + ideo7 + college, data = anes_raw),
+  lm(ft_trump ~ hostile_sexism * college + racial_resentment + age + pid7 + ideo7,
+     data = anes_raw)
+)
+```
+
+::: {.small-table}
+```{r}
+#| echo: false
+modelsummary(bad, estimate = "{estimate} ({p.value})", statistic = NULL, fmt = 5)
+```
+:::
+
+::: {.notes}
+- Raw variable names (hostile_sexism, pid7, ideo7) and no outcome label on any column
+- Column (4) adds hostile_sexism:college, so its hostile_sexism coefficient is now the slope for respondents **without** a degree, not comparable to columns (1)-(3). Nothing flags this, and the interaction row is labeled "hostile_sexism college", which doesn't even say it's a product
+- The numbers in parentheses are p-values, not standard errors, and nothing says so
+- No notes: which SEs (these are classical), what the parentheses mean
+- Five decimals: false precision
+- Observations change across columns (missing age and ideology), so the coefficient changes for two reasons at once
+- Age is per year while hostile sexism and racial resentment span 0-1, so the magnitudes aren't comparable. Rescale (per decade, or 2 SD)
+- Every goodness-of-fit statistic modelsummary could find: AIC, BIC, Log.Lik., F, RMSE. Keep N and R-squared
+- Intercept listed first and the pid7/ideo7 coding (1-7, linear) unexplained
+:::
+
+
+# Questions?
+
+::: {.notes}
+- Wrap up. Remind them of midterm logistics and office hours
+- Take any last questions on the review or the R material
+:::

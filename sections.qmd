@@ -74,7 +74,7 @@ Links become active as the materials for each week are posted.
 
 *Friday, November 13*
 
-*To be posted*
+- [Week 10 GitHub Repository](https://github.com/astrezhnev/ps812/tree/main/sections/week10/)
 
 ### Week 11: Interpreting Regressions
 
