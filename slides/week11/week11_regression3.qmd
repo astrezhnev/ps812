@@ -742,7 +742,7 @@ round(c(R2 = summary(fit_hs)$r.squared, R2_with_noise = summary(fit_noise)$r.squ
 - $0 \leq h_{ii} \leq 1$, and $h_{ii} \geq 1/n$
 
 - Leverages **sum** to the number of regressors: $\sum_{i} h_{ii} = \text{tr}(\mathbf{P}) = k$
-  - So the **average** leverage is $k / n$, which vanishes as $n$ grows
+  - So the **average** leverage is $k / n$
 
 - $h_{ii} = 1$: the fit passes **exactly** through $Y_i$
   - E.g. the only observation in a category that gets its own dummy
@@ -784,7 +784,7 @@ ggplot(lev, aes(hostile_sexism, h, colour = party)) +
 
 - Recall $\hat{\mathbf{e}} = \mathbf{M}\mathbf{e}$. If the true errors were homoskedastic, $\Var(e_i \mid \mathbf{X}) = \sigma^2$, then
 
-  $$\Var(\hat{\mathbf{e}} \mid \mathbf{X})  = \sigma^2\mathbf{M} \qquad \Var(\hat{e}_i \mid \mathbf{X}) = \sigma^2(1 - h_{ii})$$
+  $$\Var(\hat{\mathbf{e}} \mid \mathbf{X})  = \mathbf{M}\sigma^2\mathbf{M}^\prime = \sigma^2\mathbf{M} \qquad \Var(\hat{e}_i \mid \mathbf{X}) = \sigma^2(1 - h_{ii})$$
 
   - The residuals are **less** variable than the errors - the variance is **smaller** for high-leverage points.
   - Where $h_{ii} \to 1$, the residual is forced to zero!
@@ -922,12 +922,12 @@ patchwork::wrap_plots(p_dfb, p_cook)
 
 - The usual corrections [@mackinnon1985some]
 
-  $$\text{HC1}: \frac{n}{n-k}\hat{e}_i^2 \qquad \text{HC2}: \frac{\hat{e}_i^2}{1 - h_{ii}} \qquad \text{HC3}: \frac{\hat{e}_i^2}{(1 - h_{ii})^2} = \tilde{e}_i^2$$
+  $$\text{HC1}: \frac{n}{n-k}\hat{e}_i^2 \qquad \text{HC2}: \frac{\hat{e}_i^2}{1 - h_{ii}} \qquad \text{HC3}: \frac{\hat{e}_i^2}{(1 - h_{ii})^2}$$
 
   - HC2 undoes the $(1 - h_{ii})$ shrinkage. It's **unbiased** under homoskedasticity
-  - HC3 plugs in the squared **leave-one-out** errors: close to the **jackknife**, and the most conservative
+  - HC3 plugs in the squared **leave-one-out** errors - most conservative.
 
-- In large samples without massively high-leverage points, they're all the same
+- In large samples without massively high-leverage points, they're all basically the same
 
 ```{r}
 round(sapply(c("HC0", "HC1", "HC2", "HC3"), \(t) sqrt(diag(vcovHC(fit_full, type = t)))[2:3]), 4)
@@ -953,7 +953,7 @@ round(sapply(c("HC0", "HC1", "HC2", "HC3"), \(t) sqrt(diag(vcovHC(fit_full, type
 
 - Both are **linear smoothers**: $\hat{\mathbf{Y}} = \mathbf{S}\mathbf{Y}$ for some $n \times n$ matrix $\mathbf{S}$ built from $\mathbf{X}$
   - In both cases, the weights sum to 1
-  - $\text{tr}(\mathbf{S})$ measures how flexible the fit is: the **effective degrees of freedom** ($k$ for OLS)
+  - $\text{tr}(\mathbf{S})$ measures how flexible the fit is: the **effective number of parameters** ($k$ for OLS)
 
 :::
 
