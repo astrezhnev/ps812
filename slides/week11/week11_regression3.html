@@ -1137,11 +1137,16 @@ function (el, d, opts) {
   //   7   the outcome vector Y, off the plane
   //   8   the projection: Y-hat in the plane, e-hat at a right angle to it
   //   9   Y-hat taken apart as b1-hat X1 + b2-hat X2
-  // Frisch-Waugh-Lovell
-  //   10  X1 is projected onto X2 and the leftover, X1-tilde = M2 X1, drawn
-  //       from the origin, at a right angle to X2
-  //   11  the same for Y: Y-tilde = M2 Y
-  //   12  Y-tilde projected onto X1-tilde: b1-hat X1-tilde, the same b1-hat
+  // Frisch-Waugh-Lovell, back in data space with the whole cloud
+  //   10  the camera turns back to the cloud and its OLS plane; a red line
+  //       along the plane in the X1 direction has slope b1-hat
+  //   11  partial X2 out of Y: the fit of Y on X2 (a gold plane, tilted only
+  //       along X2) fades in, then each point moves up or down by its
+  //       residual, so the plane flattens out at the mean of Y
+  //   12  partial X2 out of X1: the fit of X1 on X2 (a gold vertical
+  //       curtain) fades in, then each point slides along X1 by its residual
+  //   13  the camera turns to look straight down the X2 axis: Y-tilde against
+  //       X1-tilde, whose fitted line has slope b1-hat again
   //
   // A slide shows stages opts.from to opts.to, one per .rg-step fragment;
   // stepping backwards runs each transition in reverse. opts.stages swaps in
@@ -1182,10 +1187,12 @@ function (el, d, opts) {
   // The data space is seen from the low corner of the plane, so its tilt
   // reads; the observation space from where both covariate vectors point to
   // the right. The camera turns from one to the other in the flip
-  var AZ_A = opts.azA == null ? -125 : opts.azA, AZ_B = -45, EL = 24, SWING = 14, PERIOD = 16000;
-  var az = AZ_A, off = 0;
+  // For FWL's last step it turns to look straight down the X2 axis
+  var AZ_A = opts.azA == null ? -125 : opts.azA, AZ_B = -45, AZ_SIDE = -90, EL = 24, EL_SIDE = 0,
+      SWING = 14, PERIOD = 16000;
+  var az = AZ_A, elev = EL, off = 0, zoom = 0;
   function cam() {
-    var a = az * Math.PI / 180, e = EL * Math.PI / 180;
+    var a = az * Math.PI / 180, e = elev * Math.PI / 180;
     return { sa: Math.sin(a), ca: Math.cos(a), se: Math.sin(e), ce: Math.cos(e) };
   }
   function projWith(c, sc, cx, cy) {
@@ -1198,14 +1205,14 @@ function (el, d, opts) {
   var C = cam(), pA, pB;
   function setCam() {
     C = cam();
-    pA = projWith(C, 104, 460, 280);       // data space
+    pA = projWith(C, lerp(104, 150, zoom), 460, lerp(280, 290, zoom));   // data space (zoomed in side on)
     pB = projWith(C, 90, 250, 370);        // observation space
   }
   setCam();
   function toward() { return [C.ca * C.ce, C.sa * C.ce, C.se]; }   // points at the viewer
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
-                        'aria-label': 'A 3D scatterplot of Y against X1 and X2 with its least squares plane, residuals and fitted values. Three observations are picked out and the picture is turned inside out: each observation becomes an axis and each variable a vector. The fitted values are the projection of the outcome vector onto the plane the covariate vectors span, with the residual at a right angle; partialling X2 out of X1 and Y recovers the same coefficient on X1.',
+                        'aria-label': 'A 3D scatterplot of Y against X1 and X2 with its least squares plane, residuals and fitted values. Three observations are picked out and the picture is turned inside out: each observation becomes an axis and each variable a vector. The fitted values are the projection of the outcome vector onto the plane the covariate vectors span, with the residual at a right angle; back in the cloud, partialling X2 out of Y and X1 and then looking down the X2 axis recovers the same slope on X1.',
                         style: 'width: 100%; height: auto; max-height: 520px; display: block; margin: 0 auto; font-family: inherit; touch-action: none; cursor: grab;' }, el);
 
   // Labels. A '~' after a character puts a tilde over it: combining tildes
@@ -1301,7 +1308,7 @@ function (el, d, opts) {
   [0, 25, 50, 75, 100].forEach(function (v) { tickLab.y.push(label(gTicks, String(v), GREY, 16, 400, null, 'end')); });
   var axLab = { x1: label(gTicks, 'X₁', INK, 22, 600), x2: label(gTicks, 'X₂', INK, 22, 600), y: label(gTicks, 'Y', INK, 22, 600) };
 
-  function drawBox(op) {
+  function drawBox(op, opX2) {
     var dv = toward();
     FACES.forEach(function (f) {
       var back = dot(f.n, dv) < 0;
@@ -1317,10 +1324,10 @@ function (el, d, opts) {
     var yFront = dv[1] > 0 ? L : -L, xFront = dv[0] > 0 ? L : -L;
     [0, 5, 10].forEach(function (v, j) {
       put(tickLab.x1[j], pA([wx(v), yFront * 1.14, -HZ]), 0, 18, op);
-      put(tickLab.x2[j], pA([xFront * 1.14, wx(v), -HZ]), 0, 18, op);
+      put(tickLab.x2[j], pA([xFront * 1.14, wx(v), -HZ]), 0, 18, opX2);
     });
-    put(axLab.x1, pA([0, yFront * 1.35, -HZ]), 0, 26, op);
-    put(axLab.x2, pA([xFront * 1.35, 0, -HZ]), 0, 26, op);
+    put(axLab.x1, pA([0, yFront * 1.35, -HZ]), 0, 26 + 18 * zoom, op);
+    put(axLab.x2, pA([xFront * 1.35, 0, -HZ]), 0, 26, opX2);
     var best = null;
     [[-L, -L], [-L, L], [L, -L], [L, L]].forEach(function (c) {
       var u = pA([c[0], c[1], 0])[0];
@@ -1344,12 +1351,62 @@ function (el, d, opts) {
     }
     return out;
   }
-  function drawPlane(c, op) {
+  function drawPlane(c, op, P) {
+    P = P || plane;
     var poly = [[0, 0], [10, 0], [10, 10], [0, 10]];
     poly = clipPoly(poly, function (p) { return fit(c, p[0], p[1]); });
     poly = clipPoly(poly, function (p) { return 100 - fit(c, p[0], p[1]); });
-    polyPts(plane, poly.map(function (p) { return pA([wx(p[0]), wx(p[1]), wz(fit(c, p[0], p[1]))]); }));
-    plane.setAttribute('opacity', op);
+    polyPts(P, poly.map(function (p) { return pA([wx(p[0]), wx(p[1]), wz(fit(c, p[0], p[1]))]); }));
+    P.setAttribute('opacity', op);
+  }
+
+  // ---- Frisch-Waugh-Lovell in data space ------------------------------------------
+  function ols1(yv, xv) {             // bivariate OLS: [intercept, slope]
+    var mx = mean(xv), my = mean(yv), sxy = 0, sxx = 0;
+    for (var i = 0; i < xv.length; i++) { sxy += (xv[i] - mx) * (yv[i] - my); sxx += (xv[i] - mx) * (xv[i] - mx); }
+    return [my - sxy / sxx * mx, sxy / sxx];
+  }
+  var X1BAR = mean(d.x1), X2BAR = mean(d.x2);
+  var GY = ols1(d.y, d.x2), GX = ols1(d.x1, d.x2);     // Y on X2, X1 on X2
+  // The residualized variables, shifted back to their means so they stay in the box
+  var YT_A = d.y.map(function (v, i) { return YBAR + v - GY[0] - GY[1] * d.x2[i]; });
+  var XT_A = d.x1.map(function (v, i) { return X1BAR + v - GX[0] - GX[1] * d.x2[i]; });
+  var BFA = ols1(YT_A, XT_A)[1];                        // equals B[1]
+  var gYplane = mk('polygon', { fill: GOLD, 'fill-opacity': 0.28, stroke: GOLD, 'stroke-opacity': 0.7, 'stroke-width': 1.5 }, gPlane);
+  var curtain = mk('polygon', { fill: GOLD, 'fill-opacity': 0.22, stroke: GOLD, 'stroke-opacity': 0.7, 'stroke-width': 1.5 }, gPlane);
+  var fwlPlane = mk('polygon', { fill: RED, 'fill-opacity': 0.22, stroke: RED, 'stroke-opacity': 0.8, 'stroke-width': 2.5 }, gPlane);
+  var slope = line(gTicks, RED, 5), slopeLab = label(gTicks, 'slope β̂₁ = ' + f2(B[1]), RED, 22, 700, null, 'start');
+  var gFW = mk('g', {}, gA);
+  var fwA = label(gFW, 'Full regression: β̂₁ = ' + f2(B[1]), BLUE, 22, 600, null, 'start');
+  var fwB = label(gFW, 'Ỹ on X~₁: slope ' + f2(BFA), RED, 22, 600, null, 'start');
+  var fwNote = label(gFW, 'each residual is shifted back to its variable\'s mean', GREY, 17, 400, 'italic', 'start');
+
+  function drawFWL(st) {
+    var py = clamp(st.py), px = clamp(st.px), fp = clamp(st.fp);
+    var mvY = ease(clamp((py - 0.35) / 0.65)), mvX = ease(clamp((px - 0.35) / 0.65));
+    // Y on X2: tilted only along X2, flattening to the mean as the points move
+    drawPlane([lerp(GY[0], YBAR, mvY), 0, lerp(GY[1], 0, mvY)], clamp(py / 0.3) * (1 - clamp(px / 0.3)), gYplane);
+    // X1 on X2: a vertical curtain x1 = a + b x2, straightening to x1 = mean
+    var cx0 = lerp(GX[0], X1BAR, mvX), cx1 = lerp(GX[1], 0, mvX);
+    polyPts(curtain, [[cx0, 0, 0], [cx0 + 10 * cx1, 10, 0], [cx0 + 10 * cx1, 10, 100], [cx0, 0, 100]].map(function (q) {
+      return pA([wx(q[0]), wx(q[1]), wz(q[2])]);
+    }));
+    curtain.setAttribute('opacity', clamp(px / 0.3) * (1 - clamp(fp / 0.3)));
+    // The fit of Y-tilde on X1-tilde: flat along X2, so a line seen side on
+    drawPlane([YBAR - BFA * X1BAR, BFA, 0], ease(clamp(fp / 0.4)), fwlPlane);
+    // The slope along X1 of the full OLS plane, at the mean of X2
+    var sl = ease(clamp(st.sl));
+    var s0 = pA([wx(0), wx(X2BAR), wz(fit(B, 0, X2BAR))]), s1 = pA([wx(10), wx(X2BAR), wz(fit(B, 10, X2BAR))]);
+    setLine(slope, s0, s1, sl);
+    put(slopeLab, s1, 12, 6, sl);
+    var ro = clamp((fp - 0.6) * 2.5);
+    put(fwA, [40, 50], 0, 0, ro);
+    put(fwB, [40, 84], 0, 0, ro);
+    put(fwNote, [40, 112], 0, 0, ro);
+    // Once the points have moved, the axes hold the residualized variables
+    setText(axLab.x1, mvX > 0.5 ? 'X~₁' : 'X₁');
+    setText(axLab.y, mvY > 0.5 ? 'Ỹ' : 'Y');
+    return { mvX: mvX, mvY: mvY };
   }
 
   // Points, each with its residual segment, in front of or behind the plane
@@ -1365,14 +1422,15 @@ function (el, d, opts) {
                lab: hi >= 0 ? label(g, String(hi + 1), RED, 22, 700) : null });
   }
 
-  function drawPoints(st, c) {
+  function drawPoints(st, c, mv) {
     var dr = ease(clamp(st.dr)), rs = clamp(st.rs), hl = ease(clamp(st.hl));
     var dv = toward();
     var nrm = [-c[1] * (wz(1) - wz(0)) / (wx(1) - wx(0)), -c[2] * (wz(1) - wz(0)) / (wx(1) - wx(0)), 1];
     var viewerAbove = dot(nrm, dv) > 0;
     pts.forEach(function (P, i) {
-      var f = fit(c, d.x1[i], d.x2[i]), y = lerp(d.y[i], f, dr);
-      var q = pA([wx(d.x1[i]), wx(d.x2[i]), wz(y)]), qf = pA([wx(d.x1[i]), wx(d.x2[i]), wz(f)]);
+      var x1 = lerp(d.x1[i], XT_A[i], mv.mvX), y0 = lerp(d.y[i], YT_A[i], mv.mvY);
+      var f = fit(c, x1, d.x2[i]), y = lerp(y0, f, dr);
+      var q = pA([wx(x1), wx(d.x2[i]), wz(y)]), qf = pA([wx(x1), wx(d.x2[i]), wz(f)]);
       var qe = [lerp(qf[0], q[0], rs), lerp(qf[1], q[1], rs)];
       // A point on the viewer's side of the plane is drawn in front of it
       var front = st.pl < 0.05 || ((d.y[i] >= f) === viewerAbove);
@@ -1382,6 +1440,7 @@ function (el, d, opts) {
       setLine(P.res, qf, qe, rs > 0.01 ? 1 : 0);
       var isH = P.hl >= 0;
       P.dot.setAttribute('fill', isH ? (hl > 0.5 ? RED : INK) : INK);
+      if (isH) P.dot.setAttribute('r', lerp(5.5, 7, hl));
       P.g.setAttribute('opacity', isH ? 1 : lerp(1, 0.18, hl));
       if (P.lab) put(P.lab, q, LOFF[P.hl][0], LOFF[P.hl][1], hl);
     });
@@ -1455,9 +1514,6 @@ function (el, d, opts) {
   var c1 = dot(X1, Y), c2 = dot(X2, Y), det = a11 * a22 - a12 * a12;
   var B1 = (a22 * c1 - a12 * c2) / det, B2 = (a11 * c2 - a12 * c1) / det;
   var YH = add(mul(X1, B1), mul(X2, B2));
-  var P2X1 = mul(X2, dot(X1, X2) / a22), XT = sub(X1, P2X1);
-  var P2Y = mul(X2, dot(Y, X2) / a22), YT = sub(Y, P2Y);
-  var BF = dot(XT, YT) / dot(XT, XT);
 
   var gB = mk('g', {}, svg);
   var gBax = mk('g', {}, gB), gBpl = mk('g', {}, gB), gBdc = mk('g', {}, gB),
@@ -1490,26 +1546,18 @@ function (el, d, opts) {
   var cLab = label(gBpl, 'C(X)', BLUE, 24, 600);
   var dc1 = line(gBdc, BLUE, 2.5, '7 6'), dc2 = line(gBdc, BLUE, 2.5, '7 6');
   var dcLab1 = label(gBdc, 'β̂₁X₁', BLUE, 21), dcLab2 = label(gBdc, 'β̂₂X₂', BLUE, 21);
-  var p2x = line(gBdc, GOLD, 2.5, '7 6'), p2y = line(gBdc, GOLD, 2.5, '7 6');
   var aX1 = arrow(gBv, BLUE, 4), aX2 = arrow(gBv, BLUE, 4), aY = arrow(gBv, INK, 4);
   var aYH = arrow(gBv, BLUE, 4), aE = arrow(gBv, RED, 4);
   var rt = mk('polyline', { fill: 'none', stroke: RED, 'stroke-width': 2 }, gBv);
-  var aXT = arrow(gBv, GOLD, 4), aYT = arrow(gBv, INK, 4), aBF = arrow(gBv, RED, 5);
-  var rt2 = mk('polyline', { fill: 'none', stroke: GOLD, 'stroke-width': 2 }, gBv);
-  var rt3 = mk('polyline', { fill: 'none', stroke: GOLD, 'stroke-width': 2 }, gBv);
   var lX1 = label(gBlab, 'X₁', BLUE), lX2 = label(gBlab, 'X₂', BLUE), lY = label(gBlab, 'Y', INK);
   var lYH = label(gBlab, 'Ŷ = Xβ̂', BLUE, 24), lE = label(gBlab, 'ê = Y − Xβ̂', RED, 24);
-  var lXT = label(gBlab, 'X~₁ = M₂X₁', GOLD, 24), lYT = label(gBlab, 'Ỹ = M₂Y', INK, 24);
-  var lBF = label(gBlab, 'β̂₁X~₁', RED, 24);
-  var roA = label(gBro, 'Full regression: β̂₁ = ' + f2(B1), BLUE, 22, 600, null, 'end');
-  var roB = label(gBro, 'Ỹ on X~₁: slope ' + f2(BF), RED, 22, 600, null, 'end');
 
   function drawB(st) {
     var on = ease(clamp(st.B));
     gB.setAttribute('opacity', on);
     if (on < 0.001) { gB.style.display = 'none'; return; }
     gB.style.display = '';
-    var fade = lerp(1, 0.18, ease(clamp(st.fade))), fadeC = lerp(1, 0.35, ease(clamp(st.fade)));
+    var fade = 1, fadeC = 1;
 
     [[AXL, 0, 0], [0, AXL, 0], [0, 0, 3.05]].forEach(function (p, k) {
       setSegB(bAxes[k], O, p, ease(clamp(st.B)), 1);
@@ -1524,7 +1572,7 @@ function (el, d, opts) {
 
     var xt = ease(clamp(st.x));
     setArrow(aX1, O, X1, xt, fadeC);
-    setArrow(aX2, O, X2, xt, lerp(fadeC, 1, ease(clamp(st.fade))));
+    setArrow(aX2, O, X2, xt, 1);
     put(lX1, pB(X1), 18, 30, xt * fadeC);
     put(lX2, pB(X2), -30, -12, xt);
 
@@ -1545,31 +1593,13 @@ function (el, d, opts) {
     put(dcLab1, pB(mul(P1, 0.55)), 6, 30, dc);
     put(dcLab2, pB(vlerp(P1, YH, 0.5)), -6, -16, dc);
 
-    var fx = clamp(st.fx), fy = clamp(st.fy), fb = clamp(st.fb);
-    var fx1 = ease(clamp((fx - 0.2) / 0.4)), fx2 = ease(clamp((fx - 0.6) / 0.4));
-    setSegB(p2x, X1, P2X1, fx1, 0.9);
-    setArrow(aXT, mul(P2X1, 1 - fx2), add(XT, mul(P2X1, 1 - fx2)), fx1, 1);
-    rightAngle(rt2, P2X1, sub(X1, P2X1), mul(X2, -1), 0.2, clamp((fx - 0.4) * 4) * (1 - fx2));
-    put(lXT, pB(add(XT, mul(P2X1, 1 - fx2))), 92, 22, fx2);
-    var fy1 = ease(clamp(fy / 0.5)), fy2 = ease(clamp((fy - 0.5) / 0.5));
-    setSegB(p2y, Y, P2Y, fy1, 0.9 * (1 - fy2 * 0.6));
-    setArrow(aYT, mul(P2Y, 1 - fy2), add(YT, mul(P2Y, 1 - fy2)), fy1, 1);
-    put(lYT, pB(add(YT, mul(P2Y, 1 - fy2))), -20, -14, fy2);
-    var BFV = mul(XT, BF);
-    setArrow(aBF, O, BFV, ease(fb), 1);
-    rightAngle(rt3, BFV, sub(YT, BFV), mul(BFV, -1), 0.2, clamp((fb - 0.7) * 4));
-    put(lBF, pB(BFV), -48, 30, clamp((fb - 0.6) * 3));
-
-    // The FWL readout, under the data table
-    var ro = Math.max(clamp(st.fx) * 0, clamp((fb - 0.6) * 3));
-    put(roA, [980, 252], 0, 0, Math.max(dc, ro));
-    put(roB, [980, 286], 0, 0, ro);
   }
 
   // =================================================================================
   // States and stepping
   // =================================================================================
-  var KEYS = ['cam', 'A', 'pl', 'tilt', 'rs', 'dr', 'hl', 'tb', 'B', 'x', 'cx', 'y', 'pr', 'dc', 'fx', 'fy', 'fb', 'fade'];
+  var KEYS = ['cam', 'A', 'pl', 'tilt', 'rs', 'dr', 'hl', 'tb', 'B', 'x', 'cx', 'y', 'pr', 'dc',
+              'sl', 'py', 'px', 'fp', 'side'];
   function S(o) { var s = {}; KEYS.forEach(function (k) { s[k] = o[k] || 0; }); return s; }
   var MAIN = [
     S({ A: 1 }),
@@ -1582,27 +1612,31 @@ function (el, d, opts) {
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1 }),
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1 }),
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, dc: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fade: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fy: 1, fade: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fy: 1, fb: 1, fade: 1 })
+    S({ A: 1, pl: 1, tilt: 1, sl: 1 }),
+    S({ A: 1, tilt: 1, py: 1 }),
+    S({ A: 1, tilt: 1, py: 1, px: 1 }),
+    S({ A: 1, tilt: 1, py: 1, px: 1, fp: 1, side: 1 })
   ];
-  var DUR = [0, 1100, 1000, 1400, 1400, 2200, 900, 900, 1600, 1400, 1800, 1600, 1400];
+  var DUR = [0, 1100, 1000, 1400, 1400, 2200, 900, 900, 1600, 1400, 2200, 2800, 2800, 2600];
   var STAGES = opts.stages ? opts.stages.map(S) : MAIN;
   var FROM = opts.from || 0, TO = opts.to == null ? STAGES.length - 1 : opts.to;
 
   var state = STAGES[FROM];
   function render(st) {
     state = st;
-    az = lerp(AZ_A, AZ_B, ease(clamp(st.cam))) + off;
+    var sd = ease(clamp(st.side));
+    az = lerp(lerp(AZ_A, AZ_B, ease(clamp(st.cam))), AZ_SIDE, sd) + off * (1 - sd);
+    elev = lerp(EL, EL_SIDE, sd); zoom = sd;
     setCam();
     var aOn = ease(clamp(st.A));
     gA.style.display = aOn > 0.001 ? '' : 'none';
     gA.setAttribute('opacity', aOn);
     if (aOn > 0.001) {
       var c = coefAt(ease(clamp(st.tilt)));
-      drawBox(1);
+      drawBox(1, 1 - sd);
       drawPlane(c, ease(clamp(st.pl)));
-      drawPoints(st, c);
+      var mv = drawFWL(st);
+      drawPoints(st, c, mv);
       drawReadout(st, c);
     }
     // In the flip, the brackets mark the columns that become vectors
@@ -1714,11 +1748,16 @@ function (el, d, opts) {
   //   7   the outcome vector Y, off the plane
   //   8   the projection: Y-hat in the plane, e-hat at a right angle to it
   //   9   Y-hat taken apart as b1-hat X1 + b2-hat X2
-  // Frisch-Waugh-Lovell
-  //   10  X1 is projected onto X2 and the leftover, X1-tilde = M2 X1, drawn
-  //       from the origin, at a right angle to X2
-  //   11  the same for Y: Y-tilde = M2 Y
-  //   12  Y-tilde projected onto X1-tilde: b1-hat X1-tilde, the same b1-hat
+  // Frisch-Waugh-Lovell, back in data space with the whole cloud
+  //   10  the camera turns back to the cloud and its OLS plane; a red line
+  //       along the plane in the X1 direction has slope b1-hat
+  //   11  partial X2 out of Y: the fit of Y on X2 (a gold plane, tilted only
+  //       along X2) fades in, then each point moves up or down by its
+  //       residual, so the plane flattens out at the mean of Y
+  //   12  partial X2 out of X1: the fit of X1 on X2 (a gold vertical
+  //       curtain) fades in, then each point slides along X1 by its residual
+  //   13  the camera turns to look straight down the X2 axis: Y-tilde against
+  //       X1-tilde, whose fitted line has slope b1-hat again
   //
   // A slide shows stages opts.from to opts.to, one per .rg-step fragment;
   // stepping backwards runs each transition in reverse. opts.stages swaps in
@@ -1759,10 +1798,12 @@ function (el, d, opts) {
   // The data space is seen from the low corner of the plane, so its tilt
   // reads; the observation space from where both covariate vectors point to
   // the right. The camera turns from one to the other in the flip
-  var AZ_A = opts.azA == null ? -125 : opts.azA, AZ_B = -45, EL = 24, SWING = 14, PERIOD = 16000;
-  var az = AZ_A, off = 0;
+  // For FWL's last step it turns to look straight down the X2 axis
+  var AZ_A = opts.azA == null ? -125 : opts.azA, AZ_B = -45, AZ_SIDE = -90, EL = 24, EL_SIDE = 0,
+      SWING = 14, PERIOD = 16000;
+  var az = AZ_A, elev = EL, off = 0, zoom = 0;
   function cam() {
-    var a = az * Math.PI / 180, e = EL * Math.PI / 180;
+    var a = az * Math.PI / 180, e = elev * Math.PI / 180;
     return { sa: Math.sin(a), ca: Math.cos(a), se: Math.sin(e), ce: Math.cos(e) };
   }
   function projWith(c, sc, cx, cy) {
@@ -1775,14 +1816,14 @@ function (el, d, opts) {
   var C = cam(), pA, pB;
   function setCam() {
     C = cam();
-    pA = projWith(C, 104, 460, 280);       // data space
+    pA = projWith(C, lerp(104, 150, zoom), 460, lerp(280, 290, zoom));   // data space (zoomed in side on)
     pB = projWith(C, 90, 250, 370);        // observation space
   }
   setCam();
   function toward() { return [C.ca * C.ce, C.sa * C.ce, C.se]; }   // points at the viewer
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
-                        'aria-label': 'A 3D scatterplot of Y against X1 and X2 with its least squares plane, residuals and fitted values. Three observations are picked out and the picture is turned inside out: each observation becomes an axis and each variable a vector. The fitted values are the projection of the outcome vector onto the plane the covariate vectors span, with the residual at a right angle; partialling X2 out of X1 and Y recovers the same coefficient on X1.',
+                        'aria-label': 'A 3D scatterplot of Y against X1 and X2 with its least squares plane, residuals and fitted values. Three observations are picked out and the picture is turned inside out: each observation becomes an axis and each variable a vector. The fitted values are the projection of the outcome vector onto the plane the covariate vectors span, with the residual at a right angle; back in the cloud, partialling X2 out of Y and X1 and then looking down the X2 axis recovers the same slope on X1.',
                         style: 'width: 100%; height: auto; max-height: 520px; display: block; margin: 0 auto; font-family: inherit; touch-action: none; cursor: grab;' }, el);
 
   // Labels. A '~' after a character puts a tilde over it: combining tildes
@@ -1878,7 +1919,7 @@ function (el, d, opts) {
   [0, 25, 50, 75, 100].forEach(function (v) { tickLab.y.push(label(gTicks, String(v), GREY, 16, 400, null, 'end')); });
   var axLab = { x1: label(gTicks, 'X₁', INK, 22, 600), x2: label(gTicks, 'X₂', INK, 22, 600), y: label(gTicks, 'Y', INK, 22, 600) };
 
-  function drawBox(op) {
+  function drawBox(op, opX2) {
     var dv = toward();
     FACES.forEach(function (f) {
       var back = dot(f.n, dv) < 0;
@@ -1894,10 +1935,10 @@ function (el, d, opts) {
     var yFront = dv[1] > 0 ? L : -L, xFront = dv[0] > 0 ? L : -L;
     [0, 5, 10].forEach(function (v, j) {
       put(tickLab.x1[j], pA([wx(v), yFront * 1.14, -HZ]), 0, 18, op);
-      put(tickLab.x2[j], pA([xFront * 1.14, wx(v), -HZ]), 0, 18, op);
+      put(tickLab.x2[j], pA([xFront * 1.14, wx(v), -HZ]), 0, 18, opX2);
     });
-    put(axLab.x1, pA([0, yFront * 1.35, -HZ]), 0, 26, op);
-    put(axLab.x2, pA([xFront * 1.35, 0, -HZ]), 0, 26, op);
+    put(axLab.x1, pA([0, yFront * 1.35, -HZ]), 0, 26 + 18 * zoom, op);
+    put(axLab.x2, pA([xFront * 1.35, 0, -HZ]), 0, 26, opX2);
     var best = null;
     [[-L, -L], [-L, L], [L, -L], [L, L]].forEach(function (c) {
       var u = pA([c[0], c[1], 0])[0];
@@ -1921,12 +1962,62 @@ function (el, d, opts) {
     }
     return out;
   }
-  function drawPlane(c, op) {
+  function drawPlane(c, op, P) {
+    P = P || plane;
     var poly = [[0, 0], [10, 0], [10, 10], [0, 10]];
     poly = clipPoly(poly, function (p) { return fit(c, p[0], p[1]); });
     poly = clipPoly(poly, function (p) { return 100 - fit(c, p[0], p[1]); });
-    polyPts(plane, poly.map(function (p) { return pA([wx(p[0]), wx(p[1]), wz(fit(c, p[0], p[1]))]); }));
-    plane.setAttribute('opacity', op);
+    polyPts(P, poly.map(function (p) { return pA([wx(p[0]), wx(p[1]), wz(fit(c, p[0], p[1]))]); }));
+    P.setAttribute('opacity', op);
+  }
+
+  // ---- Frisch-Waugh-Lovell in data space ------------------------------------------
+  function ols1(yv, xv) {             // bivariate OLS: [intercept, slope]
+    var mx = mean(xv), my = mean(yv), sxy = 0, sxx = 0;
+    for (var i = 0; i < xv.length; i++) { sxy += (xv[i] - mx) * (yv[i] - my); sxx += (xv[i] - mx) * (xv[i] - mx); }
+    return [my - sxy / sxx * mx, sxy / sxx];
+  }
+  var X1BAR = mean(d.x1), X2BAR = mean(d.x2);
+  var GY = ols1(d.y, d.x2), GX = ols1(d.x1, d.x2);     // Y on X2, X1 on X2
+  // The residualized variables, shifted back to their means so they stay in the box
+  var YT_A = d.y.map(function (v, i) { return YBAR + v - GY[0] - GY[1] * d.x2[i]; });
+  var XT_A = d.x1.map(function (v, i) { return X1BAR + v - GX[0] - GX[1] * d.x2[i]; });
+  var BFA = ols1(YT_A, XT_A)[1];                        // equals B[1]
+  var gYplane = mk('polygon', { fill: GOLD, 'fill-opacity': 0.28, stroke: GOLD, 'stroke-opacity': 0.7, 'stroke-width': 1.5 }, gPlane);
+  var curtain = mk('polygon', { fill: GOLD, 'fill-opacity': 0.22, stroke: GOLD, 'stroke-opacity': 0.7, 'stroke-width': 1.5 }, gPlane);
+  var fwlPlane = mk('polygon', { fill: RED, 'fill-opacity': 0.22, stroke: RED, 'stroke-opacity': 0.8, 'stroke-width': 2.5 }, gPlane);
+  var slope = line(gTicks, RED, 5), slopeLab = label(gTicks, 'slope β̂₁ = ' + f2(B[1]), RED, 22, 700, null, 'start');
+  var gFW = mk('g', {}, gA);
+  var fwA = label(gFW, 'Full regression: β̂₁ = ' + f2(B[1]), BLUE, 22, 600, null, 'start');
+  var fwB = label(gFW, 'Ỹ on X~₁: slope ' + f2(BFA), RED, 22, 600, null, 'start');
+  var fwNote = label(gFW, 'each residual is shifted back to its variable\'s mean', GREY, 17, 400, 'italic', 'start');
+
+  function drawFWL(st) {
+    var py = clamp(st.py), px = clamp(st.px), fp = clamp(st.fp);
+    var mvY = ease(clamp((py - 0.35) / 0.65)), mvX = ease(clamp((px - 0.35) / 0.65));
+    // Y on X2: tilted only along X2, flattening to the mean as the points move
+    drawPlane([lerp(GY[0], YBAR, mvY), 0, lerp(GY[1], 0, mvY)], clamp(py / 0.3) * (1 - clamp(px / 0.3)), gYplane);
+    // X1 on X2: a vertical curtain x1 = a + b x2, straightening to x1 = mean
+    var cx0 = lerp(GX[0], X1BAR, mvX), cx1 = lerp(GX[1], 0, mvX);
+    polyPts(curtain, [[cx0, 0, 0], [cx0 + 10 * cx1, 10, 0], [cx0 + 10 * cx1, 10, 100], [cx0, 0, 100]].map(function (q) {
+      return pA([wx(q[0]), wx(q[1]), wz(q[2])]);
+    }));
+    curtain.setAttribute('opacity', clamp(px / 0.3) * (1 - clamp(fp / 0.3)));
+    // The fit of Y-tilde on X1-tilde: flat along X2, so a line seen side on
+    drawPlane([YBAR - BFA * X1BAR, BFA, 0], ease(clamp(fp / 0.4)), fwlPlane);
+    // The slope along X1 of the full OLS plane, at the mean of X2
+    var sl = ease(clamp(st.sl));
+    var s0 = pA([wx(0), wx(X2BAR), wz(fit(B, 0, X2BAR))]), s1 = pA([wx(10), wx(X2BAR), wz(fit(B, 10, X2BAR))]);
+    setLine(slope, s0, s1, sl);
+    put(slopeLab, s1, 12, 6, sl);
+    var ro = clamp((fp - 0.6) * 2.5);
+    put(fwA, [40, 50], 0, 0, ro);
+    put(fwB, [40, 84], 0, 0, ro);
+    put(fwNote, [40, 112], 0, 0, ro);
+    // Once the points have moved, the axes hold the residualized variables
+    setText(axLab.x1, mvX > 0.5 ? 'X~₁' : 'X₁');
+    setText(axLab.y, mvY > 0.5 ? 'Ỹ' : 'Y');
+    return { mvX: mvX, mvY: mvY };
   }
 
   // Points, each with its residual segment, in front of or behind the plane
@@ -1942,14 +2033,15 @@ function (el, d, opts) {
                lab: hi >= 0 ? label(g, String(hi + 1), RED, 22, 700) : null });
   }
 
-  function drawPoints(st, c) {
+  function drawPoints(st, c, mv) {
     var dr = ease(clamp(st.dr)), rs = clamp(st.rs), hl = ease(clamp(st.hl));
     var dv = toward();
     var nrm = [-c[1] * (wz(1) - wz(0)) / (wx(1) - wx(0)), -c[2] * (wz(1) - wz(0)) / (wx(1) - wx(0)), 1];
     var viewerAbove = dot(nrm, dv) > 0;
     pts.forEach(function (P, i) {
-      var f = fit(c, d.x1[i], d.x2[i]), y = lerp(d.y[i], f, dr);
-      var q = pA([wx(d.x1[i]), wx(d.x2[i]), wz(y)]), qf = pA([wx(d.x1[i]), wx(d.x2[i]), wz(f)]);
+      var x1 = lerp(d.x1[i], XT_A[i], mv.mvX), y0 = lerp(d.y[i], YT_A[i], mv.mvY);
+      var f = fit(c, x1, d.x2[i]), y = lerp(y0, f, dr);
+      var q = pA([wx(x1), wx(d.x2[i]), wz(y)]), qf = pA([wx(x1), wx(d.x2[i]), wz(f)]);
       var qe = [lerp(qf[0], q[0], rs), lerp(qf[1], q[1], rs)];
       // A point on the viewer's side of the plane is drawn in front of it
       var front = st.pl < 0.05 || ((d.y[i] >= f) === viewerAbove);
@@ -1959,6 +2051,7 @@ function (el, d, opts) {
       setLine(P.res, qf, qe, rs > 0.01 ? 1 : 0);
       var isH = P.hl >= 0;
       P.dot.setAttribute('fill', isH ? (hl > 0.5 ? RED : INK) : INK);
+      if (isH) P.dot.setAttribute('r', lerp(5.5, 7, hl));
       P.g.setAttribute('opacity', isH ? 1 : lerp(1, 0.18, hl));
       if (P.lab) put(P.lab, q, LOFF[P.hl][0], LOFF[P.hl][1], hl);
     });
@@ -2032,9 +2125,6 @@ function (el, d, opts) {
   var c1 = dot(X1, Y), c2 = dot(X2, Y), det = a11 * a22 - a12 * a12;
   var B1 = (a22 * c1 - a12 * c2) / det, B2 = (a11 * c2 - a12 * c1) / det;
   var YH = add(mul(X1, B1), mul(X2, B2));
-  var P2X1 = mul(X2, dot(X1, X2) / a22), XT = sub(X1, P2X1);
-  var P2Y = mul(X2, dot(Y, X2) / a22), YT = sub(Y, P2Y);
-  var BF = dot(XT, YT) / dot(XT, XT);
 
   var gB = mk('g', {}, svg);
   var gBax = mk('g', {}, gB), gBpl = mk('g', {}, gB), gBdc = mk('g', {}, gB),
@@ -2067,26 +2157,18 @@ function (el, d, opts) {
   var cLab = label(gBpl, 'C(X)', BLUE, 24, 600);
   var dc1 = line(gBdc, BLUE, 2.5, '7 6'), dc2 = line(gBdc, BLUE, 2.5, '7 6');
   var dcLab1 = label(gBdc, 'β̂₁X₁', BLUE, 21), dcLab2 = label(gBdc, 'β̂₂X₂', BLUE, 21);
-  var p2x = line(gBdc, GOLD, 2.5, '7 6'), p2y = line(gBdc, GOLD, 2.5, '7 6');
   var aX1 = arrow(gBv, BLUE, 4), aX2 = arrow(gBv, BLUE, 4), aY = arrow(gBv, INK, 4);
   var aYH = arrow(gBv, BLUE, 4), aE = arrow(gBv, RED, 4);
   var rt = mk('polyline', { fill: 'none', stroke: RED, 'stroke-width': 2 }, gBv);
-  var aXT = arrow(gBv, GOLD, 4), aYT = arrow(gBv, INK, 4), aBF = arrow(gBv, RED, 5);
-  var rt2 = mk('polyline', { fill: 'none', stroke: GOLD, 'stroke-width': 2 }, gBv);
-  var rt3 = mk('polyline', { fill: 'none', stroke: GOLD, 'stroke-width': 2 }, gBv);
   var lX1 = label(gBlab, 'X₁', BLUE), lX2 = label(gBlab, 'X₂', BLUE), lY = label(gBlab, 'Y', INK);
   var lYH = label(gBlab, 'Ŷ = Xβ̂', BLUE, 24), lE = label(gBlab, 'ê = Y − Xβ̂', RED, 24);
-  var lXT = label(gBlab, 'X~₁ = M₂X₁', GOLD, 24), lYT = label(gBlab, 'Ỹ = M₂Y', INK, 24);
-  var lBF = label(gBlab, 'β̂₁X~₁', RED, 24);
-  var roA = label(gBro, 'Full regression: β̂₁ = ' + f2(B1), BLUE, 22, 600, null, 'end');
-  var roB = label(gBro, 'Ỹ on X~₁: slope ' + f2(BF), RED, 22, 600, null, 'end');
 
   function drawB(st) {
     var on = ease(clamp(st.B));
     gB.setAttribute('opacity', on);
     if (on < 0.001) { gB.style.display = 'none'; return; }
     gB.style.display = '';
-    var fade = lerp(1, 0.18, ease(clamp(st.fade))), fadeC = lerp(1, 0.35, ease(clamp(st.fade)));
+    var fade = 1, fadeC = 1;
 
     [[AXL, 0, 0], [0, AXL, 0], [0, 0, 3.05]].forEach(function (p, k) {
       setSegB(bAxes[k], O, p, ease(clamp(st.B)), 1);
@@ -2101,7 +2183,7 @@ function (el, d, opts) {
 
     var xt = ease(clamp(st.x));
     setArrow(aX1, O, X1, xt, fadeC);
-    setArrow(aX2, O, X2, xt, lerp(fadeC, 1, ease(clamp(st.fade))));
+    setArrow(aX2, O, X2, xt, 1);
     put(lX1, pB(X1), 18, 30, xt * fadeC);
     put(lX2, pB(X2), -30, -12, xt);
 
@@ -2122,31 +2204,13 @@ function (el, d, opts) {
     put(dcLab1, pB(mul(P1, 0.55)), 6, 30, dc);
     put(dcLab2, pB(vlerp(P1, YH, 0.5)), -6, -16, dc);
 
-    var fx = clamp(st.fx), fy = clamp(st.fy), fb = clamp(st.fb);
-    var fx1 = ease(clamp((fx - 0.2) / 0.4)), fx2 = ease(clamp((fx - 0.6) / 0.4));
-    setSegB(p2x, X1, P2X1, fx1, 0.9);
-    setArrow(aXT, mul(P2X1, 1 - fx2), add(XT, mul(P2X1, 1 - fx2)), fx1, 1);
-    rightAngle(rt2, P2X1, sub(X1, P2X1), mul(X2, -1), 0.2, clamp((fx - 0.4) * 4) * (1 - fx2));
-    put(lXT, pB(add(XT, mul(P2X1, 1 - fx2))), 92, 22, fx2);
-    var fy1 = ease(clamp(fy / 0.5)), fy2 = ease(clamp((fy - 0.5) / 0.5));
-    setSegB(p2y, Y, P2Y, fy1, 0.9 * (1 - fy2 * 0.6));
-    setArrow(aYT, mul(P2Y, 1 - fy2), add(YT, mul(P2Y, 1 - fy2)), fy1, 1);
-    put(lYT, pB(add(YT, mul(P2Y, 1 - fy2))), -20, -14, fy2);
-    var BFV = mul(XT, BF);
-    setArrow(aBF, O, BFV, ease(fb), 1);
-    rightAngle(rt3, BFV, sub(YT, BFV), mul(BFV, -1), 0.2, clamp((fb - 0.7) * 4));
-    put(lBF, pB(BFV), -48, 30, clamp((fb - 0.6) * 3));
-
-    // The FWL readout, under the data table
-    var ro = Math.max(clamp(st.fx) * 0, clamp((fb - 0.6) * 3));
-    put(roA, [980, 252], 0, 0, Math.max(dc, ro));
-    put(roB, [980, 286], 0, 0, ro);
   }
 
   // =================================================================================
   // States and stepping
   // =================================================================================
-  var KEYS = ['cam', 'A', 'pl', 'tilt', 'rs', 'dr', 'hl', 'tb', 'B', 'x', 'cx', 'y', 'pr', 'dc', 'fx', 'fy', 'fb', 'fade'];
+  var KEYS = ['cam', 'A', 'pl', 'tilt', 'rs', 'dr', 'hl', 'tb', 'B', 'x', 'cx', 'y', 'pr', 'dc',
+              'sl', 'py', 'px', 'fp', 'side'];
   function S(o) { var s = {}; KEYS.forEach(function (k) { s[k] = o[k] || 0; }); return s; }
   var MAIN = [
     S({ A: 1 }),
@@ -2159,27 +2223,31 @@ function (el, d, opts) {
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1 }),
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1 }),
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, dc: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fade: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fy: 1, fade: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fy: 1, fb: 1, fade: 1 })
+    S({ A: 1, pl: 1, tilt: 1, sl: 1 }),
+    S({ A: 1, tilt: 1, py: 1 }),
+    S({ A: 1, tilt: 1, py: 1, px: 1 }),
+    S({ A: 1, tilt: 1, py: 1, px: 1, fp: 1, side: 1 })
   ];
-  var DUR = [0, 1100, 1000, 1400, 1400, 2200, 900, 900, 1600, 1400, 1800, 1600, 1400];
+  var DUR = [0, 1100, 1000, 1400, 1400, 2200, 900, 900, 1600, 1400, 2200, 2800, 2800, 2600];
   var STAGES = opts.stages ? opts.stages.map(S) : MAIN;
   var FROM = opts.from || 0, TO = opts.to == null ? STAGES.length - 1 : opts.to;
 
   var state = STAGES[FROM];
   function render(st) {
     state = st;
-    az = lerp(AZ_A, AZ_B, ease(clamp(st.cam))) + off;
+    var sd = ease(clamp(st.side));
+    az = lerp(lerp(AZ_A, AZ_B, ease(clamp(st.cam))), AZ_SIDE, sd) + off * (1 - sd);
+    elev = lerp(EL, EL_SIDE, sd); zoom = sd;
     setCam();
     var aOn = ease(clamp(st.A));
     gA.style.display = aOn > 0.001 ? '' : 'none';
     gA.setAttribute('opacity', aOn);
     if (aOn > 0.001) {
       var c = coefAt(ease(clamp(st.tilt)));
-      drawBox(1);
+      drawBox(1, 1 - sd);
       drawPlane(c, ease(clamp(st.pl)));
-      drawPoints(st, c);
+      var mv = drawFWL(st);
+      drawPoints(st, c, mv);
       drawReadout(st, c);
     }
     // In the flip, the brackets mark the columns that become vectors
@@ -2294,11 +2362,16 @@ function (el, d, opts) {
   //   7   the outcome vector Y, off the plane
   //   8   the projection: Y-hat in the plane, e-hat at a right angle to it
   //   9   Y-hat taken apart as b1-hat X1 + b2-hat X2
-  // Frisch-Waugh-Lovell
-  //   10  X1 is projected onto X2 and the leftover, X1-tilde = M2 X1, drawn
-  //       from the origin, at a right angle to X2
-  //   11  the same for Y: Y-tilde = M2 Y
-  //   12  Y-tilde projected onto X1-tilde: b1-hat X1-tilde, the same b1-hat
+  // Frisch-Waugh-Lovell, back in data space with the whole cloud
+  //   10  the camera turns back to the cloud and its OLS plane; a red line
+  //       along the plane in the X1 direction has slope b1-hat
+  //   11  partial X2 out of Y: the fit of Y on X2 (a gold plane, tilted only
+  //       along X2) fades in, then each point moves up or down by its
+  //       residual, so the plane flattens out at the mean of Y
+  //   12  partial X2 out of X1: the fit of X1 on X2 (a gold vertical
+  //       curtain) fades in, then each point slides along X1 by its residual
+  //   13  the camera turns to look straight down the X2 axis: Y-tilde against
+  //       X1-tilde, whose fitted line has slope b1-hat again
   //
   // A slide shows stages opts.from to opts.to, one per .rg-step fragment;
   // stepping backwards runs each transition in reverse. opts.stages swaps in
@@ -2339,10 +2412,12 @@ function (el, d, opts) {
   // The data space is seen from the low corner of the plane, so its tilt
   // reads; the observation space from where both covariate vectors point to
   // the right. The camera turns from one to the other in the flip
-  var AZ_A = opts.azA == null ? -125 : opts.azA, AZ_B = -45, EL = 24, SWING = 14, PERIOD = 16000;
-  var az = AZ_A, off = 0;
+  // For FWL's last step it turns to look straight down the X2 axis
+  var AZ_A = opts.azA == null ? -125 : opts.azA, AZ_B = -45, AZ_SIDE = -90, EL = 24, EL_SIDE = 0,
+      SWING = 14, PERIOD = 16000;
+  var az = AZ_A, elev = EL, off = 0, zoom = 0;
   function cam() {
-    var a = az * Math.PI / 180, e = EL * Math.PI / 180;
+    var a = az * Math.PI / 180, e = elev * Math.PI / 180;
     return { sa: Math.sin(a), ca: Math.cos(a), se: Math.sin(e), ce: Math.cos(e) };
   }
   function projWith(c, sc, cx, cy) {
@@ -2355,14 +2430,14 @@ function (el, d, opts) {
   var C = cam(), pA, pB;
   function setCam() {
     C = cam();
-    pA = projWith(C, 104, 460, 280);       // data space
+    pA = projWith(C, lerp(104, 150, zoom), 460, lerp(280, 290, zoom));   // data space (zoomed in side on)
     pB = projWith(C, 90, 250, 370);        // observation space
   }
   setCam();
   function toward() { return [C.ca * C.ce, C.sa * C.ce, C.se]; }   // points at the viewer
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
-                        'aria-label': 'A 3D scatterplot of Y against X1 and X2 with its least squares plane, residuals and fitted values. Three observations are picked out and the picture is turned inside out: each observation becomes an axis and each variable a vector. The fitted values are the projection of the outcome vector onto the plane the covariate vectors span, with the residual at a right angle; partialling X2 out of X1 and Y recovers the same coefficient on X1.',
+                        'aria-label': 'A 3D scatterplot of Y against X1 and X2 with its least squares plane, residuals and fitted values. Three observations are picked out and the picture is turned inside out: each observation becomes an axis and each variable a vector. The fitted values are the projection of the outcome vector onto the plane the covariate vectors span, with the residual at a right angle; back in the cloud, partialling X2 out of Y and X1 and then looking down the X2 axis recovers the same slope on X1.',
                         style: 'width: 100%; height: auto; max-height: 520px; display: block; margin: 0 auto; font-family: inherit; touch-action: none; cursor: grab;' }, el);
 
   // Labels. A '~' after a character puts a tilde over it: combining tildes
@@ -2458,7 +2533,7 @@ function (el, d, opts) {
   [0, 25, 50, 75, 100].forEach(function (v) { tickLab.y.push(label(gTicks, String(v), GREY, 16, 400, null, 'end')); });
   var axLab = { x1: label(gTicks, 'X₁', INK, 22, 600), x2: label(gTicks, 'X₂', INK, 22, 600), y: label(gTicks, 'Y', INK, 22, 600) };
 
-  function drawBox(op) {
+  function drawBox(op, opX2) {
     var dv = toward();
     FACES.forEach(function (f) {
       var back = dot(f.n, dv) < 0;
@@ -2474,10 +2549,10 @@ function (el, d, opts) {
     var yFront = dv[1] > 0 ? L : -L, xFront = dv[0] > 0 ? L : -L;
     [0, 5, 10].forEach(function (v, j) {
       put(tickLab.x1[j], pA([wx(v), yFront * 1.14, -HZ]), 0, 18, op);
-      put(tickLab.x2[j], pA([xFront * 1.14, wx(v), -HZ]), 0, 18, op);
+      put(tickLab.x2[j], pA([xFront * 1.14, wx(v), -HZ]), 0, 18, opX2);
     });
-    put(axLab.x1, pA([0, yFront * 1.35, -HZ]), 0, 26, op);
-    put(axLab.x2, pA([xFront * 1.35, 0, -HZ]), 0, 26, op);
+    put(axLab.x1, pA([0, yFront * 1.35, -HZ]), 0, 26 + 18 * zoom, op);
+    put(axLab.x2, pA([xFront * 1.35, 0, -HZ]), 0, 26, opX2);
     var best = null;
     [[-L, -L], [-L, L], [L, -L], [L, L]].forEach(function (c) {
       var u = pA([c[0], c[1], 0])[0];
@@ -2501,12 +2576,62 @@ function (el, d, opts) {
     }
     return out;
   }
-  function drawPlane(c, op) {
+  function drawPlane(c, op, P) {
+    P = P || plane;
     var poly = [[0, 0], [10, 0], [10, 10], [0, 10]];
     poly = clipPoly(poly, function (p) { return fit(c, p[0], p[1]); });
     poly = clipPoly(poly, function (p) { return 100 - fit(c, p[0], p[1]); });
-    polyPts(plane, poly.map(function (p) { return pA([wx(p[0]), wx(p[1]), wz(fit(c, p[0], p[1]))]); }));
-    plane.setAttribute('opacity', op);
+    polyPts(P, poly.map(function (p) { return pA([wx(p[0]), wx(p[1]), wz(fit(c, p[0], p[1]))]); }));
+    P.setAttribute('opacity', op);
+  }
+
+  // ---- Frisch-Waugh-Lovell in data space ------------------------------------------
+  function ols1(yv, xv) {             // bivariate OLS: [intercept, slope]
+    var mx = mean(xv), my = mean(yv), sxy = 0, sxx = 0;
+    for (var i = 0; i < xv.length; i++) { sxy += (xv[i] - mx) * (yv[i] - my); sxx += (xv[i] - mx) * (xv[i] - mx); }
+    return [my - sxy / sxx * mx, sxy / sxx];
+  }
+  var X1BAR = mean(d.x1), X2BAR = mean(d.x2);
+  var GY = ols1(d.y, d.x2), GX = ols1(d.x1, d.x2);     // Y on X2, X1 on X2
+  // The residualized variables, shifted back to their means so they stay in the box
+  var YT_A = d.y.map(function (v, i) { return YBAR + v - GY[0] - GY[1] * d.x2[i]; });
+  var XT_A = d.x1.map(function (v, i) { return X1BAR + v - GX[0] - GX[1] * d.x2[i]; });
+  var BFA = ols1(YT_A, XT_A)[1];                        // equals B[1]
+  var gYplane = mk('polygon', { fill: GOLD, 'fill-opacity': 0.28, stroke: GOLD, 'stroke-opacity': 0.7, 'stroke-width': 1.5 }, gPlane);
+  var curtain = mk('polygon', { fill: GOLD, 'fill-opacity': 0.22, stroke: GOLD, 'stroke-opacity': 0.7, 'stroke-width': 1.5 }, gPlane);
+  var fwlPlane = mk('polygon', { fill: RED, 'fill-opacity': 0.22, stroke: RED, 'stroke-opacity': 0.8, 'stroke-width': 2.5 }, gPlane);
+  var slope = line(gTicks, RED, 5), slopeLab = label(gTicks, 'slope β̂₁ = ' + f2(B[1]), RED, 22, 700, null, 'start');
+  var gFW = mk('g', {}, gA);
+  var fwA = label(gFW, 'Full regression: β̂₁ = ' + f2(B[1]), BLUE, 22, 600, null, 'start');
+  var fwB = label(gFW, 'Ỹ on X~₁: slope ' + f2(BFA), RED, 22, 600, null, 'start');
+  var fwNote = label(gFW, 'each residual is shifted back to its variable\'s mean', GREY, 17, 400, 'italic', 'start');
+
+  function drawFWL(st) {
+    var py = clamp(st.py), px = clamp(st.px), fp = clamp(st.fp);
+    var mvY = ease(clamp((py - 0.35) / 0.65)), mvX = ease(clamp((px - 0.35) / 0.65));
+    // Y on X2: tilted only along X2, flattening to the mean as the points move
+    drawPlane([lerp(GY[0], YBAR, mvY), 0, lerp(GY[1], 0, mvY)], clamp(py / 0.3) * (1 - clamp(px / 0.3)), gYplane);
+    // X1 on X2: a vertical curtain x1 = a + b x2, straightening to x1 = mean
+    var cx0 = lerp(GX[0], X1BAR, mvX), cx1 = lerp(GX[1], 0, mvX);
+    polyPts(curtain, [[cx0, 0, 0], [cx0 + 10 * cx1, 10, 0], [cx0 + 10 * cx1, 10, 100], [cx0, 0, 100]].map(function (q) {
+      return pA([wx(q[0]), wx(q[1]), wz(q[2])]);
+    }));
+    curtain.setAttribute('opacity', clamp(px / 0.3) * (1 - clamp(fp / 0.3)));
+    // The fit of Y-tilde on X1-tilde: flat along X2, so a line seen side on
+    drawPlane([YBAR - BFA * X1BAR, BFA, 0], ease(clamp(fp / 0.4)), fwlPlane);
+    // The slope along X1 of the full OLS plane, at the mean of X2
+    var sl = ease(clamp(st.sl));
+    var s0 = pA([wx(0), wx(X2BAR), wz(fit(B, 0, X2BAR))]), s1 = pA([wx(10), wx(X2BAR), wz(fit(B, 10, X2BAR))]);
+    setLine(slope, s0, s1, sl);
+    put(slopeLab, s1, 12, 6, sl);
+    var ro = clamp((fp - 0.6) * 2.5);
+    put(fwA, [40, 50], 0, 0, ro);
+    put(fwB, [40, 84], 0, 0, ro);
+    put(fwNote, [40, 112], 0, 0, ro);
+    // Once the points have moved, the axes hold the residualized variables
+    setText(axLab.x1, mvX > 0.5 ? 'X~₁' : 'X₁');
+    setText(axLab.y, mvY > 0.5 ? 'Ỹ' : 'Y');
+    return { mvX: mvX, mvY: mvY };
   }
 
   // Points, each with its residual segment, in front of or behind the plane
@@ -2522,14 +2647,15 @@ function (el, d, opts) {
                lab: hi >= 0 ? label(g, String(hi + 1), RED, 22, 700) : null });
   }
 
-  function drawPoints(st, c) {
+  function drawPoints(st, c, mv) {
     var dr = ease(clamp(st.dr)), rs = clamp(st.rs), hl = ease(clamp(st.hl));
     var dv = toward();
     var nrm = [-c[1] * (wz(1) - wz(0)) / (wx(1) - wx(0)), -c[2] * (wz(1) - wz(0)) / (wx(1) - wx(0)), 1];
     var viewerAbove = dot(nrm, dv) > 0;
     pts.forEach(function (P, i) {
-      var f = fit(c, d.x1[i], d.x2[i]), y = lerp(d.y[i], f, dr);
-      var q = pA([wx(d.x1[i]), wx(d.x2[i]), wz(y)]), qf = pA([wx(d.x1[i]), wx(d.x2[i]), wz(f)]);
+      var x1 = lerp(d.x1[i], XT_A[i], mv.mvX), y0 = lerp(d.y[i], YT_A[i], mv.mvY);
+      var f = fit(c, x1, d.x2[i]), y = lerp(y0, f, dr);
+      var q = pA([wx(x1), wx(d.x2[i]), wz(y)]), qf = pA([wx(x1), wx(d.x2[i]), wz(f)]);
       var qe = [lerp(qf[0], q[0], rs), lerp(qf[1], q[1], rs)];
       // A point on the viewer's side of the plane is drawn in front of it
       var front = st.pl < 0.05 || ((d.y[i] >= f) === viewerAbove);
@@ -2539,6 +2665,7 @@ function (el, d, opts) {
       setLine(P.res, qf, qe, rs > 0.01 ? 1 : 0);
       var isH = P.hl >= 0;
       P.dot.setAttribute('fill', isH ? (hl > 0.5 ? RED : INK) : INK);
+      if (isH) P.dot.setAttribute('r', lerp(5.5, 7, hl));
       P.g.setAttribute('opacity', isH ? 1 : lerp(1, 0.18, hl));
       if (P.lab) put(P.lab, q, LOFF[P.hl][0], LOFF[P.hl][1], hl);
     });
@@ -2612,9 +2739,6 @@ function (el, d, opts) {
   var c1 = dot(X1, Y), c2 = dot(X2, Y), det = a11 * a22 - a12 * a12;
   var B1 = (a22 * c1 - a12 * c2) / det, B2 = (a11 * c2 - a12 * c1) / det;
   var YH = add(mul(X1, B1), mul(X2, B2));
-  var P2X1 = mul(X2, dot(X1, X2) / a22), XT = sub(X1, P2X1);
-  var P2Y = mul(X2, dot(Y, X2) / a22), YT = sub(Y, P2Y);
-  var BF = dot(XT, YT) / dot(XT, XT);
 
   var gB = mk('g', {}, svg);
   var gBax = mk('g', {}, gB), gBpl = mk('g', {}, gB), gBdc = mk('g', {}, gB),
@@ -2647,26 +2771,18 @@ function (el, d, opts) {
   var cLab = label(gBpl, 'C(X)', BLUE, 24, 600);
   var dc1 = line(gBdc, BLUE, 2.5, '7 6'), dc2 = line(gBdc, BLUE, 2.5, '7 6');
   var dcLab1 = label(gBdc, 'β̂₁X₁', BLUE, 21), dcLab2 = label(gBdc, 'β̂₂X₂', BLUE, 21);
-  var p2x = line(gBdc, GOLD, 2.5, '7 6'), p2y = line(gBdc, GOLD, 2.5, '7 6');
   var aX1 = arrow(gBv, BLUE, 4), aX2 = arrow(gBv, BLUE, 4), aY = arrow(gBv, INK, 4);
   var aYH = arrow(gBv, BLUE, 4), aE = arrow(gBv, RED, 4);
   var rt = mk('polyline', { fill: 'none', stroke: RED, 'stroke-width': 2 }, gBv);
-  var aXT = arrow(gBv, GOLD, 4), aYT = arrow(gBv, INK, 4), aBF = arrow(gBv, RED, 5);
-  var rt2 = mk('polyline', { fill: 'none', stroke: GOLD, 'stroke-width': 2 }, gBv);
-  var rt3 = mk('polyline', { fill: 'none', stroke: GOLD, 'stroke-width': 2 }, gBv);
   var lX1 = label(gBlab, 'X₁', BLUE), lX2 = label(gBlab, 'X₂', BLUE), lY = label(gBlab, 'Y', INK);
   var lYH = label(gBlab, 'Ŷ = Xβ̂', BLUE, 24), lE = label(gBlab, 'ê = Y − Xβ̂', RED, 24);
-  var lXT = label(gBlab, 'X~₁ = M₂X₁', GOLD, 24), lYT = label(gBlab, 'Ỹ = M₂Y', INK, 24);
-  var lBF = label(gBlab, 'β̂₁X~₁', RED, 24);
-  var roA = label(gBro, 'Full regression: β̂₁ = ' + f2(B1), BLUE, 22, 600, null, 'end');
-  var roB = label(gBro, 'Ỹ on X~₁: slope ' + f2(BF), RED, 22, 600, null, 'end');
 
   function drawB(st) {
     var on = ease(clamp(st.B));
     gB.setAttribute('opacity', on);
     if (on < 0.001) { gB.style.display = 'none'; return; }
     gB.style.display = '';
-    var fade = lerp(1, 0.18, ease(clamp(st.fade))), fadeC = lerp(1, 0.35, ease(clamp(st.fade)));
+    var fade = 1, fadeC = 1;
 
     [[AXL, 0, 0], [0, AXL, 0], [0, 0, 3.05]].forEach(function (p, k) {
       setSegB(bAxes[k], O, p, ease(clamp(st.B)), 1);
@@ -2681,7 +2797,7 @@ function (el, d, opts) {
 
     var xt = ease(clamp(st.x));
     setArrow(aX1, O, X1, xt, fadeC);
-    setArrow(aX2, O, X2, xt, lerp(fadeC, 1, ease(clamp(st.fade))));
+    setArrow(aX2, O, X2, xt, 1);
     put(lX1, pB(X1), 18, 30, xt * fadeC);
     put(lX2, pB(X2), -30, -12, xt);
 
@@ -2702,31 +2818,13 @@ function (el, d, opts) {
     put(dcLab1, pB(mul(P1, 0.55)), 6, 30, dc);
     put(dcLab2, pB(vlerp(P1, YH, 0.5)), -6, -16, dc);
 
-    var fx = clamp(st.fx), fy = clamp(st.fy), fb = clamp(st.fb);
-    var fx1 = ease(clamp((fx - 0.2) / 0.4)), fx2 = ease(clamp((fx - 0.6) / 0.4));
-    setSegB(p2x, X1, P2X1, fx1, 0.9);
-    setArrow(aXT, mul(P2X1, 1 - fx2), add(XT, mul(P2X1, 1 - fx2)), fx1, 1);
-    rightAngle(rt2, P2X1, sub(X1, P2X1), mul(X2, -1), 0.2, clamp((fx - 0.4) * 4) * (1 - fx2));
-    put(lXT, pB(add(XT, mul(P2X1, 1 - fx2))), 92, 22, fx2);
-    var fy1 = ease(clamp(fy / 0.5)), fy2 = ease(clamp((fy - 0.5) / 0.5));
-    setSegB(p2y, Y, P2Y, fy1, 0.9 * (1 - fy2 * 0.6));
-    setArrow(aYT, mul(P2Y, 1 - fy2), add(YT, mul(P2Y, 1 - fy2)), fy1, 1);
-    put(lYT, pB(add(YT, mul(P2Y, 1 - fy2))), -20, -14, fy2);
-    var BFV = mul(XT, BF);
-    setArrow(aBF, O, BFV, ease(fb), 1);
-    rightAngle(rt3, BFV, sub(YT, BFV), mul(BFV, -1), 0.2, clamp((fb - 0.7) * 4));
-    put(lBF, pB(BFV), -48, 30, clamp((fb - 0.6) * 3));
-
-    // The FWL readout, under the data table
-    var ro = Math.max(clamp(st.fx) * 0, clamp((fb - 0.6) * 3));
-    put(roA, [980, 252], 0, 0, Math.max(dc, ro));
-    put(roB, [980, 286], 0, 0, ro);
   }
 
   // =================================================================================
   // States and stepping
   // =================================================================================
-  var KEYS = ['cam', 'A', 'pl', 'tilt', 'rs', 'dr', 'hl', 'tb', 'B', 'x', 'cx', 'y', 'pr', 'dc', 'fx', 'fy', 'fb', 'fade'];
+  var KEYS = ['cam', 'A', 'pl', 'tilt', 'rs', 'dr', 'hl', 'tb', 'B', 'x', 'cx', 'y', 'pr', 'dc',
+              'sl', 'py', 'px', 'fp', 'side'];
   function S(o) { var s = {}; KEYS.forEach(function (k) { s[k] = o[k] || 0; }); return s; }
   var MAIN = [
     S({ A: 1 }),
@@ -2739,27 +2837,31 @@ function (el, d, opts) {
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1 }),
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1 }),
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, dc: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fade: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fy: 1, fade: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fy: 1, fb: 1, fade: 1 })
+    S({ A: 1, pl: 1, tilt: 1, sl: 1 }),
+    S({ A: 1, tilt: 1, py: 1 }),
+    S({ A: 1, tilt: 1, py: 1, px: 1 }),
+    S({ A: 1, tilt: 1, py: 1, px: 1, fp: 1, side: 1 })
   ];
-  var DUR = [0, 1100, 1000, 1400, 1400, 2200, 900, 900, 1600, 1400, 1800, 1600, 1400];
+  var DUR = [0, 1100, 1000, 1400, 1400, 2200, 900, 900, 1600, 1400, 2200, 2800, 2800, 2600];
   var STAGES = opts.stages ? opts.stages.map(S) : MAIN;
   var FROM = opts.from || 0, TO = opts.to == null ? STAGES.length - 1 : opts.to;
 
   var state = STAGES[FROM];
   function render(st) {
     state = st;
-    az = lerp(AZ_A, AZ_B, ease(clamp(st.cam))) + off;
+    var sd = ease(clamp(st.side));
+    az = lerp(lerp(AZ_A, AZ_B, ease(clamp(st.cam))), AZ_SIDE, sd) + off * (1 - sd);
+    elev = lerp(EL, EL_SIDE, sd); zoom = sd;
     setCam();
     var aOn = ease(clamp(st.A));
     gA.style.display = aOn > 0.001 ? '' : 'none';
     gA.setAttribute('opacity', aOn);
     if (aOn > 0.001) {
       var c = coefAt(ease(clamp(st.tilt)));
-      drawBox(1);
+      drawBox(1, 1 - sd);
       drawPlane(c, ease(clamp(st.pl)));
-      drawPoints(st, c);
+      var mv = drawFWL(st);
+      drawPoints(st, c, mv);
       drawReadout(st, c);
     }
     // In the flip, the brackets mark the columns that become vectors
@@ -2840,9 +2942,10 @@ function (el, d, opts) {
 )(document.currentScript.previousElementSibling,
 {"x1":[2.33569487170986,7.20993275699414,3.88148799902195,4.78127771703528,4.10693269885509,6.31269049186462,7.64457570106178,3.2142913263018,6.10573398837615,3.75948140732483,4.21977298666303,4.42704150868925,7.12206720262318,2.80458131893423,3.57238035959688,6.45312349849824,1.51472658885153,4.71481137456955,2.64208151620517,6.38905503334202,3.65708453415342,6.17868752105468,5.09241190753818,0.75923011510219,2.1335102169693,3.56248054926977,4.77554138585746,4.10157789295517,2.14041112224166,6.4796912760415,6.50383690380892,5.26571294054879,5.02607596934444,5.40251074454628,5.84287562950363,7.3064800357338,7.6870958051504,6.32191946504156,3.5860757646916,5.42714516891306,5.97934043656175,5.2054431107781,4.33912957165567,3.58843154917289,6.49639713431339,3.0236611937394,4.86962812725541,2.04206695982659,8.49040561035615,6.40357207666191,5.89359476535884,4.93200215992858,2.74899986189231,5.81735703659499,6.35568658758172,5.75710677706957,6.65499240006984,7.00552562609986,3.81908434527125,6.55509891451578],"x2":[3.88118410948856,4.36734625537745,4.93588728200606,7.11967781707146,6.80556882300374,8.28884682046814,3.9576159640836,1.02466799162045,9.55927638067801,4.68705929223614,4.76416760432255,5.29809395559907,6.77860312439225,6.26013274944263,4.59122384353482,3.43672326348368,1.62730565114258,7.97228796177284,3.55725306812368,3.39515402750804,9.22075673730702,3.89230323656059,2.44422515719674,1.77641053720751,4.14436445318161,1.17059953235232,1.82408402834773,1.76771412157791,3.88589576586199,4.95012020688173,6.37628122089416,2.99986625203566,9.46720824745079,5.69179904559723,7.97900412779156,3.99539300053048,9.11239021647405,3.89429962215142,4.64560522692098,6.89429391599198,3.61850705633844,5.07798262422688,6.38786614657687,4.21032569889985,6.76997754465749,3.43521417586348,0.232277895544212,3.7333881158001,4.89377854377549,5.88181830681345,4.90595714657296,2.58826850550223,0.196174201609956,7.09246045904799,2.94698447177551,7.21714864794966,5.79978931798271,8.834738249893,6.6031905567474,3.68739555754849],"y":[29.398937002225,47.5577703012242,47.8456831860773,49.6225671510662,36.8100694854885,67.9920780858972,53.3396621895393,32.3164731547254,86.31836784785,40.0124560153671,26.3624129881388,35.5619448924039,59.4203099778206,37.7746093976389,34.7890379957723,66.8560440203386,9.15955641888994,60.9590100125523,15.1747851975052,50.7803444064781,58.6707670776272,56.9259137499692,45.6041809574495,10.4028210610625,12.1861930155622,27.2965961725156,25.9393351424423,26.311141261345,20.380922065537,57.1504585315934,70.8249794193229,46.3599995541913,66.327240540294,63.6654907494089,62.4453130102794,62.7429737553736,84.7613500985591,55.5217559781732,36.2977731342575,55.9038922030697,52.7859022603182,39.1197901867291,52.1084726632441,43.5533907952684,63.0179803827275,32.1950406246329,27.6626002513989,11.1085985434797,77.9344406383419,56.9260119838882,52.8950672822819,45.7557922909087,5.3452090599875,71.9195180750191,55.3818711556566,65.8539164914665,70.3315742986548,63.6546255398239,55.2771984949575,47.297685943464],"beta":[-7.55872927554973,7.30312846213395,3.8026596438288],"idx":[49,39,33]}
 ,
-{"from":9,"to":12,"readout":false}
+{"from":9,"to":13,"readout":false}
 );
 </script>
+<span class="fragment rg-step"></span>
 <span class="fragment rg-step"></span>
 <span class="fragment rg-step"></span>
 <span class="fragment rg-step"></span>
@@ -3218,11 +3321,16 @@ function (el, d, opts) {
   //   7   the outcome vector Y, off the plane
   //   8   the projection: Y-hat in the plane, e-hat at a right angle to it
   //   9   Y-hat taken apart as b1-hat X1 + b2-hat X2
-  // Frisch-Waugh-Lovell
-  //   10  X1 is projected onto X2 and the leftover, X1-tilde = M2 X1, drawn
-  //       from the origin, at a right angle to X2
-  //   11  the same for Y: Y-tilde = M2 Y
-  //   12  Y-tilde projected onto X1-tilde: b1-hat X1-tilde, the same b1-hat
+  // Frisch-Waugh-Lovell, back in data space with the whole cloud
+  //   10  the camera turns back to the cloud and its OLS plane; a red line
+  //       along the plane in the X1 direction has slope b1-hat
+  //   11  partial X2 out of Y: the fit of Y on X2 (a gold plane, tilted only
+  //       along X2) fades in, then each point moves up or down by its
+  //       residual, so the plane flattens out at the mean of Y
+  //   12  partial X2 out of X1: the fit of X1 on X2 (a gold vertical
+  //       curtain) fades in, then each point slides along X1 by its residual
+  //   13  the camera turns to look straight down the X2 axis: Y-tilde against
+  //       X1-tilde, whose fitted line has slope b1-hat again
   //
   // A slide shows stages opts.from to opts.to, one per .rg-step fragment;
   // stepping backwards runs each transition in reverse. opts.stages swaps in
@@ -3263,10 +3371,12 @@ function (el, d, opts) {
   // The data space is seen from the low corner of the plane, so its tilt
   // reads; the observation space from where both covariate vectors point to
   // the right. The camera turns from one to the other in the flip
-  var AZ_A = opts.azA == null ? -125 : opts.azA, AZ_B = -45, EL = 24, SWING = 14, PERIOD = 16000;
-  var az = AZ_A, off = 0;
+  // For FWL's last step it turns to look straight down the X2 axis
+  var AZ_A = opts.azA == null ? -125 : opts.azA, AZ_B = -45, AZ_SIDE = -90, EL = 24, EL_SIDE = 0,
+      SWING = 14, PERIOD = 16000;
+  var az = AZ_A, elev = EL, off = 0, zoom = 0;
   function cam() {
-    var a = az * Math.PI / 180, e = EL * Math.PI / 180;
+    var a = az * Math.PI / 180, e = elev * Math.PI / 180;
     return { sa: Math.sin(a), ca: Math.cos(a), se: Math.sin(e), ce: Math.cos(e) };
   }
   function projWith(c, sc, cx, cy) {
@@ -3279,14 +3389,14 @@ function (el, d, opts) {
   var C = cam(), pA, pB;
   function setCam() {
     C = cam();
-    pA = projWith(C, 104, 460, 280);       // data space
+    pA = projWith(C, lerp(104, 150, zoom), 460, lerp(280, 290, zoom));   // data space (zoomed in side on)
     pB = projWith(C, 90, 250, 370);        // observation space
   }
   setCam();
   function toward() { return [C.ca * C.ce, C.sa * C.ce, C.se]; }   // points at the viewer
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
-                        'aria-label': 'A 3D scatterplot of Y against X1 and X2 with its least squares plane, residuals and fitted values. Three observations are picked out and the picture is turned inside out: each observation becomes an axis and each variable a vector. The fitted values are the projection of the outcome vector onto the plane the covariate vectors span, with the residual at a right angle; partialling X2 out of X1 and Y recovers the same coefficient on X1.',
+                        'aria-label': 'A 3D scatterplot of Y against X1 and X2 with its least squares plane, residuals and fitted values. Three observations are picked out and the picture is turned inside out: each observation becomes an axis and each variable a vector. The fitted values are the projection of the outcome vector onto the plane the covariate vectors span, with the residual at a right angle; back in the cloud, partialling X2 out of Y and X1 and then looking down the X2 axis recovers the same slope on X1.',
                         style: 'width: 100%; height: auto; max-height: 520px; display: block; margin: 0 auto; font-family: inherit; touch-action: none; cursor: grab;' }, el);
 
   // Labels. A '~' after a character puts a tilde over it: combining tildes
@@ -3382,7 +3492,7 @@ function (el, d, opts) {
   [0, 25, 50, 75, 100].forEach(function (v) { tickLab.y.push(label(gTicks, String(v), GREY, 16, 400, null, 'end')); });
   var axLab = { x1: label(gTicks, 'X₁', INK, 22, 600), x2: label(gTicks, 'X₂', INK, 22, 600), y: label(gTicks, 'Y', INK, 22, 600) };
 
-  function drawBox(op) {
+  function drawBox(op, opX2) {
     var dv = toward();
     FACES.forEach(function (f) {
       var back = dot(f.n, dv) < 0;
@@ -3398,10 +3508,10 @@ function (el, d, opts) {
     var yFront = dv[1] > 0 ? L : -L, xFront = dv[0] > 0 ? L : -L;
     [0, 5, 10].forEach(function (v, j) {
       put(tickLab.x1[j], pA([wx(v), yFront * 1.14, -HZ]), 0, 18, op);
-      put(tickLab.x2[j], pA([xFront * 1.14, wx(v), -HZ]), 0, 18, op);
+      put(tickLab.x2[j], pA([xFront * 1.14, wx(v), -HZ]), 0, 18, opX2);
     });
-    put(axLab.x1, pA([0, yFront * 1.35, -HZ]), 0, 26, op);
-    put(axLab.x2, pA([xFront * 1.35, 0, -HZ]), 0, 26, op);
+    put(axLab.x1, pA([0, yFront * 1.35, -HZ]), 0, 26 + 18 * zoom, op);
+    put(axLab.x2, pA([xFront * 1.35, 0, -HZ]), 0, 26, opX2);
     var best = null;
     [[-L, -L], [-L, L], [L, -L], [L, L]].forEach(function (c) {
       var u = pA([c[0], c[1], 0])[0];
@@ -3425,12 +3535,62 @@ function (el, d, opts) {
     }
     return out;
   }
-  function drawPlane(c, op) {
+  function drawPlane(c, op, P) {
+    P = P || plane;
     var poly = [[0, 0], [10, 0], [10, 10], [0, 10]];
     poly = clipPoly(poly, function (p) { return fit(c, p[0], p[1]); });
     poly = clipPoly(poly, function (p) { return 100 - fit(c, p[0], p[1]); });
-    polyPts(plane, poly.map(function (p) { return pA([wx(p[0]), wx(p[1]), wz(fit(c, p[0], p[1]))]); }));
-    plane.setAttribute('opacity', op);
+    polyPts(P, poly.map(function (p) { return pA([wx(p[0]), wx(p[1]), wz(fit(c, p[0], p[1]))]); }));
+    P.setAttribute('opacity', op);
+  }
+
+  // ---- Frisch-Waugh-Lovell in data space ------------------------------------------
+  function ols1(yv, xv) {             // bivariate OLS: [intercept, slope]
+    var mx = mean(xv), my = mean(yv), sxy = 0, sxx = 0;
+    for (var i = 0; i < xv.length; i++) { sxy += (xv[i] - mx) * (yv[i] - my); sxx += (xv[i] - mx) * (xv[i] - mx); }
+    return [my - sxy / sxx * mx, sxy / sxx];
+  }
+  var X1BAR = mean(d.x1), X2BAR = mean(d.x2);
+  var GY = ols1(d.y, d.x2), GX = ols1(d.x1, d.x2);     // Y on X2, X1 on X2
+  // The residualized variables, shifted back to their means so they stay in the box
+  var YT_A = d.y.map(function (v, i) { return YBAR + v - GY[0] - GY[1] * d.x2[i]; });
+  var XT_A = d.x1.map(function (v, i) { return X1BAR + v - GX[0] - GX[1] * d.x2[i]; });
+  var BFA = ols1(YT_A, XT_A)[1];                        // equals B[1]
+  var gYplane = mk('polygon', { fill: GOLD, 'fill-opacity': 0.28, stroke: GOLD, 'stroke-opacity': 0.7, 'stroke-width': 1.5 }, gPlane);
+  var curtain = mk('polygon', { fill: GOLD, 'fill-opacity': 0.22, stroke: GOLD, 'stroke-opacity': 0.7, 'stroke-width': 1.5 }, gPlane);
+  var fwlPlane = mk('polygon', { fill: RED, 'fill-opacity': 0.22, stroke: RED, 'stroke-opacity': 0.8, 'stroke-width': 2.5 }, gPlane);
+  var slope = line(gTicks, RED, 5), slopeLab = label(gTicks, 'slope β̂₁ = ' + f2(B[1]), RED, 22, 700, null, 'start');
+  var gFW = mk('g', {}, gA);
+  var fwA = label(gFW, 'Full regression: β̂₁ = ' + f2(B[1]), BLUE, 22, 600, null, 'start');
+  var fwB = label(gFW, 'Ỹ on X~₁: slope ' + f2(BFA), RED, 22, 600, null, 'start');
+  var fwNote = label(gFW, 'each residual is shifted back to its variable\'s mean', GREY, 17, 400, 'italic', 'start');
+
+  function drawFWL(st) {
+    var py = clamp(st.py), px = clamp(st.px), fp = clamp(st.fp);
+    var mvY = ease(clamp((py - 0.35) / 0.65)), mvX = ease(clamp((px - 0.35) / 0.65));
+    // Y on X2: tilted only along X2, flattening to the mean as the points move
+    drawPlane([lerp(GY[0], YBAR, mvY), 0, lerp(GY[1], 0, mvY)], clamp(py / 0.3) * (1 - clamp(px / 0.3)), gYplane);
+    // X1 on X2: a vertical curtain x1 = a + b x2, straightening to x1 = mean
+    var cx0 = lerp(GX[0], X1BAR, mvX), cx1 = lerp(GX[1], 0, mvX);
+    polyPts(curtain, [[cx0, 0, 0], [cx0 + 10 * cx1, 10, 0], [cx0 + 10 * cx1, 10, 100], [cx0, 0, 100]].map(function (q) {
+      return pA([wx(q[0]), wx(q[1]), wz(q[2])]);
+    }));
+    curtain.setAttribute('opacity', clamp(px / 0.3) * (1 - clamp(fp / 0.3)));
+    // The fit of Y-tilde on X1-tilde: flat along X2, so a line seen side on
+    drawPlane([YBAR - BFA * X1BAR, BFA, 0], ease(clamp(fp / 0.4)), fwlPlane);
+    // The slope along X1 of the full OLS plane, at the mean of X2
+    var sl = ease(clamp(st.sl));
+    var s0 = pA([wx(0), wx(X2BAR), wz(fit(B, 0, X2BAR))]), s1 = pA([wx(10), wx(X2BAR), wz(fit(B, 10, X2BAR))]);
+    setLine(slope, s0, s1, sl);
+    put(slopeLab, s1, 12, 6, sl);
+    var ro = clamp((fp - 0.6) * 2.5);
+    put(fwA, [40, 50], 0, 0, ro);
+    put(fwB, [40, 84], 0, 0, ro);
+    put(fwNote, [40, 112], 0, 0, ro);
+    // Once the points have moved, the axes hold the residualized variables
+    setText(axLab.x1, mvX > 0.5 ? 'X~₁' : 'X₁');
+    setText(axLab.y, mvY > 0.5 ? 'Ỹ' : 'Y');
+    return { mvX: mvX, mvY: mvY };
   }
 
   // Points, each with its residual segment, in front of or behind the plane
@@ -3446,14 +3606,15 @@ function (el, d, opts) {
                lab: hi >= 0 ? label(g, String(hi + 1), RED, 22, 700) : null });
   }
 
-  function drawPoints(st, c) {
+  function drawPoints(st, c, mv) {
     var dr = ease(clamp(st.dr)), rs = clamp(st.rs), hl = ease(clamp(st.hl));
     var dv = toward();
     var nrm = [-c[1] * (wz(1) - wz(0)) / (wx(1) - wx(0)), -c[2] * (wz(1) - wz(0)) / (wx(1) - wx(0)), 1];
     var viewerAbove = dot(nrm, dv) > 0;
     pts.forEach(function (P, i) {
-      var f = fit(c, d.x1[i], d.x2[i]), y = lerp(d.y[i], f, dr);
-      var q = pA([wx(d.x1[i]), wx(d.x2[i]), wz(y)]), qf = pA([wx(d.x1[i]), wx(d.x2[i]), wz(f)]);
+      var x1 = lerp(d.x1[i], XT_A[i], mv.mvX), y0 = lerp(d.y[i], YT_A[i], mv.mvY);
+      var f = fit(c, x1, d.x2[i]), y = lerp(y0, f, dr);
+      var q = pA([wx(x1), wx(d.x2[i]), wz(y)]), qf = pA([wx(x1), wx(d.x2[i]), wz(f)]);
       var qe = [lerp(qf[0], q[0], rs), lerp(qf[1], q[1], rs)];
       // A point on the viewer's side of the plane is drawn in front of it
       var front = st.pl < 0.05 || ((d.y[i] >= f) === viewerAbove);
@@ -3463,6 +3624,7 @@ function (el, d, opts) {
       setLine(P.res, qf, qe, rs > 0.01 ? 1 : 0);
       var isH = P.hl >= 0;
       P.dot.setAttribute('fill', isH ? (hl > 0.5 ? RED : INK) : INK);
+      if (isH) P.dot.setAttribute('r', lerp(5.5, 7, hl));
       P.g.setAttribute('opacity', isH ? 1 : lerp(1, 0.18, hl));
       if (P.lab) put(P.lab, q, LOFF[P.hl][0], LOFF[P.hl][1], hl);
     });
@@ -3536,9 +3698,6 @@ function (el, d, opts) {
   var c1 = dot(X1, Y), c2 = dot(X2, Y), det = a11 * a22 - a12 * a12;
   var B1 = (a22 * c1 - a12 * c2) / det, B2 = (a11 * c2 - a12 * c1) / det;
   var YH = add(mul(X1, B1), mul(X2, B2));
-  var P2X1 = mul(X2, dot(X1, X2) / a22), XT = sub(X1, P2X1);
-  var P2Y = mul(X2, dot(Y, X2) / a22), YT = sub(Y, P2Y);
-  var BF = dot(XT, YT) / dot(XT, XT);
 
   var gB = mk('g', {}, svg);
   var gBax = mk('g', {}, gB), gBpl = mk('g', {}, gB), gBdc = mk('g', {}, gB),
@@ -3571,26 +3730,18 @@ function (el, d, opts) {
   var cLab = label(gBpl, 'C(X)', BLUE, 24, 600);
   var dc1 = line(gBdc, BLUE, 2.5, '7 6'), dc2 = line(gBdc, BLUE, 2.5, '7 6');
   var dcLab1 = label(gBdc, 'β̂₁X₁', BLUE, 21), dcLab2 = label(gBdc, 'β̂₂X₂', BLUE, 21);
-  var p2x = line(gBdc, GOLD, 2.5, '7 6'), p2y = line(gBdc, GOLD, 2.5, '7 6');
   var aX1 = arrow(gBv, BLUE, 4), aX2 = arrow(gBv, BLUE, 4), aY = arrow(gBv, INK, 4);
   var aYH = arrow(gBv, BLUE, 4), aE = arrow(gBv, RED, 4);
   var rt = mk('polyline', { fill: 'none', stroke: RED, 'stroke-width': 2 }, gBv);
-  var aXT = arrow(gBv, GOLD, 4), aYT = arrow(gBv, INK, 4), aBF = arrow(gBv, RED, 5);
-  var rt2 = mk('polyline', { fill: 'none', stroke: GOLD, 'stroke-width': 2 }, gBv);
-  var rt3 = mk('polyline', { fill: 'none', stroke: GOLD, 'stroke-width': 2 }, gBv);
   var lX1 = label(gBlab, 'X₁', BLUE), lX2 = label(gBlab, 'X₂', BLUE), lY = label(gBlab, 'Y', INK);
   var lYH = label(gBlab, 'Ŷ = Xβ̂', BLUE, 24), lE = label(gBlab, 'ê = Y − Xβ̂', RED, 24);
-  var lXT = label(gBlab, 'X~₁ = M₂X₁', GOLD, 24), lYT = label(gBlab, 'Ỹ = M₂Y', INK, 24);
-  var lBF = label(gBlab, 'β̂₁X~₁', RED, 24);
-  var roA = label(gBro, 'Full regression: β̂₁ = ' + f2(B1), BLUE, 22, 600, null, 'end');
-  var roB = label(gBro, 'Ỹ on X~₁: slope ' + f2(BF), RED, 22, 600, null, 'end');
 
   function drawB(st) {
     var on = ease(clamp(st.B));
     gB.setAttribute('opacity', on);
     if (on < 0.001) { gB.style.display = 'none'; return; }
     gB.style.display = '';
-    var fade = lerp(1, 0.18, ease(clamp(st.fade))), fadeC = lerp(1, 0.35, ease(clamp(st.fade)));
+    var fade = 1, fadeC = 1;
 
     [[AXL, 0, 0], [0, AXL, 0], [0, 0, 3.05]].forEach(function (p, k) {
       setSegB(bAxes[k], O, p, ease(clamp(st.B)), 1);
@@ -3605,7 +3756,7 @@ function (el, d, opts) {
 
     var xt = ease(clamp(st.x));
     setArrow(aX1, O, X1, xt, fadeC);
-    setArrow(aX2, O, X2, xt, lerp(fadeC, 1, ease(clamp(st.fade))));
+    setArrow(aX2, O, X2, xt, 1);
     put(lX1, pB(X1), 18, 30, xt * fadeC);
     put(lX2, pB(X2), -30, -12, xt);
 
@@ -3626,31 +3777,13 @@ function (el, d, opts) {
     put(dcLab1, pB(mul(P1, 0.55)), 6, 30, dc);
     put(dcLab2, pB(vlerp(P1, YH, 0.5)), -6, -16, dc);
 
-    var fx = clamp(st.fx), fy = clamp(st.fy), fb = clamp(st.fb);
-    var fx1 = ease(clamp((fx - 0.2) / 0.4)), fx2 = ease(clamp((fx - 0.6) / 0.4));
-    setSegB(p2x, X1, P2X1, fx1, 0.9);
-    setArrow(aXT, mul(P2X1, 1 - fx2), add(XT, mul(P2X1, 1 - fx2)), fx1, 1);
-    rightAngle(rt2, P2X1, sub(X1, P2X1), mul(X2, -1), 0.2, clamp((fx - 0.4) * 4) * (1 - fx2));
-    put(lXT, pB(add(XT, mul(P2X1, 1 - fx2))), 92, 22, fx2);
-    var fy1 = ease(clamp(fy / 0.5)), fy2 = ease(clamp((fy - 0.5) / 0.5));
-    setSegB(p2y, Y, P2Y, fy1, 0.9 * (1 - fy2 * 0.6));
-    setArrow(aYT, mul(P2Y, 1 - fy2), add(YT, mul(P2Y, 1 - fy2)), fy1, 1);
-    put(lYT, pB(add(YT, mul(P2Y, 1 - fy2))), -20, -14, fy2);
-    var BFV = mul(XT, BF);
-    setArrow(aBF, O, BFV, ease(fb), 1);
-    rightAngle(rt3, BFV, sub(YT, BFV), mul(BFV, -1), 0.2, clamp((fb - 0.7) * 4));
-    put(lBF, pB(BFV), -48, 30, clamp((fb - 0.6) * 3));
-
-    // The FWL readout, under the data table
-    var ro = Math.max(clamp(st.fx) * 0, clamp((fb - 0.6) * 3));
-    put(roA, [980, 252], 0, 0, Math.max(dc, ro));
-    put(roB, [980, 286], 0, 0, ro);
   }
 
   // =================================================================================
   // States and stepping
   // =================================================================================
-  var KEYS = ['cam', 'A', 'pl', 'tilt', 'rs', 'dr', 'hl', 'tb', 'B', 'x', 'cx', 'y', 'pr', 'dc', 'fx', 'fy', 'fb', 'fade'];
+  var KEYS = ['cam', 'A', 'pl', 'tilt', 'rs', 'dr', 'hl', 'tb', 'B', 'x', 'cx', 'y', 'pr', 'dc',
+              'sl', 'py', 'px', 'fp', 'side'];
   function S(o) { var s = {}; KEYS.forEach(function (k) { s[k] = o[k] || 0; }); return s; }
   var MAIN = [
     S({ A: 1 }),
@@ -3663,27 +3796,31 @@ function (el, d, opts) {
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1 }),
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1 }),
     S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, dc: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fade: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fy: 1, fade: 1 }),
-    S({ cam: 1, tb: 1, B: 1, x: 1, cx: 1, y: 1, pr: 1, fx: 1, fy: 1, fb: 1, fade: 1 })
+    S({ A: 1, pl: 1, tilt: 1, sl: 1 }),
+    S({ A: 1, tilt: 1, py: 1 }),
+    S({ A: 1, tilt: 1, py: 1, px: 1 }),
+    S({ A: 1, tilt: 1, py: 1, px: 1, fp: 1, side: 1 })
   ];
-  var DUR = [0, 1100, 1000, 1400, 1400, 2200, 900, 900, 1600, 1400, 1800, 1600, 1400];
+  var DUR = [0, 1100, 1000, 1400, 1400, 2200, 900, 900, 1600, 1400, 2200, 2800, 2800, 2600];
   var STAGES = opts.stages ? opts.stages.map(S) : MAIN;
   var FROM = opts.from || 0, TO = opts.to == null ? STAGES.length - 1 : opts.to;
 
   var state = STAGES[FROM];
   function render(st) {
     state = st;
-    az = lerp(AZ_A, AZ_B, ease(clamp(st.cam))) + off;
+    var sd = ease(clamp(st.side));
+    az = lerp(lerp(AZ_A, AZ_B, ease(clamp(st.cam))), AZ_SIDE, sd) + off * (1 - sd);
+    elev = lerp(EL, EL_SIDE, sd); zoom = sd;
     setCam();
     var aOn = ease(clamp(st.A));
     gA.style.display = aOn > 0.001 ? '' : 'none';
     gA.setAttribute('opacity', aOn);
     if (aOn > 0.001) {
       var c = coefAt(ease(clamp(st.tilt)));
-      drawBox(1);
+      drawBox(1, 1 - sd);
       drawPlane(c, ease(clamp(st.pl)));
-      drawPoints(st, c);
+      var mv = drawFWL(st);
+      drawPoints(st, c, mv);
       drawReadout(st, c);
     }
     // In the flip, the brackets mark the columns that become vectors
