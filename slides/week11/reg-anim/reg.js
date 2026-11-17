@@ -344,7 +344,7 @@ function (el, d, opts) {
     for (var i = 0; i < n; i++) { var r = d.y[i] - fit(c, d.x1[i], d.x2[i]); ss += r * r; }
     var t = clamp(st.tilt), show = clamp(st.rs);
     gRA.setAttribute('opacity', show);
-    setText(raLab, (t < 0.02 ? 'Σ (Yᵢ − Ȳ)² = ' : 'Σ (Yᵢ − plane)² = ') + fmtInt(ss) +
+    setText(raLab, (t < 0.02 ? 'Σ (Yᵢ − Ȳ)² = ' : 'Σ (Yᵢ − Ŷᵢ)² = ') + fmtInt(ss) +
                    (t < 0.02 ? '   (TSS)' : t > 0.98 ? '   (SSR)' : ''));
     put(raLab, [40, 60], 0, 0, 1);
     raBar.setAttribute('width', (320 * ss / TSS).toFixed(1));
