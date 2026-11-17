@@ -4015,7 +4015,7 @@ adj_R2 0.252   0.415           0.684      0.671</code></pre>
 <li class="fragment"><p><span class="math inline">\(0 \leq h_{ii} \leq 1\)</span>, and <span class="math inline">\(h_{ii} \geq 1/n\)</span></p></li>
 <li class="fragment"><p>Leverages <strong>sum</strong> to the number of regressors: <span class="math inline">\(\sum_{i} h_{ii} = \text{tr}(\mathbf{P}) = k\)</span></p>
 <ul>
-<li class="fragment">So the <strong>average</strong> leverage is <span class="math inline">\(k / n\)</span>, which vanishes as <span class="math inline">\(n\)</span> grows</li>
+<li class="fragment">So the <strong>average</strong> leverage is <span class="math inline">\(k / n\)</span></li>
 </ul></li>
 <li class="fragment"><p><span class="math inline">\(h_{ii} = 1\)</span>: the fit passes <strong>exactly</strong> through <span class="math inline">\(Y_i\)</span></p>
 <ul>
@@ -4032,7 +4032,7 @@ adj_R2 0.252   0.415           0.684      0.671</code></pre>
 <ul>
 <li class="fragment"><p>A high-leverage point pulls the fit <strong>toward itself</strong>, so its own residual comes out <strong>small</strong></p></li>
 <li class="fragment"><p>Recall <span class="math inline">\(\hat{\mathbf{e}} = \mathbf{M}\mathbf{e}\)</span>. If the true errors were homoskedastic, <span class="math inline">\(\Var(e_i \mid \mathbf{X}) = \sigma^2\)</span>, then</p>
-<p><span class="math display">\[\Var(\hat{\mathbf{e}} \mid \mathbf{X})  = \sigma^2\mathbf{M} \qquad \Var(\hat{e}_i \mid \mathbf{X}) = \sigma^2(1 - h_{ii})\]</span></p>
+<p><span class="math display">\[\Var(\hat{\mathbf{e}} \mid \mathbf{X})  = \mathbf{M}\sigma^2\mathbf{M}^\prime = \sigma^2\mathbf{M} \qquad \Var(\hat{e}_i \mid \mathbf{X}) = \sigma^2(1 - h_{ii})\]</span></p>
 <ul>
 <li class="fragment">The residuals are <strong>less</strong> variable than the errors - the variance is <strong>smaller</strong> for high-leverage points.</li>
 <li class="fragment">Where <span class="math inline">\(h_{ii} \to 1\)</span>, the residual is forced to zero!</li>
@@ -4275,12 +4275,12 @@ partyRepublican    0.0489  0.0489   0.0489</code></pre>
 <li class="fragment">So HC0 standard errors tend to be too small in small samples</li>
 </ul></li>
 <li class="fragment"><p>The usual corrections <span class="citation" data-cites="mackinnon1985some">(<a href="#/references" role="doc-biblioref" onclick>MacKinnon and White 1985</a>)</span></p>
-<p><span class="math display">\[\text{HC1}: \frac{n}{n-k}\hat{e}_i^2 \qquad \text{HC2}: \frac{\hat{e}_i^2}{1 - h_{ii}} \qquad \text{HC3}: \frac{\hat{e}_i^2}{(1 - h_{ii})^2} = \tilde{e}_i^2\]</span></p>
+<p><span class="math display">\[\text{HC1}: \frac{n}{n-k}\hat{e}_i^2 \qquad \text{HC2}: \frac{\hat{e}_i^2}{1 - h_{ii}} \qquad \text{HC3}: \frac{\hat{e}_i^2}{(1 - h_{ii})^2}\]</span></p>
 <ul>
 <li class="fragment">HC2 undoes the <span class="math inline">\((1 - h_{ii})\)</span> shrinkage. It’s <strong>unbiased</strong> under homoskedasticity</li>
-<li class="fragment">HC3 plugs in the squared <strong>leave-one-out</strong> errors: close to the <strong>jackknife</strong>, and the most conservative</li>
+<li class="fragment">HC3 plugs in the squared <strong>leave-one-out</strong> errors - most conservative.</li>
 </ul></li>
-<li class="fragment"><p>In large samples without massively high-leverage points, they’re all the same</p></li>
+<li class="fragment"><p>In large samples without massively high-leverage points, they’re all basically the same</p></li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-label="1"></a><span class="fu">round</span>(<span class="fu">sapply</span>(<span class="fu">c</span>(<span class="st">&quot;HC0&quot;</span>, <span class="st">&quot;HC1&quot;</span>, <span class="st">&quot;HC2&quot;</span>, <span class="st">&quot;HC3&quot;</span>), \(t) <span class="fu">sqrt</span>(<span class="fu">diag</span>(<span class="fu">vcovHC</span>(fit_full, <span class="at">type =</span> t)))[<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]), <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4304,7 +4304,7 @@ racial_resentment 1.5729 1.5737 1.5743 1.5758</code></pre>
 <li class="fragment"><p>Both are <strong>linear smoothers</strong>: <span class="math inline">\(\hat{\mathbf{Y}} = \mathbf{S}\mathbf{Y}\)</span> for some <span class="math inline">\(n \times n\)</span> matrix <span class="math inline">\(\mathbf{S}\)</span> built from <span class="math inline">\(\mathbf{X}\)</span></p>
 <ul>
 <li class="fragment">In both cases, the weights sum to 1</li>
-<li class="fragment"><span class="math inline">\(\text{tr}(\mathbf{S})\)</span> measures how flexible the fit is: the <strong>effective degrees of freedom</strong> (<span class="math inline">\(k\)</span> for OLS)</li>
+<li class="fragment"><span class="math inline">\(\text{tr}(\mathbf{S})\)</span> measures how flexible the fit is: the <strong>effective number of parameters</strong> (<span class="math inline">\(k\)</span> for OLS)</li>
 </ul></li>
 </ul>
 </section>
