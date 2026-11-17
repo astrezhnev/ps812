@@ -107,6 +107,19 @@ Thanks to the work of many scholars over the last several decades, obtaining rep
 
 You will submit your complete analysis code along with your poster and present your poster in person at the MEAD poster session. I should be able to generate all figures and results presented in the poster from your provided code. If you want to use this as an opportunity to learn how to work Quarto, I would encourage you to make it possible to generate *the poster itself* from your replication code, but this is not required.
 
+#### Poster printing instructions.
+
+You should print your poster from [UW Madison Libraries' Poster Printing service](https://www.library.wisc.edu/locations/printing/poster-printing/). You will be given a Department Funding String to reference when submitting your poster for printing. Typical poster sizes are 48 in. x 36 in., though you may want to reduce it to 42 in. x 32.5 in. to save on paper. Posters can be either landscape or portrait sized. Below are some possible templates to use for creating your poster although you are welcome to use whatever typesetting software that you would like and should feel free to use whatever template you prefer (or customize and make your own!)
+
+**LaTeX poster templates**:
+
+- [UW-Madison Poster Template](https://www.overleaf.com/latex/templates/uw-madison-poster-template/tfbyxyhbymsq) (`tikzposter`, 42 in. x 32.5 in. landscape)
+- [Zach Warner's UW-Madison Beamer Poster Theme](https://github.com/zachwarner/Warner-Wisconsin-Beamer-Poster) (`beamerposter`, 48 in. x 36 in. landscape)
+
+**Typst poster template**:
+
+- [UW-Madison Quarto/Typst Poster](https://github.com/astrezhnev/quarto-poster) (48 in. x 36 in. landscape by default; set `size: "36x48"` for portrait)
+
 ### Participation (10%)
 
 We expect students to take an active role in learning in both lecture and section. Engagement with the teaching staff by asking and answering questions will contribute to this grade as will interaction on the Slack. Additionally, bonus credit can be earned by attending talks from external speakers at the MEAD workshop.
