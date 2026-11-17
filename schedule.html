@@ -45,7 +45,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-59285f19cc93ba41e7772f6fd9b25434.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e83085fcbfc6b1160df889401e018023.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -167,8 +167,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#week-9-introduction-to-regression" id="toc-week-9-introduction-to-regression" class="nav-link" data-scroll-target="#week-9-introduction-to-regression">Week 9: Introduction to Regression</a></li>
   <li><a href="#week-10-inference-for-regression" id="toc-week-10-inference-for-regression" class="nav-link" data-scroll-target="#week-10-inference-for-regression">Week 10: Inference for Regression</a></li>
   <li><a href="#week-11-interpreting-regressions" id="toc-week-11-interpreting-regressions" class="nav-link" data-scroll-target="#week-11-interpreting-regressions">Week 11: Interpreting Regressions</a></li>
-  <li><a href="#week-12-regression-wrap-up" id="toc-week-12-regression-wrap-up" class="nav-link" data-scroll-target="#week-12-regression-wrap-up">Week 12: Regression wrap-up</a></li>
-  <li><a href="#week-13-weighting-estimators" id="toc-week-13-weighting-estimators" class="nav-link" data-scroll-target="#week-13-weighting-estimators">Week 13: Weighting estimators</a></li>
+  <li><a href="#week-12-missing-data" id="toc-week-12-missing-data" class="nav-link" data-scroll-target="#week-12-missing-data">Week 12: Missing data</a></li>
+  <li><a href="#week-13-survey-weighting" id="toc-week-13-survey-weighting" class="nav-link" data-scroll-target="#week-13-survey-weighting">Week 13: Survey weighting</a></li>
   <li><a href="#week-14-preview-causal-inference" id="toc-week-14-preview-causal-inference" class="nav-link" data-scroll-target="#week-14-preview-causal-inference">Week 14: Preview: Causal inference</a></li>
   </ul>
 </nav>
@@ -467,13 +467,17 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <hr>
 </section>
-<section id="week-12-regression-wrap-up" class="level2">
-<h2 class="anchored" data-anchor-id="week-12-regression-wrap-up">Week 12: Regression wrap-up</h2>
+<section id="week-12-missing-data" class="level2">
+<h2 class="anchored" data-anchor-id="week-12-missing-data">Week 12: Missing data</h2>
 <p><em>Tuesday, November 24</em></p>
 <p><strong>Topics:</strong></p>
 <ul>
-<li>Polynomial regression, sieve estimators</li>
-<li>Overfitting and penalized regression</li>
+<li>Missing data, bounds for the sample mean, and assumptions for point identification</li>
+<li>Horvitz-Thompson and Hájek inverse probability weighting estimators</li>
+</ul>
+<p><strong>Readings:</strong></p>
+<ul>
+<li><a href="https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/missing-data/0E4CAAF51D501EC05D4D5F2D0950C012">Section 6.1-6.2</a>; Aronow and Miller 2019.</li>
 </ul>
 <div class="callout callout-style-simple callout-important">
 <div class="callout-body d-flex">
@@ -487,18 +491,16 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <hr>
 </section>
-<section id="week-13-weighting-estimators" class="level2">
-<h2 class="anchored" data-anchor-id="week-13-weighting-estimators">Week 13: Weighting estimators</h2>
+<section id="week-13-survey-weighting" class="level2">
+<h2 class="anchored" data-anchor-id="week-13-survey-weighting">Week 13: Survey weighting</h2>
 <p><em>Tuesday, December 1 &amp; Wednesday, December 2</em></p>
 <p><strong>Topics:</strong></p>
 <ul>
-<li>Missing data, bounds for the sample mean, and assumptions for point identification</li>
-<li>Horvitz-Thompson and Hájek inverse probability weighting estimators</li>
-<li>Post-stratification/raking weights in surveys.</li>
+<li>Beyond simple random samples: stratified and clustered samples</li>
+<li>Post-stratification/raking/balancing weights to adjust for non-response</li>
 </ul>
 <p><strong>Readings:</strong></p>
 <ul>
-<li><a href="https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/missing-data/0E4CAAF51D501EC05D4D5F2D0950C012">Section 6.1-6.2</a>; Aronow and Miller 2019.</li>
 <li>Section 1-2. Caughey, Devin, Adam J. Berinsky, Sara Chatfield, Erin Hartman, Eric Schickler, and Jasjeet S. Sekhon. <a href="https://www.dropbox.com/s/hnb4tjf3eer4yxo/Caughey_et_al-target_estimation_calibration_weighting.pdf?dl=1">“Target Estimation and Adjustment Weighting for Survey Nonresponse and Sampling Bias.”</a> <em>Elements in Quantitative and Computational Methods for the Social Sciences</em>. Cambridge: Cambridge University Press, 2020.</li>
 </ul>
 <div class="callout callout-style-simple callout-important">
