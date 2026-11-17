@@ -82,11 +82,11 @@ Links become active as the materials for each week are posted.
 
 *To be posted*
 
-### Week 12: Regression Wrap-up
+### Week 12: Introduction to Weighting
 
 *No section -- Thanksgiving recess runs November 26-29*
 
-### Week 13: Weighting Estimators
+### Week 13: Weighting, Part 2
 
 *Friday, December 4*
 

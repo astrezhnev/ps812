@@ -230,14 +230,19 @@ Textbook readings are from Aronow and Miller, *Foundations of Agnostic Statistic
 
 ---
 
-## Week 12: Regression wrap-up
+## Week 12: Missing data
 
 *Tuesday, November 24*
 
 **Topics:**
 
-- Polynomial regression, sieve estimators
-- Overfitting and penalized regression
+- Missing data, bounds for the sample mean, and assumptions for point identification
+- Horvitz-Thompson and Hájek inverse probability weighting estimators
+
+**Readings:**
+
+- [Section 6.1-6.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/missing-data/0E4CAAF51D501EC05D4D5F2D0950C012); Aronow and Miller 2019.
+
 
 ::: {.callout-important appearance="simple"}
 Thanksgiving recess runs November 26-29. Class meets as usual on Tuesday this week.
@@ -245,20 +250,19 @@ Thanksgiving recess runs November 26-29. Class meets as usual on Tuesday this we
 
 ---
 
-## Week 13: Weighting estimators
+## Week 13: Survey weighting
 
 *Tuesday, December 1 & Wednesday, December 2*
 
 **Topics:**
 
-- Missing data, bounds for the sample mean, and assumptions for point identification
-- Horvitz-Thompson and Hájek inverse probability weighting estimators
-- Post-stratification/raking weights in surveys.
+- Beyond simple random samples: stratified and clustered samples
+- Post-stratification/raking/balancing weights to adjust for non-response
 
 **Readings:**
 
-- [Section 6.1-6.2](https://www-cambridge-org.ezproxy.library.wisc.edu/core/books/foundations-of-agnostic-statistics/missing-data/0E4CAAF51D501EC05D4D5F2D0950C012); Aronow and Miller 2019.
 - Section 1-2. Caughey, Devin, Adam J. Berinsky, Sara Chatfield, Erin Hartman, Eric Schickler, and Jasjeet S. Sekhon. ["Target Estimation and Adjustment Weighting for Survey Nonresponse and Sampling Bias."](https://www.dropbox.com/s/hnb4tjf3eer4yxo/Caughey_et_al-target_estimation_calibration_weighting.pdf?dl=1) *Elements in Quantitative and Computational Methods for the Social Sciences*. Cambridge: Cambridge University Press, 2020.
+
 
 ::: {.callout-important appearance="simple"}
 **Fall Grad Poster Presentations** at MEAD, Friday 12/4, 1:30-4pm Ogg Room
