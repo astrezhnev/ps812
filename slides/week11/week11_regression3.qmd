@@ -112,7 +112,7 @@ b_sim <- coef(fit_sim)
 
 # One scene for every 3D slide: the cloud and its plane, then three rows
 # (50, 40 and 34, which become observation axes 1, 2 and 3) turned into
-# vectors for the projection and FWL pictures. These three were picked so the
+# vectors for the projection picture, then back to the whole cloud for FWL. These three were picked so the
 # vectors' geometry reads well: X1 and X2 at about 45 degrees, Y well off
 # their plane. Each slide plays stages `from` to `to`; `stages` swaps in a
 # different list of states and `readout` reports the sums of squares
@@ -151,7 +151,7 @@ reg_anim(3, 9)
 ```{r}
 #| echo: false
 #| output: asis
-reg_anim(9, 12)
+reg_anim(9, 13)
 ```
 
 ## The geometry of least squares
