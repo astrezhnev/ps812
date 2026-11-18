@@ -154,83 +154,6 @@ reg_anim(3, 9)
 reg_anim(9, 13)
 ```
 
-## The geometry of least squares
-
-::: {.incremental}
-
-- The **column space** of $\mathbf{X}$ is every linear combination of its columns
-
-  $$\mathcal{C}(\mathbf{X}) = \{\mathbf{X}\mathbf{b} : \mathbf{b} \in \mathbb{R}^k\}$$
-
-  - Every possible vector of **linear predictions** of $\mathbf{Y}$ from $\mathbf{X}$
-
-- $\hat{\mathbf{Y}} = \mathbf{X}\hat{\boldsymbol{\beta}}$ is the point in $\mathcal{C}(\mathbf{X})$ **closest** to $\mathbf{Y}$: its **projection**
-
-- The shortest path from a point to a plane meets it at a **right angle**, so the residual is **orthogonal** to every column of $\mathbf{X}$
-
-  $$\mathbf{X}^\prime\hat{\mathbf{e}} = \mathbf{X}^\prime(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \mathbf{0}$$
-
-- With an intercept: $\sum_i \hat{e}_i = 0$ and $\sum_i \hat{e}_i X_{ij} = 0$ for every covariate.
-
-:::
-
-## The hat matrix
-
-::: {.incremental}
-
-- Solving the normal equations and multiplying through by $\mathbf{X}$
-
-  $$\hat{\mathbf{Y}} = \mathbf{X}\hat{\boldsymbol{\beta}} = \underbrace{\mathbf{X}(\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime}_{\mathbf{P}}\,\mathbf{Y}$$
-
-- $\mathbf{P}$ is the $n \times n$ **projection matrix** onto the **column space** of $\mathbf{X}$
-  - Also called the **hat matrix**: it "puts the hat on" $\mathbf{Y}$
-
-- Multiplying **any** vector by $\mathbf{P}$ gives its best linear prediction from $\mathbf{X}$
-  - $\mathbf{P}\mathbf{Z}$ = the fitted values from regressing $\mathbf{Z}$ on $\mathbf{X}$
-
-:::
-
-## Properties of the hat matrix
-
-::: {.incremental}
-
-- **Leaves $\mathcal{C}(\mathbf{X})$ alone**: anything already in the column space is its own projection
-
-  $$\mathbf{P}\mathbf{X} = \mathbf{X}(\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\mathbf{X} = \mathbf{X}$$
-
-- **Idempotent**: projecting twice is the same as projecting once, $\mathbf{P}\mathbf{P} = \mathbf{P}$
-  - Regressing the fitted values on $\mathbf{X}$ returns the same fitted values
-
-- **Symmetric**: $\mathbf{P}^\prime = \mathbf{P}$
-
-- **Trace** (sum of the diagonals) equals the number of parameters $k$
-
-  $$\text{tr}(\mathbf{P}) = \text{tr}\big(\mathbf{X}(\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\big) = \text{tr}\big((\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\mathbf{X}\big) = \text{tr}(\mathbf{I}_k) = k$$
-
-
-:::
-
-## The residual maker
-
-::: {.incremental}
-
-- The complement of $\mathbf{P}$ is the **annihilator** or **residual maker**
-
-  $$\mathbf{M} = \mathbf{I}_n - \mathbf{P} \qquad \mathbf{M}\mathbf{Y} = \mathbf{Y} - \hat{\mathbf{Y}} = \hat{\mathbf{e}}$$
-
-- It projects onto everything **orthogonal** to $\mathcal{C}(\mathbf{X})$
-  - **Annihilates** $\mathbf{X}$: $\mathbf{M}\mathbf{X} = \mathbf{X} - \mathbf{P}\mathbf{X} = \mathbf{0}$
-  - Also symmetric and idempotent, with $\text{tr}(\mathbf{M}) = n - k$
-  - $\mathbf{P}\mathbf{M} = \mathbf{0}$: the fitted values and the residuals are **orthogonal**
-
-- Every outcome vector splits into two **perpendicular** pieces
-
-  $$\mathbf{Y} = \mathbf{P}\mathbf{Y} + \mathbf{M}\mathbf{Y} = \hat{\mathbf{Y}} + \hat{\mathbf{e}} \qquad \Vert\mathbf{Y}\Vert^2 = \Vert\hat{\mathbf{Y}}\Vert^2 + \Vert\hat{\mathbf{e}}\Vert^2$$
-
-  - The part that's **explained** by $\mathbf{X}$ and the part that isn't explained by $\mathbf{X}$
-
-:::
-
 <!-- ============================================================
      Wald tests (Blackwell 2025, Section 8.3)
      ============================================================ -->
@@ -339,11 +262,11 @@ se_pint <- sqrt(diag(V_pint))
 
   $$W = (\mathbf{R}\hat{\boldsymbol{\beta}} - \mathbf{r})^\prime\,\big(\mathbf{R}\widehat{\mathbf{V}}\mathbf{R}^\prime\big)^{-1}\,(\mathbf{R}\hat{\boldsymbol{\beta}} - \mathbf{r})$$
 
-  - Without the middle matrix, this is just plain Euclidean distance
+  - Without the middle matrix, this is just Euclidean distance
   - The inverse variance **rescales** each deviation by how noisy it is and **uncorrelates** them
-  - The matrix version of dividing by the variance gives a squared **Mahalanobis** distance
+  - The matrix version of "dividing by the variance" gives a squared **Mahalanobis** distance
 
-- With one restriction ($q = 1$), $W$ is exactly $t^2$ - our familiar univariate test statistic squared. 
+- With one restriction ($q = 1$), $W$ is exactly $T^2$ - our familiar univariate test statistic squared. 
 
 - Large values of $W$ are evidence **against** $H_0$
 
@@ -448,7 +371,7 @@ c(W = W, critical = qchisq(0.95, df = 2), p = pchisq(W, df = 2, lower.tail = FAL
 ::: {.incremental}
 
 - We **fail to reject** the null that the hostile sexism slope is the same in all three parties
-- And for the null that hostile sexism is unrelated to the thermometer in **every** party?
+- But we **do reject** the null that hostile sexism is entirely unrelated to Trump support ($H_0: \beta_1 = \beta_4 = \beta_5 = 0$)
 
 :::
 
@@ -511,13 +434,13 @@ anova(fit_add, fit_pint)                       # classical F-test of the two int
 
 :::
 
-## One restriction: $W = t^2$
+## One restriction: $W = T^2$
 
 ::: {.incremental}
 
 - With a single restriction, $\mathbf{R}$ is a $1 \times k$ row and $r$ is a number, so $W$ is a **scalar**
 
-  $$W = \frac{(\mathbf{R}\hat{\boldsymbol{\beta}} - r)^2}{\mathbf{R}\widehat{\mathbf{V}}\mathbf{R}^\prime} = \left(\frac{\mathbf{R}\hat{\boldsymbol{\beta}} - r}{\widehat{SE}(\mathbf{R}\hat{\boldsymbol{\beta}})}\right)^2 = t^2$$
+  $$W = \frac{(\mathbf{R}\hat{\boldsymbol{\beta}} - r)^2}{\mathbf{R}\widehat{\mathbf{V}}\mathbf{R}^\prime} = \left(\frac{\mathbf{R}\hat{\boldsymbol{\beta}} - r}{\widehat{SE}(\mathbf{R}\hat{\boldsymbol{\beta}})}\right)^2 = T^2$$
 
 - And $\chi^2_1$ is the distribution of a **squared** standard normal
   - $\chi^2_{1, 0.95} = 3.84 = 1.96^2$
@@ -527,7 +450,7 @@ anova(fit_add, fit_pint)                       # classical F-test of the two int
 
   $$\widehat{SE}(\mathbf{R}\hat{\boldsymbol{\beta}}) = \sqrt{\mathbf{R}\widehat{\mathbf{V}}\mathbf{R}^\prime} = \sqrt{\sum_j R_j^2 \widehat{\Var}(\hat{\beta}_j) + 2\sum_{j < l} R_j R_l \widehat{\Cov}(\hat{\beta}_j, \hat{\beta}_l)}$$
 
-  - E.g. the **sum** of two coefficients: don't forget the **covariance**!
+  - E.g. the **sum** of two coefficients. Don't forget the **covariance**!
 
   $$\widehat{SE}(\hat{\beta}_1 + \hat{\beta}_5) = \sqrt{\widehat{\Var}(\hat{\beta}_1) + \widehat{\Var}(\hat{\beta}_5) + 2\,\widehat{\Cov}(\hat{\beta}_1, \hat{\beta}_5)}$$
 
@@ -564,48 +487,83 @@ hypotheses(fit_pint, hypothesis = "hostile_sexism + `hostile_sexism:partyRepubli
 
 :::
 
-## Confidence regions
-
-```{r}
-#| echo: false
-#| fig-width: 12
-#| fig-height: 4.3
-#| fig-align: center
-
-# The 95% Wald confidence region for the two interactions, an ellipse, against
-# the box made by the two individual 95% intervals
-idx <- c(5, 6)
-b2 <- b_pint[idx]
-V2 <- V_pint[idx, idx]
-L <- t(chol(V2))
-th <- seq(0, 2 * pi, length.out = 300)
-ell <- t(b2 + sqrt(qchisq(0.95, 2)) * L %*% rbind(cos(th), sin(th)))
-ell <- tibble(b4 = ell[, 1], b5 = ell[, 2])
-box <- tibble(lo4 = b2[1] - 1.96 * sqrt(V2[1, 1]), hi4 = b2[1] + 1.96 * sqrt(V2[1, 1]),
-              lo5 = b2[2] - 1.96 * sqrt(V2[2, 2]), hi5 = b2[2] + 1.96 * sqrt(V2[2, 2]))
-ggplot() +
-  geom_rect(data = box, aes(xmin = lo4, xmax = hi4, ymin = lo5, ymax = hi5),
-            fill = NA, colour = "#646569", linetype = "dashed", linewidth = 0.9) +
-  geom_polygon(data = ell, aes(b4, b5), fill = "#0479a8", alpha = 0.18, colour = "#0479a8", linewidth = 1.2) +
-  annotate("point", x = b2[1], y = b2[2], size = 3.5, colour = "#0479a8") +
-  annotate("point", x = 0, y = 0, size = 4, shape = 4, stroke = 2, colour = "#c5050c") +
-  annotate("text", x = -1.2, y = 1.6, label = "H₀: β₄ = β₅ = 0", colour = "#c5050c", size = 5.5, hjust = 1) +
-  annotate("text", x = box$hi4, y = box$hi5 + 1, label = "individual 95% intervals", colour = "#646569",
-           size = 5, hjust = 1) +
-  labs(x = "HS × Independent", y = "HS × Republican") +
-  coord_equal() +
-  theme_reg
-```
+## The geometry of least squares
 
 ::: {.incremental}
 
-- **Invert** the Wald test. Our confidence region contains every $\mathbf{b}$ we **wouldn't** reject
+- The **column space** of $\mathbf{X}$ is every linear combination of its columns
 
-  $$\big\{\mathbf{b} : (\mathbf{R}\hat{\boldsymbol{\beta}} - \mathbf{b})^\prime(\mathbf{R}\widehat{\mathbf{V}}\mathbf{R}^\prime)^{-1}(\mathbf{R}\hat{\boldsymbol{\beta}} - \mathbf{b}) \leq \chi^2_{q, 0.95}\big\}$$
+  $$\mathcal{C}(\mathbf{X}) = \{\mathbf{X}\mathbf{b} : \mathbf{b} \in \mathbb{R}^k\}$$
 
-  - An **ellipse** stretched along the noisier coefficient and tilted by the correlation.
+  - Every possible vector of **linear predictions** of $\mathbf{Y}$ from $\mathbf{X}$
+
+- $\hat{\mathbf{Y}} = \mathbf{X}\hat{\boldsymbol{\beta}}$ is the point in $\mathcal{C}(\mathbf{X})$ **closest** to $\mathbf{Y}$: its **projection**
+
+- The shortest path from a point to a plane meets it at a **right angle**, so the residual is **orthogonal** to every column of $\mathbf{X}$
+
+  $$\mathbf{X}^\prime\hat{\mathbf{e}} = \mathbf{X}^\prime(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \mathbf{0}$$
+
+- With an intercept: $\sum_i \hat{e}_i = 0$ and $\sum_i \hat{e}_i X_{ij} = 0$ for every covariate.
 
 :::
+
+## The hat matrix
+
+::: {.incremental}
+
+- Solving the normal equations and multiplying through by $\mathbf{X}$
+
+  $$\hat{\mathbf{Y}} = \mathbf{X}\hat{\boldsymbol{\beta}} = \underbrace{\mathbf{X}(\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime}_{\mathbf{P}}\,\mathbf{Y}$$
+
+- $\mathbf{P}$ is the $n \times n$ **projection matrix** onto the **column space** of $\mathbf{X}$
+  - Also called the **hat matrix**: it "puts the hat on" $\mathbf{Y}$
+
+- Multiplying **any** vector by $\mathbf{P}$ gives its best linear prediction from $\mathbf{X}$
+  - $\mathbf{P}\mathbf{Z}$ = the fitted values from regressing $\mathbf{Z}$ on $\mathbf{X}$
+
+:::
+
+## Properties of the hat matrix
+
+::: {.incremental}
+
+- **Leaves $\mathcal{C}(\mathbf{X})$ alone**: anything already in the column space is its own projection
+
+  $$\mathbf{P}\mathbf{X} = \mathbf{X}(\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\mathbf{X} = \mathbf{X}$$
+
+- **Idempotent**: projecting twice is the same as projecting once, $\mathbf{P}\mathbf{P} = \mathbf{P}$
+  - Regressing the fitted values on $\mathbf{X}$ returns the same fitted values
+
+- **Symmetric**: $\mathbf{P}^\prime = \mathbf{P}$
+
+- **Trace** (sum of the diagonals) equals the number of parameters $k$
+
+  $$\text{tr}(\mathbf{P}) = \text{tr}\big(\mathbf{X}(\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\big) = \text{tr}\big((\mathbf{X}^\prime\mathbf{X})^{-1}\mathbf{X}^\prime\mathbf{X}\big) = \text{tr}(\mathbf{I}_k) = k$$
+
+
+:::
+
+## The residual maker
+
+::: {.incremental}
+
+- The complement of $\mathbf{P}$ is the **annihilator** or **residual maker**
+
+  $$\mathbf{M} = \mathbf{I}_n - \mathbf{P} \qquad \mathbf{M}\mathbf{Y} = \mathbf{Y} - \hat{\mathbf{Y}} = \hat{\mathbf{e}}$$
+
+- It projects onto everything **orthogonal** to $\mathcal{C}(\mathbf{X})$
+  - **Annihilates** $\mathbf{X}$: $\mathbf{M}\mathbf{X} = \mathbf{X} - \mathbf{P}\mathbf{X} = \mathbf{0}$
+  - Also symmetric and idempotent. $\text{tr}(\mathbf{M}) = n - k$
+  - $\mathbf{P}\mathbf{M} = \mathbf{0}$: the fitted values and the residuals are **orthogonal**
+
+- Regression splits the outcome into two **perpendicular** pieces
+
+  $$\mathbf{Y} = \mathbf{P}\mathbf{Y} + \mathbf{M}\mathbf{Y} = \hat{\mathbf{Y}} + \hat{\mathbf{e}}$$
+
+  - The part that's **explained** by $\mathbf{X}$ and the part that isn't explained by $\mathbf{X}$
+
+:::
+
 
 <!-- ============================================================
      Goodness of fit (Blackwell 2025, Section 7.2)
