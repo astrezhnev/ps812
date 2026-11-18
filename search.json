@@ -2800,34 +2800,6 @@
     "text": "Frisch-Waugh-Lovell"
   },
   {
-    "objectID": "slides/week11/week11_regression3.html#the-geometry-of-least-squares",
-    "href": "slides/week11/week11_regression3.html#the-geometry-of-least-squares",
-    "title": "Week 11: Regression, part 3",
-    "section": "The geometry of least squares",
-    "text": "The geometry of least squares\n\nThe column space of \\(\\mathbf{X}\\) is every linear combination of its columns\n\\[\\mathcal{C}(\\mathbf{X}) = \\{\\mathbf{X}\\mathbf{b} : \\mathbf{b} \\in \\mathbb{R}^k\\}\\]\n\nEvery possible vector of linear predictions of \\(\\mathbf{Y}\\) from \\(\\mathbf{X}\\)\n\n\\(\\hat{\\mathbf{Y}} = \\mathbf{X}\\hat{\\boldsymbol{\\beta}}\\) is the point in \\(\\mathcal{C}(\\mathbf{X})\\) closest to \\(\\mathbf{Y}\\): its projection\nThe shortest path from a point to a plane meets it at a right angle, so the residual is orthogonal to every column of \\(\\mathbf{X}\\)\n\\[\\mathbf{X}^\\prime\\hat{\\mathbf{e}} = \\mathbf{X}^\\prime(\\mathbf{Y} - \\mathbf{X}\\hat{\\boldsymbol{\\beta}}) = \\mathbf{0}\\]\nWith an intercept: \\(\\sum_i \\hat{e}_i = 0\\) and \\(\\sum_i \\hat{e}_i X_{ij} = 0\\) for every covariate."
-  },
-  {
-    "objectID": "slides/week11/week11_regression3.html#the-hat-matrix",
-    "href": "slides/week11/week11_regression3.html#the-hat-matrix",
-    "title": "Week 11: Regression, part 3",
-    "section": "The hat matrix",
-    "text": "The hat matrix\n\nSolving the normal equations and multiplying through by \\(\\mathbf{X}\\)\n\\[\\hat{\\mathbf{Y}} = \\mathbf{X}\\hat{\\boldsymbol{\\beta}} = \\underbrace{\\mathbf{X}(\\mathbf{X}^\\prime\\mathbf{X})^{-1}\\mathbf{X}^\\prime}_{\\mathbf{P}}\\,\\mathbf{Y}\\]\n\\(\\mathbf{P}\\) is the \\(n \\times n\\) projection matrix onto the column space of \\(\\mathbf{X}\\)\n\nAlso called the hat matrix: it “puts the hat on” \\(\\mathbf{Y}\\)\n\nMultiplying any vector by \\(\\mathbf{P}\\) gives its best linear prediction from \\(\\mathbf{X}\\)\n\n\\(\\mathbf{P}\\mathbf{Z}\\) = the fitted values from regressing \\(\\mathbf{Z}\\) on \\(\\mathbf{X}\\)"
-  },
-  {
-    "objectID": "slides/week11/week11_regression3.html#properties-of-the-hat-matrix",
-    "href": "slides/week11/week11_regression3.html#properties-of-the-hat-matrix",
-    "title": "Week 11: Regression, part 3",
-    "section": "Properties of the hat matrix",
-    "text": "Properties of the hat matrix\n\nLeaves \\(\\mathcal{C}(\\mathbf{X})\\) alone: anything already in the column space is its own projection\n\\[\\mathbf{P}\\mathbf{X} = \\mathbf{X}(\\mathbf{X}^\\prime\\mathbf{X})^{-1}\\mathbf{X}^\\prime\\mathbf{X} = \\mathbf{X}\\]\nIdempotent: projecting twice is the same as projecting once, \\(\\mathbf{P}\\mathbf{P} = \\mathbf{P}\\)\n\nRegressing the fitted values on \\(\\mathbf{X}\\) returns the same fitted values\n\nSymmetric: \\(\\mathbf{P}^\\prime = \\mathbf{P}\\)\nTrace (sum of the diagonals) equals the number of parameters \\(k\\)\n\\[\\text{tr}(\\mathbf{P}) = \\text{tr}\\big(\\mathbf{X}(\\mathbf{X}^\\prime\\mathbf{X})^{-1}\\mathbf{X}^\\prime\\big) = \\text{tr}\\big((\\mathbf{X}^\\prime\\mathbf{X})^{-1}\\mathbf{X}^\\prime\\mathbf{X}\\big) = \\text{tr}(\\mathbf{I}_k) = k\\]"
-  },
-  {
-    "objectID": "slides/week11/week11_regression3.html#the-residual-maker",
-    "href": "slides/week11/week11_regression3.html#the-residual-maker",
-    "title": "Week 11: Regression, part 3",
-    "section": "The residual maker",
-    "text": "The residual maker\n\nThe complement of \\(\\mathbf{P}\\) is the annihilator or residual maker\n\\[\\mathbf{M} = \\mathbf{I}_n - \\mathbf{P} \\qquad \\mathbf{M}\\mathbf{Y} = \\mathbf{Y} - \\hat{\\mathbf{Y}} = \\hat{\\mathbf{e}}\\]\nIt projects onto everything orthogonal to \\(\\mathcal{C}(\\mathbf{X})\\)\n\nAnnihilates \\(\\mathbf{X}\\): \\(\\mathbf{M}\\mathbf{X} = \\mathbf{X} - \\mathbf{P}\\mathbf{X} = \\mathbf{0}\\)\nAlso symmetric and idempotent, with \\(\\text{tr}(\\mathbf{M}) = n - k\\)\n\\(\\mathbf{P}\\mathbf{M} = \\mathbf{0}\\): the fitted values and the residuals are orthogonal\n\nEvery outcome vector splits into two perpendicular pieces\n\\[\\mathbf{Y} = \\mathbf{P}\\mathbf{Y} + \\mathbf{M}\\mathbf{Y} = \\hat{\\mathbf{Y}} + \\hat{\\mathbf{e}} \\qquad \\Vert\\mathbf{Y}\\Vert^2 = \\Vert\\hat{\\mathbf{Y}}\\Vert^2 + \\Vert\\hat{\\mathbf{e}}\\Vert^2\\]\n\nThe part that’s explained by \\(\\mathbf{X}\\) and the part that isn’t explained by \\(\\mathbf{X}\\)"
-  },
-  {
     "objectID": "slides/week11/week11_regression3.html#testing-more-than-one-coefficient",
     "href": "slides/week11/week11_regression3.html#testing-more-than-one-coefficient",
     "title": "Week 11: Regression, part 3",
@@ -2867,7 +2839,7 @@
     "href": "slides/week11/week11_regression3.html#the-wald-statistic",
     "title": "Week 11: Regression, part 3",
     "section": "The Wald statistic",
-    "text": "The Wald statistic\n\nLet’s construct a single statistic to build our test around.\nTake squared distance from the null \\(\\mathbf{r}\\), scaled by the variance-covariance matrix\n\\[W = (\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - \\mathbf{r})^\\prime\\,\\big(\\mathbf{R}\\widehat{\\mathbf{V}}\\mathbf{R}^\\prime\\big)^{-1}\\,(\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - \\mathbf{r})\\]\n\nWithout the middle matrix, this is just plain Euclidean distance\nThe inverse variance rescales each deviation by how noisy it is and uncorrelates them\nThe matrix version of dividing by the variance gives a squared Mahalanobis distance\n\nWith one restriction (\\(q = 1\\)), \\(W\\) is exactly \\(t^2\\) - our familiar univariate test statistic squared.\nLarge values of \\(W\\) are evidence against \\(H_0\\)"
+    "text": "The Wald statistic\n\nLet’s construct a single statistic to build our test around.\nTake squared distance from the null \\(\\mathbf{r}\\), scaled by the variance-covariance matrix\n\\[W = (\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - \\mathbf{r})^\\prime\\,\\big(\\mathbf{R}\\widehat{\\mathbf{V}}\\mathbf{R}^\\prime\\big)^{-1}\\,(\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - \\mathbf{r})\\]\n\nWithout the middle matrix, this is just Euclidean distance\nThe inverse variance rescales each deviation by how noisy it is and uncorrelates them\nThe matrix version of “dividing by the variance” gives a squared Mahalanobis distance\n\nWith one restriction (\\(q = 1\\)), \\(W\\) is exactly \\(T^2\\) - our familiar univariate test statistic squared.\nLarge values of \\(W\\) are evidence against \\(H_0\\)"
   },
   {
     "objectID": "slides/week11/week11_regression3.html#why-weight-by-the-covariance",
@@ -2895,7 +2867,7 @@
     "href": "slides/week11/week11_regression3.html#wald-tests-by-hand",
     "title": "Week 11: Regression, part 3",
     "section": "Wald tests by hand",
-    "text": "Wald tests by hand\n\nR &lt;- rbind(c(0, 0, 0, 0, 1, 0),                # hostile_sexism:partyIndependent\n           c(0, 0, 0, 0, 0, 1))                # hostile_sexism:partyRepublican\nr &lt;- c(0, 0)\n\ndev &lt;- R %*% b_pint - r                        # q x 1 deviations from the null\nW &lt;- drop(t(dev) %*% solve(R %*% V_pint %*% t(R)) %*% dev)\nc(W = W, critical = qchisq(0.95, df = 2), p = pchisq(W, df = 2, lower.tail = FALSE))\n\n        W  critical         p \n3.7549954 5.9914645 0.1529724 \n\n\n\nWe fail to reject the null that the hostile sexism slope is the same in all three parties\nAnd for the null that hostile sexism is unrelated to the thermometer in every party?\n\n\n\nR3 &lt;- rbind(c(0, 1, 0, 0, 0, 0), c(0, 0, 0, 0, 1, 0), c(0, 0, 0, 0, 0, 1))\ndev3 &lt;- R3 %*% b_pint\nW3 &lt;- drop(t(dev3) %*% solve(R3 %*% V_pint %*% t(R3)) %*% dev3)\nc(W = round(W3, 1), critical = round(qchisq(0.95, df = 3), 2), p = format.pval(pchisq(W3, df = 3, lower.tail = FALSE)))\n\n           W     critical            p \n     \"292.6\"       \"7.81\" \"&lt; 2.22e-16\""
+    "text": "Wald tests by hand\n\nR &lt;- rbind(c(0, 0, 0, 0, 1, 0),                # hostile_sexism:partyIndependent\n           c(0, 0, 0, 0, 0, 1))                # hostile_sexism:partyRepublican\nr &lt;- c(0, 0)\n\ndev &lt;- R %*% b_pint - r                        # q x 1 deviations from the null\nW &lt;- drop(t(dev) %*% solve(R %*% V_pint %*% t(R)) %*% dev)\nc(W = W, critical = qchisq(0.95, df = 2), p = pchisq(W, df = 2, lower.tail = FALSE))\n\n        W  critical         p \n3.7549954 5.9914645 0.1529724 \n\n\n\nWe fail to reject the null that the hostile sexism slope is the same in all three parties\nBut we do reject the null that hostile sexism is entirely unrelated to Trump support (\\(H_0: \\beta_1 = \\beta_4 = \\beta_5 = 0\\))\n\n\n\nR3 &lt;- rbind(c(0, 1, 0, 0, 0, 0), c(0, 0, 0, 0, 1, 0), c(0, 0, 0, 0, 0, 1))\ndev3 &lt;- R3 %*% b_pint\nW3 &lt;- drop(t(dev3) %*% solve(R3 %*% V_pint %*% t(R3)) %*% dev3)\nc(W = round(W3, 1), critical = round(qchisq(0.95, df = 3), 2), p = format.pval(pchisq(W3, df = 3, lower.tail = FALSE)))\n\n           W     critical            p \n     \"292.6\"       \"7.81\" \"&lt; 2.22e-16\""
   },
   {
     "objectID": "slides/week11/week11_regression3.html#wald-tests-in-r",
@@ -2915,8 +2887,8 @@
     "objectID": "slides/week11/week11_regression3.html#one-restriction-w-t2",
     "href": "slides/week11/week11_regression3.html#one-restriction-w-t2",
     "title": "Week 11: Regression, part 3",
-    "section": "One restriction: \\(W = t^2\\)",
-    "text": "One restriction: \\(W = t^2\\)\n\nWith a single restriction, \\(\\mathbf{R}\\) is a \\(1 \\times k\\) row and \\(r\\) is a number, so \\(W\\) is a scalar\n\\[W = \\frac{(\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - r)^2}{\\mathbf{R}\\widehat{\\mathbf{V}}\\mathbf{R}^\\prime} = \\left(\\frac{\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - r}{\\widehat{SE}(\\mathbf{R}\\hat{\\boldsymbol{\\beta}})}\\right)^2 = t^2\\]\nAnd \\(\\chi^2_1\\) is the distribution of a squared standard normal\n\n\\(\\chi^2_{1, 0.95} = 3.84 = 1.96^2\\)\nThe Wald test with \\(q = 1\\) is the two-sided \\(t\\)-test\n\nSo the \\(t\\)-test works for any linear combination, with standard error\n\\[\\widehat{SE}(\\mathbf{R}\\hat{\\boldsymbol{\\beta}}) = \\sqrt{\\mathbf{R}\\widehat{\\mathbf{V}}\\mathbf{R}^\\prime} = \\sqrt{\\sum_j R_j^2 \\widehat{\\Var}(\\hat{\\beta}_j) + 2\\sum_{j &lt; l} R_j R_l \\widehat{\\Cov}(\\hat{\\beta}_j, \\hat{\\beta}_l)}\\]\n\nE.g. the sum of two coefficients: don’t forget the covariance!\n\n\\[\\widehat{SE}(\\hat{\\beta}_1 + \\hat{\\beta}_5) = \\sqrt{\\widehat{\\Var}(\\hat{\\beta}_1) + \\widehat{\\Var}(\\hat{\\beta}_5) + 2\\,\\widehat{\\Cov}(\\hat{\\beta}_1, \\hat{\\beta}_5)}\\]"
+    "section": "One restriction: \\(W = T^2\\)",
+    "text": "One restriction: \\(W = T^2\\)\n\nWith a single restriction, \\(\\mathbf{R}\\) is a \\(1 \\times k\\) row and \\(r\\) is a number, so \\(W\\) is a scalar\n\\[W = \\frac{(\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - r)^2}{\\mathbf{R}\\widehat{\\mathbf{V}}\\mathbf{R}^\\prime} = \\left(\\frac{\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - r}{\\widehat{SE}(\\mathbf{R}\\hat{\\boldsymbol{\\beta}})}\\right)^2 = T^2\\]\nAnd \\(\\chi^2_1\\) is the distribution of a squared standard normal\n\n\\(\\chi^2_{1, 0.95} = 3.84 = 1.96^2\\)\nThe Wald test with \\(q = 1\\) is the two-sided \\(t\\)-test\n\nSo the \\(t\\)-test works for any linear combination, with standard error\n\\[\\widehat{SE}(\\mathbf{R}\\hat{\\boldsymbol{\\beta}}) = \\sqrt{\\mathbf{R}\\widehat{\\mathbf{V}}\\mathbf{R}^\\prime} = \\sqrt{\\sum_j R_j^2 \\widehat{\\Var}(\\hat{\\beta}_j) + 2\\sum_{j &lt; l} R_j R_l \\widehat{\\Cov}(\\hat{\\beta}_j, \\hat{\\beta}_l)}\\]\n\nE.g. the sum of two coefficients. Don’t forget the covariance!\n\n\\[\\widehat{SE}(\\hat{\\beta}_1 + \\hat{\\beta}_5) = \\sqrt{\\widehat{\\Var}(\\hat{\\beta}_1) + \\widehat{\\Var}(\\hat{\\beta}_5) + 2\\,\\widehat{\\Cov}(\\hat{\\beta}_1, \\hat{\\beta}_5)}\\]"
   },
   {
     "objectID": "slides/week11/week11_regression3.html#testing-a-linear-combination",
@@ -2926,11 +2898,32 @@
     "text": "Testing a linear combination\n\nThe slope among Republicans is \\(\\beta_1 + \\beta_5\\), and the difference between Independents and Republicans is \\(\\beta_4 - \\beta_5\\)\n\n\nlin_comb &lt;- function(R, b, V) {\n  est &lt;- sum(R * b)                           # R b-hat\n  se &lt;- sqrt(drop(R %*% V %*% R))             # R V R', covariances included\n  c(estimate = est, se = se, t = est / se, W = (est / se)^2,\n    lower = est - qnorm(0.975) * se, upper = est + qnorm(0.975) * se)\n}\nround(rbind(\n  republican_slope = lin_comb(c(0, 1, 0, 0, 0, 1), b_pint, V_pint),\n  ind_minus_rep    = lin_comb(c(0, 0, 0, 0, 1, -1), b_pint, V_pint)\n), 3)\n\n                 estimate    se      t       W   lower  upper\nrepublican_slope   36.818 3.250 11.329 128.348  30.448 43.187\nind_minus_rep      -3.643 9.761 -0.373   0.139 -22.774 15.488\n\n\n\n\nhypotheses(fit_pint, hypothesis = \"hostile_sexism + `hostile_sexism:partyRepublican` = 0\", vcov = \"HC0\")\n\n\n                                        Hypothesis Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %\n hostile_sexism+`hostile_sexism:partyRepublican`=0     36.8       3.25 11.3   &lt;0.001 96.4  30.4   43.2\n\n\n\n\nThe covariance term matters: \\(\\widehat{\\Cov}(\\hat{\\beta}_1, \\hat{\\beta}_5) = -5.58\\) is large and negative"
   },
   {
-    "objectID": "slides/week11/week11_regression3.html#confidence-regions",
-    "href": "slides/week11/week11_regression3.html#confidence-regions",
+    "objectID": "slides/week11/week11_regression3.html#the-geometry-of-least-squares",
+    "href": "slides/week11/week11_regression3.html#the-geometry-of-least-squares",
     "title": "Week 11: Regression, part 3",
-    "section": "Confidence regions",
-    "text": "Confidence regions\n\n\nInvert the Wald test. Our confidence region contains every \\(\\mathbf{b}\\) we wouldn’t reject\n\\[\\big\\{\\mathbf{b} : (\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - \\mathbf{b})^\\prime(\\mathbf{R}\\widehat{\\mathbf{V}}\\mathbf{R}^\\prime)^{-1}(\\mathbf{R}\\hat{\\boldsymbol{\\beta}} - \\mathbf{b}) \\leq \\chi^2_{q, 0.95}\\big\\}\\]\n\nAn ellipse stretched along the noisier coefficient and tilted by the correlation."
+    "section": "The geometry of least squares",
+    "text": "The geometry of least squares\n\nThe column space of \\(\\mathbf{X}\\) is every linear combination of its columns\n\\[\\mathcal{C}(\\mathbf{X}) = \\{\\mathbf{X}\\mathbf{b} : \\mathbf{b} \\in \\mathbb{R}^k\\}\\]\n\nEvery possible vector of linear predictions of \\(\\mathbf{Y}\\) from \\(\\mathbf{X}\\)\n\n\\(\\hat{\\mathbf{Y}} = \\mathbf{X}\\hat{\\boldsymbol{\\beta}}\\) is the point in \\(\\mathcal{C}(\\mathbf{X})\\) closest to \\(\\mathbf{Y}\\): its projection\nThe shortest path from a point to a plane meets it at a right angle, so the residual is orthogonal to every column of \\(\\mathbf{X}\\)\n\\[\\mathbf{X}^\\prime\\hat{\\mathbf{e}} = \\mathbf{X}^\\prime(\\mathbf{Y} - \\mathbf{X}\\hat{\\boldsymbol{\\beta}}) = \\mathbf{0}\\]\nWith an intercept: \\(\\sum_i \\hat{e}_i = 0\\) and \\(\\sum_i \\hat{e}_i X_{ij} = 0\\) for every covariate."
+  },
+  {
+    "objectID": "slides/week11/week11_regression3.html#the-hat-matrix",
+    "href": "slides/week11/week11_regression3.html#the-hat-matrix",
+    "title": "Week 11: Regression, part 3",
+    "section": "The hat matrix",
+    "text": "The hat matrix\n\nSolving the normal equations and multiplying through by \\(\\mathbf{X}\\)\n\\[\\hat{\\mathbf{Y}} = \\mathbf{X}\\hat{\\boldsymbol{\\beta}} = \\underbrace{\\mathbf{X}(\\mathbf{X}^\\prime\\mathbf{X})^{-1}\\mathbf{X}^\\prime}_{\\mathbf{P}}\\,\\mathbf{Y}\\]\n\\(\\mathbf{P}\\) is the \\(n \\times n\\) projection matrix onto the column space of \\(\\mathbf{X}\\)\n\nAlso called the hat matrix: it “puts the hat on” \\(\\mathbf{Y}\\)\n\nMultiplying any vector by \\(\\mathbf{P}\\) gives its best linear prediction from \\(\\mathbf{X}\\)\n\n\\(\\mathbf{P}\\mathbf{Z}\\) = the fitted values from regressing \\(\\mathbf{Z}\\) on \\(\\mathbf{X}\\)"
+  },
+  {
+    "objectID": "slides/week11/week11_regression3.html#properties-of-the-hat-matrix",
+    "href": "slides/week11/week11_regression3.html#properties-of-the-hat-matrix",
+    "title": "Week 11: Regression, part 3",
+    "section": "Properties of the hat matrix",
+    "text": "Properties of the hat matrix\n\nLeaves \\(\\mathcal{C}(\\mathbf{X})\\) alone: anything already in the column space is its own projection\n\\[\\mathbf{P}\\mathbf{X} = \\mathbf{X}(\\mathbf{X}^\\prime\\mathbf{X})^{-1}\\mathbf{X}^\\prime\\mathbf{X} = \\mathbf{X}\\]\nIdempotent: projecting twice is the same as projecting once, \\(\\mathbf{P}\\mathbf{P} = \\mathbf{P}\\)\n\nRegressing the fitted values on \\(\\mathbf{X}\\) returns the same fitted values\n\nSymmetric: \\(\\mathbf{P}^\\prime = \\mathbf{P}\\)\nTrace (sum of the diagonals) equals the number of parameters \\(k\\)\n\\[\\text{tr}(\\mathbf{P}) = \\text{tr}\\big(\\mathbf{X}(\\mathbf{X}^\\prime\\mathbf{X})^{-1}\\mathbf{X}^\\prime\\big) = \\text{tr}\\big((\\mathbf{X}^\\prime\\mathbf{X})^{-1}\\mathbf{X}^\\prime\\mathbf{X}\\big) = \\text{tr}(\\mathbf{I}_k) = k\\]"
+  },
+  {
+    "objectID": "slides/week11/week11_regression3.html#the-residual-maker",
+    "href": "slides/week11/week11_regression3.html#the-residual-maker",
+    "title": "Week 11: Regression, part 3",
+    "section": "The residual maker",
+    "text": "The residual maker\n\nThe complement of \\(\\mathbf{P}\\) is the annihilator or residual maker\n\\[\\mathbf{M} = \\mathbf{I}_n - \\mathbf{P} \\qquad \\mathbf{M}\\mathbf{Y} = \\mathbf{Y} - \\hat{\\mathbf{Y}} = \\hat{\\mathbf{e}}\\]\nIt projects onto everything orthogonal to \\(\\mathcal{C}(\\mathbf{X})\\)\n\nAnnihilates \\(\\mathbf{X}\\): \\(\\mathbf{M}\\mathbf{X} = \\mathbf{X} - \\mathbf{P}\\mathbf{X} = \\mathbf{0}\\)\nAlso symmetric and idempotent. \\(\\text{tr}(\\mathbf{M}) = n - k\\)\n\\(\\mathbf{P}\\mathbf{M} = \\mathbf{0}\\): the fitted values and the residuals are orthogonal\n\nRegression splits the outcome into two perpendicular pieces\n\\[\\mathbf{Y} = \\mathbf{P}\\mathbf{Y} + \\mathbf{M}\\mathbf{Y} = \\hat{\\mathbf{Y}} + \\hat{\\mathbf{e}}\\]\n\nThe part that’s explained by \\(\\mathbf{X}\\) and the part that isn’t explained by \\(\\mathbf{X}\\)"
   },
   {
     "objectID": "slides/week11/week11_regression3.html#how-well-does-the-regression-fit",
