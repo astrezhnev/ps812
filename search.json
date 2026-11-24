@@ -3091,7 +3091,7 @@
     "href": "slides/week12/week12_missing_data.html#welcome-back",
     "title": "Week 12: Missing data",
     "section": "Welcome back!",
-    "text": "Welcome back!\n\n\n\\[\n\\newcommand{\\Var}{\\text{Var}}\n\\newcommand{\\Cov}{\\text{Cov}}\n\\newcommand{\\Corr}{\\text{Corr}}\n\\newcommand{\\indep}{\\mathrel{\\perp\\mkern-10mu\\perp}}\n\\]"
+    "text": "Welcome back!\n\n\n\\[\n\\newcommand{\\Var}{\\text{Var}}\n\\newcommand{\\Cov}{\\text{Cov}}\n\\newcommand{\\Corr}{\\text{Corr}}\n\\newcommand{\\indep}{\\mathrel{\\perp\\mkern-10mu\\perp}}\n\\newcommand{\\nindep}{\\not\\indep}\n\\]"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#where-does-uncertainty-come-from",
@@ -3115,25 +3115,25 @@
     "text": "A finite population"
   },
   {
-    "objectID": "slides/week12/week12_missing_data.html#two-sources-of-randomness",
-    "href": "slides/week12/week12_missing_data.html#two-sources-of-randomness",
-    "title": "Week 12: Missing data",
-    "section": "Two sources of randomness",
-    "text": "Two sources of randomness\n\n\n\n\n\n\n\n\n\nSampling from \\(F\\)\nFinite population\n\n\n\n\nThe values \\(Y_i\\)\nRandom draws\nFixed numbers\n\n\nWhat’s random\nWhich values we draw\nWhich units we see: \\(R_i\\)\n\n\nEstimand\n\\(\\mu = \\mathbb{E}[Y_i]\\)\n\\(\\mu_N = \\frac{1}{N}\\sum_{i=1}^N Y_i\\)\n\n\n\n\nSampling from an infinite population: the cells stay, but the values change\nFinite population: the values stay, but the holes move"
-  },
-  {
     "objectID": "slides/week12/week12_missing_data.html#a-finite-population-1",
     "href": "slides/week12/week12_missing_data.html#a-finite-population-1",
     "title": "Week 12: Missing data",
     "section": "A finite population",
-    "text": "A finite population\n\n\\(N\\) units with outcomes \\(Y_1, Y_2, \\dots, Y_N\\)\n\nThese are fixed numbers, not random variables\n\nEstimand: the population mean\n\\[\\mu_N = \\frac{1}{N}\\sum_{i=1}^N Y_i\\]\nand the population variance\n\\[S^2 = \\frac{1}{N-1}\\sum_{i=1}^N (Y_i - \\mu_N)^2\\]\nIf we saw every \\(Y_i\\), there’s no uncertainty at all."
+    "text": "A finite population\n\n\\(N\\) units with outcomes \\(Y_1, Y_2, \\dots, Y_N\\)\n\nWe’ll treat these as fixed\n\nEstimand: the population mean\n\\[\\mu_N = \\frac{1}{N}\\sum_{i=1}^N Y_i\\]\nand the population variance\n\\[S^2 = \\frac{1}{N-1}\\sum_{i=1}^N (Y_i - \\mu_N)^2\\]\nIf we saw every \\(Y_i\\), there would be no uncertainty at all."
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#simple-random-sampling",
     "href": "slides/week12/week12_missing_data.html#simple-random-sampling",
     "title": "Week 12: Missing data",
     "section": "Simple random sampling",
-    "text": "Simple random sampling\n\n\\(R_i = 1\\) if unit \\(i\\) is in the sample, \\(R_i = 0\\) if not, with \\(\\sum_{i=1}^N R_i = n\\)\nSimple random sampling (SRS): each of the \\(\\binom{N}{n}\\) subsets of size \\(n\\) is equally likely\n\nEach unit has the same inclusion probability\n\n\\[\\Pr(R_i = 1) = \\frac{n}{N}\\]\nBut the \\(R_i\\) are not independent\n\\[\\Pr(R_i = 1, R_j = 1) = \\frac{n}{N}\\cdot\\frac{n-1}{N-1} \\quad\\Rightarrow\\quad \\Cov(R_i, R_j) = -\\frac{1}{N-1}\\cdot\\frac{n}{N}\\left(1 - \\frac{n}{N}\\right)\\]"
+    "text": "Simple random sampling\n\nLet \\(R_i\\) be the inclusion indicator\n\n\\(R_i = 1\\) if unit \\(i\\) is in the sample\n\\(R_i = 0\\) if not\n\\(\\sum_{i=1}^N R_i = n\\) - our sample is the number of “included” units.\n\nSimple random sampling (SRS): each of the \\(\\binom{N}{n}\\) subsets of size \\(n\\) is equally likely\nEach unit has the same inclusion probability\n\\[\\Pr(R_i = 1) = \\frac{n}{N}\\]\nBut the \\(R_i\\) are not independent - the joint inclusion probability is not the product of the marginals\n\\[\\Pr(R_i = 1, R_j = 1) = \\Pr(R_i = 1) \\Pr(R_j = 1 | R_i = 1)= \\frac{n}{N}\\cdot\\frac{n-1}{N-1}\\]"
+  },
+  {
+    "objectID": "slides/week12/week12_missing_data.html#simple-random-sampling-1",
+    "href": "slides/week12/week12_missing_data.html#simple-random-sampling-1",
+    "title": "Week 12: Missing data",
+    "section": "Simple random sampling",
+    "text": "Simple random sampling\n\nSo there’s a covariance we have to care about\n\\[\\begin{aligned}\n   \\Cov(R_i, R_j) &= \\Pr(R_i = 1, R_j = 1) - \\Pr(R_i = 1)\\Pr(R_j = 1)\\\\\n   &= \\frac{n}{N}\\cdot\\frac{n-1}{N-1} - \\frac{n}{N}\\cdot \\frac{n}{N}\\\\\n   &= \\frac{n^2 - n}{N(N - 1)} - \\frac{n^2}{N^2}\\\\\n   &= \\frac{(n^2 - n)N - n^2(N - 1)}{N^2(N - 1)} \\\\\n   &= \\frac{n^2 - nN}{N^2(N - 1)} \\\\\n   &= -\\frac{n(N - n)}{N^2(N - 1)} = \\frac{1}{N-1} \\cdot \\frac{n}{N} \\cdot \\frac{N-n}{N}\\\\\n   &= -\\frac{\\Var(R_i)}{N - 1}\n   \\end{aligned}\\]"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#the-sample-mean-is-unbiased",
@@ -3154,7 +3154,7 @@
     "href": "slides/week12/week12_missing_data.html#the-variance-of-the-sample-mean-1",
     "title": "Week 12: Missing data",
     "section": "The variance of the sample mean",
-    "text": "The variance of the sample mean\n\nDeviations from the mean sum to zero, so\n\\[\\begin{aligned}\n0 = \\Big(\\sum_{i} (Y_i - \\mu_N)\\Big)^2 &= \\sum_{i} (Y_i - \\mu_N)^2 + \\sum_{i \\neq j} (Y_i - \\mu_N)(Y_j - \\mu_N) \\\\\n\\Rightarrow \\quad \\sum_{i \\neq j} (Y_i - \\mu_N)(Y_j - \\mu_N) &= -\\sum_i (Y_i - \\mu_N)^2\n\\end{aligned}\\]\nPlug in \\(\\Var(R_i) = \\frac{n}{N}\\left(1 - \\frac{n}{N}\\right)\\) and \\(\\Cov(R_i, R_j) = -\\frac{1}{N-1}\\cdot\\frac{n}{N}\\left(1 - \\frac{n}{N}\\right)\\)\n\\[\\begin{aligned}\n\\Var(\\hat{\\mu}) &= \\frac{1}{n^2}\\cdot\\frac{n}{N}\\left(1 - \\frac{n}{N}\\right)\\Big[\\sum_i (Y_i - \\mu_N)^2 + \\frac{1}{N-1}\\sum_i (Y_i - \\mu_N)^2\\Big] \\\\\n&= \\frac{1}{n^2}\\cdot\\frac{n}{N}\\left(1 - \\frac{n}{N}\\right) \\cdot N \\cdot \\underbrace{\\frac{1}{N-1}\\sum_i (Y_i - \\mu_N)^2}_{S^2} \\\\\n&= \\left(1 - \\frac{n}{N}\\right)\\frac{S^2}{n}\n\\end{aligned}\\]\n\\(1 - \\frac{n}{N}\\) is the finite population correction: at \\(n = N\\) (a census) the variance is \\(0\\)"
+    "text": "The variance of the sample mean\n\nDeviations from the mean sum to zero, so\n\\[\\begin{aligned}\n0 = \\Big(\\sum_{i} (Y_i - \\mu_N)\\Big)^2 &= \\sum_{i} (Y_i - \\mu_N)^2 + \\sum_{i \\neq j} (Y_i - \\mu_N)(Y_j - \\mu_N) \\\\\n\\Rightarrow \\quad \\sum_{i \\neq j} (Y_i - \\mu_N)(Y_j - \\mu_N) &= -\\sum_i (Y_i - \\mu_N)^2\n\\end{aligned}\\]\nPlug in \\(\\Cov(R_i, R_j) = -\\frac{\\Var(R_i)}{N-1}\\)\n\\[\\begin{aligned}\n\\Var(\\hat{\\mu}) &= \\frac{\\Var(R_i)}{n^2}\\Big[\\sum_i (Y_i - \\mu_N)^2 + \\frac{1}{N-1}\\sum_i (Y_i - \\mu_N)^2\\Big] \\\\\n&= \\frac{\\Var(R_i)}{n^2} \\cdot N \\cdot \\underbrace{\\frac{1}{N-1}\\sum_i (Y_i - \\mu_N)^2}_{S^2} \\\\\n&= \\frac{1}{n^2}\\cdot\\frac{n}{N}\\left(1 - \\frac{n}{N}\\right) \\cdot N S^2 \\\\\n&= \\left(1 - \\frac{n}{N}\\right)\\frac{S^2}{n}\n\\end{aligned}\\]"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#estimating-the-variance",
@@ -3171,46 +3171,39 @@
     "text": "From finite populations back to i.i.d.\n\nAs \\(N \\to \\infty\\), \\(\\frac{n}{N} \\to 0\\) and\n\\[\\Var(\\hat{\\mu}) = \\left(1 - \\frac{n}{N}\\right)\\frac{S^2}{n} \\to \\frac{\\sigma^2}{n}\\]\nSampling without replacement from a huge population \\(\\approx\\) i.i.d. draws\n\nThe “infinite population” is a limit of the finite population seetting\n\nWe can apply this idea beyond random sampling from a finite population to other forms of missingness"
   },
   {
-    "objectID": "slides/week12/week12_missing_data.html#simulating-srs-in-r",
-    "href": "slides/week12/week12_missing_data.html#simulating-srs-in-r",
-    "title": "Week 12: Missing data",
-    "section": "Simulating SRS in R",
-    "text": "Simulating SRS in R\n\n# The animation's finite population: 24 fixed values; observe 10 of them\ny &lt;- pop$y; N &lt;- length(y); n &lt;- 10\nset.seed(60706)\nmu_hat &lt;- replicate(10000, mean(sample(y, n)))   # sample() draws without replacement\nc(mu_N = mean(y), mean_of_estimates = mean(mu_hat))\n\n             mu_N mean_of_estimates \n         5.627355          5.611808 \n\nc(simulated = var(mu_hat), fpc_formula = (1 - n / N) * var(y) / n, iid_formula = var(y) / n)\n\n  simulated fpc_formula iid_formula \n  0.3713020   0.3711126   0.6361930"
-  },
-  {
     "objectID": "slides/week12/week12_missing_data.html#the-missing-data-problem",
     "href": "slides/week12/week12_missing_data.html#the-missing-data-problem",
     "title": "Week 12: Missing data",
     "section": "The missing data problem",
-    "text": "The missing data problem\n\nFor each unit we observe \\((Y_i^*, R_i, X_i)\\), where\n\\[Y_i^* = \\begin{cases} Y_i & R_i = 1 \\\\ \\texttt{NA} & R_i = 0 \\end{cases}\\]\n\\(R_i\\) works the same way (observability), but now it’s out of our control\n\nWe don’t know \\(\\Pr(R_i = 1)\\) and can’t assume that \\(R_i\\) is independent of \\(Y_i\\)\n\nApply Law of Iterated/Total Expectation conditioning on \\(R_i\\):\n\\[\\mathbb{E}[Y_i] = \\mathbb{E}[Y_i \\mid R_i = 1]\\Pr(R_i = 1) + \\underbrace{\\mathbb{E}[Y_i \\mid R_i = 0]}_{\\text{never observed}}\\Pr(R_i = 0)\\]"
+    "text": "The missing data problem\n\nFor each unit we observe \\((Y_i^*, R_i, X_i)\\), where\n\\[Y_i^* = \\begin{cases} Y_i & R_i = 1 \\\\ \\texttt{NA} & R_i = 0 \\end{cases}\\]\n\\(R_i\\) works the same way (do we observe \\(Y_i\\) or not), but now it’s out of our control\n\nWe don’t know \\(\\Pr(R_i = 1)\\) and can’t assume that \\(R_i\\) is independent of \\(Y_i\\)\n\nLaw of iterated expectations conditioning on \\(R_i\\):\n\\[\\mathbb{E}[Y_i] = \\mathbb{E}[Y_i \\mid R_i = 1]\\Pr(R_i = 1) + \\underbrace{\\mathbb{E}[Y_i \\mid R_i = 0]}_{\\text{never observed}}\\Pr(R_i = 0)\\]"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#example-who-wont-report-their-income",
     "href": "slides/week12/week12_missing_data.html#example-who-wont-report-their-income",
     "title": "Week 12: Missing data",
     "section": "Example: who won’t report their income?",
-    "text": "Example: who won’t report their income?\n\n2024 CES: “Thinking back over the last year, what was your family’s annual income?”\n\n8.5% of 59,784 respondents choose “Prefer not to say”\n\n\\(Y_i = 1\\) if family income is $60,000 or more, about the median among those who answer\n\\(X_i\\): observed for everyone\n\nAge, gender, education, race, employment, marital status, party ID, political engagement\n\nPolitical engagement - non-response to four questions on politics\n\nOver the past year, has the nation’s economy gotten better or worse?\nGenerally speaking, do you think of yourself as a Democrat, a Republican, an Independent…? (party ID)\nIn general, how would you describe your own political viewpoint? (ideology)\nDo you follow what’s going on in government and public affairs…? (interest)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n“Not sure” answers\nRespondents\nRefuse income\nIncome $60k+ (if answered)\n\n\n\n\n0\n54,034\n7.7%\n51%\n\n\n1\n4,229\n14.0%\n28%\n\n\n2\n1,135\n19.2%\n18%\n\n\n3 or 4\n386\n30.6%\n12%"
+    "text": "Example: who won’t report their income?\n\n2024 CES: “Thinking back over the last year, what was your family’s annual income?”\n\n8.5% of 59,784 respondents choose “Prefer not to say”\n\nOutcome of interest\n\n\\(Y_i = 1\\) if family income is $60,000 or more\n\nCovariates (\\(X_i\\)) observed for all units\n\nAge, gender, education, race, employment, marital status, party ID, political engagement"
+  },
+  {
+    "objectID": "slides/week12/week12_missing_data.html#example-who-wont-report-their-income-1",
+    "href": "slides/week12/week12_missing_data.html#example-who-wont-report-their-income-1",
+    "title": "Week 12: Missing data",
+    "section": "Example: who won’t report their income?",
+    "text": "Example: who won’t report their income?\n\nPolitical engagement - non-response to four questions on politics\n\nOver the past year, has the nation’s economy gotten better or worse?\nGenerally speaking, do you think of yourself as a Democrat, a Republican, an Independent…? (party ID)\nIn general, how would you describe your own political viewpoint? (ideology)\nDo you follow what’s going on in government and public affairs…? (interest)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n“Not sure” answers\nRespondents\nRefuse income\nIncome $60k+ (if answered)\n\n\n\n\n0\n54,034\n7.7%\n51%\n\n\n1\n4,229\n14.0%\n28%\n\n\n2\n1,135\n19.2%\n18%\n\n\n3 or 4\n386\n30.6%\n12%"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#what-can-we-learn-without-assumptions",
     "href": "slides/week12/week12_missing_data.html#what-can-we-learn-without-assumptions",
     "title": "Week 12: Missing data",
     "section": "What can we learn without assumptions?",
-    "text": "What can we learn without assumptions?\n\nSuppose \\(Y_i \\in [a, b]\\). Then \\(\\mathbb{E}[Y_i \\mid R_i = 0]\\) is somewhere in \\([a, b]\\)\nWe can get bounds by plugging in the two extremes (Manski 1989)\n\\[\\mathbb{E}[Y_i] \\in \\Big[\\,\\mathbb{E}[Y_i \\mid R_i = 1]\\Pr(R_i = 1) + a\\Pr(R_i = 0),\\ \\ \\mathbb{E}[Y_i \\mid R_i = 1]\\Pr(R_i = 1) + b\\Pr(R_i = 0)\\,\\Big]\\]"
-  },
-  {
-    "objectID": "slides/week12/week12_missing_data.html#bounds-in-the-running-example",
-    "href": "slides/week12/week12_missing_data.html#bounds-in-the-running-example",
-    "title": "Week 12: Missing data",
-    "section": "Bounds in the running example",
-    "text": "Bounds in the running example\n\np_R &lt;- mean(ces$R)\ncc  &lt;- mean(ces$inc60[ces$R == 1])                # the complete-case mean\nc(complete_case = cc,\n  lower = cc * p_R + 0 * (1 - p_R),               # every refuser earns under $60k\n  upper = cc * p_R + 1 * (1 - p_R))               # every refuser earns $60k or more\n\ncomplete_case         lower         upper \n    0.4850209     0.4435802     0.5290211 \n\n\n\n8.5% missing and a binary outcome: an interval 8.5 percentage points wide\nTo get a point estimate we need assumptions about \\(R_i\\)"
+    "text": "What can we learn without assumptions?\n\nSuppose \\(Y_i \\in [a, b]\\). Then \\(\\mathbb{E}[Y_i \\mid R_i = 0]\\) is somewhere in \\([a, b]\\)\nWe can get bounds by plugging in the two extremes (Manski 1989)\n\\[\\mathbb{E}[Y_i] \\in \\Big[\\,\\underbrace{\\mathbb{E}[Y_i \\mid R_i = 1]\\Pr(R_i = 1) + a\\Pr(R_i = 0)}_{\\text{lower bound: } \\mathbb{E}[Y_i \\mid R_i = 0] = a},\\ \\ \\underbrace{\\mathbb{E}[Y_i \\mid R_i = 1]\\Pr(R_i = 1) + b\\Pr(R_i = 0)}_{\\text{upper bound: } \\mathbb{E}[Y_i \\mid R_i = 0] = b}\\,\\Big]\\]\n\n\n\np_R &lt;- mean(ces$R)\ncc  &lt;- mean(ces$inc60[ces$R == 1])                # the complete-case mean\nc(complete_case = cc,\n  lower = cc * p_R + 0 * (1 - p_R),               # every refuser earns under $60k\n  upper = cc * p_R + 1 * (1 - p_R))               # every refuser earns $60k or more\n\ncomplete_case         lower         upper \n    0.4850209     0.4435802     0.5290211"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#rubins-taxonomy",
     "href": "slides/week12/week12_missing_data.html#rubins-taxonomy",
     "title": "Week 12: Missing data",
     "section": "Rubin’s taxonomy",
-    "text": "Rubin’s taxonomy\n\nMissing completely at random (MCAR)\n\\[R_i \\indep Y_i\\]\nMissing at random (MAR)\n\\[R_i \\indep Y_i \\mid X_i\\]\nMissing not at random (MNAR): neither holds\nTerms originated from Rubin (1976) - not the best language.\n\n“At random” does not mean “random”: MAR allows missingness to depend on \\(X_i\\)\nHere “at random” is closer to “according to known non-randomness”"
+    "text": "Rubin’s taxonomy\n\nMissing completely at random (MCAR)\n\\[R_i \\indep Y_i\\]\nMissing at random (MAR)\n\\[R_i \\indep Y_i \\mid X_i\\]\nMissing not at random (MNAR):\n\\[R_i \\nindep Y_i \\mid X_i\\]\nTerms originated from Rubin (1976) - not the best language.\n\n“At random” does not mean “random”: MAR allows missingness to depend on \\(X_i\\)\nRubin’s “at random” is closer to “according to known non-randomness”"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#missing-completely-at-random",
@@ -3238,7 +3231,7 @@
     "href": "slides/week12/week12_missing_data.html#identification-under-mar",
     "title": "Week 12: Missing data",
     "section": "Identification under MAR",
-    "text": "Identification under MAR\n\nLaw of iterated expectations, then MAR\n\\[\\mathbb{E}[Y_i] = \\mathbb{E}\\big[\\mathbb{E}[Y_i \\mid X_i]\\big] = \\mathbb{E}\\big[\\mathbb{E}[Y_i \\mid R_i = 1, X_i]\\big]\\]\n\nEverything on the right is observable\n\nRegression estimator: fit \\(\\mathbb{E}[Y_i \\mid R_i = 1, X_i]\\) among respondents and predict for everyone\n\\[\\hat{\\mu}_{\\text{reg}} = \\frac{1}{n}\\sum_{i=1}^n \\hat{\\mathbb{E}}[Y_i \\mid R_i = 1, X_i]\\]\nWeighted average of outcomes among respondents\n\nWith weights proportional to \\(X_i\\) distribution in the full sample"
+    "text": "Identification under MAR\n\nLaw of iterated expectations, then MAR\n\\[\\mathbb{E}[Y_i] = \\mathbb{E}\\big[\\mathbb{E}[Y_i \\mid X_i]\\big] = \\mathbb{E}\\big[\\mathbb{E}[Y_i \\mid R_i = 1, X_i]\\big]\\]\n\nEverything on the right is observable\n\nRegression estimator: fit \\(\\mathbb{E}[Y_i \\mid R_i = 1, X_i]\\) among respondents and predict for everyone\n\\[\\hat{\\mu}_{\\text{reg}} = \\frac{1}{n}\\sum_{i=1}^n \\hat{\\mathbb{E}}[Y_i \\mid R_i = 1, X_i]\\]\nWeighted average of outcomes among respondents…\n\n…with weights proportional to \\(X_i\\) distribution in the full sample"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#missing-not-at-random",
@@ -3252,7 +3245,7 @@
     "href": "slides/week12/week12_missing_data.html#the-propensity-score-for-missingness",
     "title": "Week 12: Missing data",
     "section": "The propensity score for missingness",
-    "text": "The propensity score for missingness\n\nIt turns out that we only need to know one thing in order to fully adjust for non-response bias.\n\nThe response propensity score\n\n\\[p_R(x) = \\Pr(R_i = 1 \\mid X_i = x)\\]\nUnder MAR, all we need to condition on is \\(p_R(X_i)\\) (Rosenbaum and Rubin 1983)\n\\[R_i \\indep Y_i \\mid X_i \\quad\\Rightarrow\\quad R_i \\indep Y_i \\mid p_R(X_i)\\]\nAdjusting for the propensity score is as good as adjusting for all of \\(X_i\\)"
+    "text": "The propensity score for missingness\n\nUnder missing at random, we only need to know one thing in order to fully adjust for non-response bias.\nThe response propensity score:\n\\[p_R(x) = \\Pr(R_i = 1 \\mid X_i = x)\\]\nConditioning on \\(p_R(X_i)\\) is enough to get rid of the bias (Rosenbaum and Rubin 1983)\n\\[R_i \\indep Y_i \\mid X_i \\quad\\Rightarrow\\quad R_i \\indep Y_i \\mid p_R(X_i)\\]\nAdjusting for the propensity score is as good as adjusting for all of \\(X_i\\)"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#reweighting-the-respondents",
@@ -3266,7 +3259,7 @@
     "href": "slides/week12/week12_missing_data.html#horvitz-thompson",
     "title": "Week 12: Missing data",
     "section": "Horvitz-Thompson",
-    "text": "Horvitz-Thompson\n\nOur new estimator re-weights each respondent by the inverse propensity of response \\(1 / p_R(X_i)\\) (Horvitz and Thompson 1952)\n\\[\\hat{\\mu}_{\\text{HT}} = \\frac{1}{n}\\sum_{i=1}^n \\frac{R_i Y_i^*}{p_R(X_i)}\\]\nThis is the Horvitz-Thompson or “inverse propensity weighting” (IPW) estimator\nCan think of this as creating a pseudo-population where each respondent stands in for \\(1 / p_R(X_i)\\) people like them.\n\nUnder-represented respondents count for more\nOver-represented respondents count for less"
+    "text": "Horvitz-Thompson\n\nConsider an estimator that re-weights each respondent by their inverse propensity (Horvitz and Thompson 1952)\n\\[\\hat{\\mu}_{\\text{HT}} = \\frac{1}{n}\\sum_{i=1}^n \\frac{R_i Y_i^*}{p_R(X_i)}\\]\nThis is the Horvitz-Thompson or “inverse propensity weighting” (IPW) estimator\nCan think of this as creating a pseudo-population where each respondent stands in for \\(1 / p_R(X_i)\\) people like them.\n\nUnder-represented respondents count for more\nOver-represented respondents count for less"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#horvitz-thompson-is-unbiased-under-mar",
@@ -3280,14 +3273,14 @@
     "href": "slides/week12/week12_missing_data.html#hájek",
     "title": "Week 12: Missing data",
     "section": "Hájek",
-    "text": "Hájek\n\nThe HT weights \\(\\frac{R_i}{p_R(X_i)}\\) only sum to \\(n\\) on average. The Hájek estimator (stabilized IPW) normalizes them to sum to exactly 1 in the sample (Hájek 1971)\n\\[\\hat{\\mu}_{\\text{Hájek}} = \\frac{\\sum_{i=1}^n \\frac{R_i Y_i^*}{p_R(X_i)}}{\\sum_{i=1}^n \\frac{R_i}{p_R(X_i)}}\\]\nHas a clean interpretation as a convex average of the respondents\n\nSlightly biased, consistent, usually lower variance than HT"
+    "text": "Hájek\n\nThe HT weights \\(\\frac{R_i}{p_R(X_i)}\\) only sum to \\(n\\) on average.\n\nThe Hájek estimator (stabilized IPW) normalizes them to sum to exactly 1 in the sample (Hájek 1971)\n\n\\[\\hat{\\mu}_{\\text{Hájek}} = \\frac{1}{\\sum_{i=1}^n \\frac{R_i}{p_R(X_i)}}{\\sum_{i=1}^n \\frac{R_i Y_i^*}{p_R(X_i)}}\\]\nHas a clean interpretation as a convex average of the respondents\n\nSlightly biased, consistent, usually lower variance than HT"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#ipw-in-the-running-example",
     "href": "slides/week12/week12_missing_data.html#ipw-in-the-running-example",
     "title": "Week 12: Missing data",
     "section": "IPW in the running example",
-    "text": "IPW in the running example\n\nps_fit &lt;- glm(R ~ age + I(age^2) + educ + race + gender + employ + marstat + factor(pid7) +\n                factor(pmin(unsure, 3)), family = binomial, data = ces)\nces &lt;- ces |&gt; mutate(p_hat = fitted(ps_fit), y_star = replace_na(inc60, 0))\nces |&gt; summarize(complete_case = mean(inc60, na.rm = TRUE),\n                 ht    = mean(R * y_star / p_hat),\n                 hajek = sum(R * y_star / p_hat) / sum(R / p_hat))\n\n# A tibble: 1 × 3\n  complete_case    ht hajek\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1         0.485 0.483 0.483\n\n\n\nRefusers are less engaged, and less engaged respondents earn less: weighting moves the estimate down, by 0.2 percentage points\nWeights run from 1.01 to 2.91: the largest go to young students who are unsure about politics\nWhy so small? Only 8.5% refuse. The shift is at most \\(\\Pr(R_i = 0)\\) times how different refusers look from respondents"
+    "text": "IPW in the running example\n\nps_fit &lt;- glm(R ~ age + I(age^2) + educ + race + gender + employ + marstat + factor(pid7) +\n                factor(pmin(unsure, 3)), family = binomial, data = ces)\nces &lt;- ces |&gt; mutate(p_hat = fitted(ps_fit), y_star = replace_na(inc60, 0))\nces |&gt; summarize(complete_case = mean(inc60, na.rm = TRUE),\n                 ht    = mean(R * y_star / p_hat),\n                 hajek = sum(R * y_star / p_hat) / sum(R / p_hat))\n\n# A tibble: 1 × 3\n  complete_case    ht hajek\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1         0.485 0.483 0.483\n\n\n\nRefusers are less politically engaged, and less politically engaged respondents earn less\nWeighting moves the estimate down, by 0.2 percentage points\nWeights run from 1.01 to 2.91\n\nthe largest go to young students who are unsure about politics\n\nSize of the bias and adjustment is proportional to the magnitude of non-response\n\nOnly 8.5% refuse. The shift is at most \\(\\Pr(R_i = 0)\\) times how different refusers look from respondents"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#problems-with-weights",

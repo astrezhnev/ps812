@@ -1107,6 +1107,7 @@ Anton Strezhnev
 \newcommand{\Cov}{\text{Cov}}
 \newcommand{\Corr}{\text{Corr}}
 \newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
+\newcommand{\nindep}{\not\indep}
 \]</span></p>
 </div>
 <!-- ============================================================
@@ -1116,20 +1117,20 @@ Anton Strezhnev
 <section id="where-does-uncertainty-come-from" class="slide level2">
 <h2>Where does uncertainty come from?</h2>
 <ul>
-<li>We’ve spent a lot of time focusing on randomness from <strong>sampling from a population</strong>
+<li class="fragment">We’ve spent a lot of time focusing on randomness from <strong>sampling from a population</strong>
 <ul>
-<li>Our <strong>sample mean</strong> is not the same as the <strong>population mean</strong></li>
-<li>Statistics gives us some tools for characterizing that error (<strong>sampling variance</strong>)</li>
+<li class="fragment">Our <strong>sample mean</strong> is not the same as the <strong>population mean</strong></li>
+<li class="fragment">Statistics gives us some tools for characterizing that error (<strong>sampling variance</strong>)</li>
 </ul></li>
-<li>But what happens if we have the <strong>full population</strong>?
+<li class="fragment">But what happens if we have the <strong>full population</strong>?
 <ul>
-<li>All 193-197 countries in the world</li>
-<li>All 50 states.</li>
-<li>A set of <em>the specific villages</em> we’re interested in.</li>
+<li class="fragment">All 193-197 countries in the world</li>
+<li class="fragment">All 50 states.</li>
+<li class="fragment">A set of <em>the specific villages</em> we’re interested in.</li>
 </ul></li>
-<li><strong>Key idea</strong>: Uncertainty comes from the stuff we <strong>don’t see</strong>
+<li class="fragment"><strong>Key idea</strong>: Uncertainty comes from the stuff we <strong>don’t see</strong>
 <ul>
-<li>And solutions require knowing the <strong>mechanism</strong> by which we don’t see things!</li>
+<li class="fragment">And solutions require knowing the <strong>mechanism</strong> by which we don’t see things!</li>
 </ul></li>
 </ul>
 </section>
@@ -1284,7 +1285,7 @@ function (el, d, opts) {
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
                         'aria-label': 'Left: a population distribution F. Middle: a strip of N units. Right: the distribution of the estimates. First, repeated samples from F change the values in the strip. Then the values are frozen and the randomness comes from which units are punched out of the strip: at random, then more often for one group, and finally with the observed units reweighted to fill the holes',
-                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; font-family: inherit;' }, el);
+                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; overflow: hidden; font-family: inherit;' }, el);
 
   // ---- Y axis -------------------------------------------------------------------
   mk('line', { x1: AX, x2: AX, y1: Y0, y2: Y1 - 6, stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round' }, svg);
@@ -1338,7 +1339,7 @@ function (el, d, opts) {
   }
 
   // ---- The strip --------------------------------------------------------------------
-  var gS = mk('g', {}, svg), cells = [], stems = [], dots = [], rtx = [];
+  var gS = mk('g', {}, svg), cells = [], units = [], stems = [], dots = [], rtx = [];
   for (var i = 0; i < N; i++) {
     cells.push(mk('rect', { y: Y1 - 8, height: Y0 - Y1 + 8, fill: '#ffffff', stroke: '#c8c8c8', 'stroke-width': 1.5 }, gS));
   }
@@ -1352,9 +1353,12 @@ function (el, d, opts) {
   label(HX1, py(d.muN) - 8, [[{ 'font-style': 'italic' }, 'μ_N']], { 'text-anchor': 'end', fill: RED, 'font-weight': 600 }, gMuN);
 
   mk('line', { x1: SX0, x2: SX1, y1: Y0, y2: Y0, stroke: INK, 'stroke-width': 2 }, svg);
+  // Each unit's stem and dot share a group, so a unit that goes missing can
+  // pop out and fall off the bottom of the figure in one piece
   for (i = 0; i < N; i++) {
-    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, svg));
-    dots.push(mk('circle', { r: 7 }, svg));
+    units.push(mk('g', {}, svg));
+    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, units[i]));
+    dots.push(mk('circle', { r: 7 }, units[i]));
     rtx.push(mk('text', { y: RY, 'text-anchor': 'middle', 'font-size': 18, fill: INK }, svg));
   }
   var rLab = label(SX0 - 10, RY, [[{ 'font-style': 'italic' }, 'R_i']], { 'text-anchor': 'end', 'font-size': 20 }, svg);
@@ -1365,11 +1369,14 @@ function (el, d, opts) {
   function estLine(col, lab, below) {
     var g = mk('g', {}, svg);
     var ln = mk('line', { x1: SX0, x2: HX0, stroke: col, 'stroke-width': 3, 'stroke-dasharray': '9 6' }, g);
-    var t = label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
-                                     stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, g);
+    // The label sits at y = 0 in its own group, which is what moves: the hat
+    // is drawn once into the same group, so it travels with the letter
+    var lg = mk('g', {}, g);
+    label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
+                             stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, lg);
     return { g: g, set: function (y, o) {
       ln.setAttribute('y1', py(y)); ln.setAttribute('y2', py(y));
-      t.setAttribute('y', py(y) + (below ? 24 : -8)); g.setAttribute('opacity', o);
+      lg.setAttribute('transform', 'translate(0,' + (py(y) + (below ? 24 : -8)) + ')'); g.setAttribute('opacity', o);
     } };
   }
   var eA = estLine(INK, [[{ 'font-style': 'italic' }, '^μ']]);
@@ -1409,8 +1416,9 @@ function (el, d, opts) {
     function obs(pat, p) {
       var k = Math.min(Math.floor(p), K), f = p - k, o = [];
       for (var i = 0; i < N; i++) {
-        if (k === 0) o.push(lerp(1, pat[0][i], ease(stag(f, i))));
-        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], ease(f)));
+        // (linear in time: the pop-and-fall below supplies its own easing)
+        if (k === 0) o.push(lerp(1, pat[0][i], stag(f, i)));
+        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], f));
         else o.push(pat[k - 1][i]);
       }
       return o;
@@ -1451,9 +1459,18 @@ function (el, d, opts) {
         if (u < 0.3) { yv = d.ay[sa - 1][i]; op = 1 - u / 0.3; }
         else { yv = d.ay[sa][i]; xv = lerp(launch(yv, sa, i), xs[i], ease((u - 0.3) / 0.7)); op = 1; }
       } else { yv = d.ay[sa - 1][i]; op = 1; }
-      op *= lerp(0.15, 1, o[i]) * (1 - ew * (1 - R[i]));
+      // A missing unit pops out of its cell (up, with the dot swelling), then
+      // drops straight down, accelerating, until it's below the figure.
+      // A unit coming back runs the same path in reverse
+      var out = 1 - o[i], dy = 0, sc = 1;
+      if (out > 0) {
+        var POP = 22, dyEnd = H - py(yv) + 24;
+        if (out < 0.25) { var pp = out / 0.25; dy = -POP * Math.sin(pp * Math.PI / 2); sc = 1 + 0.4 * Math.sin(pp * Math.PI); }
+        else { var q = (out - 0.25) / 0.75; dy = -POP + (dyEnd + POP) * q * q; }
+      }
+      units[i].setAttribute('transform', 'translate(0,' + dy + ')');
       var col = mixCol(INK, XCOL[d.fx[i]], s.xc);
-      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv));
+      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv)); dots[i].setAttribute('r', 7 * sc);
       dots[i].setAttribute('fill', col); dots[i].setAttribute('opacity', op);
       stems[i].setAttribute('x1', xv); stems[i].setAttribute('x2', xv); stems[i].setAttribute('y2', py(yv));
       stems[i].setAttribute('stroke', col); stems[i].setAttribute('opacity', op * (Math.abs(xv - xs[i]) < 1 ? 1 : 0));
@@ -1466,7 +1483,7 @@ function (el, d, opts) {
     rLab.setAttribute('opacity', s.fz);
 
     // ---- Density and truth
-    gD.setAttribute('opacity', 1 - 0.85 * s.fz);
+    gD.setAttribute('opacity', 1 - s.fz);
     gMu.setAttribute('opacity', s.mu * (1 - s.fz));
     gMuN.setAttribute('opacity', s.fz);
 
@@ -1722,7 +1739,7 @@ function (el, d, opts) {
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
                         'aria-label': 'Left: a population distribution F. Middle: a strip of N units. Right: the distribution of the estimates. First, repeated samples from F change the values in the strip. Then the values are frozen and the randomness comes from which units are punched out of the strip: at random, then more often for one group, and finally with the observed units reweighted to fill the holes',
-                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; font-family: inherit;' }, el);
+                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; overflow: hidden; font-family: inherit;' }, el);
 
   // ---- Y axis -------------------------------------------------------------------
   mk('line', { x1: AX, x2: AX, y1: Y0, y2: Y1 - 6, stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round' }, svg);
@@ -1776,7 +1793,7 @@ function (el, d, opts) {
   }
 
   // ---- The strip --------------------------------------------------------------------
-  var gS = mk('g', {}, svg), cells = [], stems = [], dots = [], rtx = [];
+  var gS = mk('g', {}, svg), cells = [], units = [], stems = [], dots = [], rtx = [];
   for (var i = 0; i < N; i++) {
     cells.push(mk('rect', { y: Y1 - 8, height: Y0 - Y1 + 8, fill: '#ffffff', stroke: '#c8c8c8', 'stroke-width': 1.5 }, gS));
   }
@@ -1790,9 +1807,12 @@ function (el, d, opts) {
   label(HX1, py(d.muN) - 8, [[{ 'font-style': 'italic' }, 'μ_N']], { 'text-anchor': 'end', fill: RED, 'font-weight': 600 }, gMuN);
 
   mk('line', { x1: SX0, x2: SX1, y1: Y0, y2: Y0, stroke: INK, 'stroke-width': 2 }, svg);
+  // Each unit's stem and dot share a group, so a unit that goes missing can
+  // pop out and fall off the bottom of the figure in one piece
   for (i = 0; i < N; i++) {
-    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, svg));
-    dots.push(mk('circle', { r: 7 }, svg));
+    units.push(mk('g', {}, svg));
+    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, units[i]));
+    dots.push(mk('circle', { r: 7 }, units[i]));
     rtx.push(mk('text', { y: RY, 'text-anchor': 'middle', 'font-size': 18, fill: INK }, svg));
   }
   var rLab = label(SX0 - 10, RY, [[{ 'font-style': 'italic' }, 'R_i']], { 'text-anchor': 'end', 'font-size': 20 }, svg);
@@ -1803,11 +1823,14 @@ function (el, d, opts) {
   function estLine(col, lab, below) {
     var g = mk('g', {}, svg);
     var ln = mk('line', { x1: SX0, x2: HX0, stroke: col, 'stroke-width': 3, 'stroke-dasharray': '9 6' }, g);
-    var t = label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
-                                     stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, g);
+    // The label sits at y = 0 in its own group, which is what moves: the hat
+    // is drawn once into the same group, so it travels with the letter
+    var lg = mk('g', {}, g);
+    label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
+                             stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, lg);
     return { g: g, set: function (y, o) {
       ln.setAttribute('y1', py(y)); ln.setAttribute('y2', py(y));
-      t.setAttribute('y', py(y) + (below ? 24 : -8)); g.setAttribute('opacity', o);
+      lg.setAttribute('transform', 'translate(0,' + (py(y) + (below ? 24 : -8)) + ')'); g.setAttribute('opacity', o);
     } };
   }
   var eA = estLine(INK, [[{ 'font-style': 'italic' }, '^μ']]);
@@ -1847,8 +1870,9 @@ function (el, d, opts) {
     function obs(pat, p) {
       var k = Math.min(Math.floor(p), K), f = p - k, o = [];
       for (var i = 0; i < N; i++) {
-        if (k === 0) o.push(lerp(1, pat[0][i], ease(stag(f, i))));
-        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], ease(f)));
+        // (linear in time: the pop-and-fall below supplies its own easing)
+        if (k === 0) o.push(lerp(1, pat[0][i], stag(f, i)));
+        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], f));
         else o.push(pat[k - 1][i]);
       }
       return o;
@@ -1889,9 +1913,18 @@ function (el, d, opts) {
         if (u < 0.3) { yv = d.ay[sa - 1][i]; op = 1 - u / 0.3; }
         else { yv = d.ay[sa][i]; xv = lerp(launch(yv, sa, i), xs[i], ease((u - 0.3) / 0.7)); op = 1; }
       } else { yv = d.ay[sa - 1][i]; op = 1; }
-      op *= lerp(0.15, 1, o[i]) * (1 - ew * (1 - R[i]));
+      // A missing unit pops out of its cell (up, with the dot swelling), then
+      // drops straight down, accelerating, until it's below the figure.
+      // A unit coming back runs the same path in reverse
+      var out = 1 - o[i], dy = 0, sc = 1;
+      if (out > 0) {
+        var POP = 22, dyEnd = H - py(yv) + 24;
+        if (out < 0.25) { var pp = out / 0.25; dy = -POP * Math.sin(pp * Math.PI / 2); sc = 1 + 0.4 * Math.sin(pp * Math.PI); }
+        else { var q = (out - 0.25) / 0.75; dy = -POP + (dyEnd + POP) * q * q; }
+      }
+      units[i].setAttribute('transform', 'translate(0,' + dy + ')');
       var col = mixCol(INK, XCOL[d.fx[i]], s.xc);
-      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv));
+      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv)); dots[i].setAttribute('r', 7 * sc);
       dots[i].setAttribute('fill', col); dots[i].setAttribute('opacity', op);
       stems[i].setAttribute('x1', xv); stems[i].setAttribute('x2', xv); stems[i].setAttribute('y2', py(yv));
       stems[i].setAttribute('stroke', col); stems[i].setAttribute('opacity', op * (Math.abs(xv - xs[i]) < 1 ? 1 : 0));
@@ -1904,7 +1937,7 @@ function (el, d, opts) {
     rLab.setAttribute('opacity', s.fz);
 
     // ---- Density and truth
-    gD.setAttribute('opacity', 1 - 0.85 * s.fz);
+    gD.setAttribute('opacity', 1 - s.fz);
     gMu.setAttribute('opacity', s.mu * (1 - s.fz));
     gMuN.setAttribute('opacity', s.fz);
 
@@ -2009,44 +2042,6 @@ function (el, d, opts) {
 <span class="fragment st-step"></span>
 <span class="fragment st-step"></span>
 <span class="fragment st-step"></span>
-</section>
-<section id="two-sources-of-randomness" class="slide level2">
-<h2>Two sources of randomness</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 21%">
-<col style="width: 31%">
-<col style="width: 46%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th>Sampling from <span class="math inline">\(F\)</span></th>
-<th>Finite population</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>The values <span class="math inline">\(Y_i\)</span></td>
-<td>Random draws</td>
-<td>Fixed numbers</td>
-</tr>
-<tr class="even">
-<td>What’s random</td>
-<td>Which values we draw</td>
-<td>Which units we see: <span class="math inline">\(R_i\)</span></td>
-</tr>
-<tr class="odd">
-<td>Estimand</td>
-<td><span class="math inline">\(\mu = \mathbb{E}[Y_i]\)</span></td>
-<td><span class="math inline">\(\mu_N = \frac{1}{N}\sum_{i=1}^N Y_i\)</span></td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li class="fragment">Sampling from an <strong>infinite population</strong>: the cells stay, but the <strong>values</strong> change</li>
-<li class="fragment">Finite population: the values stay, but the <strong>holes</strong> move</li>
-</ul>
 <!-- ============================================================
      Finite population inference under simple random sampling
      ============================================================ -->
@@ -2056,26 +2051,44 @@ function (el, d, opts) {
 <ul>
 <li class="fragment"><p><span class="math inline">\(N\)</span> units with outcomes <span class="math inline">\(Y_1, Y_2, \dots, Y_N\)</span></p>
 <ul>
-<li class="fragment">These are <strong>fixed numbers</strong>, not random variables</li>
+<li class="fragment">We’ll treat these as <strong>fixed</strong></li>
 </ul></li>
 <li class="fragment"><p>Estimand: the <strong>population mean</strong></p>
 <p><span class="math display">\[\mu_N = \frac{1}{N}\sum_{i=1}^N Y_i\]</span></p></li>
 <li class="fragment"><p>and the <strong>population variance</strong></p>
 <p><span class="math display">\[S^2 = \frac{1}{N-1}\sum_{i=1}^N (Y_i - \mu_N)^2\]</span></p></li>
-<li class="fragment"><p>If we saw every <span class="math inline">\(Y_i\)</span>, there’s no uncertainty at all.</p></li>
+<li class="fragment"><p>If we saw every <span class="math inline">\(Y_i\)</span>, there would be no uncertainty at all.</p></li>
 </ul>
 </section>
 <section id="simple-random-sampling" class="slide level2">
 <h2>Simple random sampling</h2>
 <ul>
-<li class="fragment"><p><span class="math inline">\(R_i = 1\)</span> if unit <span class="math inline">\(i\)</span> is in the sample, <span class="math inline">\(R_i = 0\)</span> if not, with <span class="math inline">\(\sum_{i=1}^N R_i = n\)</span></p></li>
-<li class="fragment"><p><strong>Simple random sampling</strong> (SRS): each of the <span class="math inline">\(\binom{N}{n}\)</span> subsets of size <span class="math inline">\(n\)</span> is equally likely</p>
+<li class="fragment"><p>Let <span class="math inline">\(R_i\)</span> be the <strong>inclusion indicator</strong></p>
 <ul>
-<li class="fragment">Each unit has the same <strong>inclusion probability</strong></li>
-</ul>
+<li class="fragment"><span class="math inline">\(R_i = 1\)</span> if unit <span class="math inline">\(i\)</span> is in the sample</li>
+<li class="fragment"><span class="math inline">\(R_i = 0\)</span> if not</li>
+<li class="fragment"><span class="math inline">\(\sum_{i=1}^N R_i = n\)</span> - our sample is the number of “included” units.</li>
+</ul></li>
+<li class="fragment"><p><strong>Simple random sampling</strong> (SRS): each of the <span class="math inline">\(\binom{N}{n}\)</span> subsets of size <span class="math inline">\(n\)</span> is equally likely</p></li>
+<li class="fragment"><p>Each unit has the same <strong>inclusion probability</strong></p>
 <p><span class="math display">\[\Pr(R_i = 1) = \frac{n}{N}\]</span></p></li>
-<li class="fragment"><p>But the <span class="math inline">\(R_i\)</span> are <strong>not independent</strong></p>
-<p><span class="math display">\[\Pr(R_i = 1, R_j = 1) = \frac{n}{N}\cdot\frac{n-1}{N-1} \quad\Rightarrow\quad \Cov(R_i, R_j) = -\frac{1}{N-1}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right)\]</span></p></li>
+<li class="fragment"><p>But the <span class="math inline">\(R_i\)</span> are <strong>not independent</strong> - the <strong>joint</strong> inclusion probability is not the product of the marginals</p>
+<p><span class="math display">\[\Pr(R_i = 1, R_j = 1) = \Pr(R_i = 1) \Pr(R_j = 1 | R_i = 1)= \frac{n}{N}\cdot\frac{n-1}{N-1}\]</span></p></li>
+</ul>
+</section>
+<section id="simple-random-sampling-1" class="slide level2">
+<h2>Simple random sampling</h2>
+<ul>
+<li class="fragment"><p>So there’s a covariance we have to care about</p>
+<p><span class="math display">\[\begin{aligned}
+   \Cov(R_i, R_j) &amp;= \Pr(R_i = 1, R_j = 1) - \Pr(R_i = 1)\Pr(R_j = 1)\\
+   &amp;= \frac{n}{N}\cdot\frac{n-1}{N-1} - \frac{n}{N}\cdot \frac{n}{N}\\
+   &amp;= \frac{n^2 - n}{N(N - 1)} - \frac{n^2}{N^2}\\
+   &amp;= \frac{(n^2 - n)N - n^2(N - 1)}{N^2(N - 1)} \\
+   &amp;= \frac{n^2 - nN}{N^2(N - 1)} \\
+   &amp;= -\frac{n(N - n)}{N^2(N - 1)} = \frac{1}{N-1} \cdot \frac{n}{N} \cdot \frac{N-n}{N}\\
+   &amp;= -\frac{\Var(R_i)}{N - 1}
+   \end{aligned}\]</span></p></li>
 </ul>
 </section>
 <section id="the-sample-mean-is-unbiased" class="slide level2">
@@ -2105,13 +2118,13 @@ function (el, d, opts) {
 0 = \Big(\sum_{i} (Y_i - \mu_N)\Big)^2 &amp;= \sum_{i} (Y_i - \mu_N)^2 + \sum_{i \neq j} (Y_i - \mu_N)(Y_j - \mu_N) \\
 \Rightarrow \quad \sum_{i \neq j} (Y_i - \mu_N)(Y_j - \mu_N) &amp;= -\sum_i (Y_i - \mu_N)^2
 \end{aligned}\]</span></p></li>
-<li class="fragment"><p>Plug in <span class="math inline">\(\Var(R_i) = \frac{n}{N}\left(1 - \frac{n}{N}\right)\)</span> and <span class="math inline">\(\Cov(R_i, R_j) = -\frac{1}{N-1}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right)\)</span></p>
+<li class="fragment"><p>Plug in <span class="math inline">\(\Cov(R_i, R_j) = -\frac{\Var(R_i)}{N-1}\)</span></p>
 <p><span class="math display">\[\begin{aligned}
-\Var(\hat{\mu}) &amp;= \frac{1}{n^2}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right)\Big[\sum_i (Y_i - \mu_N)^2 + \frac{1}{N-1}\sum_i (Y_i - \mu_N)^2\Big] \\
-&amp;= \frac{1}{n^2}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right) \cdot N \cdot \underbrace{\frac{1}{N-1}\sum_i (Y_i - \mu_N)^2}_{S^2} \\
+\Var(\hat{\mu}) &amp;= \frac{\Var(R_i)}{n^2}\Big[\sum_i (Y_i - \mu_N)^2 + \frac{1}{N-1}\sum_i (Y_i - \mu_N)^2\Big] \\
+&amp;= \frac{\Var(R_i)}{n^2} \cdot N \cdot \underbrace{\frac{1}{N-1}\sum_i (Y_i - \mu_N)^2}_{S^2} \\
+&amp;= \frac{1}{n^2}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right) \cdot N S^2 \\
 &amp;= \left(1 - \frac{n}{N}\right)\frac{S^2}{n}
 \end{aligned}\]</span></p></li>
-<li class="fragment"><p><span class="math inline">\(1 - \frac{n}{N}\)</span> is the <strong>finite population correction</strong>: at <span class="math inline">\(n = N\)</span> (a census) the variance is <span class="math inline">\(0\)</span></p></li>
 </ul>
 </section>
 <section id="estimating-the-variance" class="slide level2">
@@ -2136,25 +2149,6 @@ function (el, d, opts) {
 </ul></li>
 <li class="fragment"><p>We can apply this idea beyond random sampling from a <strong>finite population</strong> to other forms of <strong>missingness</strong></p></li>
 </ul>
-</section>
-<section id="simulating-srs-in-r" class="slide level2">
-<h2>Simulating SRS in R</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="co"># The animation&#39;s finite population: 24 fixed values; observe 10 of them</span></span>
-<span id="cb1-2"><a aria-label="2"></a>y <span class="ot">&lt;-</span> pop<span class="sc">$</span>y; N <span class="ot">&lt;-</span> <span class="fu">length</span>(y); n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb1-3"><a aria-label="3"></a><span class="fu">set.seed</span>(<span class="dv">60706</span>)</span>
-<span id="cb1-4"><a aria-label="4"></a>mu_hat <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">10000</span>, <span class="fu">mean</span>(<span class="fu">sample</span>(y, n)))   <span class="co"># sample() draws without replacement</span></span>
-<span id="cb1-5"><a aria-label="5"></a><span class="fu">c</span>(<span class="at">mu_N =</span> <span class="fu">mean</span>(y), <span class="at">mean_of_estimates =</span> <span class="fu">mean</span>(mu_hat))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>             mu_N mean_of_estimates 
-         5.627355          5.611808 </code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="fu">c</span>(<span class="at">simulated =</span> <span class="fu">var</span>(mu_hat), <span class="at">fpc_formula =</span> (<span class="dv">1</span> <span class="sc">-</span> n <span class="sc">/</span> N) <span class="sc">*</span> <span class="fu">var</span>(y) <span class="sc">/</span> n, <span class="at">iid_formula =</span> <span class="fu">var</span>(y) <span class="sc">/</span> n)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  simulated fpc_formula iid_formula 
-  0.3713020   0.3711126   0.6361930 </code></pre>
-</div>
-</div>
 <!-- ============================================================
      Missing data (Aronow and Miller 2019, Section 6.1)
      ============================================================ -->
@@ -2164,27 +2158,35 @@ function (el, d, opts) {
 <ul>
 <li class="fragment"><p>For each unit we observe <span class="math inline">\((Y_i^*, R_i, X_i)\)</span>, where</p>
 <p><span class="math display">\[Y_i^* = \begin{cases} Y_i &amp; R_i = 1 \\ \texttt{NA} &amp; R_i = 0 \end{cases}\]</span></p></li>
-<li class="fragment"><p><span class="math inline">\(R_i\)</span> works the same way (observability), but now it’s <strong>out of our control</strong></p>
+<li class="fragment"><p><span class="math inline">\(R_i\)</span> works the same way (do we observe <span class="math inline">\(Y_i\)</span> or not), but now it’s <strong>out of our control</strong></p>
 <ul>
 <li class="fragment">We don’t know <span class="math inline">\(\Pr(R_i = 1)\)</span> and can’t assume that <span class="math inline">\(R_i\)</span> is independent of <span class="math inline">\(Y_i\)</span></li>
 </ul></li>
-<li class="fragment"><p>Apply Law of Iterated/Total Expectation conditioning on <span class="math inline">\(R_i\)</span>:</p>
+<li class="fragment"><p><strong>Law of iterated expectations</strong> conditioning on <span class="math inline">\(R_i\)</span>:</p>
 <p><span class="math display">\[\mathbb{E}[Y_i] = \mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + \underbrace{\mathbb{E}[Y_i \mid R_i = 0]}_{\text{never observed}}\Pr(R_i = 0)\]</span></p></li>
 </ul>
 </section>
 <section id="example-who-wont-report-their-income" class="slide level2">
 <h2>Example: who won’t report their income?</h2>
 <ul>
-<li class="fragment"><p>2024 CES: “Thinking back over the last year, what was your family’s annual income?”</p>
+<li class="fragment">2024 CES: “Thinking back over the last year, what was your family’s annual income?”
 <ul>
 <li class="fragment">8.5% of 59,784 respondents choose <strong>“Prefer not to say”</strong></li>
 </ul></li>
-<li class="fragment"><p><span class="math inline">\(Y_i = 1\)</span> if family income is <strong>$60,000 or more</strong>, about the median among those who answer</p></li>
-<li class="fragment"><p><span class="math inline">\(X_i\)</span>: observed for everyone</p>
+<li class="fragment"><strong>Outcome of interest</strong>
+<ul>
+<li class="fragment"><span class="math inline">\(Y_i = 1\)</span> if family income is <strong>$60,000 or more</strong></li>
+</ul></li>
+<li class="fragment"><strong>Covariates</strong> (<span class="math inline">\(X_i\)</span>) observed for all units
 <ul>
 <li class="fragment">Age, gender, education, race, employment, marital status, party ID, <strong>political engagement</strong></li>
 </ul></li>
-<li class="fragment"><p><strong>Political engagement</strong> - non-response to four questions on politics</p>
+</ul>
+</section>
+<section id="example-who-wont-report-their-income-1" class="slide level2">
+<h2>Example: who won’t report their income?</h2>
+<ul>
+<li class="fragment"><strong>Political engagement</strong> - non-response to four questions on politics
 <ul>
 <li class="fragment">Over the past year, has the nation’s economy gotten better or worse?</li>
 <li class="fragment">Generally speaking, do you think of yourself as a Democrat, a Republican, an Independent…? (party ID)</li>
@@ -2246,26 +2248,21 @@ function (el, d, opts) {
 <ul>
 <li class="fragment"><p>Suppose <span class="math inline">\(Y_i \in [a, b]\)</span>. Then <span class="math inline">\(\mathbb{E}[Y_i \mid R_i = 0]\)</span> is somewhere in <span class="math inline">\([a, b]\)</span></p></li>
 <li class="fragment"><p>We can get <strong>bounds</strong> by plugging in the two extremes <span class="citation" data-cites="manski1989anatomy">(<a href="#/references" role="doc-biblioref" onclick>Manski 1989</a>)</span></p>
-<p><span class="math display">\[\mathbb{E}[Y_i] \in \Big[\,\mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + a\Pr(R_i = 0),\ \ \mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + b\Pr(R_i = 0)\,\Big]\]</span></p></li>
+<p><span class="math display">\[\mathbb{E}[Y_i] \in \Big[\,\underbrace{\mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + a\Pr(R_i = 0)}_{\text{lower bound: } \mathbb{E}[Y_i \mid R_i = 0] = a},\ \ \underbrace{\mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + b\Pr(R_i = 0)}_{\text{upper bound: } \mathbb{E}[Y_i \mid R_i = 0] = b}\,\Big]\]</span></p></li>
 </ul>
-</section>
-<section id="bounds-in-the-running-example" class="slide level2">
-<h2>Bounds in the running example</h2>
+<div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a>p_R <span class="ot">&lt;-</span> <span class="fu">mean</span>(ces<span class="sc">$</span>R)</span>
-<span id="cb5-2"><a aria-label="2"></a>cc  <span class="ot">&lt;-</span> <span class="fu">mean</span>(ces<span class="sc">$</span>inc60[ces<span class="sc">$</span>R <span class="sc">==</span> <span class="dv">1</span>])                <span class="co"># the complete-case mean</span></span>
-<span id="cb5-3"><a aria-label="3"></a><span class="fu">c</span>(<span class="at">complete_case =</span> cc,</span>
-<span id="cb5-4"><a aria-label="4"></a>  <span class="at">lower =</span> cc <span class="sc">*</span> p_R <span class="sc">+</span> <span class="dv">0</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p_R),               <span class="co"># every refuser earns under $60k</span></span>
-<span id="cb5-5"><a aria-label="5"></a>  <span class="at">upper =</span> cc <span class="sc">*</span> p_R <span class="sc">+</span> <span class="dv">1</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p_R))               <span class="co"># every refuser earns $60k or more</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a>p_R <span class="ot">&lt;-</span> <span class="fu">mean</span>(ces<span class="sc">$</span>R)</span>
+<span id="cb1-2"><a aria-label="2"></a>cc  <span class="ot">&lt;-</span> <span class="fu">mean</span>(ces<span class="sc">$</span>inc60[ces<span class="sc">$</span>R <span class="sc">==</span> <span class="dv">1</span>])                <span class="co"># the complete-case mean</span></span>
+<span id="cb1-3"><a aria-label="3"></a><span class="fu">c</span>(<span class="at">complete_case =</span> cc,</span>
+<span id="cb1-4"><a aria-label="4"></a>  <span class="at">lower =</span> cc <span class="sc">*</span> p_R <span class="sc">+</span> <span class="dv">0</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p_R),               <span class="co"># every refuser earns under $60k</span></span>
+<span id="cb1-5"><a aria-label="5"></a>  <span class="at">upper =</span> cc <span class="sc">*</span> p_R <span class="sc">+</span> <span class="dv">1</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p_R))               <span class="co"># every refuser earns $60k or more</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>complete_case         lower         upper 
     0.4850209     0.4435802     0.5290211 </code></pre>
 </div>
 </div>
-<ul>
-<li class="fragment">8.5% missing and a binary outcome: an interval 8.5 percentage points wide</li>
-<li class="fragment">To get a <strong>point estimate</strong> we need assumptions about <span class="math inline">\(R_i\)</span></li>
-</ul>
+</div>
 </section>
 <section id="rubins-taxonomy" class="slide level2">
 <h2>Rubin’s taxonomy</h2>
@@ -2274,11 +2271,12 @@ function (el, d, opts) {
 <p><span class="math display">\[R_i \indep Y_i\]</span></p></li>
 <li class="fragment"><p><strong>Missing at random</strong> (MAR)</p>
 <p><span class="math display">\[R_i \indep Y_i \mid X_i\]</span></p></li>
-<li class="fragment"><p><strong>Missing not at random</strong> (MNAR): neither holds</p></li>
+<li class="fragment"><p><strong>Missing not at random</strong> (MNAR):</p>
+<p><span class="math display">\[R_i \nindep Y_i \mid X_i\]</span></p></li>
 <li class="fragment"><p>Terms originated from <span class="citation" data-cites="rubin1976inference">Rubin (<a href="#/references" role="doc-biblioref" onclick>1976</a>)</span> - not the best language.</p>
 <ul>
 <li class="fragment">“At random” does <strong>not</strong> mean “random”: MAR allows missingness to depend on <span class="math inline">\(X_i\)</span></li>
-<li class="fragment">Here “at random” is closer to “according to <strong>known</strong> non-randomness”</li>
+<li class="fragment">Rubin’s “at random” is closer to “according to <strong>known</strong> non-randomness”</li>
 </ul></li>
 </ul>
 </section>
@@ -2444,7 +2442,7 @@ function (el, d, opts) {
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
                         'aria-label': 'Left: a population distribution F. Middle: a strip of N units. Right: the distribution of the estimates. First, repeated samples from F change the values in the strip. Then the values are frozen and the randomness comes from which units are punched out of the strip: at random, then more often for one group, and finally with the observed units reweighted to fill the holes',
-                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; font-family: inherit;' }, el);
+                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; overflow: hidden; font-family: inherit;' }, el);
 
   // ---- Y axis -------------------------------------------------------------------
   mk('line', { x1: AX, x2: AX, y1: Y0, y2: Y1 - 6, stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round' }, svg);
@@ -2498,7 +2496,7 @@ function (el, d, opts) {
   }
 
   // ---- The strip --------------------------------------------------------------------
-  var gS = mk('g', {}, svg), cells = [], stems = [], dots = [], rtx = [];
+  var gS = mk('g', {}, svg), cells = [], units = [], stems = [], dots = [], rtx = [];
   for (var i = 0; i < N; i++) {
     cells.push(mk('rect', { y: Y1 - 8, height: Y0 - Y1 + 8, fill: '#ffffff', stroke: '#c8c8c8', 'stroke-width': 1.5 }, gS));
   }
@@ -2512,9 +2510,12 @@ function (el, d, opts) {
   label(HX1, py(d.muN) - 8, [[{ 'font-style': 'italic' }, 'μ_N']], { 'text-anchor': 'end', fill: RED, 'font-weight': 600 }, gMuN);
 
   mk('line', { x1: SX0, x2: SX1, y1: Y0, y2: Y0, stroke: INK, 'stroke-width': 2 }, svg);
+  // Each unit's stem and dot share a group, so a unit that goes missing can
+  // pop out and fall off the bottom of the figure in one piece
   for (i = 0; i < N; i++) {
-    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, svg));
-    dots.push(mk('circle', { r: 7 }, svg));
+    units.push(mk('g', {}, svg));
+    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, units[i]));
+    dots.push(mk('circle', { r: 7 }, units[i]));
     rtx.push(mk('text', { y: RY, 'text-anchor': 'middle', 'font-size': 18, fill: INK }, svg));
   }
   var rLab = label(SX0 - 10, RY, [[{ 'font-style': 'italic' }, 'R_i']], { 'text-anchor': 'end', 'font-size': 20 }, svg);
@@ -2525,11 +2526,14 @@ function (el, d, opts) {
   function estLine(col, lab, below) {
     var g = mk('g', {}, svg);
     var ln = mk('line', { x1: SX0, x2: HX0, stroke: col, 'stroke-width': 3, 'stroke-dasharray': '9 6' }, g);
-    var t = label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
-                                     stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, g);
+    // The label sits at y = 0 in its own group, which is what moves: the hat
+    // is drawn once into the same group, so it travels with the letter
+    var lg = mk('g', {}, g);
+    label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
+                             stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, lg);
     return { g: g, set: function (y, o) {
       ln.setAttribute('y1', py(y)); ln.setAttribute('y2', py(y));
-      t.setAttribute('y', py(y) + (below ? 24 : -8)); g.setAttribute('opacity', o);
+      lg.setAttribute('transform', 'translate(0,' + (py(y) + (below ? 24 : -8)) + ')'); g.setAttribute('opacity', o);
     } };
   }
   var eA = estLine(INK, [[{ 'font-style': 'italic' }, '^μ']]);
@@ -2569,8 +2573,9 @@ function (el, d, opts) {
     function obs(pat, p) {
       var k = Math.min(Math.floor(p), K), f = p - k, o = [];
       for (var i = 0; i < N; i++) {
-        if (k === 0) o.push(lerp(1, pat[0][i], ease(stag(f, i))));
-        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], ease(f)));
+        // (linear in time: the pop-and-fall below supplies its own easing)
+        if (k === 0) o.push(lerp(1, pat[0][i], stag(f, i)));
+        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], f));
         else o.push(pat[k - 1][i]);
       }
       return o;
@@ -2611,9 +2616,18 @@ function (el, d, opts) {
         if (u < 0.3) { yv = d.ay[sa - 1][i]; op = 1 - u / 0.3; }
         else { yv = d.ay[sa][i]; xv = lerp(launch(yv, sa, i), xs[i], ease((u - 0.3) / 0.7)); op = 1; }
       } else { yv = d.ay[sa - 1][i]; op = 1; }
-      op *= lerp(0.15, 1, o[i]) * (1 - ew * (1 - R[i]));
+      // A missing unit pops out of its cell (up, with the dot swelling), then
+      // drops straight down, accelerating, until it's below the figure.
+      // A unit coming back runs the same path in reverse
+      var out = 1 - o[i], dy = 0, sc = 1;
+      if (out > 0) {
+        var POP = 22, dyEnd = H - py(yv) + 24;
+        if (out < 0.25) { var pp = out / 0.25; dy = -POP * Math.sin(pp * Math.PI / 2); sc = 1 + 0.4 * Math.sin(pp * Math.PI); }
+        else { var q = (out - 0.25) / 0.75; dy = -POP + (dyEnd + POP) * q * q; }
+      }
+      units[i].setAttribute('transform', 'translate(0,' + dy + ')');
       var col = mixCol(INK, XCOL[d.fx[i]], s.xc);
-      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv));
+      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv)); dots[i].setAttribute('r', 7 * sc);
       dots[i].setAttribute('fill', col); dots[i].setAttribute('opacity', op);
       stems[i].setAttribute('x1', xv); stems[i].setAttribute('x2', xv); stems[i].setAttribute('y2', py(yv));
       stems[i].setAttribute('stroke', col); stems[i].setAttribute('opacity', op * (Math.abs(xv - xs[i]) < 1 ? 1 : 0));
@@ -2626,7 +2640,7 @@ function (el, d, opts) {
     rLab.setAttribute('opacity', s.fz);
 
     // ---- Density and truth
-    gD.setAttribute('opacity', 1 - 0.85 * s.fz);
+    gD.setAttribute('opacity', 1 - s.fz);
     gMu.setAttribute('opacity', s.mu * (1 - s.fz));
     gMuN.setAttribute('opacity', s.fz);
 
@@ -2755,9 +2769,9 @@ function (el, d, opts) {
 </ul></li>
 <li class="fragment"><p><strong>Regression estimator</strong>: fit <span class="math inline">\(\mathbb{E}[Y_i \mid R_i = 1, X_i]\)</span> among respondents and predict for <strong>everyone</strong></p>
 <p><span class="math display">\[\hat{\mu}_{\text{reg}} = \frac{1}{n}\sum_{i=1}^n \hat{\mathbb{E}}[Y_i \mid R_i = 1, X_i]\]</span></p></li>
-<li class="fragment"><p>Weighted average of outcomes among respondents</p>
+<li class="fragment"><p>Weighted average of outcomes among respondents…</p>
 <ul>
-<li class="fragment">With weights <strong>proportional</strong> to <span class="math inline">\(X_i\)</span> distribution in the <strong>full sample</strong></li>
+<li class="fragment">…with weights <strong>proportional</strong> to <span class="math inline">\(X_i\)</span> distribution in the <strong>full sample</strong></li>
 </ul></li>
 </ul>
 </section>
@@ -2778,12 +2792,10 @@ function (el, d, opts) {
 <section id="the-propensity-score-for-missingness" class="slide level2">
 <h2>The propensity score for missingness</h2>
 <ul>
-<li class="fragment"><p>It turns out that we only need to know <strong>one thing</strong> in order to fully adjust for non-response bias.</p>
-<ul>
-<li class="fragment">The <strong>response propensity score</strong></li>
-</ul>
+<li class="fragment"><p>Under <strong>missing at random</strong>, we only need to know <strong>one thing</strong> in order to fully adjust for non-response bias.</p></li>
+<li class="fragment"><p>The <strong>response propensity score</strong>:</p>
 <p><span class="math display">\[p_R(x) = \Pr(R_i = 1 \mid X_i = x)\]</span></p></li>
-<li class="fragment"><p>Under MAR, all we need to condition on is <span class="math inline">\(p_R(X_i)\)</span> <span class="citation" data-cites="rosenbaum1983central">(<a href="#/references" role="doc-biblioref" onclick>Rosenbaum and Rubin 1983</a>)</span></p>
+<li class="fragment"><p>Conditioning on <span class="math inline">\(p_R(X_i)\)</span> is enough to get rid of the bias <span class="citation" data-cites="rosenbaum1983central">(<a href="#/references" role="doc-biblioref" onclick>Rosenbaum and Rubin 1983</a>)</span></p>
 <p><span class="math display">\[R_i \indep Y_i \mid X_i \quad\Rightarrow\quad R_i \indep Y_i \mid p_R(X_i)\]</span></p></li>
 <li class="fragment"><p>Adjusting for the <strong>propensity score</strong> is as good as adjusting for all of <span class="math inline">\(X_i\)</span></p></li>
 </ul>
@@ -2939,7 +2951,7 @@ function (el, d, opts) {
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
                         'aria-label': 'Left: a population distribution F. Middle: a strip of N units. Right: the distribution of the estimates. First, repeated samples from F change the values in the strip. Then the values are frozen and the randomness comes from which units are punched out of the strip: at random, then more often for one group, and finally with the observed units reweighted to fill the holes',
-                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; font-family: inherit;' }, el);
+                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; overflow: hidden; font-family: inherit;' }, el);
 
   // ---- Y axis -------------------------------------------------------------------
   mk('line', { x1: AX, x2: AX, y1: Y0, y2: Y1 - 6, stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round' }, svg);
@@ -2993,7 +3005,7 @@ function (el, d, opts) {
   }
 
   // ---- The strip --------------------------------------------------------------------
-  var gS = mk('g', {}, svg), cells = [], stems = [], dots = [], rtx = [];
+  var gS = mk('g', {}, svg), cells = [], units = [], stems = [], dots = [], rtx = [];
   for (var i = 0; i < N; i++) {
     cells.push(mk('rect', { y: Y1 - 8, height: Y0 - Y1 + 8, fill: '#ffffff', stroke: '#c8c8c8', 'stroke-width': 1.5 }, gS));
   }
@@ -3007,9 +3019,12 @@ function (el, d, opts) {
   label(HX1, py(d.muN) - 8, [[{ 'font-style': 'italic' }, 'μ_N']], { 'text-anchor': 'end', fill: RED, 'font-weight': 600 }, gMuN);
 
   mk('line', { x1: SX0, x2: SX1, y1: Y0, y2: Y0, stroke: INK, 'stroke-width': 2 }, svg);
+  // Each unit's stem and dot share a group, so a unit that goes missing can
+  // pop out and fall off the bottom of the figure in one piece
   for (i = 0; i < N; i++) {
-    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, svg));
-    dots.push(mk('circle', { r: 7 }, svg));
+    units.push(mk('g', {}, svg));
+    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, units[i]));
+    dots.push(mk('circle', { r: 7 }, units[i]));
     rtx.push(mk('text', { y: RY, 'text-anchor': 'middle', 'font-size': 18, fill: INK }, svg));
   }
   var rLab = label(SX0 - 10, RY, [[{ 'font-style': 'italic' }, 'R_i']], { 'text-anchor': 'end', 'font-size': 20 }, svg);
@@ -3020,11 +3035,14 @@ function (el, d, opts) {
   function estLine(col, lab, below) {
     var g = mk('g', {}, svg);
     var ln = mk('line', { x1: SX0, x2: HX0, stroke: col, 'stroke-width': 3, 'stroke-dasharray': '9 6' }, g);
-    var t = label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
-                                     stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, g);
+    // The label sits at y = 0 in its own group, which is what moves: the hat
+    // is drawn once into the same group, so it travels with the letter
+    var lg = mk('g', {}, g);
+    label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
+                             stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, lg);
     return { g: g, set: function (y, o) {
       ln.setAttribute('y1', py(y)); ln.setAttribute('y2', py(y));
-      t.setAttribute('y', py(y) + (below ? 24 : -8)); g.setAttribute('opacity', o);
+      lg.setAttribute('transform', 'translate(0,' + (py(y) + (below ? 24 : -8)) + ')'); g.setAttribute('opacity', o);
     } };
   }
   var eA = estLine(INK, [[{ 'font-style': 'italic' }, '^μ']]);
@@ -3064,8 +3082,9 @@ function (el, d, opts) {
     function obs(pat, p) {
       var k = Math.min(Math.floor(p), K), f = p - k, o = [];
       for (var i = 0; i < N; i++) {
-        if (k === 0) o.push(lerp(1, pat[0][i], ease(stag(f, i))));
-        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], ease(f)));
+        // (linear in time: the pop-and-fall below supplies its own easing)
+        if (k === 0) o.push(lerp(1, pat[0][i], stag(f, i)));
+        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], f));
         else o.push(pat[k - 1][i]);
       }
       return o;
@@ -3106,9 +3125,18 @@ function (el, d, opts) {
         if (u < 0.3) { yv = d.ay[sa - 1][i]; op = 1 - u / 0.3; }
         else { yv = d.ay[sa][i]; xv = lerp(launch(yv, sa, i), xs[i], ease((u - 0.3) / 0.7)); op = 1; }
       } else { yv = d.ay[sa - 1][i]; op = 1; }
-      op *= lerp(0.15, 1, o[i]) * (1 - ew * (1 - R[i]));
+      // A missing unit pops out of its cell (up, with the dot swelling), then
+      // drops straight down, accelerating, until it's below the figure.
+      // A unit coming back runs the same path in reverse
+      var out = 1 - o[i], dy = 0, sc = 1;
+      if (out > 0) {
+        var POP = 22, dyEnd = H - py(yv) + 24;
+        if (out < 0.25) { var pp = out / 0.25; dy = -POP * Math.sin(pp * Math.PI / 2); sc = 1 + 0.4 * Math.sin(pp * Math.PI); }
+        else { var q = (out - 0.25) / 0.75; dy = -POP + (dyEnd + POP) * q * q; }
+      }
+      units[i].setAttribute('transform', 'translate(0,' + dy + ')');
       var col = mixCol(INK, XCOL[d.fx[i]], s.xc);
-      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv));
+      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv)); dots[i].setAttribute('r', 7 * sc);
       dots[i].setAttribute('fill', col); dots[i].setAttribute('opacity', op);
       stems[i].setAttribute('x1', xv); stems[i].setAttribute('x2', xv); stems[i].setAttribute('y2', py(yv));
       stems[i].setAttribute('stroke', col); stems[i].setAttribute('opacity', op * (Math.abs(xv - xs[i]) < 1 ? 1 : 0));
@@ -3121,7 +3149,7 @@ function (el, d, opts) {
     rLab.setAttribute('opacity', s.fz);
 
     // ---- Density and truth
-    gD.setAttribute('opacity', 1 - 0.85 * s.fz);
+    gD.setAttribute('opacity', 1 - s.fz);
     gMu.setAttribute('opacity', s.mu * (1 - s.fz));
     gMuN.setAttribute('opacity', s.fz);
 
@@ -3228,7 +3256,7 @@ function (el, d, opts) {
 <section id="horvitz-thompson" class="slide level2">
 <h2>Horvitz-Thompson</h2>
 <ul>
-<li class="fragment"><p>Our new estimator <strong>re-weights</strong> each respondent by the <strong>inverse propensity</strong> of response <span class="math inline">\(1 / p_R(X_i)\)</span> <span class="citation" data-cites="horvitz1952generalization">(<a href="#/references" role="doc-biblioref" onclick>Horvitz and Thompson 1952</a>)</span></p>
+<li class="fragment"><p>Consider an estimator that <strong>re-weights</strong> each respondent by their <strong>inverse propensity</strong> <span class="citation" data-cites="horvitz1952generalization">(<a href="#/references" role="doc-biblioref" onclick>Horvitz and Thompson 1952</a>)</span></p>
 <p><span class="math display">\[\hat{\mu}_{\text{HT}} = \frac{1}{n}\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}\]</span></p></li>
 <li class="fragment"><p>This is the <strong>Horvitz-Thompson</strong> or <strong>“inverse propensity weighting” (IPW)</strong> estimator</p></li>
 <li class="fragment"><p>Can think of this as creating a <strong>pseudo-population</strong> where each respondent stands in for <span class="math inline">\(1 / p_R(X_i)\)</span> people like them.</p>
@@ -3253,8 +3281,11 @@ function (el, d, opts) {
 <section id="hájek" class="slide level2">
 <h2>Hájek</h2>
 <ul>
-<li class="fragment"><p>The HT weights <span class="math inline">\(\frac{R_i}{p_R(X_i)}\)</span> only sum to <span class="math inline">\(n\)</span> <strong>on average</strong>. The <strong>Hájek</strong> estimator <strong>(stabilized IPW)</strong> normalizes them to sum to exactly 1 in the sample <span class="citation" data-cites="hajek1971comment">(<a href="#/references" role="doc-biblioref" onclick>Hájek 1971</a>)</span></p>
-<p><span class="math display">\[\hat{\mu}_{\text{Hájek}} = \frac{\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}}{\sum_{i=1}^n \frac{R_i}{p_R(X_i)}}\]</span></p></li>
+<li class="fragment"><p>The HT weights <span class="math inline">\(\frac{R_i}{p_R(X_i)}\)</span> only sum to <span class="math inline">\(n\)</span> <strong>on average</strong>.</p>
+<ul>
+<li class="fragment">The <strong>Hájek</strong> estimator <strong>(stabilized IPW)</strong> normalizes them to sum to exactly 1 in the sample <span class="citation" data-cites="hajek1971comment">(<a href="#/references" role="doc-biblioref" onclick>Hájek 1971</a>)</span></li>
+</ul>
+<p><span class="math display">\[\hat{\mu}_{\text{Hájek}} = \frac{1}{\sum_{i=1}^n \frac{R_i}{p_R(X_i)}}{\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}}\]</span></p></li>
 <li class="fragment"><p>Has a clean interpretation as a <strong>convex average</strong> of the respondents</p>
 <ul>
 <li class="fragment">Slightly biased, consistent, usually <strong>lower variance</strong> than HT</li>
@@ -3264,12 +3295,12 @@ function (el, d, opts) {
 <section id="ipw-in-the-running-example" class="slide level2">
 <h2>IPW in the running example</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-label="1"></a>ps_fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(R <span class="sc">~</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> educ <span class="sc">+</span> race <span class="sc">+</span> gender <span class="sc">+</span> employ <span class="sc">+</span> marstat <span class="sc">+</span> <span class="fu">factor</span>(pid7) <span class="sc">+</span></span>
-<span id="cb7-2"><a aria-label="2"></a>                <span class="fu">factor</span>(<span class="fu">pmin</span>(unsure, <span class="dv">3</span>)), <span class="at">family =</span> binomial, <span class="at">data =</span> ces)</span>
-<span id="cb7-3"><a aria-label="3"></a>ces <span class="ot">&lt;-</span> ces <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">p_hat =</span> <span class="fu">fitted</span>(ps_fit), <span class="at">y_star =</span> <span class="fu">replace_na</span>(inc60, <span class="dv">0</span>))</span>
-<span id="cb7-4"><a aria-label="4"></a>ces <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="at">complete_case =</span> <span class="fu">mean</span>(inc60, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb7-5"><a aria-label="5"></a>                 <span class="at">ht    =</span> <span class="fu">mean</span>(R <span class="sc">*</span> y_star <span class="sc">/</span> p_hat),</span>
-<span id="cb7-6"><a aria-label="6"></a>                 <span class="at">hajek =</span> <span class="fu">sum</span>(R <span class="sc">*</span> y_star <span class="sc">/</span> p_hat) <span class="sc">/</span> <span class="fu">sum</span>(R <span class="sc">/</span> p_hat))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a>ps_fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(R <span class="sc">~</span> age <span class="sc">+</span> <span class="fu">I</span>(age<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> educ <span class="sc">+</span> race <span class="sc">+</span> gender <span class="sc">+</span> employ <span class="sc">+</span> marstat <span class="sc">+</span> <span class="fu">factor</span>(pid7) <span class="sc">+</span></span>
+<span id="cb3-2"><a aria-label="2"></a>                <span class="fu">factor</span>(<span class="fu">pmin</span>(unsure, <span class="dv">3</span>)), <span class="at">family =</span> binomial, <span class="at">data =</span> ces)</span>
+<span id="cb3-3"><a aria-label="3"></a>ces <span class="ot">&lt;-</span> ces <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">p_hat =</span> <span class="fu">fitted</span>(ps_fit), <span class="at">y_star =</span> <span class="fu">replace_na</span>(inc60, <span class="dv">0</span>))</span>
+<span id="cb3-4"><a aria-label="4"></a>ces <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="at">complete_case =</span> <span class="fu">mean</span>(inc60, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-5"><a aria-label="5"></a>                 <span class="at">ht    =</span> <span class="fu">mean</span>(R <span class="sc">*</span> y_star <span class="sc">/</span> p_hat),</span>
+<span id="cb3-6"><a aria-label="6"></a>                 <span class="at">hajek =</span> <span class="fu">sum</span>(R <span class="sc">*</span> y_star <span class="sc">/</span> p_hat) <span class="sc">/</span> <span class="fu">sum</span>(R <span class="sc">/</span> p_hat))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   complete_case    ht hajek
@@ -3278,9 +3309,16 @@ function (el, d, opts) {
 </div>
 </div>
 <ul>
-<li class="fragment">Refusers are less engaged, and less engaged respondents earn less: weighting moves the estimate <strong>down</strong>, by 0.2 percentage points</li>
-<li class="fragment">Weights run from 1.01 to 2.91: the largest go to young students who are unsure about politics</li>
-<li class="fragment">Why so small? Only 8.5% refuse. The shift is at most <span class="math inline">\(\Pr(R_i = 0)\)</span> times how different refusers look from respondents</li>
+<li class="fragment">Refusers are <strong>less politically engaged</strong>, and <strong>less politically engaged</strong> respondents earn less</li>
+<li class="fragment">Weighting moves the estimate <strong>down</strong>, by 0.2 percentage points</li>
+<li class="fragment">Weights run from 1.01 to 2.91
+<ul>
+<li class="fragment">the largest go to young students who are unsure about politics</li>
+</ul></li>
+<li class="fragment">Size of the bias and adjustment is proportional to the magnitude of non-response
+<ul>
+<li class="fragment">Only 8.5% refuse. The shift is at most <span class="math inline">\(\Pr(R_i = 0)\)</span> times how different refusers look from respondents</li>
+</ul></li>
 </ul>
 </section>
 <section id="problems-with-weights" class="slide level2">
