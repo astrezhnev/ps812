@@ -3133,7 +3133,7 @@
     "href": "slides/week12/week12_missing_data.html#simple-random-sampling-1",
     "title": "Week 12: Missing data",
     "section": "Simple random sampling",
-    "text": "Simple random sampling\n\nSo there’s a covariance we have to care about\n\\[\\begin{aligned}\n   \\Cov(R_i, R_j) &= \\Pr(R_i = 1, R_j = 1) - \\Pr(R_i = 1)\\Pr(R_j = 1)\\\\\n   &= \\frac{n}{N}\\cdot\\frac{n-1}{N-1} - \\frac{n}{N}\\cdot \\frac{n}{N}\\\\\n   &= \\frac{n^2 - n}{N(N - 1)} - \\frac{n^2}{N^2}\\\\\n   &= \\frac{(n^2 - n)N - n^2(N - 1)}{N^2(N - 1)} \\\\\n   &= \\frac{n^2 - nN}{N^2(N - 1)} \\\\\n   &= -\\frac{n(N - n)}{N^2(N - 1)} = \\frac{1}{N-1} \\cdot \\frac{n}{N} \\cdot \\frac{N-n}{N}\\\\\n   &= -\\frac{\\Var(R_i)}{N - 1}\n   \\end{aligned}\\]"
+    "text": "Simple random sampling\n\nSo there’s a covariance we have to care about\n\\[\\begin{aligned}\n   \\Cov(R_i, R_j) &= \\Pr(R_i = 1, R_j = 1) - \\Pr(R_i = 1)\\Pr(R_j = 1)\\\\\n   &= \\frac{n}{N}\\cdot\\frac{n-1}{N-1} - \\frac{n}{N}\\cdot \\frac{n}{N}\\\\\n   &= \\frac{n^2 - n}{N(N - 1)} - \\frac{n^2}{N^2}\\\\\n   &= \\frac{(n^2 - n)N - n^2(N - 1)}{N^2(N - 1)} \\\\\n   &= \\frac{n^2 - nN}{N^2(N - 1)} \\\\\n   &= -\\frac{n(N - n)}{N^2(N - 1)} = -\\frac{1}{N-1} \\cdot \\frac{n}{N} \\cdot \\frac{N-n}{N}\\\\\n   &= -\\frac{\\Var(R_i)}{N - 1}\n   \\end{aligned}\\]"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#the-sample-mean-is-unbiased",
@@ -3231,7 +3231,7 @@
     "href": "slides/week12/week12_missing_data.html#identification-under-mar",
     "title": "Week 12: Missing data",
     "section": "Identification under MAR",
-    "text": "Identification under MAR\n\nLaw of iterated expectations, then MAR\n\\[\\mathbb{E}[Y_i] = \\mathbb{E}\\big[\\mathbb{E}[Y_i \\mid X_i]\\big] = \\mathbb{E}\\big[\\mathbb{E}[Y_i \\mid R_i = 1, X_i]\\big]\\]\n\nEverything on the right is observable\n\nRegression estimator: fit \\(\\mathbb{E}[Y_i \\mid R_i = 1, X_i]\\) among respondents and predict for everyone\n\\[\\hat{\\mu}_{\\text{reg}} = \\frac{1}{n}\\sum_{i=1}^n \\hat{\\mathbb{E}}[Y_i \\mid R_i = 1, X_i]\\]\nWeighted average of outcomes among respondents…\n\n…with weights proportional to \\(X_i\\) distribution in the full sample"
+    "text": "Identification under MAR\n\nLaw of iterated expectations followed by MAR\n\\[\\mathbb{E}[Y_i] = \\mathbb{E}\\big[\\mathbb{E}[Y_i \\mid X_i]\\big] = \\mathbb{E}\\big[\\mathbb{E}[Y_i \\mid R_i = 1, X_i]\\big]\\]\n\nEverything on the right is observable\n\nRegression imputation: fit \\(\\mathbb{E}[Y_i \\mid R_i = 1, X_i]\\), then compute:\n\\[\\hat{\\mu}_{\\text{reg}} = \\frac{1}{n}\\sum_{i=1}^n \\hat{\\mathbb{E}}[Y_i \\mid R_i = 1, X_i]\\]\nTake the observed relationship between \\(Y_i\\) and \\(X_i\\) among respondents\n\nAnd impute the missing values for the full sample."
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#missing-not-at-random",
@@ -3273,21 +3273,21 @@
     "href": "slides/week12/week12_missing_data.html#hájek",
     "title": "Week 12: Missing data",
     "section": "Hájek",
-    "text": "Hájek\n\nThe HT weights \\(\\frac{R_i}{p_R(X_i)}\\) only sum to \\(n\\) on average.\n\nThe Hájek estimator (stabilized IPW) normalizes them to sum to exactly 1 in the sample (Hájek 1971)\n\n\\[\\hat{\\mu}_{\\text{Hájek}} = \\frac{1}{\\sum_{i=1}^n \\frac{R_i}{p_R(X_i)}}{\\sum_{i=1}^n \\frac{R_i Y_i^*}{p_R(X_i)}}\\]\nHas a clean interpretation as a convex average of the respondents\n\nSlightly biased, consistent, usually lower variance than HT"
+    "text": "Hájek\n\nThe HT weights \\(\\frac{R_i}{p_R(X_i)}\\) only sum to \\(n\\) on average.\nThe Hájek estimator (stabilized IPW) normalizes them to sum to exactly 1 in the sample (Hájek 1971)\n\\[\\hat{\\mu}_{\\text{Hájek}} = \\frac{1}{\\sum_{i=1}^n \\frac{R_i}{p_R(X_i)}}{\\sum_{i=1}^n \\frac{R_i Y_i^*}{p_R(X_i)}}\\]\nHas a clean interpretation as a convex average of the respondents\n\nSlightly biased, consistent, usually lower variance than HT"
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#ipw-in-the-running-example",
     "href": "slides/week12/week12_missing_data.html#ipw-in-the-running-example",
     "title": "Week 12: Missing data",
     "section": "IPW in the running example",
-    "text": "IPW in the running example\n\nps_fit &lt;- glm(R ~ age + I(age^2) + educ + race + gender + employ + marstat + factor(pid7) +\n                factor(pmin(unsure, 3)), family = binomial, data = ces)\nces &lt;- ces |&gt; mutate(p_hat = fitted(ps_fit), y_star = replace_na(inc60, 0))\nces |&gt; summarize(complete_case = mean(inc60, na.rm = TRUE),\n                 ht    = mean(R * y_star / p_hat),\n                 hajek = sum(R * y_star / p_hat) / sum(R / p_hat))\n\n# A tibble: 1 × 3\n  complete_case    ht hajek\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1         0.485 0.483 0.483\n\n\n\nRefusers are less politically engaged, and less politically engaged respondents earn less\nWeighting moves the estimate down, by 0.2 percentage points\nWeights run from 1.01 to 2.91\n\nthe largest go to young students who are unsure about politics\n\nSize of the bias and adjustment is proportional to the magnitude of non-response\n\nOnly 8.5% refuse. The shift is at most \\(\\Pr(R_i = 0)\\) times how different refusers look from respondents"
+    "text": "IPW in the running example\n\nps_fit &lt;- glm(R ~ age + I(age^2) + educ + race + gender + employ + marstat + factor(pid7) +\n                factor(pmin(unsure, 3)), family = binomial, data = ces)\nces &lt;- ces |&gt; mutate(p_hat = fitted(ps_fit), y_star = replace_na(inc60, 0))\nces |&gt; summarize(complete_case = mean(inc60, na.rm = TRUE),\n                 ht    = mean(R * y_star / p_hat),\n                 hajek = sum(R * y_star / p_hat) / sum(R / p_hat))\n\n# A tibble: 1 × 3\n  complete_case    ht hajek\n          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1         0.485 0.483 0.483\n\n\n\nRefusers are less politically engaged, and less politically engaged respondents earn less\nWeighting moves the estimate down, by 0.2 percentage points\nWeights run from 1.01 to 2.91\n\nthe largest go to young students who are unsure about politics\n\nSize of the bias and adjustment is proportional to the magnitude of non-response\n\nOnly 8.5% refuse."
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#problems-with-weights",
     "href": "slides/week12/week12_missing_data.html#problems-with-weights",
     "title": "Week 12: Missing data",
     "section": "Problems with weights",
-    "text": "Problems with weights\n\n\\(\\hat{p}_R(x)\\) near \\(0\\) means huge weights\n\nA few respondents drive the estimate \\(\\leadsto\\) massive variance\nEffective sample size: \\(n_{\\text{eff}} = \\big(\\sum_i w_i\\big)^2 / \\sum_i w_i^2\\)\n\nPositivity fails: no respondents to re-weight to!\nMisspecified \\(\\hat{p}_R\\): the weights don’t balance \\(X_i\\)\n\nSolution: balancing weights - compute \\(\\hat{p}_R\\) such that we get exact balance on (functions of) \\(X_i\\)\n\nStandard errors: Need to account for uncertainty in estimating the weights."
+    "text": "Problems with weights\n\n\\(\\hat{p}_R(x)\\) near \\(0\\) means huge weights\n\nA few respondents drive the estimate \\(\\leadsto\\) massive variance\nEffective sample size: \\(n_{\\text{eff}} = \\big(\\sum_i w_i\\big)^2 / \\sum_i w_i^2\\)\n\nPositivity fails: no respondents to re-weight to!\nMisspecified \\(\\hat{p}_R\\): the weights don’t balance \\(X_i\\)\n\nSolution: balancing weights - compute \\(\\hat{p}_R\\) such that we get exact balance on (functions of) \\(X_i\\)\n\nStandard errors:\n\nNeed to account for uncertainty in estimating the weights."
   },
   {
     "objectID": "slides/week12/week12_missing_data.html#next-week",

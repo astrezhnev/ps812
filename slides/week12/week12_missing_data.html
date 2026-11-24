@@ -2100,7 +2100,7 @@ function (el, d, opts) {
    &amp;= \frac{n^2 - n}{N(N - 1)} - \frac{n^2}{N^2}\\
    &amp;= \frac{(n^2 - n)N - n^2(N - 1)}{N^2(N - 1)} \\
    &amp;= \frac{n^2 - nN}{N^2(N - 1)} \\
-   &amp;= -\frac{n(N - n)}{N^2(N - 1)} = \frac{1}{N-1} \cdot \frac{n}{N} \cdot \frac{N-n}{N}\\
+   &amp;= -\frac{n(N - n)}{N^2(N - 1)} = -\frac{1}{N-1} \cdot \frac{n}{N} \cdot \frac{N-n}{N}\\
    &amp;= -\frac{\Var(R_i)}{N - 1}
    \end{aligned}\]</span></p></li>
 </ul>
@@ -2783,16 +2783,16 @@ function (el, d, opts) {
 <section id="identification-under-mar" class="slide level2">
 <h2>Identification under MAR</h2>
 <ul>
-<li class="fragment"><p>Law of iterated expectations, then MAR</p>
+<li class="fragment"><p>Law of iterated expectations followed by MAR</p>
 <p><span class="math display">\[\mathbb{E}[Y_i] = \mathbb{E}\big[\mathbb{E}[Y_i \mid X_i]\big] = \mathbb{E}\big[\mathbb{E}[Y_i \mid R_i = 1, X_i]\big]\]</span></p>
 <ul>
 <li class="fragment">Everything on the right is <strong>observable</strong></li>
 </ul></li>
-<li class="fragment"><p><strong>Regression estimator</strong>: fit <span class="math inline">\(\mathbb{E}[Y_i \mid R_i = 1, X_i]\)</span> among respondents and predict for <strong>everyone</strong></p>
+<li class="fragment"><p><strong>Regression imputation</strong>: fit <span class="math inline">\(\mathbb{E}[Y_i \mid R_i = 1, X_i]\)</span>, then compute:</p>
 <p><span class="math display">\[\hat{\mu}_{\text{reg}} = \frac{1}{n}\sum_{i=1}^n \hat{\mathbb{E}}[Y_i \mid R_i = 1, X_i]\]</span></p></li>
-<li class="fragment"><p>Weighted average of outcomes among respondents…</p>
+<li class="fragment"><p>Take the observed relationship between <span class="math inline">\(Y_i\)</span> and <span class="math inline">\(X_i\)</span> among <strong>respondents</strong></p>
 <ul>
-<li class="fragment">…with weights <strong>proportional</strong> to <span class="math inline">\(X_i\)</span> distribution in the <strong>full sample</strong></li>
+<li class="fragment">And <strong>impute</strong> the missing values for the full sample.</li>
 </ul></li>
 </ul>
 </section>
@@ -3309,10 +3309,8 @@ function (el, d, opts) {
 <section id="hájek" class="slide level2">
 <h2>Hájek</h2>
 <ul>
-<li class="fragment"><p>The HT weights <span class="math inline">\(\frac{R_i}{p_R(X_i)}\)</span> only sum to <span class="math inline">\(n\)</span> <strong>on average</strong>.</p>
-<ul>
-<li class="fragment">The <strong>Hájek</strong> estimator <strong>(stabilized IPW)</strong> normalizes them to sum to exactly 1 in the sample <span class="citation" data-cites="hajek1971comment">(<a href="#/references" role="doc-biblioref" onclick>Hájek 1971</a>)</span></li>
-</ul>
+<li class="fragment"><p>The HT weights <span class="math inline">\(\frac{R_i}{p_R(X_i)}\)</span> only sum to <span class="math inline">\(n\)</span> <strong>on average</strong>.</p></li>
+<li class="fragment"><p>The <strong>Hájek</strong> estimator <strong>(stabilized IPW)</strong> normalizes them to sum to exactly 1 in the sample <span class="citation" data-cites="hajek1971comment">(<a href="#/references" role="doc-biblioref" onclick>Hájek 1971</a>)</span></p>
 <p><span class="math display">\[\hat{\mu}_{\text{Hájek}} = \frac{1}{\sum_{i=1}^n \frac{R_i}{p_R(X_i)}}{\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}}\]</span></p></li>
 <li class="fragment"><p>Has a clean interpretation as a <strong>convex average</strong> of the respondents</p>
 <ul>
@@ -3345,7 +3343,7 @@ function (el, d, opts) {
 </ul></li>
 <li class="fragment">Size of the bias and adjustment is proportional to the magnitude of non-response
 <ul>
-<li class="fragment">Only 8.5% refuse. The shift is at most <span class="math inline">\(\Pr(R_i = 0)\)</span> times how different refusers look from respondents</li>
+<li class="fragment">Only 8.5% refuse.</li>
 </ul></li>
 </ul>
 </section>
@@ -3362,7 +3360,10 @@ function (el, d, opts) {
 <ul>
 <li class="fragment">Solution: <strong>balancing weights</strong> - compute <span class="math inline">\(\hat{p}_R\)</span> such that we get exact balance on (functions of) <span class="math inline">\(X_i\)</span></li>
 </ul></li>
-<li class="fragment"><p><strong>Standard errors</strong>: Need to account for uncertainty in estimating the weights.</p></li>
+<li class="fragment"><p><strong>Standard errors</strong>:</p>
+<ul>
+<li class="fragment">Need to account for uncertainty in estimating the weights.</li>
+</ul></li>
 </ul>
 <!-- ============================================================
      Wrap-up
