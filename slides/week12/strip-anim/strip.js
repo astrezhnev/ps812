@@ -198,9 +198,17 @@ function (el, d, opts) {
   }
 
   // ---- The strip --------------------------------------------------------------------
-  var gS = mk('g', {}, svg), cells = [], units = [], stems = [], dots = [], rtx = [];
+  // A unit is its cell (a chunk of the strip) plus its dot. Under each cell
+  // sits the hole it leaves behind when it's punched out: a recessed slot
+  // with a dashed edge
+  var gS = mk('g', {}, svg), holes = [], cells = [], units = [], dots = [], rtx = [];
+  var CT = Y1 - 8, CH = Y0 - Y1 + 8;
   for (var i = 0; i < N; i++) {
-    cells.push(mk('rect', { y: Y1 - 8, height: Y0 - Y1 + 8, fill: '#ffffff', stroke: '#c8c8c8', 'stroke-width': 1.5 }, gS));
+    holes.push(mk('rect', { y: CT, height: CH, fill: '#e4e4e4', stroke: '#a0a0a0', 'stroke-width': 1.5,
+                            'stroke-dasharray': '5 4', opacity: 0 }, gS));
+  }
+  for (i = 0; i < N; i++) {
+    cells.push(mk('rect', { y: CT, height: CH, fill: '#ffffff', stroke: '#c8c8c8', 'stroke-width': 1.5 }, gS));
   }
 
   // ---- The truth: mu (the mean of F) and mu_N (the mean of the N units), over the strip
@@ -212,11 +220,10 @@ function (el, d, opts) {
   label(HX1, py(d.muN) - 8, [[{ 'font-style': 'italic' }, 'μ_N']], { 'text-anchor': 'end', fill: RED, 'font-weight': 600 }, gMuN);
 
   mk('line', { x1: SX0, x2: SX1, y1: Y0, y2: Y0, stroke: INK, 'stroke-width': 2 }, svg);
-  // Each unit's stem and dot share a group, so a unit that goes missing can
-  // pop out and fall off the bottom of the figure in one piece
+  // The dot lives in a group above the truth lines; while a unit is falling
+  // its cell joins that group too, so the chunk and dot leave in one piece
   for (i = 0; i < N; i++) {
     units.push(mk('g', {}, svg));
-    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, units[i]));
     dots.push(mk('circle', { r: 7 }, units[i]));
     rtx.push(mk('text', { y: RY, 'text-anchor': 'middle', 'font-size': 18, fill: INK }, svg));
   }
@@ -303,9 +310,9 @@ function (el, d, opts) {
     for (i = 0; i < N; i++) {
       var c = cells[i];
       c.setAttribute('x', xs[i] - ws[i] / 2); c.setAttribute('width', Math.max(0, ws[i]));
-      c.setAttribute('fill-opacity', o[i]);
-      c.setAttribute('stroke-dasharray', o[i] < 0.5 ? '5 4' : 'none');
       c.setAttribute('stroke-opacity', ws[i] < 1 ? 0 : 1);
+      holes[i].setAttribute('x', xs[i] - ws[i] / 2); holes[i].setAttribute('width', Math.max(0, ws[i]));
+      holes[i].setAttribute('opacity', ws[i] < 1 ? 0 : clamp(4 * (1 - o[i])));
       c.setAttribute('fill', s.w > 0 && R[i] ? mixCol('#ffffff', d.fx[i] ? '#f6ecd6' : '#dcecf3', ew) : '#ffffff');
 
       // Where the unit's value is, and how visible
@@ -318,21 +325,21 @@ function (el, d, opts) {
         if (u < 0.3) { yv = d.ay[sa - 1][i]; op = 1 - u / 0.3; }
         else { yv = d.ay[sa][i]; xv = lerp(launch(yv, sa, i), xs[i], ease((u - 0.3) / 0.7)); op = 1; }
       } else { yv = d.ay[sa - 1][i]; op = 1; }
-      // A missing unit pops out of its cell (up, with the dot swelling), then
-      // drops straight down, accelerating, until it's below the figure.
-      // A unit coming back runs the same path in reverse
+      // A missing unit's chunk of the strip pops out (up a little, the dot
+      // swelling), then drops straight down, accelerating, until it's below
+      // the figure, leaving its hole behind. A unit coming back runs the same
+      // path in reverse
       var out = 1 - o[i], dy = 0, sc = 1;
       if (out > 0) {
-        var POP = 22, dyEnd = H - py(yv) + 24;
+        var POP = 12, dyEnd = H - CT + 12;
         if (out < 0.25) { var pp = out / 0.25; dy = -POP * Math.sin(pp * Math.PI / 2); sc = 1 + 0.4 * Math.sin(pp * Math.PI); }
         else { var q = (out - 0.25) / 0.75; dy = -POP + (dyEnd + POP) * q * q; }
-      }
+        if (c.parentNode !== units[i]) units[i].insertBefore(c, dots[i]);
+      } else if (c.parentNode !== gS) gS.appendChild(c);
       units[i].setAttribute('transform', 'translate(0,' + dy + ')');
       var col = mixCol(INK, XCOL[d.fx[i]], s.xc);
       dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv)); dots[i].setAttribute('r', 7 * sc);
       dots[i].setAttribute('fill', col); dots[i].setAttribute('opacity', op);
-      stems[i].setAttribute('x1', xv); stems[i].setAttribute('x2', xv); stems[i].setAttribute('y2', py(yv));
-      stems[i].setAttribute('stroke', col); stems[i].setAttribute('opacity', op * (Math.abs(xv - xs[i]) < 1 ? 1 : 0));
 
       rtx[i].setAttribute('x', xs[i]); rtx[i].textContent = o[i] >= 0.5 ? '1' : '0';
       rtx[i].setAttribute('fill', o[i] >= 0.5 ? INK : RED);
