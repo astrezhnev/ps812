@@ -1,0 +1,651 @@
+---
+title: "Week 12: Missing data"
+subtitle: "PS 812 - Introduction to Statistical Methods in Political Science"
+author:
+  - name: "Anton Strezhnev"
+    affiliation: "University of Wisconsin-Madison"
+    email: strezhnev@wisc.edu
+date: "November 24, 2026"
+date-format: "MMMM D, YYYY"
+editor:
+  render-on-save: true
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    overview: true
+    navigation-mode: vertical
+    progress: false
+    controls: true
+    link-external-newwindow: true
+    footer: "PS 812 - University of Wisconsin-Madison"
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+execute:
+  cache: false
+  echo: true
+code:
+  execute:
+    - r
+    - python
+embed-resources: true
+bibliography: ../ps812.bib
+link-citations: true
+
+---
+
+## Welcome back! {.title-slide}
+
+<!-- MathJax macros for the whole deck. The reveal math plugin overwrites
+     window.MathJax, so a header config would be clobbered; defining them in
+     the first slide registers them before any later slide is typeset. The
+     wrapper takes up no space and renders nothing. -->
+::: {style="position:absolute;width:0;height:0;overflow:hidden;opacity:0"}
+$$
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Corr}{\text{Corr}}
+\newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
+$$
+:::
+
+```{r}
+#| label: setup
+#| include: false
+#| message: false
+
+library(tidyverse)
+options(width = 110)    # the code font is small, so let printed output run wider
+# Paint the figure device the slide color, so plots with a fixed aspect ratio
+# (coord_equal) don't sit in a white box
+knitr::opts_chunk$set(dev.args = list(bg = "#F7F7F7"))
+
+# 2024 CES Common Content (data/prepare_data.R builds the extract from the
+# full release). Running example: family income, where about 8.5% of
+# respondents pick the explicit "Prefer not to say" option. The outcome is
+# inc60, family income of $60,000 or more (about the median among those who
+# answer); R = 1 if the respondent answered.
+# Covariates: age, gender, education, race, employment, marital status, party
+# ID and political engagement (unsure: the number of "not sure" / "don't know"
+# answers on four political items), observed for everyone in the extract.
+# weight is the CES common weight, saved for next week
+ces <- read_csv("data/ces24_income.csv") |>
+  mutate(R = 1L - refused)
+
+theme_md <- theme_minimal(base_size = 18) +
+  theme(panel.grid = element_blank(),
+        axis.line = element_line(colour = "#333333"),
+        strip.text = element_text(face = "bold"),
+        plot.background = element_rect(fill = "#F7F7F7", colour = NA))
+```
+
+```{r}
+#| label: strip-setup
+#| include: false
+
+# Draws for the strip animation (strip-anim/strip.js), which runs across the
+# intro, MAR and IPW slides. F is a 50/50 mixture of two normals, one per value
+# of a binary covariate X: Y | X = 0 ~ N(3.5, 1.2^2), Y | X = 1 ~ N(6.5, 1.2^2),
+# so mu = E[Y] = 5.
+set.seed(812)
+st_N <- 24; st_K <- 8; st_S <- 400
+st_n <- 10                   # SRS: observe n of the N units
+st_pi <- c(0.3, 0.8)         # Pr(R_i = 1 | X_i = 0), Pr(R_i = 1 | X_i = 1)
+st_mean <- c(3.5, 6.5); st_sd <- 1.2
+draw_F <- function() {
+  x <- rbinom(st_N, 1, 0.5)
+  list(x = x, y = pmin(pmax(rnorm(st_N, st_mean[x + 1], st_sd), 0.3), 9.7))
+}
+
+# Scene A: S i.i.d. samples of N units from F. The last one animated becomes
+# the finite population, so it is redrawn until X splits 12/12, which keeps
+# both groups visible when units go missing by X
+st_A <- replicate(st_S, draw_F(), simplify = FALSE)
+while (sum(st_A[[st_K]]$x) != st_N / 2) st_A[[st_K]] <- draw_F()
+pop <- st_A[[st_K]]
+mu_N <- mean(pop$y)
+
+# Scene B: simple random sampling, n of the N units observed
+st_B <- replicate(st_S, as.integer(seq_len(st_N) %in% sample(st_N, st_n)), simplify = FALSE)
+
+# Scene C: R_i ~ Bernoulli(pi(X_i)), independently. A draw that leaves a group
+# with no observed unit is redrawn (both estimators need one in each group).
+# Complete-case mean, and the Hajek estimator with the known pi(X)
+draw_R <- function() {
+  repeat {
+    r <- rbinom(st_N, 1, st_pi[pop$x + 1])
+    if (all(tapply(r, pop$x, sum) > 0)) return(r)
+  }
+}
+st_C <- replicate(st_S, draw_R(), simplify = FALSE)
+hajek <- function(r) { w <- r / st_pi[pop$x + 1]; sum(w * pop$y) / sum(w) }
+
+strip_data <- jsonlite::toJSON(list(
+  N = st_N, n = st_n, K = st_K, ylim = c(0, 10), pi = st_pi,
+  dens = list(w1 = 0.5, m0 = st_mean[1], m1 = st_mean[2], s = st_sd),
+  mu = sum(0.5 * st_mean), muN = mu_N,
+  ay = lapply(st_A[1:st_K], function(s) round(s$y, 3)), fx = pop$x,
+  br = st_B[1:st_K], cr = st_C[1:st_K],
+  estA = round(sapply(st_A, function(s) mean(s$y)), 4),
+  estB = round(sapply(st_B, function(r) mean(pop$y[r == 1])), 4),
+  estC = round(sapply(st_C, function(r) mean(pop$y[r == 1])), 4),
+  estW = round(sapply(st_C, hajek), 4)
+), auto_unbox = TRUE, digits = NA)
+
+# Stages (see the header of strip.js): 0-3 i.i.d. sampling, 4-7 a fixed finite
+# population under SRS, 8-11 missingness that depends on X, 12-13 IPW
+strip_anim <- function(from, to) {
+  cat("```{=html}",
+      '<div class="st-anim"></div>',
+      "<script>",
+      "(", readLines("strip-anim/strip.js"), ")(document.currentScript.previousElementSibling,",
+      strip_data, ", { from: ", from, ", to: ", to, " });",
+      "</script>",
+      rep('<span class="fragment st-step"></span>', to - from),
+      "```", sep = "\n")
+}
+```
+
+<!-- ============================================================
+     Where does the randomness come from?
+     ============================================================ -->
+
+## Where does uncertainty come from?
+
+- We've spent a lot of time focusing on randomness from **sampling from a population**
+     - Our **sample mean** is not the same as the **population mean**
+     - Statistics gives us some tools for characterizing that error (**sampling variance**)
+
+- But what happens if we have the **full population**?
+     - All 193-197 countries in the world
+     - All 50 states.
+     - A set of *the specific villages* we're interested in.
+
+- **Key idea**: Uncertainty comes from the stuff we **don't see**
+     - And solutions require knowing the **mechanism** by which we don't see things!
+
+## Sampling from a population {.strip-slide}
+
+```{r}
+#| echo: false
+#| output: asis
+strip_anim(0, 3)
+```
+
+## A finite population {.strip-slide}
+
+```{r}
+#| echo: false
+#| output: asis
+strip_anim(3, 7)
+```
+
+## Two sources of randomness
+
+|                   | Sampling from $F$          | Finite population                       |
+|-------------------|----------------------------|-----------------------------------------|
+| The values $Y_i$  | Random draws               | Fixed numbers                           |
+| What's random     | Which values we draw       | Which units we see: $R_i$               |
+| Estimand          | $\mu = \mathbb{E}[Y_i]$    | $\mu_N = \frac{1}{N}\sum_{i=1}^N Y_i$   |
+
+::: {.incremental}
+
+- Sampling from an **infinite population**: the cells stay, but the **values** change
+- Finite population: the values stay, but the **holes** move
+
+:::
+
+<!-- ============================================================
+     Finite population inference under simple random sampling
+     ============================================================ -->
+
+## A finite population
+
+::: {.incremental}
+
+- $N$ units with outcomes $Y_1, Y_2, \dots, Y_N$
+  - These are **fixed numbers**, not random variables
+
+- Estimand: the **population mean**
+
+  $$\mu_N = \frac{1}{N}\sum_{i=1}^N Y_i$$
+
+- and the **population variance**
+
+  $$S^2 = \frac{1}{N-1}\sum_{i=1}^N (Y_i - \mu_N)^2$$
+
+- If we saw every $Y_i$, there's no uncertainty at all.
+
+:::
+
+## Simple random sampling
+
+::: {.incremental}
+
+- $R_i = 1$ if unit $i$ is in the sample, $R_i = 0$ if not, with $\sum_{i=1}^N R_i = n$
+
+- **Simple random sampling** (SRS): each of the $\binom{N}{n}$ subsets of size $n$ is equally likely
+     - Each unit has the same **inclusion probability**
+
+     $$\Pr(R_i = 1) = \frac{n}{N}$$
+
+- But the $R_i$ are **not independent**
+
+  $$\Pr(R_i = 1, R_j = 1) = \frac{n}{N}\cdot\frac{n-1}{N-1} \quad\Rightarrow\quad \Cov(R_i, R_j) = -\frac{1}{N-1}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right)$$
+
+:::
+
+## The sample mean is unbiased
+
+::: {.incremental}
+
+- We can write the sample mean as an average involving the inclusion indicator $R_i$
+
+  $$\hat{\mu} = \frac{1}{n}\sum_{i=1}^N R_i Y_i$$
+
+- The $Y_i$ are constants, so they come out of the expectation
+
+  $$\mathbb{E}[\hat{\mu}] = \frac{1}{n}\sum_{i=1}^N \mathbb{E}[R_i]\, Y_i = \frac{1}{n}\sum_{i=1}^N \frac{n}{N}\, Y_i = \mu_N$$
+
+:::
+
+## The variance of the sample mean
+
+::: {.incremental}
+
+- Recenter around the **mean** $\mu_N$
+
+  $$\hat{\mu} - \mu_N = \frac{1}{n}\sum_{i=1}^N R_i\,(Y_i - \mu_N)$$
+
+- Only the $R_i$ are random
+
+  $$\Var(\hat{\mu}) = \frac{1}{n^2}\Big[\sum_{i} (Y_i - \mu_N)^2\,\Var(R_i) + \sum_{i \neq j} (Y_i - \mu_N)(Y_j - \mu_N)\Cov(R_i, R_j)\Big]$$
+
+- The covariance terms don't go away since the $R_i$ are **negatively** correlated
+
+:::
+
+## The variance of the sample mean
+
+::: {.incremental}
+
+- Deviations from the mean sum to zero, so
+
+  $$\begin{aligned}
+  0 = \Big(\sum_{i} (Y_i - \mu_N)\Big)^2 &= \sum_{i} (Y_i - \mu_N)^2 + \sum_{i \neq j} (Y_i - \mu_N)(Y_j - \mu_N) \\
+  \Rightarrow \quad \sum_{i \neq j} (Y_i - \mu_N)(Y_j - \mu_N) &= -\sum_i (Y_i - \mu_N)^2
+  \end{aligned}$$
+
+- Plug in $\Var(R_i) = \frac{n}{N}\left(1 - \frac{n}{N}\right)$ and $\Cov(R_i, R_j) = -\frac{1}{N-1}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right)$
+
+  $$\begin{aligned}
+  \Var(\hat{\mu}) &= \frac{1}{n^2}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right)\Big[\sum_i (Y_i - \mu_N)^2 + \frac{1}{N-1}\sum_i (Y_i - \mu_N)^2\Big] \\
+  &= \frac{1}{n^2}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right) \cdot N \cdot \underbrace{\frac{1}{N-1}\sum_i (Y_i - \mu_N)^2}_{S^2} \\
+  &= \left(1 - \frac{n}{N}\right)\frac{S^2}{n}
+  \end{aligned}$$
+
+- $1 - \frac{n}{N}$ is the **finite population correction**: at $n = N$ (a census) the variance is $0$
+
+:::
+
+## Estimating the variance
+
+::: {.incremental}
+
+- Plug in the **sample** variance
+
+  $$s^2 = \frac{1}{n-1}\sum_{i=1}^N R_i\,(Y_i - \hat{\mu})^2 \qquad \widehat{\Var}(\hat{\mu}) = \left(1 - \frac{n}{N}\right)\frac{s^2}{n}$$
+
+- Under SRS, $\mathbb{E}[s^2] = S^2$, so $\widehat{\Var}(\hat{\mu})$ is **exactly** unbiased
+
+- A finite population CLT applies here [@hajek1960limiting]: as $n$ and $N - n$ grow
+
+  $$\frac{\hat{\mu} - \mu_N}{\sqrt{\widehat{\Var}(\hat{\mu})}} \xrightarrow{d} \mathcal{N}(0, 1)$$
+
+- So the usual interval $\hat{\mu} \pm 1.96\sqrt{\widehat{\Var}(\hat{\mu})}$ works
+
+:::
+
+## From finite populations back to i.i.d.
+
+::: {.incremental}
+
+- As $N \to \infty$, $\frac{n}{N} \to 0$ and
+
+  $$\Var(\hat{\mu}) = \left(1 - \frac{n}{N}\right)\frac{S^2}{n} \to \frac{\sigma^2}{n}$$
+
+- Sampling without replacement from a huge population $\approx$ i.i.d. draws
+  - The "infinite population" is a **limit** of the finite population seetting
+
+- We can apply this idea beyond random sampling from a **finite population** to other forms of **missingness**
+
+:::
+
+## Simulating SRS in R
+
+```{r}
+#| label: srs-sim
+
+# The animation's finite population: 24 fixed values; observe 10 of them
+y <- pop$y; N <- length(y); n <- 10
+set.seed(60706)
+mu_hat <- replicate(10000, mean(sample(y, n)))   # sample() draws without replacement
+c(mu_N = mean(y), mean_of_estimates = mean(mu_hat))
+c(simulated = var(mu_hat), fpc_formula = (1 - n / N) * var(y) / n, iid_formula = var(y) / n)
+```
+
+<!-- ============================================================
+     Missing data (Aronow and Miller 2019, Section 6.1)
+     ============================================================ -->
+
+## The missing data problem
+
+::: {.incremental}
+
+- For each unit we observe $(Y_i^*, R_i, X_i)$, where
+
+  $$Y_i^* = \begin{cases} Y_i & R_i = 1 \\ \texttt{NA} & R_i = 0 \end{cases}$$
+
+- $R_i$ works the same way (observability), but now it's **out of our control**
+  - We don't know $\Pr(R_i = 1)$ and can't assume that $R_i$ is independent of $Y_i$
+
+- Apply Law of Iterated/Total Expectation conditioning on $R_i$:
+
+  $$\mathbb{E}[Y_i] = \mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + \underbrace{\mathbb{E}[Y_i \mid R_i = 0]}_{\text{never observed}}\Pr(R_i = 0)$$
+
+:::
+
+## Example: who won't report their income?
+
+::: {.incremental}
+
+- 2024 CES: "Thinking back over the last year, what was your family's annual income?"
+  - `r sprintf("%.1f", 100 * mean(ces$R == 0))`% of `r format(nrow(ces), big.mark = ",")` respondents choose **"Prefer not to say"**
+
+- $Y_i = 1$ if family income is **\$60,000 or more**, about the median among those who answer
+
+- $X_i$: observed for everyone
+  - Age, gender, education, race, employment, marital status, party ID, **political engagement**
+
+- **Political engagement** - non-response to four questions on politics
+  - Over the past year, has the nation's economy gotten better or worse?
+  - Generally speaking, do you think of yourself as a Democrat, a Republican, an Independent...? (party ID)
+  - In general, how would you describe your own political viewpoint? (ideology)
+  - Do you follow what's going on in government and public affairs...? (interest)
+
+:::
+
+
+::: {.fragment .est-table}
+
+```{r}
+#| echo: false
+ces |>
+  mutate(unsure = if_else(unsure >= 3, "3 or 4", as.character(unsure))) |>
+  group_by(unsure) |>
+  summarize(n = format(n(), big.mark = ","),
+            refused = sprintf("%.1f%%", 100 * mean(R == 0)),
+            above = sprintf("%.0f%%", 100 * mean(inc60, na.rm = TRUE))) |>
+  knitr::kable(col.names = c("\"Not sure\" answers", "Respondents", "Refuse income",
+                             "Income $60k+ (if answered)"), align = "lrrr")
+```
+
+:::
+
+## What can we learn without assumptions?
+
+::: {.incremental}
+
+- Suppose $Y_i \in [a, b]$. Then $\mathbb{E}[Y_i \mid R_i = 0]$ is somewhere in $[a, b]$
+
+- We can get **bounds** by plugging in the two extremes [@manski1989anatomy]
+
+  $$\mathbb{E}[Y_i] \in \Big[\,\mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + a\Pr(R_i = 0),\ \ \mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + b\Pr(R_i = 0)\,\Big]$$
+
+
+:::
+
+## Bounds in the running example
+
+```{r}
+#| label: bounds
+
+p_R <- mean(ces$R)
+cc  <- mean(ces$inc60[ces$R == 1])                # the complete-case mean
+c(complete_case = cc,
+  lower = cc * p_R + 0 * (1 - p_R),               # every refuser earns under $60k
+  upper = cc * p_R + 1 * (1 - p_R))               # every refuser earns $60k or more
+```
+
+::: {.incremental}
+
+- `r sprintf("%.1f", 100 * mean(ces$R == 0))`% missing and a binary outcome: an interval `r sprintf("%.1f", 100 * mean(ces$R == 0))` percentage points wide
+- To get a **point estimate** we need assumptions about $R_i$
+
+:::
+
+## Rubin's taxonomy
+
+::: {.incremental}
+
+- **Missing completely at random** (MCAR)
+
+  $$R_i \indep Y_i$$
+
+- **Missing at random** (MAR)
+
+  $$R_i \indep Y_i \mid X_i$$
+
+- **Missing not at random** (MNAR): neither holds
+
+- Terms originated from @rubin1976inference - not the best language.
+  - "At random" does **not** mean "random": MAR allows missingness to depend on $X_i$
+  - Here "at random" is closer to "according to **known** non-randomness"
+
+:::
+
+## Missing completely at random
+
+::: {.incremental}
+
+- Under MCAR, respondents look like nonrespondents
+
+  $$\mathbb{E}[Y_i] = \mathbb{E}[Y_i \mid R_i = 1]$$
+
+- The **complete-case** mean is consistent for $\mathbb{E}[Y_i]$
+  - Missingness behaves like **random sampling** from a target population
+
+:::
+
+## Missing at random {.strip-slide}
+
+```{r}
+#| echo: false
+#| output: asis
+strip_anim(8, 11)
+```
+
+## Missing at random
+
+::: {.incremental}
+
+- MAR: **within** levels of $X_i$, missingness is unrelated to $Y_i$
+
+  $$R_i \indep Y_i \mid X_i$$
+
+- Plus **positivity**: Have to have some probability of responding at each covariate level.
+
+  $$\Pr(R_i = 1 \mid X_i = x) > 0 \quad \text{for all } x$$
+
+- MCAR within each **stratum** of $X_i$
+     - But the response rate can **differ** across strata
+     - The complete-case mean is **biased** when $X_i$ predicts both $R_i$ and $Y_i$
+
+:::
+
+## Identification under MAR
+
+::: {.incremental}
+
+- Law of iterated expectations, then MAR
+
+  $$\mathbb{E}[Y_i] = \mathbb{E}\big[\mathbb{E}[Y_i \mid X_i]\big] = \mathbb{E}\big[\mathbb{E}[Y_i \mid R_i = 1, X_i]\big]$$
+
+  - Everything on the right is **observable**
+
+- **Regression estimator**: fit $\mathbb{E}[Y_i \mid R_i = 1, X_i]$ among respondents and predict for **everyone**
+
+  $$\hat{\mu}_{\text{reg}} = \frac{1}{n}\sum_{i=1}^n \hat{\mathbb{E}}[Y_i \mid R_i = 1, X_i]$$
+
+- Weighted average of outcomes among respondents
+     - With weights **proportional** to $X_i$ distribution in the **full sample**
+
+:::
+
+## Missing not at random
+
+::: {.incremental}
+
+- Even given $X_i$, missingness depends on $Y_i$
+
+  $$\mathbb{E}[Y_i \mid R_i = 0, X_i] \neq \mathbb{E}[Y_i \mid R_i = 1, X_i]$$
+
+- Can't tell whether we're in MAR or MNAR from the data alone!
+     - Analogous to **unobserved confounding** of response and outcome.
+
+:::
+
+<!-- ============================================================
+     Inverse probability weighting (Aronow and Miller 2019, 6.1.4, 6.2.5)
+     ============================================================ -->
+
+## The propensity score for missingness
+
+::: {.incremental}
+
+- It turns out that we only need to know **one thing** in order to fully adjust for non-response bias. 
+     - The **response propensity score**
+
+     $$p_R(x) = \Pr(R_i = 1 \mid X_i = x)$$
+
+- Under MAR, all we need to condition on is $p_R(X_i)$ [@rosenbaum1983central]
+
+  $$R_i \indep Y_i \mid X_i \quad\Rightarrow\quad R_i \indep Y_i \mid p_R(X_i)$$
+
+- Adjusting for the **propensity score** is as good as adjusting for all of $X_i$
+
+
+:::
+
+## Reweighting the respondents {.strip-slide}
+
+```{r}
+#| echo: false
+#| output: asis
+strip_anim(11, 13)
+```
+
+## Horvitz-Thompson
+
+::: {.incremental}
+
+- Our new estimator **re-weights** each respondent by the **inverse propensity** of response $1 / p_R(X_i)$ [@horvitz1952generalization]
+
+  $$\hat{\mu}_{\text{HT}} = \frac{1}{n}\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}$$
+
+- This is the **Horvitz-Thompson** or **"inverse propensity weighting" (IPW)** estimator
+- Can think of this as creating a **pseudo-population** where each respondent stands in for $1 / p_R(X_i)$ people like them.
+     - **Under-represented** respondents count for more
+     - **Over-represented** respondents count for less
+
+:::
+
+## Horvitz-Thompson is unbiased under MAR
+
+::: {.incremental}
+
+- With $p_R$ **known**, and since $R_i Y_i^* = R_i Y_i$
+
+  $$\begin{aligned}
+  \mathbb{E}[\hat{\mu}_{\text{HT}}] = \mathbb{E}\left[\frac{R_i Y_i}{p_R(X_i)}\right] &= \mathbb{E}\left[\frac{\mathbb{E}[R_i Y_i \mid X_i]}{p_R(X_i)}\right] \\
+  &= \mathbb{E}\left[\frac{\mathbb{E}[R_i \mid X_i]\,\mathbb{E}[Y_i \mid X_i]}{p_R(X_i)}\right] \qquad \text{(MAR)} \\
+  &= \mathbb{E}\big[\mathbb{E}[Y_i \mid X_i]\big] = \mathbb{E}[Y_i]
+  \end{aligned}$$
+
+- Positivity ensures we don't divide by zero
+
+
+:::
+
+## Hájek
+
+::: {.incremental}
+
+- The HT weights $\frac{R_i}{p_R(X_i)}$ only sum to $n$ **on average**. 
+     The **Hájek** estimator **(stabilized IPW)** normalizes them to sum to exactly 1 in the sample [@hajek1971comment]
+
+  $$\hat{\mu}_{\text{Hájek}} = \frac{\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}}{\sum_{i=1}^n \frac{R_i}{p_R(X_i)}}$$
+
+- Has a clean interpretation as a **convex average** of the respondents
+  - Slightly biased, consistent, usually **lower variance** than HT
+
+:::
+
+## IPW in the running example
+
+```{r}
+#| label: ipw
+
+ps_fit <- glm(R ~ age + I(age^2) + educ + race + gender + employ + marstat + factor(pid7) +
+                factor(pmin(unsure, 3)), family = binomial, data = ces)
+ces <- ces |> mutate(p_hat = fitted(ps_fit), y_star = replace_na(inc60, 0))
+ces |> summarize(complete_case = mean(inc60, na.rm = TRUE),
+                 ht    = mean(R * y_star / p_hat),
+                 hajek = sum(R * y_star / p_hat) / sum(R / p_hat))
+```
+
+::: {.incremental}
+
+- Refusers are less engaged, and less engaged respondents earn less: weighting moves the estimate **down**, by `r sprintf("%.1f", 100 * with(ces, mean(inc60, na.rm = TRUE) - sum(R * y_star / p_hat) / sum(R / p_hat)))` percentage points
+- Weights run from `r sprintf("%.2f", min(1 / ces$p_hat[ces$R == 1]))` to `r sprintf("%.2f", max(1 / ces$p_hat[ces$R == 1]))`: the largest go to young students who are unsure about politics
+- Why so small? Only `r sprintf("%.1f", 100 * mean(ces$R == 0))`% refuse. The shift is at most $\Pr(R_i = 0)$ times how different refusers look from respondents
+
+:::
+
+## Problems with weights
+
+::: {.incremental}
+
+- $\hat{p}_R(x)$ near $0$ means **huge** weights
+  - A few respondents drive the estimate $\leadsto$ **massive variance**
+  - Effective sample size: $n_{\text{eff}} = \big(\sum_i w_i\big)^2 / \sum_i w_i^2$
+
+- **Positivity** fails: no respondents to re-weight to!
+
+- **Misspecified** $\hat{p}_R$: the weights don't balance $X_i$
+     - Solution: **balancing weights** - compute $\hat{p}_R$ such that we get exact balance on (functions of) $X_i$
+
+- **Standard errors**: Need to account for uncertainty in estimating the weights.
+
+:::
+
+<!-- ============================================================
+     Wrap-up
+     ============================================================ -->
+
+## Next week
+
+::: {.incremental}
+
+- Survey weighting is a missing data problem
+  - **Stratified** and **clustered** sampling: non-random or correlated selection *by design*
+  - **Post-stratification** and **raking** to adjust for nonresponse
+  - The same Horvitz-Thompson and Hájek estimators!
+
+:::
+
+## References {.refs-slide}
+
+::: {#refs}
+:::

@@ -53,3 +53,7 @@ slides/week6/data/GSS2024.dta
 # 2024 ANES Time Series source file for section 7 (~79 MB). prepare_data.R
 # turns it into the small committed CSV extract.
 sections/week7/data/anes_timeseries_2024_stata_20260519.dta
+
+# 2024 CES Common Content source file for week 12 (~1 GB). prepare_data.R
+# turns it into the small committed CSV extract.
+slides/week12/data/CCES24_Common_OUTPUT_vv_topost_final.dta
