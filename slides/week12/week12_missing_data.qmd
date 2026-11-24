@@ -47,6 +47,7 @@ $$
 \newcommand{\Cov}{\text{Cov}}
 \newcommand{\Corr}{\text{Corr}}
 \newcommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
+\newcommand{\nindep}{\not\indep}
 $$
 :::
 
@@ -153,6 +154,8 @@ strip_anim <- function(from, to) {
 
 ## Where does uncertainty come from?
 
+:::{.incremental}
+
 - We've spent a lot of time focusing on randomness from **sampling from a population**
      - Our **sample mean** is not the same as the **population mean**
      - Statistics gives us some tools for characterizing that error (**sampling variance**)
@@ -164,6 +167,8 @@ strip_anim <- function(from, to) {
 
 - **Key idea**: Uncertainty comes from the stuff we **don't see**
      - And solutions require knowing the **mechanism** by which we don't see things!
+
+:::
 
 ## Sampling from a population {.strip-slide}
 
@@ -181,21 +186,6 @@ strip_anim(0, 3)
 strip_anim(3, 7)
 ```
 
-## Two sources of randomness
-
-|                   | Sampling from $F$          | Finite population                       |
-|-------------------|----------------------------|-----------------------------------------|
-| The values $Y_i$  | Random draws               | Fixed numbers                           |
-| What's random     | Which values we draw       | Which units we see: $R_i$               |
-| Estimand          | $\mu = \mathbb{E}[Y_i]$    | $\mu_N = \frac{1}{N}\sum_{i=1}^N Y_i$   |
-
-::: {.incremental}
-
-- Sampling from an **infinite population**: the cells stay, but the **values** change
-- Finite population: the values stay, but the **holes** move
-
-:::
-
 <!-- ============================================================
      Finite population inference under simple random sampling
      ============================================================ -->
@@ -205,7 +195,7 @@ strip_anim(3, 7)
 ::: {.incremental}
 
 - $N$ units with outcomes $Y_1, Y_2, \dots, Y_N$
-  - These are **fixed numbers**, not random variables
+  - We'll treat these as **fixed**
 
 - Estimand: the **population mean**
 
@@ -215,7 +205,7 @@ strip_anim(3, 7)
 
   $$S^2 = \frac{1}{N-1}\sum_{i=1}^N (Y_i - \mu_N)^2$$
 
-- If we saw every $Y_i$, there's no uncertainty at all.
+- If we saw every $Y_i$, there would be no uncertainty at all.
 
 :::
 
@@ -223,16 +213,38 @@ strip_anim(3, 7)
 
 ::: {.incremental}
 
-- $R_i = 1$ if unit $i$ is in the sample, $R_i = 0$ if not, with $\sum_{i=1}^N R_i = n$
+- Let $R_i$ be the **inclusion indicator**
+     - $R_i = 1$ if unit $i$ is in the sample
+     - $R_i = 0$ if not
+     - $\sum_{i=1}^N R_i = n$ - our sample is the number of "included" units.
 
 - **Simple random sampling** (SRS): each of the $\binom{N}{n}$ subsets of size $n$ is equally likely
-     - Each unit has the same **inclusion probability**
+- Each unit has the same **inclusion probability**
 
      $$\Pr(R_i = 1) = \frac{n}{N}$$
 
-- But the $R_i$ are **not independent**
+- But the $R_i$ are **not independent** - the **joint** inclusion probability is not the product of the marginals
 
-  $$\Pr(R_i = 1, R_j = 1) = \frac{n}{N}\cdot\frac{n-1}{N-1} \quad\Rightarrow\quad \Cov(R_i, R_j) = -\frac{1}{N-1}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right)$$
+  $$\Pr(R_i = 1, R_j = 1) = \Pr(R_i = 1) \Pr(R_j = 1 | R_i = 1)= \frac{n}{N}\cdot\frac{n-1}{N-1}$$
+
+:::
+
+## Simple random sampling
+
+::: {.incremental}
+
+- So there's a covariance we have to care about
+
+     $$\begin{aligned}
+     \Cov(R_i, R_j) &= \Pr(R_i = 1, R_j = 1) - \Pr(R_i = 1)\Pr(R_j = 1)\\
+     &= \frac{n}{N}\cdot\frac{n-1}{N-1} - \frac{n}{N}\cdot \frac{n}{N}\\
+     &= \frac{n^2 - n}{N(N - 1)} - \frac{n^2}{N^2}\\
+     &= \frac{(n^2 - n)N - n^2(N - 1)}{N^2(N - 1)} \\
+     &= \frac{n^2 - nN}{N^2(N - 1)} \\
+     &= -\frac{n(N - n)}{N^2(N - 1)} = \frac{1}{N-1} \cdot \frac{n}{N} \cdot \frac{N-n}{N}\\
+     &= -\frac{\Var(R_i)}{N - 1}
+     \end{aligned}$$
+
 
 :::
 
@@ -277,15 +289,15 @@ strip_anim(3, 7)
   \Rightarrow \quad \sum_{i \neq j} (Y_i - \mu_N)(Y_j - \mu_N) &= -\sum_i (Y_i - \mu_N)^2
   \end{aligned}$$
 
-- Plug in $\Var(R_i) = \frac{n}{N}\left(1 - \frac{n}{N}\right)$ and $\Cov(R_i, R_j) = -\frac{1}{N-1}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right)$
+- Plug in $\Cov(R_i, R_j) = -\frac{\Var(R_i)}{N-1}$
 
   $$\begin{aligned}
-  \Var(\hat{\mu}) &= \frac{1}{n^2}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right)\Big[\sum_i (Y_i - \mu_N)^2 + \frac{1}{N-1}\sum_i (Y_i - \mu_N)^2\Big] \\
-  &= \frac{1}{n^2}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right) \cdot N \cdot \underbrace{\frac{1}{N-1}\sum_i (Y_i - \mu_N)^2}_{S^2} \\
+  \Var(\hat{\mu}) &= \frac{\Var(R_i)}{n^2}\Big[\sum_i (Y_i - \mu_N)^2 + \frac{1}{N-1}\sum_i (Y_i - \mu_N)^2\Big] \\
+  &= \frac{\Var(R_i)}{n^2} \cdot N \cdot \underbrace{\frac{1}{N-1}\sum_i (Y_i - \mu_N)^2}_{S^2} \\
+  &= \frac{1}{n^2}\cdot\frac{n}{N}\left(1 - \frac{n}{N}\right) \cdot N S^2 \\
   &= \left(1 - \frac{n}{N}\right)\frac{S^2}{n}
   \end{aligned}$$
 
-- $1 - \frac{n}{N}$ is the **finite population correction**: at $n = N$ (a census) the variance is $0$
 
 :::
 
@@ -322,19 +334,6 @@ strip_anim(3, 7)
 
 :::
 
-## Simulating SRS in R
-
-```{r}
-#| label: srs-sim
-
-# The animation's finite population: 24 fixed values; observe 10 of them
-y <- pop$y; N <- length(y); n <- 10
-set.seed(60706)
-mu_hat <- replicate(10000, mean(sample(y, n)))   # sample() draws without replacement
-c(mu_N = mean(y), mean_of_estimates = mean(mu_hat))
-c(simulated = var(mu_hat), fpc_formula = (1 - n / N) * var(y) / n, iid_formula = var(y) / n)
-```
-
 <!-- ============================================================
      Missing data (Aronow and Miller 2019, Section 6.1)
      ============================================================ -->
@@ -347,10 +346,10 @@ c(simulated = var(mu_hat), fpc_formula = (1 - n / N) * var(y) / n, iid_formula =
 
   $$Y_i^* = \begin{cases} Y_i & R_i = 1 \\ \texttt{NA} & R_i = 0 \end{cases}$$
 
-- $R_i$ works the same way (observability), but now it's **out of our control**
+- $R_i$ works the same way (do we observe $Y_i$ or not), but now it's **out of our control**
   - We don't know $\Pr(R_i = 1)$ and can't assume that $R_i$ is independent of $Y_i$
 
-- Apply Law of Iterated/Total Expectation conditioning on $R_i$:
+- **Law of iterated expectations** conditioning on $R_i$:
 
   $$\mathbb{E}[Y_i] = \mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + \underbrace{\mathbb{E}[Y_i \mid R_i = 0]}_{\text{never observed}}\Pr(R_i = 0)$$
 
@@ -363,18 +362,25 @@ c(simulated = var(mu_hat), fpc_formula = (1 - n / N) * var(y) / n, iid_formula =
 - 2024 CES: "Thinking back over the last year, what was your family's annual income?"
   - `r sprintf("%.1f", 100 * mean(ces$R == 0))`% of `r format(nrow(ces), big.mark = ",")` respondents choose **"Prefer not to say"**
 
-- $Y_i = 1$ if family income is **\$60,000 or more**, about the median among those who answer
+- **Outcome of interest**
+  - $Y_i = 1$ if family income is **\$60,000 or more**
 
-- $X_i$: observed for everyone
+- **Covariates** ($X_i$) observed for all units 
   - Age, gender, education, race, employment, marital status, party ID, **political engagement**
+
+
+:::
+
+
+## Example: who won't report their income?
+
+::: {.incremental}
 
 - **Political engagement** - non-response to four questions on politics
   - Over the past year, has the nation's economy gotten better or worse?
   - Generally speaking, do you think of yourself as a Democrat, a Republican, an Independent...? (party ID)
   - In general, how would you describe your own political viewpoint? (ideology)
   - Do you follow what's going on in government and public affairs...? (interest)
-
-:::
 
 
 ::: {.fragment .est-table}
@@ -393,6 +399,8 @@ ces |>
 
 :::
 
+:::
+
 ## What can we learn without assumptions?
 
 ::: {.incremental}
@@ -401,12 +409,9 @@ ces |>
 
 - We can get **bounds** by plugging in the two extremes [@manski1989anatomy]
 
-  $$\mathbb{E}[Y_i] \in \Big[\,\mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + a\Pr(R_i = 0),\ \ \mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + b\Pr(R_i = 0)\,\Big]$$
+  $$\mathbb{E}[Y_i] \in \Big[\,\underbrace{\mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + a\Pr(R_i = 0)}_{\text{lower bound: } \mathbb{E}[Y_i \mid R_i = 0] = a},\ \ \underbrace{\mathbb{E}[Y_i \mid R_i = 1]\Pr(R_i = 1) + b\Pr(R_i = 0)}_{\text{upper bound: } \mathbb{E}[Y_i \mid R_i = 0] = b}\,\Big]$$
 
-
-:::
-
-## Bounds in the running example
+::: {.fragment}
 
 ```{r}
 #| label: bounds
@@ -418,12 +423,10 @@ c(complete_case = cc,
   upper = cc * p_R + 1 * (1 - p_R))               # every refuser earns $60k or more
 ```
 
-::: {.incremental}
-
-- `r sprintf("%.1f", 100 * mean(ces$R == 0))`% missing and a binary outcome: an interval `r sprintf("%.1f", 100 * mean(ces$R == 0))` percentage points wide
-- To get a **point estimate** we need assumptions about $R_i$
+:::
 
 :::
+
 
 ## Rubin's taxonomy
 
@@ -437,11 +440,13 @@ c(complete_case = cc,
 
   $$R_i \indep Y_i \mid X_i$$
 
-- **Missing not at random** (MNAR): neither holds
+- **Missing not at random** (MNAR):
+
+   $$R_i \nindep Y_i \mid X_i$$
 
 - Terms originated from @rubin1976inference - not the best language.
   - "At random" does **not** mean "random": MAR allows missingness to depend on $X_i$
-  - Here "at random" is closer to "according to **known** non-randomness"
+  - Rubin's "at random" is closer to "according to **known** non-randomness"
 
 :::
 
@@ -498,8 +503,8 @@ strip_anim(8, 11)
 
   $$\hat{\mu}_{\text{reg}} = \frac{1}{n}\sum_{i=1}^n \hat{\mathbb{E}}[Y_i \mid R_i = 1, X_i]$$
 
-- Weighted average of outcomes among respondents
-     - With weights **proportional** to $X_i$ distribution in the **full sample**
+- Weighted average of outcomes among respondents...
+     - ...with weights **proportional** to $X_i$ distribution in the **full sample**
 
 :::
 
@@ -524,12 +529,12 @@ strip_anim(8, 11)
 
 ::: {.incremental}
 
-- It turns out that we only need to know **one thing** in order to fully adjust for non-response bias. 
-     - The **response propensity score**
+- Under **missing at random**, we only need to know **one thing** in order to fully adjust for non-response bias. 
+- The **response propensity score**:
 
      $$p_R(x) = \Pr(R_i = 1 \mid X_i = x)$$
 
-- Under MAR, all we need to condition on is $p_R(X_i)$ [@rosenbaum1983central]
+- Conditioning on $p_R(X_i)$ is enough to get rid of the bias [@rosenbaum1983central]
 
   $$R_i \indep Y_i \mid X_i \quad\Rightarrow\quad R_i \indep Y_i \mid p_R(X_i)$$
 
@@ -550,7 +555,7 @@ strip_anim(11, 13)
 
 ::: {.incremental}
 
-- Our new estimator **re-weights** each respondent by the **inverse propensity** of response $1 / p_R(X_i)$ [@horvitz1952generalization]
+- Consider an estimator that **re-weights** each respondent by their **inverse propensity** [@horvitz1952generalization]
 
   $$\hat{\mu}_{\text{HT}} = \frac{1}{n}\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}$$
 
@@ -583,9 +588,9 @@ strip_anim(11, 13)
 ::: {.incremental}
 
 - The HT weights $\frac{R_i}{p_R(X_i)}$ only sum to $n$ **on average**. 
-     The **Hájek** estimator **(stabilized IPW)** normalizes them to sum to exactly 1 in the sample [@hajek1971comment]
+     - The **Hájek** estimator **(stabilized IPW)** normalizes them to sum to exactly 1 in the sample [@hajek1971comment]
 
-  $$\hat{\mu}_{\text{Hájek}} = \frac{\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}}{\sum_{i=1}^n \frac{R_i}{p_R(X_i)}}$$
+  $$\hat{\mu}_{\text{Hájek}} = \frac{1}{\sum_{i=1}^n \frac{R_i}{p_R(X_i)}}{\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}}$$
 
 - Has a clean interpretation as a **convex average** of the respondents
   - Slightly biased, consistent, usually **lower variance** than HT
@@ -607,9 +612,12 @@ ces |> summarize(complete_case = mean(inc60, na.rm = TRUE),
 
 ::: {.incremental}
 
-- Refusers are less engaged, and less engaged respondents earn less: weighting moves the estimate **down**, by `r sprintf("%.1f", 100 * with(ces, mean(inc60, na.rm = TRUE) - sum(R * y_star / p_hat) / sum(R / p_hat)))` percentage points
-- Weights run from `r sprintf("%.2f", min(1 / ces$p_hat[ces$R == 1]))` to `r sprintf("%.2f", max(1 / ces$p_hat[ces$R == 1]))`: the largest go to young students who are unsure about politics
-- Why so small? Only `r sprintf("%.1f", 100 * mean(ces$R == 0))`% refuse. The shift is at most $\Pr(R_i = 0)$ times how different refusers look from respondents
+- Refusers are **less politically engaged**, and **less politically engaged** respondents earn less
+- Weighting moves the estimate **down**, by `r sprintf("%.1f", 100 * with(ces, mean(inc60, na.rm = TRUE) - sum(R * y_star / p_hat) / sum(R / p_hat)))` percentage points
+- Weights run from `r sprintf("%.2f", min(1 / ces$p_hat[ces$R == 1]))` to `r sprintf("%.2f", max(1 / ces$p_hat[ces$R == 1]))`
+     - the largest go to young students who are unsure about politics
+- Size of the bias and adjustment is proportional to the magnitude of non-response
+     - Only `r sprintf("%.1f", 100 * mean(ces$R == 0))`% refuse. The shift is at most $\Pr(R_i = 0)$ times how different refusers look from respondents
 
 :::
 

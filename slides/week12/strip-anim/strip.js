@@ -144,7 +144,7 @@ function (el, d, opts) {
 
   var svg = mk('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
                         'aria-label': 'Left: a population distribution F. Middle: a strip of N units. Right: the distribution of the estimates. First, repeated samples from F change the values in the strip. Then the values are frozen and the randomness comes from which units are punched out of the strip: at random, then more often for one group, and finally with the observed units reweighted to fill the holes',
-                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; font-family: inherit;' }, el);
+                        style: 'width: 100%; height: auto; max-height: 560px; display: block; margin: 0 auto; overflow: hidden; font-family: inherit;' }, el);
 
   // ---- Y axis -------------------------------------------------------------------
   mk('line', { x1: AX, x2: AX, y1: Y0, y2: Y1 - 6, stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round' }, svg);
@@ -198,7 +198,7 @@ function (el, d, opts) {
   }
 
   // ---- The strip --------------------------------------------------------------------
-  var gS = mk('g', {}, svg), cells = [], stems = [], dots = [], rtx = [];
+  var gS = mk('g', {}, svg), cells = [], units = [], stems = [], dots = [], rtx = [];
   for (var i = 0; i < N; i++) {
     cells.push(mk('rect', { y: Y1 - 8, height: Y0 - Y1 + 8, fill: '#ffffff', stroke: '#c8c8c8', 'stroke-width': 1.5 }, gS));
   }
@@ -212,9 +212,12 @@ function (el, d, opts) {
   label(HX1, py(d.muN) - 8, [[{ 'font-style': 'italic' }, 'μ_N']], { 'text-anchor': 'end', fill: RED, 'font-weight': 600 }, gMuN);
 
   mk('line', { x1: SX0, x2: SX1, y1: Y0, y2: Y0, stroke: INK, 'stroke-width': 2 }, svg);
+  // Each unit's stem and dot share a group, so a unit that goes missing can
+  // pop out and fall off the bottom of the figure in one piece
   for (i = 0; i < N; i++) {
-    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, svg));
-    dots.push(mk('circle', { r: 7 }, svg));
+    units.push(mk('g', {}, svg));
+    stems.push(mk('line', { y1: Y0, stroke: INK, 'stroke-width': 2 }, units[i]));
+    dots.push(mk('circle', { r: 7 }, units[i]));
     rtx.push(mk('text', { y: RY, 'text-anchor': 'middle', 'font-size': 18, fill: INK }, svg));
   }
   var rLab = label(SX0 - 10, RY, [[{ 'font-style': 'italic' }, 'R_i']], { 'text-anchor': 'end', 'font-size': 20 }, svg);
@@ -225,11 +228,14 @@ function (el, d, opts) {
   function estLine(col, lab, below) {
     var g = mk('g', {}, svg);
     var ln = mk('line', { x1: SX0, x2: HX0, stroke: col, 'stroke-width': 3, 'stroke-dasharray': '9 6' }, g);
-    var t = label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
-                                     stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, g);
+    // The label sits at y = 0 in its own group, which is what moves: the hat
+    // is drawn once into the same group, so it travels with the letter
+    var lg = mk('g', {}, g);
+    label(SX1 + 8, 0, lab, { fill: col, 'font-weight': 600, 'font-size': 21,
+                             stroke: BG, 'stroke-width': 6, 'paint-order': 'stroke', 'stroke-linejoin': 'round' }, lg);
     return { g: g, set: function (y, o) {
       ln.setAttribute('y1', py(y)); ln.setAttribute('y2', py(y));
-      t.setAttribute('y', py(y) + (below ? 24 : -8)); g.setAttribute('opacity', o);
+      lg.setAttribute('transform', 'translate(0,' + (py(y) + (below ? 24 : -8)) + ')'); g.setAttribute('opacity', o);
     } };
   }
   var eA = estLine(INK, [[{ 'font-style': 'italic' }, '^μ']]);
@@ -269,8 +275,9 @@ function (el, d, opts) {
     function obs(pat, p) {
       var k = Math.min(Math.floor(p), K), f = p - k, o = [];
       for (var i = 0; i < N; i++) {
-        if (k === 0) o.push(lerp(1, pat[0][i], ease(stag(f, i))));
-        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], ease(f)));
+        // (linear in time: the pop-and-fall below supplies its own easing)
+        if (k === 0) o.push(lerp(1, pat[0][i], stag(f, i)));
+        else if (k < K && f > 0) o.push(lerp(pat[k - 1][i], pat[k][i], f));
         else o.push(pat[k - 1][i]);
       }
       return o;
@@ -311,9 +318,18 @@ function (el, d, opts) {
         if (u < 0.3) { yv = d.ay[sa - 1][i]; op = 1 - u / 0.3; }
         else { yv = d.ay[sa][i]; xv = lerp(launch(yv, sa, i), xs[i], ease((u - 0.3) / 0.7)); op = 1; }
       } else { yv = d.ay[sa - 1][i]; op = 1; }
-      op *= lerp(0.15, 1, o[i]) * (1 - ew * (1 - R[i]));
+      // A missing unit pops out of its cell (up, with the dot swelling), then
+      // drops straight down, accelerating, until it's below the figure.
+      // A unit coming back runs the same path in reverse
+      var out = 1 - o[i], dy = 0, sc = 1;
+      if (out > 0) {
+        var POP = 22, dyEnd = H - py(yv) + 24;
+        if (out < 0.25) { var pp = out / 0.25; dy = -POP * Math.sin(pp * Math.PI / 2); sc = 1 + 0.4 * Math.sin(pp * Math.PI); }
+        else { var q = (out - 0.25) / 0.75; dy = -POP + (dyEnd + POP) * q * q; }
+      }
+      units[i].setAttribute('transform', 'translate(0,' + dy + ')');
       var col = mixCol(INK, XCOL[d.fx[i]], s.xc);
-      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv));
+      dots[i].setAttribute('cx', xv); dots[i].setAttribute('cy', py(yv)); dots[i].setAttribute('r', 7 * sc);
       dots[i].setAttribute('fill', col); dots[i].setAttribute('opacity', op);
       stems[i].setAttribute('x1', xv); stems[i].setAttribute('x2', xv); stems[i].setAttribute('y2', py(yv));
       stems[i].setAttribute('stroke', col); stems[i].setAttribute('opacity', op * (Math.abs(xv - xs[i]) < 1 ? 1 : 0));
@@ -326,7 +342,7 @@ function (el, d, opts) {
     rLab.setAttribute('opacity', s.fz);
 
     // ---- Density and truth
-    gD.setAttribute('opacity', 1 - 0.85 * s.fz);
+    gD.setAttribute('opacity', 1 - s.fz);
     gMu.setAttribute('opacity', s.mu * (1 - s.fz));
     gMuN.setAttribute('opacity', s.fz);
 
