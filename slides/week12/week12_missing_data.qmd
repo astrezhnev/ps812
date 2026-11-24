@@ -241,7 +241,7 @@ strip_anim(3, 7)
      &= \frac{n^2 - n}{N(N - 1)} - \frac{n^2}{N^2}\\
      &= \frac{(n^2 - n)N - n^2(N - 1)}{N^2(N - 1)} \\
      &= \frac{n^2 - nN}{N^2(N - 1)} \\
-     &= -\frac{n(N - n)}{N^2(N - 1)} = \frac{1}{N-1} \cdot \frac{n}{N} \cdot \frac{N-n}{N}\\
+     &= -\frac{n(N - n)}{N^2(N - 1)} = -\frac{1}{N-1} \cdot \frac{n}{N} \cdot \frac{N-n}{N}\\
      &= -\frac{\Var(R_i)}{N - 1}
      \end{aligned}$$
 
@@ -493,18 +493,18 @@ strip_anim(8, 11)
 
 ::: {.incremental}
 
-- Law of iterated expectations, then MAR
+- Law of iterated expectations followed by MAR
 
   $$\mathbb{E}[Y_i] = \mathbb{E}\big[\mathbb{E}[Y_i \mid X_i]\big] = \mathbb{E}\big[\mathbb{E}[Y_i \mid R_i = 1, X_i]\big]$$
 
   - Everything on the right is **observable**
 
-- **Regression estimator**: fit $\mathbb{E}[Y_i \mid R_i = 1, X_i]$ among respondents and predict for **everyone**
+- **Regression imputation**: fit $\mathbb{E}[Y_i \mid R_i = 1, X_i]$, then compute:
 
   $$\hat{\mu}_{\text{reg}} = \frac{1}{n}\sum_{i=1}^n \hat{\mathbb{E}}[Y_i \mid R_i = 1, X_i]$$
 
-- Weighted average of outcomes among respondents...
-     - ...with weights **proportional** to $X_i$ distribution in the **full sample**
+- Take the observed relationship between $Y_i$ and $X_i$ among **respondents**
+     - And **impute** the missing values for the full sample.
 
 :::
 
@@ -588,7 +588,7 @@ strip_anim(11, 13)
 ::: {.incremental}
 
 - The HT weights $\frac{R_i}{p_R(X_i)}$ only sum to $n$ **on average**. 
-     - The **Hájek** estimator **(stabilized IPW)** normalizes them to sum to exactly 1 in the sample [@hajek1971comment]
+- The **Hájek** estimator **(stabilized IPW)** normalizes them to sum to exactly 1 in the sample [@hajek1971comment]
 
   $$\hat{\mu}_{\text{Hájek}} = \frac{1}{\sum_{i=1}^n \frac{R_i}{p_R(X_i)}}{\sum_{i=1}^n \frac{R_i Y_i^*}{p_R(X_i)}}$$
 
@@ -617,7 +617,7 @@ ces |> summarize(complete_case = mean(inc60, na.rm = TRUE),
 - Weights run from `r sprintf("%.2f", min(1 / ces$p_hat[ces$R == 1]))` to `r sprintf("%.2f", max(1 / ces$p_hat[ces$R == 1]))`
      - the largest go to young students who are unsure about politics
 - Size of the bias and adjustment is proportional to the magnitude of non-response
-     - Only `r sprintf("%.1f", 100 * mean(ces$R == 0))`% refuse. The shift is at most $\Pr(R_i = 0)$ times how different refusers look from respondents
+     - Only `r sprintf("%.1f", 100 * mean(ces$R == 0))`% refuse. 
 
 :::
 
@@ -634,7 +634,8 @@ ces |> summarize(complete_case = mean(inc60, na.rm = TRUE),
 - **Misspecified** $\hat{p}_R$: the weights don't balance $X_i$
      - Solution: **balancing weights** - compute $\hat{p}_R$ such that we get exact balance on (functions of) $X_i$
 
-- **Standard errors**: Need to account for uncertainty in estimating the weights.
+- **Standard errors**: 
+     - Need to account for uncertainty in estimating the weights.
 
 :::
 
